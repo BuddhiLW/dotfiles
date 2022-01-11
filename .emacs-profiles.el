@@ -1,0 +1,5 @@
+(("default" . ((user-emacs-directory . "~/.emacs.default")))
+ ("spacemacs" . ((user-emacs-directory . "~/spacemacs")))
+ ("progress" . ((user-emacs-directory . "~/.ep")))
+ ("doom" . ((user-emacs-directory . "~/.edoom")))
+ ("tecosaur" . ((user-emacs-directory . "~/.tecosaur.d"))))
