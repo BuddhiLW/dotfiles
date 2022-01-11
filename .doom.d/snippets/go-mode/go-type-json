@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: go-json-type
-# key: tjs
-# --
-$1 string \`json:"${1:$(downcase yas-text)}"\`
-$0

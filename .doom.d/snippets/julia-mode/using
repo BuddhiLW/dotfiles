@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: using 
-# key: u
-# --
-using $1

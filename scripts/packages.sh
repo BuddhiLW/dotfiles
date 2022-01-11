@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+## Helper function
+installpkg(){ pacman --noconfirm --needed -S "$1" >/dev/null 2>&1 ;}
+
 opt="--needed --noconfirm"
 
 ## bash start setup

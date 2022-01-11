@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: math boldface
-# key: mbf
-# --
-\mathbf{$0}

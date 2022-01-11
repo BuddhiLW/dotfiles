@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: go-ResponseWriter 
-# key: w
-# --
-w http.ResponseWriter

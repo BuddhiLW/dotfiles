@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name:latex-dot 
-# key: \d
-# --
-\dot{$1}

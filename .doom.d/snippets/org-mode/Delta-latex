@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name:Delta-latex 
-# key: \D
-# --
-\Delta{$1}

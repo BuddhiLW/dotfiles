@@ -1,15 +1,24 @@
 #+TITLE: Install documentation
 
+* What the script does
+
 #+begin_src shell :tangle no
 #!/usr/bin/env bash
+## Helper function
+installpkg(){ pacman --noconfirm --needed -S "$1" >/dev/null 2>&1 ;}
+installpkgyay(){ yay --noconfirm --needed -S "$1" >/dev/null 2>&1 ;}
+
+opt="--needed --noconfirm"
 
 ## bash start setup
 yay -Sy figlet lolcat fortune
+#### TODO: run script installing ble.sh (https://github.com/akinomyoga/ble.sh)
 
 ## us intl with modfier keys
-sudo cp 00-keyboard.conf /etc/X11/xorg.conf.d/
+sudo cp $PWD/low-level/00-keyboard.conf /etc/X11/xorg.conf.d/
 
 ## Management tools
+## This pomodoro program integrated with my build of the status bar; e.g., $ pomo "new task"; or $ pomob)
 yay -Sy openpomodoro
 
 ### Spell checking
@@ -19,6 +28,9 @@ yay -Sy ispell aspell aspell-en aspell-pt
 ## Programming languages
 ## Go
 mkdir -p ~/go/src
+
+## Purescript
+installpkgyay purescript-bin
 #+end_src
 
 #+begin_src shell

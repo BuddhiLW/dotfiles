@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: latex-leftrightarrow 
-# key: \L
-# --
-\Leftrightarrow $0

@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: meu-snippet 
-# key: <hello
-# --
-
-Hello world! $1
-
-Região dois: $2

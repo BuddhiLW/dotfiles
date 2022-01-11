@@ -1,5 +1,0 @@
-# -*- mode: snippet -*-
-# name: attr-image-size 
-# key: <at
-# --
-#+ATTR_HTML: :width 500px

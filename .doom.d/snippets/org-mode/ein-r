@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: ein-r 
-# key: <er
-# --
-#+begin_src ein-r :session localhost :results output
-$0
-#+end_src

@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: go-import 
-# key: gim
-# --
-import(
-	$0
-)
