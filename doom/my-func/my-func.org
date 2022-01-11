@@ -1,0 +1,199 @@
+#+TITLE: Description and motives for each function
+#+PROPERTY: header-args:emacs-lisp :mkdirp
+
+* Org roam setup
+#+begin_src emacs-lisp :tangle org-roam.el
+(setq org-roam-directory "~/buddhi-roam")
+#+end_src
+
+#+RESULTS:
+: ~/buddhi-roam
+
+* Ein/Babel setup
+
+#+begin_src emacs-lisp :tangle ein-babel.el
+(add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+(add-hook 'org-mode-hook 'org-display-inline-images)
+#+end_src
+
+To execute or export code in =org-mode= code blocks, you'll need to set up =org-babel-load-languages= for each language you'd like to use.  [[https://orgmode.org/worg/org-contrib/babel/languages.html][This page]] documents all of the languages that you can use with =org-babel=.
+
+#+begin_src emacs-lisp :tangle ein-babel.el
+(with-eval-after-load 'org
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (browser . t)
+     (ditaa . t)
+     (R . t)
+     (go . t)
+     ;; (ipython . t)
+     ;; (julia-vterm . t)
+     ;; (julia . t)
+     (ein . t)
+     (ditaa . t)
+     (css . t)
+     (lisp . t)
+     (latex . t)
+     (clojure . t)
+     (clojurescript . t)))
+
+  (push '("conf-unix" . conf-unix) org-src-lang-modes))
+#+end_src
+* Fast Input Method
+For the efficient study of =Mandarin=, I change input methods quite often.
+Therefore, I use a program to make this change in a key-stroke.
+
+#+begin_src emacs-lisp :tangle fast-input-method.el
+;; Input method and key binding configuration.
+(setq alternative-input-methods
+      '(("pyim" . [?\ß]) ;; chinese-tonepy with autocomplete
+        ("chinese-tonepy" . [?\æ])
+        ("chinese-sisheng" . [?\ð])))
+
+(setq default-input-method
+      (caar alternative-input-methods))
+
+(defun toggle-alternative-input-method (method &optional arg interactive)
+  (if arg
+      (toggle-input-method arg interactive)
+    (let ((previous-input-method current-input-method))
+      (when current-input-method
+        (deactivate-input-method))
+      (unless (and previous-input-method
+                   (string= previous-input-method method))
+        (activate-input-method method)))))
+
+(defun reload-alternative-input-methods ()
+  (dolist (config alternative-input-methods)
+    (let ((method (car config)))
+      (global-set-key (cdr config)
+                      `(lambda (&optional arg interactive)
+                         ,(concat "Behaves similar to `toggle-input-method', but uses \""
+                                  method "\" instead of `default-input-method'")
+                         (interactive "P\np")
+                         (toggle-alternative-input-method ,method arg interactive))))))
+
+(reload-alternative-input-methods)
+#+end_src
+
+#+RESULTS:
+
+* Fast =Mandarin= and =default= font size change
+
+The bindings for rapidly accessing these commands will live under =config.el=.
+
+#+begin_src emacs-lisp :tangle lw_chdoom.el
+(defun lw/chdoom (fontsize)
+  (interactive
+   (list (read-number "Font size: "
+                      (or 30))))
+  (set-fontset-font "fontset-default" 'han
+                    (font-spec :family "Sarasa Mono Slab HC" :size fontsize)))
+
+;; (set-face-attribute 'default nil :height 200)
+
+(defun lw/defdoom (fontsize)
+  (interactive
+   (list (read-number "Font size: "
+                      (or 200))))
+  (set-face-attribute 'default nil :height  fontsize))
+#+end_src
+
+* Transparency toggle
+#+begin_src emacs-lisp :tangle transparency.el
+(defun toggle-transparency ()
+  (interactive)
+  (let ((alpha (frame-parameter nil 'alpha)))
+    (set-frame-parameter
+     nil 'alpha
+     (if (eql (cond ((numberp alpha) alpha)
+                    ((numberp (cdr alpha)) (cdr alpha))
+                    ;; Also handle undocumented (<active> <inactive>) form.
+                    ((numberp (cadr alpha)) (cadr alpha)))
+              100)
+         '(100 . 0) '(95 . 100)))))
+
+(global-set-key (kbd "C-c t") 'toggle-transparency)
+#+end_src
+
+#+RESULTS:
+: toggle-transparency
+
+* Vocabulary search
+
+#+begin_src emacs-lisp :tangle vocabulary.el
+(defun lw/find-vocabulary ()
+  (interactive)
+  (find-file "~/PP/Notes/vocabulary.org"))
+
+(defun lw/bing-dict-brief (word &optional sync-p)
+  "Show the explanation of WORD from Bing in the echo area."
+  (interactive
+   (let* ((default (if (use-region-p)
+                       (buffer-substring-no-properties
+                        (region-beginning) (region-end))
+                     (let ((text (thing-at-point 'word)))
+                       (if text (substring-no-properties text)))))
+          (prompt (if (stringp default)
+                      (format "Search Bing dict (default \"%s\"): " default)
+                    "Search Bing dict: "))
+          (string (read-string prompt nil 'bing-dict-history default)))
+     (list string)))
+
+  (and bing-dict-cache-auto-save
+       (not bing-dict--cache)
+       (bing-dict--cache-load))
+
+  (let ((cached-result (and (listp bing-dict--cache)
+                            (car (assoc-default word bing-dict--cache)))))
+    (if cached-result
+        (progn
+          ;; update cached-result's time
+          (setcdr (assoc-default word bing-dict--cache) (time-to-seconds))
+          (message cached-result))
+      (save-match-data
+        (if sync-p
+            (with-current-buffer (url-retrieve-synchronously
+                                  (concat bing-dict--base-url
+                                          (url-hexify-string word))
+                                  t t)
+              (bing-dict-brief-cb nil (decode-coding-string word 'utf-8)))
+          (url-retrieve (concat bing-dict--base-url
+                                (url-hexify-string word))
+                        'bing-dict-brief-cb
+                        `(,(decode-coding-string word 'utf-8))
+                        t
+                        t)))))
+  (lw/find-vocabulary))
+#+end_src
+
+#+RESULTS:
+: lw/bing-dict-brief
+
+* LaTeX compiler call
+** For minted (shell scape)
+
+#+begin_src emacs-lisp :tangle latex-opt.el
+(defun lw/TeX-command-toggle-shell-escape ()
+  "toggles the option --shell-escape from the tex command"
+  (interactive)
+  (setq TeX-command-extra-options
+        (cond ((string-match-p "\\_<--shell-escape\\_>" TeX-command-extra-options)
+               (replace-regexp-in-string "\\_<--shell-escape\\_>" "" TeX-command-extra-options))
+              ((string-empty-p TeX-command-extra-options) "--shell-escape")
+              (t (format "--shell-escape %s" TeX-command-extra-options))))
+  (message "TeX-command-extra-options : `%s'" TeX-command-extra-options))
+#+end_src
+
+#+RESULTS:
+: lw/TeX-command-toggle-shell-escape
+* Make diary entry
+#+begin_src emacs-lisp
+(defun lw/make-diary-entry ()
+  (interactive)
+  (let)
+  (find-file current-diary))
+
+#+end_src

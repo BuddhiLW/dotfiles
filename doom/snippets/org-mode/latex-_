@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name:latex-_ 
+# key: _
+# --
+_{$0}

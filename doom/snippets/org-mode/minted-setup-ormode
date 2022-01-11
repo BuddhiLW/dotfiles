@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: minted-setup-orgmode 
+# key: <ms
+# --
+#+LATEX_COMPILER: xelatex
+
+#+STARTUP: latexpreview
+#+LATEX_HEADER:\usepackage{xcolor} % to access the named colour LightGray
+#+LATEX_HEADER:\definecolor{LightGray}{gray}{0.2}
+#+LATEX_HEADER:\usepackage{minted}
+#+LATEX_HEADER:\usemintedstyle{monokai}
+
+#+LATEX_HEADER: \hypersetup{colorlinks, allcolors=., colorlinks=true, linkcolor={blue!78!white}, urlcolor={purple}, filecolor={winered}}
+#+LATEX_HEADER: \usepackage{minted}
+#+LATEX_HEADER: \usemintedstyle{monokai}
+

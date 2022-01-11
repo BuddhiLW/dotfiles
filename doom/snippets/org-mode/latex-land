@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: latex-land 
+# key: e
+# --
+\, \land \, $0

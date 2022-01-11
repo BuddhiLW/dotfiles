@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: clj boot 
+# key: <cljb
+# --
+#!/usr/bin/env boot

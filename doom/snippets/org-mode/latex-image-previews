@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: setup-preview 
+# key: preview
+# --
+#+startup: latexpreview
+#+startup: imagepreview
+$0

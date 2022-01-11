@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: julia-vterm
+# key: <vj
+# --
+#+begin_src julia :session main :result output
+$0
+#+end_src

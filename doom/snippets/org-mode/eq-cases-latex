@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: eq-cases-latex
+# key: \cases
+# --
+\begin{cases}
+\end{cases}

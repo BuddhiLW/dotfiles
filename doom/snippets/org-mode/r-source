@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: r-sourceblock 
+# key: <r
+# --
+#+begin_src R :session :results output
+$0
+#+end_src
