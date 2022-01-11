@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+mkdir -p ~/.local/share/podman
+ln -fs "$PWD/completion" ~/.local/share/podman/completion

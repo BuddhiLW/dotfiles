@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+
+ln -sf "$PWD/.bashrc" "$HOME/.bashrc"
+ln -sf "$PWD/.dircolors" "$HOME/.dircolors"
+ln -sf "$PWD/.inputrc" "$HOME/.inputrc"
+ln -sf "$PWD/.profile" "$HOME/.profile"
+ln -sf "$PWD/.profile" "$HOME/.bash_profile"
+ln -sf "$PWD/scripts" "$HOME/Scripts"
+
+mkdir -p "$HOME/.local/bin" || true
+ln -sf "$PWD/bin/linux/x86_64/tmatrix" "$HOME/.local/bin/tmatrix"
+ln -sf "$PWD/bin/linux/x86_64/clusterctl" "$HOME/.local/bin/clusterctl"
+ln -sf "$PWD/bin/linux/x86_64/minikube" "$HOME/.local/bin/minikube"
+
+for i in vim lynx gh git tmux docker podman; do
+  cd $i && ./setup
+  cd -
+done

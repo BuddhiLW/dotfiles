@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Wrapper for newsboat to "send" notifications.
+# In reality I'm just parsing and dropping the info
+# about unread stuff into a file, and that file
+# is read and visualized by dwmblocks and dwm.
+
+file="${TMPDIR:-/tmp}/newsboat_notify"
+
+#feeds="$(printf "%s" "$1" | grep -Po '[0-9]+(?= unread feeds)')"
+articles="$(printf "%s" "$1" | grep -Po '[0-9]+(?= unread articles)')"
+
+if [ -z "$articles" ] || [ "$articles" = 0 ]; then
+    echo '' >"$file"
+    chmod 600 -- "$file"
+else
+    fg="22EEFF"
+    bg="092535"
+    output="^b#$bg^^c#$fg^  $articles "
+    echo "$output" >"$file"
+    chmod 600 -- "$file"
+fi
+
+pkill -RTMIN+5 -x dwmblocks

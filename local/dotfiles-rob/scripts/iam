@@ -1,0 +1,110 @@
+#!/bin/bash
+
+declare B=$'\033[1m' X=$'\033[0m'
+[[ ! -t 1 ]] && B= && X=
+
+DIR="$HOME/.local/share/iam"
+[[ -d "$DIR" ]] || mkdir -p "$DIR" &>/dev/null
+
+declare -A modes
+modes[muted]='🔇'
+modes[live]='🔴'
+modes[away]='🐟'
+modes[focusing]='☕'
+modes[working]='🏢'
+modes[chatting]='💬'
+modes[random]='💬'
+modes[ranting]='🤬'
+modes[recording]='🎬'
+modes[tuned]='📻'
+modes[meditative]='📻🧘'
+modes[writing]='✍️'
+modes[partying]='🎉'
+modes[gaming]='🕹️ '
+
+x_modes() {
+  for i in "${!modes[@]}"; do
+    echo "${modes[$i]} ${B}${i^}$X"
+  done
+}
+
+x_live() {
+  ps -ef |grep -v grep| grep obs &>/dev/null
+  test $? && echo "${modes[live]}"
+}
+
+_basic() {
+  local message="$*" buf
+  [[ -z "$message" ]] && return 1
+  buf="${modes[$CMD]} $message"
+  #[[ -n "$(x_muted)" ]] && buf="${buf/\ /\ ${modes[muted]}\ }"
+  t "$buf" 2>/dev/null
+  echo "$CMD" > "$DIR/mode"
+}
+
+x_working() { _basic "$@"; }
+x_chatting() { _basic "$@"; }
+x_ranting() { _basic "$@"; }
+x_partying() { _basic "$@"; }
+x_recording() { _basic "$@"; }
+x_writing() { _basic "$@"; }
+x_tuned() { _basic "tuned to $@"; }
+x_meditative() { _basic "Meditative https://open.spotify.com/playlist/35fMnNReBETCnQ0CH5CHug"; }
+x_random() { _basic "saying and doing random things"; }
+x_gaming() {  _basic "$@"; }
+x_focusing() {  _basic "$@"; }
+x_away() { _basic "$@"; }
+x_muted() {
+  [[ -e "$DIR/muted" ]] && echo "${modes[muted]}" && return 0
+  return 1
+}
+x_mute() { touch "$DIR/muted"; }
+x_unmute() { rm "$DIR/muted" &>/dev/null; }
+x_mode() {
+  local mode muted live
+  #live=$(x_live)
+  [[ -e "$DIR/mode" ]] || return 1
+  mode="$(<"$DIR/mode")"
+  x_muted &>/dev/null && muted=muted
+  if [[ $1 = emoji ]]; then
+    printf "%s" "${modes[$mode]}"
+    [[ -n "$muted" ]] && echo -n " ${modes[$muted]}"
+    #echo " ${modes[live]}"
+  else
+    printf "%s" "$mode"
+    [[ -n "$muted" ]] && echo -n " $muted"
+    #[[ -n "$live" ]] && echo " live"
+  fi
+}
+
+#--------------------- completion and delegation --------------------
+
+while IFS= read -r line; do
+    [[ $line =~ ^declare\ -f\ x_ ]] || continue
+    COMMANDS+=( "${line##declare -f x_}" )
+done < <(declare -F)
+
+if [[ -n $COMP_LINE ]]; then
+    line=${COMP_LINE#* }
+    for c in "${COMMANDS[@]}"; do
+        [[ ${c:0:${#line}} == "${line,,}" ]] && echo "$c"
+    done
+    exit
+fi
+
+EXE="${0##*/}"
+for c in "${COMMANDS[@]}"; do
+    if [[ $c == "$EXE" ]]; then
+        "x_$EXE" "$@"
+        exit $?
+    fi
+done
+
+CMD="$1"; shift
+for c in "${COMMANDS[@]}"; do
+    if [[ $c == "$CMD" ]]; then
+        "x_$CMD" "$@"
+        exit $?
+    fi
+done
+

@@ -1,0 +1,24 @@
+#!/usr/bin/sh
+
+col1="#a79d1f"
+col2="#ffd235"
+
+#hour="$(( ( ($(date +%H) - 1) % 12) + 1 ))"
+#minute="$(date +%M)"
+#
+#case "$hour" in
+#    "1")  if [ "$minute" -lt 30 ]; then icon="🕐"; else icon="🕜"; fi ;;
+#    "2")  if [ "$minute" -lt 30 ]; then icon="🕑"; else icon="🕝"; fi ;;
+#    "3")  if [ "$minute" -lt 30 ]; then icon="🕒"; else icon="🕞"; fi ;;
+#    "4")  if [ "$minute" -lt 30 ]; then icon="🕓"; else icon="🕟"; fi ;;
+#    "5")  if [ "$minute" -lt 30 ]; then icon="🕔"; else icon="🕠"; fi ;;
+#    "6")  if [ "$minute" -lt 30 ]; then icon="🕕"; else icon="🕡"; fi ;;
+#    "7")  if [ "$minute" -lt 30 ]; then icon="🕖"; else icon="🕢"; fi ;;
+#    "8")  if [ "$minute" -lt 30 ]; then icon="🕗"; else icon="🕣"; fi ;;
+#    "9")  if [ "$minute" -lt 30 ]; then icon="🕘"; else icon="🕤"; fi ;;
+#    "10") if [ "$minute" -lt 30 ]; then icon="🕙"; else icon="🕥"; fi ;;
+#    "11") if [ "$minute" -lt 30 ]; then icon="🕚"; else icon="🕦"; fi ;;
+#    "12") if [ "$minute" -lt 30 ]; then icon="🕛"; else icon="🕧"; fi ;;
+#esac
+
+echo "^c${col1}^^f2^^c${col2}^$(date +%T)"

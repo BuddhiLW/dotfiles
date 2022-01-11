@@ -1,0 +1,7 @@
+#!/usr/bin/sh
+
+icon=
+col1="#b09050"
+col2="#d0b070"
+
+df -h | awk "/\/$/ { print \"^c$col1^$icon^f3^^c$col2^\"\$4 }"

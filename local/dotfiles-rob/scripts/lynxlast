@@ -1,0 +1,5 @@
+#!/bin/bash
+
+select url in $(urls); do
+    lynx "$url"
+done

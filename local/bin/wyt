@@ -1,0 +1,5 @@
+#!/bin/sh
+
+watch=$(echo "$*" | python ~/.local/bin/youtube-watch.py)
+url=$(echo "https://www.youtube.com"$watch)
+freetube $url

@@ -1,0 +1,12 @@
+#!/usr/bin/sh
+
+# This script outputs the percentage of RAM used.
+# It is used by dwmblocks.
+# Dependencies:
+# - bc
+
+percent="$(free | awk '/^Mem/ { print $3"*100/"$2 }' | bc)"
+col1="^c#337777^"
+col2="^c#77FFFF^"
+
+echo "${col1}^f3^${col2}${percent}%"
