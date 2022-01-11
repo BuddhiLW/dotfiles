@@ -1,0 +1,13 @@
+{"_id":"backendPreference","value":"invidious"}
+{"_id":"barColor","value":true}
+{"_id":"bounds","value":{"x":1060,"y":40,"width":826,"height":1027,"maximized":false}}
+{"_id":"defaultInvidiousInstance","value":"https://yewtu.be"}
+{"_id":"defaultProfile","value":"xLlMTIh6EUM3JLN9"}
+{"_id":"defaultQuality","value":"1080"}
+{"_id":"enableSearchSuggestions","value":false}
+{"_id":"hideLabelsSideBar","value":true}
+{"_id":"hideWatchedSubs","value":true}
+{"_id":"proxyProtocol","value":"https"}
+{"_id":"uiScale","value":110}
+{"_id":"useProxy","value":false}
+{"_id":"useRssFeeds","value":true}
