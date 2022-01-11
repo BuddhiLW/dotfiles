@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name:latex-case 
+# key: <lc
+# --
+\begin{cases}
+$1
+\end{cases}

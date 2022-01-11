@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name:dfrac-latex 
+# key: \df
+# --
+\dfrac{$1}{$2}

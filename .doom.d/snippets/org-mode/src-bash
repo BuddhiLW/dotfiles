@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: src-bash
+# key: <sh
+# --
+#+begin_src shell
+$0
+#+end_src
