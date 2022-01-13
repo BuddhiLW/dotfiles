@@ -342,6 +342,9 @@
         :desc "New default size" "d" #'lw/defdoom
         :desc "New ch-default size" "c" #'lw/chdoom)))
 
+(map! :leader
+      :desc "Yank history" "y" #'consult-yank-from-kill-ring)
+
 (setq elfeed-feeds
       '("http://nullprogram.com/feed/"
         "https://planet.emacslife.com/atom.xml"
@@ -383,6 +386,10 @@
 
 (use-package! org-ref
   :config
+  (require 'org-ref-helm)
+  (require 'org-ref-arxiv)
+  (require 'org-ref-scopus)
+  (require 'org-ref-wos)
   (map! :leader
         (:prefix-map ("b" . "buddhi")
          (:prefix ("l" . "latex")
@@ -392,11 +399,14 @@
            :desc "Arxiv Search" "s" #'arxiv-search
            :desc "Arxiv Download" "d" #'arxiv-download-pdf-export-bibtex
            :desc "GScholar Search" "g" #'gscholar-bibtex))))
-  (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f"))
-  (require 'org-ref-helm)
-  (require 'org-ref-arxiv)
-  (require 'org-ref-scopus)
-  (require 'org-ref-wos))
+  (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f")))
+
+(use-package! arxiv-mode
+  :config
+  (setq arxiv-default-download-folder
+        (substitute-in-file-name "$HOME/Documents/Reseach/"))
+  (setq arxiv-default-bibliography
+        (substitute-in-file-name "$HOME/Bibliography/collection.bib")))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
@@ -434,3 +444,7 @@
     (deft-use-filter-string-for-filename t)
     (deft-default-extension "org")
     (deft-directory org-roam-directory))
+
+(use-package! pdf-tools)
+
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 3.0))

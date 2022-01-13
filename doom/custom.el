@@ -4,12 +4,12 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(TeX-engine 'default)
- '(TeX-save-query t)
+ '(TeX-save-query t t)
  '(ansi-color-names-vector
    ["#232530" "#e95678" "#09f7a0" "#fab795" "#21bfc2" "#6c6f93" "#59e3e3" "#c7c9cb"])
  '(conda-anaconda-home "/opt/anaconda/")
  '(custom-safe-themes
-   '("850bb46cc41d8a28669f78b98db04a46053eca663db71a001b40288a9b36796c" "23c806e34594a583ea5bbf5adf9a964afe4f28b4467d28777bcba0d35aa0872e" default))
+   '("8a379e7ac3a57e64de672dd744d4730b3bdb88ae328e8106f95cd81cbd44e0b6" "2035a16494e06636134de6d572ec47c30e26c3447eafeb6d3a9e8aee73732396" "850bb46cc41d8a28669f78b98db04a46053eca663db71a001b40288a9b36796c" "23c806e34594a583ea5bbf5adf9a964afe4f28b4467d28777bcba0d35aa0872e" default))
  '(exwm-floating-border-color "#16161c")
  '(fci-rule-color "#f9cec3")
  '(helm-minibuffer-history-key "M-p")
@@ -24,7 +24,7 @@
      ("ein-julia" . julia)))
  '(objed-cursor-color "#e95678")
  '(package-selected-packages
-   '(pdf-tools celestial-mode-line arxiv-mode org-ref gscholar-bibtex helm-bibtex bing-dict pyim-basedict undo-tree ox-hugo js-comint impatient-mode elnode conda))
+   '(ewal-doom-themes pdf-tools celestial-mode-line arxiv-mode org-ref gscholar-bibtex helm-bibtex bing-dict pyim-basedict undo-tree ox-hugo js-comint impatient-mode elnode conda))
  '(pdf-view-midnight-colors (cons "#c7c9cb" "#232530"))
  '(rustic-ansi-faces
    ["#232530" "#e95678" "#09f7a0" "#fab795" "#21bfc2" "#6c6f93" "#59e3e3" "#c7c9cb"])
@@ -56,6 +56,21 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ 
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ 
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ 
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
