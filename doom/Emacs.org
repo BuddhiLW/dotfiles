@@ -414,6 +414,11 @@ This change the default exportation options to =LaTeX=.
 #+RESULTS:
 : erc-colorize
 * Diary
+
+#+begin_src emacs-lisp
+(load! "./my-func/diary.el")
+#+end_src
+
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix-map ("b" . "buddhi")

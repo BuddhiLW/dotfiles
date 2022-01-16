@@ -37,3 +37,25 @@ installpkgyay purescript-bin
 ## LaTeX
 pip install Pygments
 #+end_src
+* Programs and dependencies
+
+** Neomutt
+#+begin_src shell
+yay -S neomutt curl isync msmtp pass pam-gnupg notmuch abook urlview
+#+end_src
+
+** ffsubsync (mpv)
+*** pip
+#+begin_src shell
+pip install --upgrade ffsubsync
+#+end_src
+*** gitclone (mpv configs)
+#+begin_src shell
+git clone 'https://github.com/Ajatt-Tools/autosubsync-mpv' ~/.config/mpv/scripts/auto
+#+end_src
+*** How to use it,
+
+#+begin_src shell
+mpv Documentaries/The-War-on-Democracy.mp4  --sub-paths=subs/TheWarOnDem
+ocracy/TheWD.srt
+#+end_src

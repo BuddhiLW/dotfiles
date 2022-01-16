@@ -277,6 +277,8 @@
   (add-hook! erc-twitch-mode-hook #'erc-colorize-enable)
   (add-hook! erc-twitch-mode-hook #'erc-hl-nicks-enable))
 
+(load! "./my-func/diary.el")
+
 (map! :leader
       (:prefix-map ("b" . "buddhi")
         :desc "Diary entry" "d" #'lw/create-or-access-diary))
