@@ -121,9 +121,11 @@
 ** Initial screen
 
 #+begin_src emacs-lisp
+(load! "./my-func/dashboard.el")
 #+end_src
 
 #+RESULTS:
+: t
 
 Lastly, the doom dashboard "useful commands" are no longer useful to me.
 So, we'll disable them and then for a particularly /clean/ look disable
@@ -177,11 +179,14 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 
 Discussion on: https://emacs-china.org/t/org-mode/440/89
 #+begin_src emacs-lisp :tangle packages.el
-;; (package! zh-align :recipe
-;;   (:host github
-;;    :repo "https://github.com/chen-chao/zh-align.el"
-;;    :branch "master"))
+(package! zh-align
+  :recipe (:host github
+           :repo "chen-chao/zh-align.el"))      
 #+end_src
+
+#+RESULTS:
+| zh-align | :modules | ((:private . Emacs) (:private . modules)) | :recipe | (:host github :repo chen-chao/zh-align.el) |
+
 * Chinese setup with guesses
 ** Input
 #+begin_src emacs-lisp
@@ -392,3 +397,25 @@ This change the default exportation options to =LaTeX=.
 
 #+RESULTS:
 | :foreground | default | :background | default | :scale | 3.0 | :html-foreground | Black | :html-background | Transparent | :html-scale | 1.0 | :matchers | (begin $1 $ $$ \( \[) |
+** Julia
+
+* ERC/IRC Twitch
+
+#+begin_src emacs-lisp
+(use-package! erc-hl-nicks)
+(use-package! erc-colorize)
+
+(use-package! erc-twitch
+  :config
+  (add-hook! erc-twitch-mode-hook #'erc-colorize-enable)
+  (add-hook! erc-twitch-mode-hook #'erc-hl-nicks-enable))
+#+end_src
+
+#+RESULTS:
+: erc-colorize
+* Diary
+#+begin_src emacs-lisp
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+        :desc "Diary entry" "d" #'lw/create-or-access-diary))
+#+end_src

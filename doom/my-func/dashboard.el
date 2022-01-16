@@ -1,5 +1,5 @@
-(load-file "./splash-layout.el")
-(load-file "./splash-phrase.el")
+(load-file (substitute-in-file-name "$HOME/.doom.d/my-func/splash-layout.el"))
+(load-file (substitute-in-file-name "$HOME/.doom.d/my-func/splash-phrase.el"))
 
 (defadvice! doom-dashboard-widget-loaded-with-phrase ()
   :override #'doom-dashboard-widget-loaded
