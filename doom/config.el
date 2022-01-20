@@ -277,8 +277,21 @@
   (add-hook! erc-twitch-mode-hook #'erc-colorize-enable)
   (add-hook! erc-twitch-mode-hook #'erc-hl-nicks-enable))
 
+(use-package! hidepw)
+
+(use-package! helm-pass)
+
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+        :desc "Password list" "p" #'helm-pass))
+
 (load! "./my-func/diary.el")
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
         :desc "Diary entry" "d" #'lw/create-or-access-diary))
+
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("n" . "navigate to")
+        :desc "Function at point" "f" #'find-function-at-point)))

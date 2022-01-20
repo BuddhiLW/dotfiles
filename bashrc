@@ -230,7 +230,9 @@ alias ep="emacs --with-profile progress"
 alias edoom="emacs --with-profile doom"
 alias e="emacs --with-profile"
 alias ecf="$DOOMDIR/config"
+alias lynx="lynx --display_charset=utf-8"
 # alias emacs="emacsclient -t"
+#
 alias '?'=duck
 alias '??'=google
 alias '???'=bing

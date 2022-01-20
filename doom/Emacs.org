@@ -413,7 +413,31 @@ This change the default exportation options to =LaTeX=.
 
 #+RESULTS:
 : erc-colorize
-* Diary
+* Pass
+#+begin_src emacs-lisp
+(use-package! hidepw)
+#+end_src
+
+#+RESULTS:
+: hidepw
+
+#+begin_src emacs-lisp
+(use-package! helm-pass)
+#+end_src
+
+#+RESULTS:
+: helm-pass
+
+#+begin_src emacs-lisp
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+        :desc "Password list" "p" #'helm-pass))
+#+end_src
+
+#+RESULTS:
+: helm-pass
+* Navigation
+** Diary
 
 #+begin_src emacs-lisp
 (load! "./my-func/diary.el")
@@ -424,3 +448,14 @@ This change the default exportation options to =LaTeX=.
       (:prefix-map ("b" . "buddhi")
         :desc "Diary entry" "d" #'lw/create-or-access-diary))
 #+end_src
+
+** Function definitions
+#+begin_src emacs-lisp
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("n" . "navigate to")
+        :desc "Function at point" "f" #'find-function-at-point)))
+#+end_src
+
+#+RESULTS:
+: find-function-at-point

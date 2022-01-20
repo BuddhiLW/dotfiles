@@ -23,6 +23,7 @@ _use_wal()
 	file_path=$1
 	xwinwrap_args="-g 2560x1080+1920 -ni -b -st -un -o 1.0 -ov -debug"
 	mpv_args="-wid WID --loop --no-audio --no-resume-playback --panscan=1.0"
+
 	if [ "$debug" = "true" ];
 	then
 		xwinwrap $xwinwrap_args -- mpv $mpv_args $file_path
