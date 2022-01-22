@@ -114,6 +114,21 @@
 
 (load! "./my-func/transparency.el")
 
+(use-package! org
+  :config
+  (setq org-ellipsis " ▾")
+  (setq org-agenda-start-with-log-mode t)
+  (setq org-log-done 'time)
+  (setq org-log-into-drawer t)
+  (setq org-agenda-files
+        '("~/PP/Notes/Agenda/Tasks.org"
+          "~/PP/Notes/Agenda/Habits.org"
+          "~/PP/Notes/Agenda/IMPA.org"
+          "~/PP/Notes/Agenda/ProcSel.org"
+          "~/PP/Notes/Agenda/University.org"
+          "~/PP/Notes/Agenda/Research.org"
+          "~/PP/Notes/Agenda/CafeDoBem")))
+
 (use-package! conda
   :config
   (setq
@@ -295,3 +310,12 @@
       (:prefix-map ("b" . "buddhi")
        (:prefix ("n" . "navigate to")
         :desc "Function at point" "f" #'find-function-at-point)))
+
+(map! :leader
+      :desc "Magit" "m" #'magit)
+
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+                (:prefix ("n" . "navigate to")
+                 :desc "Emacs.org" "e"  #'lw/goto-emacs-org
+                 :desc "my-func.org" "F" #'lw/goto-my-func-org)))

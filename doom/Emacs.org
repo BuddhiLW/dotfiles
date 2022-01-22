@@ -140,6 +140,23 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 #+begin_src emacs-lisp
 (load! "./my-func/transparency.el")
 #+end_src
+** Org
+#+begin_src emacs-lisp
+(use-package! org
+  :config
+  (setq org-ellipsis " ▾")
+  (setq org-agenda-start-with-log-mode t)
+  (setq org-log-done 'time)
+  (setq org-log-into-drawer t)
+  (setq org-agenda-files
+        '("~/PP/Notes/Agenda/Tasks.org"
+          "~/PP/Notes/Agenda/Habits.org"
+          "~/PP/Notes/Agenda/IMPA.org"
+          "~/PP/Notes/Agenda/ProcSel.org"
+          "~/PP/Notes/Agenda/University.org"
+          "~/PP/Notes/Agenda/Research.org"
+          "~/PP/Notes/Agenda/CafeDoBem")))
+#+end_src
 
 * Anaconda
 #+begin_src emacs-lisp
@@ -459,3 +476,21 @@ This change the default exportation options to =LaTeX=.
 
 #+RESULTS:
 : find-function-at-point
+* Magit
+#+begin_src emacs-lisp
+(map! :leader
+      :desc "Magit" "m" #'magit)
+#+end_src
+
+* Go to =Emacs.org= and =my-func.org=
+
+#+begin_src emacs-lisp
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+                (:prefix ("n" . "navigate to")
+                 :desc "Emacs.org" "e"  #'lw/goto-emacs-org
+                 :desc "my-func.org" "F" #'lw/goto-my-func-org)))
+#+end_src
+
+#+RESULTS:
+: lw/goto-my-func-org

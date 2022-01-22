@@ -420,6 +420,20 @@ The bindings for rapidly accessing these commands will live under =config.el=.
 ;;        (message (concat  "File " (concat filePath " already exists")))
 ;;      (with-temp-buffer (write-file Pathfile))))
 #+end_src
+* Navigation to core files
+#+begin_src emacs-lisp :tangle goto.el
+(defun lw/goto-emacs-org ()
+  "Open =Emacs.org= file which maps to init.el."
+  (interactive)
+  (find-file (expand-file-name "Emacs.org" doom-private-dir)))
+  ;; (goto-char
+  ;;  (or (save-excursion
+  ;;        (goto-char (point-min))
+  ;;        (search-forward "(doom!" nil t))
+  ;;      (point))))
 
-#+RESULTS:
-: lw/create-or-access-diary
+(defun lw/goto-my-func-org ()
+  "Open =my-func.org= file which maps to homecooked function."
+  (interactive)
+  (find-file (expand-file-name "my-func/my-func.org" doom-private-dir)))
+#+end_src
