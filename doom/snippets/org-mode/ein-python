@@ -3,5 +3,5 @@
 # key: <ep
 # --
 #+begin_src ein-python :session localhost :results output
-$1
+$0
 #+end_src

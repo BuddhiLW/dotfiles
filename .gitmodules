@@ -1,0 +1,9 @@
+[submodule "doom/ob-julia"]
+	path = doom/ob-julia
+	url = https://github.com/gjkerns/ob-julia.git
+[submodule "doom/ob-julia-vterm.el"]
+	path = doom/ob-julia-vterm.el
+	url = https://github.com/shg/ob-julia-vterm.el.git
+[submodule "doom/julia-vterm.el"]
+	path = doom/julia-vterm.el
+	url = https://github.com/shg/julia-vterm.el.git

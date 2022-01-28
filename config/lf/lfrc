@@ -1,3 +1,5 @@
+set ratios 1:2:3
+set cleaner ~/.config/lf/cleaner
 # Luke's lf settings
 
 # Basic vars
@@ -104,6 +106,9 @@ map <c-y> up
 map V push :!nvim<space>
 
 map W $setsid -f $TERMINAL >/dev/null 2>&1
+
+set previewer ~/.config/lf/preview
+set cleaner ~/.config/lf/cleaner
 
 # Source Bookmarks
 source "~/.config/lf/shortcutrc"

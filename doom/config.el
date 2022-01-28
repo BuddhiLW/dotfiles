@@ -142,8 +142,8 @@
 (load! "./my-func/ein-babel.el")
 
 (setq doom-font
- (set-fontset-font "fontset-default" 'han
-                   (font-spec :family "Sarasa Mono Slab HC")))
+      (set-fontset-font "fontset-default" 'han
+                        (font-spec :family "Sarasa Mono Slab HC")))
 
 (load! "./my-func/lw_chdoom.el")
 
@@ -151,11 +151,11 @@
 
 (use-package! pyim
   :config
-        (require 'pyim-basedict) ; 拼音词库设置，五笔用户 *不需要* 此行设置
-        (pyim-basedict-enable)   ; 拼音词库，五笔用户 *不需要* 此行设置
-        (setq default-input-method "pyim")
-        (setq pyim-page-length 10)
-        (pyim-isearch-mode 1))
+  (require 'pyim-basedict) ; 拼音词库设置，五笔用户 *不需要* 此行设置
+  (pyim-basedict-enable)   ; 拼音词库，五笔用户 *不需要* 此行设置
+  (setq default-input-method "pyim")
+  (setq pyim-page-length 10)
+  (pyim-isearch-mode 1))
 
 (use-package! bing-dict
   :config
@@ -164,7 +164,7 @@
          (:prefix ("b" . "bing")
           :desc "Bing dictionary brief" "d" #'lw/bing-dict-brief
           :desc "Personal vocabulary" "p" #'lw/find-vocabulary)))
-;; :desc "Activate synonym" "s" #'lw/bing-synonym))))
+  ;; :desc "Activate synonym" "s" #'lw/bing-synonym))))
 
   (setq bing-dict-add-to-kill-ring t)
   (setq bing-dict-show-thesaurus 'both)
@@ -209,9 +209,9 @@
 ;;               TeX-engine 'xetex)     ; optional
 
 (map! :leader
-        (:prefix-map ("b" . "buddhi")
-         (:prefix ("l" . "latex")
-          :desc "Shell scape" "s" #'lw/TeX-command-toggle-shell-escape)))
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("l" . "latex")
+        :desc "Shell scape" "s" #'lw/TeX-command-toggle-shell-escape)))
 
 (use-package! helm-bibtex)
 
@@ -266,19 +266,19 @@
       (:prefix-map ("b" . "buddhi")
        :desc "Sunrise sunset info" "µ" #'lw/sunset))
 
-  (use-package! deft
-    :bind ("<f2>" . deft)
-    :commands (deft)
-    :config (setq deft-directory "~/buddhi-roam/"
-                  deft-extensions '("md" "org"))
-    :after org
-    :bind
-    ("C-c n d" . deft)
-    :custom
-    (deft-recursive t)
-    (deft-use-filter-string-for-filename t)
-    (deft-default-extension "org")
-    (deft-directory org-roam-directory))
+(use-package! deft
+  :bind ("<f2>" . deft)
+  :commands (deft)
+  :config (setq deft-directory "~/buddhi-roam/"
+                deft-extensions '("md" "org"))
+  :after org
+  :bind
+  ("C-c n d" . deft)
+  :custom
+  (deft-recursive t)
+  (deft-use-filter-string-for-filename t)
+  (deft-default-extension "org")
+  (deft-directory org-roam-directory))
 
 (use-package! pdf-tools)
 
@@ -298,13 +298,13 @@
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-        :desc "Password list" "p" #'helm-pass))
+       :desc "Password list" "p" #'helm-pass))
 
 (load! "./my-func/diary.el")
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-        :desc "Diary entry" "d" #'lw/create-or-access-diary))
+       :desc "Diary entry" "d" #'lw/create-or-access-diary))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
@@ -316,6 +316,77 @@
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-                (:prefix ("n" . "navigate to")
-                 :desc "Emacs.org" "e"  #'lw/goto-emacs-org
-                 :desc "my-func.org" "F" #'lw/goto-my-func-org)))
+       (:prefix ("n" . "navigate to")
+        :desc "Emacs.org" "e"  #'lw/goto-emacs-org
+        :desc "my-func.org" "F" #'lw/goto-my-func-org)))
+
+(use-package! company-coq)
+(use-package! coq-commenter)
+(use-package! proof-general
+  :config
+  (add-hook! 'coq-mode-hook #'company-coq-mode)
+  (add-hook! 'coq-mode-hook #'coq-commenter-mode))
+
+(setq inferior-julia-program-name "julia")
+
+(package! julia-vterm
+  :recipe (:host github
+           :repo "shg/julia-vterm.el"))
+
+(package-install-file "~/.doom.d/julia-vterm.el/julia-vterm.el")
+
+(package! ob-julia-vterm
+  :recipe (:host github
+           :repo "shg/ob-julia-vterm.el"))
+
+(package-install-file "~/.doom.d/ob-julia-vterm.el/ob-julia-vterm.el")
+
+(package! ob-julia
+  :recipe (:host github
+           :repo "gjkernsx/ob-julia"))
+
+;; (package-install-file "~/.doom.d/ob-julia/ob-julia.el")
+
+(add-hook 'julia-mode-hook #'julia-vterm-mode)
+(setq julia-vterm-repl-program "/usr/bin/julia -t 4")
+
+(require 'org)
+(add-to-list 'org-babel-load-languages '(julia-vterm . t))
+(org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)
+(defalias 'org-babel-execute:julia 'org-babel-execute:julia-vterm)
+
+(add-to-list 'load-path "~/.doom.d/ob-julia/ob-julia.el")
+
+;; (with-eval-after-load 'org
+;;   (org-babel-do-load-languages
+;;    'org-babel-load-languages
+;;    '((emacs-lisp . t)
+;;      (python . t)
+;;      (browser . t)
+;;      (ditaa . t)
+;;      (R . t)
+;;      (go . t)
+;;      ;; (ipython . t)
+;;      (julia-vterm . t)
+;;      ;; (julia . t)
+;;      (ein . t)
+;;      (ditaa . t)
+;;      (css . t)
+;;      (lisp . t)
+;;      (latex . t)
+;;      (clojure . t)
+;;      (clojurescript . t)))
+;;   (push '("conf-unix" . conf-unix) org-src-lang-modes))
+
+(custom-set-variables
+ '(ob-ein-languages
+   '(("ein-python" . python)
+     ("ein-R" . R)
+     ("ein-r" . R)
+     ("ein-julia" . julia))))
+
+(use-package julia-mode)
+
+(use-package julia-snail)
+
+   (setq inferior-julia-program-name "julia")

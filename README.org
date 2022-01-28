@@ -59,3 +59,9 @@ git clone 'https://github.com/Ajatt-Tools/autosubsync-mpv' ~/.config/mpv/scripts
 mpv Documentaries/The-War-on-Democracy.mp4  --sub-paths=subs/TheWarOnDem
 ocracy/TheWD.srt
 #+end_src
+
+** lf (list file)
+*** Previewing
+#+begin_src shell
+yay -Sy chafa bat ffmpegthumbnailer poppler epub-thumbnailer-git wkhtmltopdf catdoc docx2tex docx2txt odt2tex gnumeric exiftool iso-info transmission-cli
+#+end_src

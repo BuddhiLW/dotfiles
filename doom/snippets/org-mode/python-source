@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: python
+# key: <py
+# --
+#+begin_src python :session localhost :results both
+$0
+#+end_src
