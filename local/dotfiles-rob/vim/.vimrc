@@ -8,6 +8,8 @@ set nocompatible
 
 "####################### Vi Compatible (~/.exrc) #######################
 
+set syntax
+
 " automatically indent new lines
 set autoindent
 

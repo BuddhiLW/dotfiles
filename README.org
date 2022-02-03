@@ -1,10 +1,17 @@
 #+TITLE: Install documentation
 
+These are my configurations. They don't work as automatically as I aim them to
+work. Be aware this is a work on progress.
+
+OS intended: fresh pacman-derived (Manjaro, Arch, Artix etc.) distros
+
 * What the script does
+
+It should be self-explanatory. Any need of clarification, issue an issue in =github=.
 
 #+begin_src shell :tangle no
 #!/usr/bin/env bash
-## Helper function
+## Helper function: install with dependency; no questions asked; errors are shown to &1
 installpkg(){ pacman --noconfirm --needed -S "$1" >/dev/null 2>&1 ;}
 installpkgyay(){ yay --noconfirm --needed -S "$1" >/dev/null 2>&1 ;}
 
@@ -37,6 +44,7 @@ installpkgyay purescript-bin
 ## LaTeX
 pip install Pygments
 #+end_src
+
 * Programs and dependencies
 
 ** Neomutt

@@ -5,12 +5,12 @@
 
 (defun lw/create-or-access-diary ()
   (interactive)
-  (if (not (file-exists-p (lw/diary-day-entry))) ;; if the file doesn't exist
-      (or (write-region ;; write (text into it) and create the directory
-           (format "#+TITLE: %s" (shell-command-to-string "echo -n $(date +%Y-%m-%d) \n")) ;; (text into it) -- Title
-           nil ;; just works
-           (lw/diary-day-entry)) ;; name of the file written to
-        (find-file (lw/diary-day-entry))) ;; it file already exists, just navigate to it
+  (if (not (file-exists-p (lw/diary-day-entry)))
+      (or (write-region
+           (format "#+TITLE: %s" (shell-command-to-string "echo -n $(date +%Y-%m-%d) \n"))
+           nil
+           (lw/diary-day-entry))
+        (find-file (lw/diary-day-entry)))
     (find-file (lw/diary-day-entry))))
 
 ;; (defun fzl-create-empty-file-if-no-exist2022-01-16.orgs(filePath)

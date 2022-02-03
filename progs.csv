@@ -1,6 +1,6 @@
 #TAG,NAME IN REPO (or git url),PURPOSE (should be a verb phrase to sound right while installing)
-,xorg-server,"is the graphical server."
-,xorg-xwininfo,"allows querying information about windows."
+,xorg-server,"is the graphical server.",
+,xorg-xwininfo,"allows querying information about windows.",
 ,xorg-xinit,"starts the graphical server."
 ,ttf-linux-libertine,"provides the sans and serif fonts for LARBS."
 A,lf-git,"is an extensive terminal file manager that everyone likes."
