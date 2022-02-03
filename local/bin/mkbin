@@ -1,0 +1,13 @@
+#!/usr/bin/bash
+
+script_name="$@"
+path_file=".local/bin/$script_name"
+
+if ! [ -e $path_file  ];
+then
+	touch $path_file && echo "#!/usr/bin/bash" > $path_file
+	chomod +x $path_file
+	vim $path_file
+else
+	vim $path_file
+fi
