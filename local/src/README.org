@@ -1,0 +1,8 @@
+#+TITLE: Readme
+
+* TODO DWM keybindings-setup
+* TODO DWM-blocks
+** TODO DWM-blocks capabilities
+** TODO DWM-blocks dependencies
+* TODO Brief mention on st
+* License
