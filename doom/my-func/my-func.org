@@ -189,14 +189,6 @@ The bindings for rapidly accessing these commands will live under =config.el=.
 
 #+RESULTS:
 : lw/TeX-command-toggle-shell-escape
-* Make diary entry
-#+begin_src emacs-lisp
-(defun lw/make-diary-entry ()
-  (interactive)
-  (let)
-  (find-file current-diary))
-
-#+end_src
 * Startup dashboard
 
 ** The layout of the dashboard
@@ -397,6 +389,7 @@ The bindings for rapidly accessing these commands will live under =config.el=.
    (shell-command-to-string "fortune")
    "\n"))
 #+end_src
+
 * Diary
 #+begin_src emacs-lisp :tangle diary.el
 (defconst diary-dir (expand-file-name "~/PP/Notes/Diary/"))

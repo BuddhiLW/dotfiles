@@ -1,0 +1,27 @@
+00:00:00.946091 VirtualBox GUI VM Selector Window 6.1.32 r149290 linux.amd64 (Jan 19 2022 07:56:17) release log
+00:00:00.946093 Log opened 2022-02-03T01:13:18.030318000Z
+00:00:00.946093 Build Type: release
+00:00:00.946096 OS Product: Linux
+00:00:00.946097 OS Release: 5.16.3-artix1-1
+00:00:00.946098 OS Version: #1 SMP PREEMPT Thu, 27 Jan 2022 18:27:00 +0000
+00:00:00.946127 DMI Product Name: G3 3590
+00:00:00.946135 DMI Product Version: 
+00:00:00.946139 Firmware type: UEFI
+00:00:00.947187 Secure Boot: Disabled
+00:00:00.947226 Host RAM: 7777MB (7.5GB) total, 6017MB (5.8GB) available
+00:00:00.947230 Executable: /usr/lib/virtualbox/VirtualBox
+00:00:00.947231 Process ID: 30595
+00:00:00.947231 Package type: LINUX_64BITS_GENERIC (OSE)
+00:00:00.947278 Qt version: 5.15.2
+00:00:01.125265 GUI: UIMediumEnumerator: Medium-enumeration started...
+00:00:01.877451 GUI: UIDesktopWidgetWatchdog::sltHandleHostScreenAvailableGeometryCalculated: Screen 0 work area is actually resized to: 1054x30 x 826x1031
+00:00:01.881757 GUI: UIDesktopWidgetWatchdog::sltHandleHostScreenAvailableGeometryCalculated: Screen 1 work area is actually resized to: 30x33 x 1854x1031
+00:00:01.913529 GUI: UIMediumEnumerator: Medium-enumeration finished!
+00:00:20.912219 GUI: UIMediumEnumerator: Medium with key={{21d3d5b8-a557-49ae-a2e5-28f6dfc97e1f}} created
+00:00:23.940609 GUI: UIMediumEnumerator: Medium-enumeration finished!
+00:00:34.254297 GUI: UIMediumEnumerator: Medium-enumeration finished!
+00:00:34.264330 GUI: UIMediumEnumerator: Medium-enumeration finished!
+00:01:06.248860 GUI: UIMediumEnumerator: Medium-enumeration finished!
+00:01:15.008525 GUI: UIMediumEnumerator: Medium-enumeration finished!
+00:03:56.187581 GUI: UIMediumEnumerator: Medium-enumeration finished!
+00:04:32.322394 GUI: UIMediumEnumerator: Medium-enumeration finished!

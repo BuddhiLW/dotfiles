@@ -306,6 +306,15 @@
       (:prefix-map ("b" . "buddhi")
        :desc "Diary entry" "d" #'lw/create-or-access-diary))
 
+(defun lw/find-evildeeds ()
+  (interactive)
+  (find-file (getenv "EVILDEEDS")))
+  
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("n" . "navigate to")
+        :desc "Evil Deeds" "n" #'lw/find-evildeeds)))
+
 (map! :leader
       (:prefix-map ("b" . "buddhi")
        (:prefix ("n" . "navigate to")
@@ -320,73 +329,18 @@
         :desc "Emacs.org" "e"  #'lw/goto-emacs-org
         :desc "my-func.org" "F" #'lw/goto-my-func-org)))
 
-(use-package! company-coq)
-(use-package! coq-commenter)
-(use-package! proof-general
-  :config
-  (add-hook! 'coq-mode-hook #'company-coq-mode)
-  (add-hook! 'coq-mode-hook #'coq-commenter-mode))
+;; (use-package! company-coq)
+;; (use-package! coq-commenter)
+;; (use-package! proof-general
+;;   :config
+;;   (add-hook! 'coq-mode-hook #'company-coq-mode)
+;;   (add-hook! 'coq-mode-hook #'coq-commenter-mode))
 
-(setq inferior-julia-program-name "julia")
+(use-package! elm-mode
+  :hook (elm-mode . rainbow-delimiters-mode))
 
-(package! julia-vterm
-  :recipe (:host github
-           :repo "shg/julia-vterm.el"))
-
-(package-install-file "~/.doom.d/julia-vterm.el/julia-vterm.el")
-
-(package! ob-julia-vterm
-  :recipe (:host github
-           :repo "shg/ob-julia-vterm.el"))
-
-(package-install-file "~/.doom.d/ob-julia-vterm.el/ob-julia-vterm.el")
-
-(package! ob-julia
-  :recipe (:host github
-           :repo "gjkernsx/ob-julia"))
-
-;; (package-install-file "~/.doom.d/ob-julia/ob-julia.el")
-
-(add-hook 'julia-mode-hook #'julia-vterm-mode)
-(setq julia-vterm-repl-program "/usr/bin/julia -t 4")
-
-(require 'org)
-(add-to-list 'org-babel-load-languages '(julia-vterm . t))
-(org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)
-(defalias 'org-babel-execute:julia 'org-babel-execute:julia-vterm)
-
-(add-to-list 'load-path "~/.doom.d/ob-julia/ob-julia.el")
-
-;; (with-eval-after-load 'org
-;;   (org-babel-do-load-languages
-;;    'org-babel-load-languages
-;;    '((emacs-lisp . t)
-;;      (python . t)
-;;      (browser . t)
-;;      (ditaa . t)
-;;      (R . t)
-;;      (go . t)
-;;      ;; (ipython . t)
-;;      (julia-vterm . t)
-;;      ;; (julia . t)
-;;      (ein . t)
-;;      (ditaa . t)
-;;      (css . t)
-;;      (lisp . t)
-;;      (latex . t)
-;;      (clojure . t)
-;;      (clojurescript . t)))
-;;   (push '("conf-unix" . conf-unix) org-src-lang-modes))
-
-(custom-set-variables
- '(ob-ein-languages
-   '(("ein-python" . python)
-     ("ein-R" . R)
-     ("ein-r" . R)
-     ("ein-julia" . julia))))
-
-(use-package julia-mode)
-
-(use-package julia-snail)
-
-   (setq inferior-julia-program-name "julia")
+;; (use-package! elm-oracle
+;;   :config
+;; (with-eval-after-load 'company
+;;         (add-to-list 'company-backends 'company-elm))
+;; (add-hook 'elm-mode-hook #'elm-oracle-setup-completion)

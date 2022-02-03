@@ -27,6 +27,14 @@ _source_if() { [[ -r "$1" ]] && source "$1"; }
 #                           (also see envx)
 
 export USER="buddhilw"
+export BOOKS="$DOCUMENTS/Books"
+export CS_B="$BOOKS/CS"
+export CS_LANG_B="$CS_B/Languages"
+export ELM_B="$CS_LANG_B/Elm"
+export PP="$HOME/PP" #Programming Projects
+export BLOG="$PP/ClojureScript/Blobing"
+export CONTENT="$BLOG/content"
+export EVILDEEDS="$CONTENT/md/pages/US-tyranny.md"
 # export GITUSER="$USER"
 # export REPOS="$HOME/Repos"
 # export GHREPOS="$REPOS/github.com/$GITUSER"
@@ -231,6 +239,9 @@ alias edoom="emacs --with-profile doom"
 alias e="emacs --with-profile"
 alias ecf="$DOOMDIR/config"
 alias lynx="lynx --display_charset=utf-8"
+#### Directory easyeness
+alias scb='cd $SC_B'
+alias elmb='cd $ELM_B'
 # alias emacs="emacsclient -t"
 #
 alias '?'=duck

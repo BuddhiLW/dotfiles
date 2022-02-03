@@ -41,7 +41,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-old-hope)
+(setq doom-theme 'doom-dark+)
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -331,9 +331,6 @@ This change the default exportation options to =LaTeX=.
   (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f")))
 #+end_src
 
-#+RESULTS:
-: t
-
 #+begin_src emacs-lisp
 (use-package! arxiv-mode
   :config
@@ -465,6 +462,21 @@ This change the default exportation options to =LaTeX=.
       (:prefix-map ("b" . "buddhi")
        :desc "Diary entry" "d" #'lw/create-or-access-diary))
 #+end_src
+** Evil Deeds
+
+#+begin_src emacs-lisp
+(defun lw/find-evildeeds ()
+  (interactive)
+  (find-file (getenv "EVILDEEDS")))
+  
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("n" . "navigate to")
+        :desc "Evil Deeds" "n" #'lw/find-evildeeds)))
+#+end_src
+
+#+RESULTS:
+: lw/find-evildeeds
 
 ** Function definitions
 #+begin_src emacs-lisp
@@ -496,109 +508,127 @@ This change the default exportation options to =LaTeX=.
 : lw/goto-my-func-org
 * Proof General and Coq
 #+begin_src emacs-lisp
-(use-package! company-coq)
-(use-package! coq-commenter)
-(use-package! proof-general
-  :config
-  (add-hook! 'coq-mode-hook #'company-coq-mode)
-  (add-hook! 'coq-mode-hook #'coq-commenter-mode))
+;; (use-package! company-coq)
+;; (use-package! coq-commenter)
+;; (use-package! proof-general
+;;   :config
+;;   (add-hook! 'coq-mode-hook #'company-coq-mode)
+;;   (add-hook! 'coq-mode-hook #'coq-commenter-mode))
 #+end_src
 
 #+RESULTS:
 : t
 
-* Julia
-
+* Elm
 #+begin_src emacs-lisp
-(setq inferior-julia-program-name "julia")
+(use-package! elm-mode
+  :hook (elm-mode . rainbow-delimiters-mode))
 #+end_src
 
 #+RESULTS:
-: julia
+| rainbow-delimiters-mode | elm-indent-mode |
 
 #+begin_src emacs-lisp
-(package! julia-vterm
-  :recipe (:host github
-           :repo "shg/julia-vterm.el"))
-
-(package-install-file "~/.doom.d/julia-vterm.el/julia-vterm.el")
-
-(package! ob-julia-vterm
-  :recipe (:host github
-           :repo "shg/ob-julia-vterm.el"))
-
-(package-install-file "~/.doom.d/ob-julia-vterm.el/ob-julia-vterm.el")
-
-(package! ob-julia
-  :recipe (:host github
-           :repo "gjkernsx/ob-julia"))
-
-;; (package-install-file "~/.doom.d/ob-julia/ob-julia.el")
-
-(add-hook 'julia-mode-hook #'julia-vterm-mode)
-(setq julia-vterm-repl-program "/usr/bin/julia -t 4")
-
-(require 'org)
-(add-to-list 'org-babel-load-languages '(julia-vterm . t))
-(org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)
-(defalias 'org-babel-execute:julia 'org-babel-execute:julia-vterm)
+;; (use-package! elm-oracle
+;;   :config
+;; (with-eval-after-load 'company
+;;         (add-to-list 'company-backends 'company-elm))
+;; (add-hook 'elm-mode-hook #'elm-oracle-setup-completion)
 #+end_src
 
-#+RESULTS:
-: org-babel-execute:julia
-
-#+begin_src emacs-lisp
-(add-to-list 'load-path "~/.doom.d/ob-julia/ob-julia.el")
+#+begin_src shell
+npm install -g elm-oracle
 #+end_src
 
-To execute or export code in =org-mode= code blocks, you'll need to set up =org-babel-load-languages= for each language you'd like to use.  [[https://orgmode.org/worg/org-contrib/babel/languages.html][This page]] documents all of the languages that you can use with =org-babel=.
+* Comment Julia
 
-#+begin_src emacs-lisp
-;; (with-eval-after-load 'org
-;;   (org-babel-do-load-languages
-;;    'org-babel-load-languages
-;;    '((emacs-lisp . t)
-;;      (python . t)
-;;      (browser . t)
-;;      (ditaa . t)
-;;      (R . t)
-;;      (go . t)
-;;      ;; (ipython . t)
-;;      (julia-vterm . t)
-;;      ;; (julia . t)
-;;      (ein . t)
-;;      (ditaa . t)
-;;      (css . t)
-;;      (lisp . t)
-;;      (latex . t)
-;;      (clojure . t)
-;;      (clojurescript . t)))
-;;   (push '("conf-unix" . conf-unix) org-src-lang-modes))
-#+end_src
+# #+begin_src emacs-lisp
+# (setq inferior-julia-program-name "julia")
+# #+end_src
 
-#+begin_src emacs-lisp
-(custom-set-variables
- '(ob-ein-languages
-   '(("ein-python" . python)
-     ("ein-R" . R)
-     ("ein-r" . R)
-     ("ein-julia" . julia))))
-#+end_src
+# #+RESULTS:
+# : julia
 
-#+RESULTS:
+# #+begin_src emacs-lisp
+# (package! julia-vterm
+#   :recipe (:host github
+#            :repo "shg/julia-vterm.el"))
 
-#+begin_src emacs-lisp
-(use-package julia-mode)
-#+end_src
+# (package-install-file "~/.doom.d/julia-vterm.el/julia-vterm.el")
 
-#+RESULTS:
+# (package! ob-julia-vterm
+#   :recipe (:host github
+#            :repo "shg/ob-julia-vterm.el"))
 
-#+begin_src emacs-lisp
-(use-package julia-snail)
-#+end_src
+# (package-install-file "~/.doom.d/ob-julia-vterm.el/ob-julia-vterm.el")
 
-#+RESULTS:
+# (package! ob-julia
+#   :recipe (:host github
+#            :repo "gjkernsx/ob-julia"))
 
-#+begin_src emacs-lisp
-   (setq inferior-julia-program-name "julia")
-#+end_src
+# ;; (package-install-file "~/.doom.d/ob-julia/ob-julia.el")
+
+# (add-hook 'julia-mode-hook #'julia-vterm-mode)
+# (setq julia-vterm-repl-program "/usr/bin/julia -t 4")
+
+# (require 'org)
+# (add-to-list 'org-babel-load-languages '(julia-vterm . t))
+# (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)
+# (defalias 'org-babel-execute:julia 'org-babel-execute:julia-vterm)
+# #+end_src
+
+# #+begin_src emacs-lisp
+# (add-to-list 'load-path "~/.doom.d/ob-julia/ob-julia.el")
+# #+end_src
+
+# To execute or export code in =org-mode= code blocks, you'll need to set up =org-babel-load-languages= for each language you'd like to use.  [[https://orgmode.org/worg/org-contrib/babel/languages.html][This page]] documents all of the languages that you can use with =org-babel=.
+
+# #+begin_src emacs-lisp
+# ;; (with-eval-after-load 'org
+# ;;   (org-babel-do-load-languages
+# ;;    'org-babel-load-languages
+# ;;    '((emacs-lisp . t)
+# ;;      (python . t)
+# ;;      (browser . t)
+# ;;      (ditaa . t)
+# ;;      (R . t)
+# ;;      (go . t)
+# ;;      ;; (ipython . t)
+# ;;      (julia-vterm . t)
+# ;;      ;; (julia . t)
+# ;;      (ein . t)
+# ;;      (ditaa . t)
+# ;;      (css . t)
+# ;;      (lisp . t)
+# ;;      (latex . t)
+# ;;      (clojure . t)
+# ;;      (clojurescript . t)))
+# ;;   (push '("conf-unix" . conf-unix) org-src-lang-modes))
+# #+end_src
+
+# #+begin_src emacs-lisp
+# (custom-set-variables
+#  '(ob-ein-languages
+#    '(("ein-python" . python)
+#      ("ein-R" . R)
+#      ("ein-r" . R)
+#      ("ein-julia" . julia))))
+# #+end_src
+
+# #+RESULTS:
+
+# #+begin_src emacs-lisp
+# (use-package julia-mode)
+# #+end_src
+
+# #+RESULTS:
+
+# #+begin_src emacs-lisp
+# (use-package julia-snail)
+# #+end_src
+
+# #+RESULTS:
+
+# #+begin_src emacs-lisp
+#    (setq inferior-julia-program-name "julia")
+# #+end_src

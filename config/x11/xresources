@@ -1,8 +1,12 @@
 /* !! Transparency (0-1): */
-/* *.alpha: 0.8 */
+*.alpha: 0.5
 
 !! Set a default font and font size as below:
-*.font: monospace:size=15
+*.font: LiberationMono:size=20
+
+/* SarasaFixedSlabSC */
+/* LuxiMono */
+/* LiberationMono */
 
 /* name		dark	light */
 /* black	0	8 */
