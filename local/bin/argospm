@@ -1,0 +1,5 @@
+#!/opt/anaconda/bin/python
+
+from argostranslate import argospm
+
+argospm.main()

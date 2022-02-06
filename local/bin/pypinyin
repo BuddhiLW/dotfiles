@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/opt/anaconda/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

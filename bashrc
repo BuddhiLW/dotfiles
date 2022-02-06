@@ -190,11 +190,12 @@ shopt -s histappend
 
 PROMPT_LONG=20
 PROMPT_MAX=95
-PROMPT_AT=@
+PROMPT_AT=' ፠ ' # @ 𝄏 𖣐 ⌯
 
-__ps1() {
+
+__ps1() { # g='\[\e[30m\]'
     local P='$' dir="${PWD##*/}" B countme short long double\
-	  r='\[\e[31m\]' g='\[\e[30m\]' h='\[\e[34m\]' \
+	  r='\[\e[31m\]' g='\[\e[37m\]' h='\[\e[34m\]' \
 	  u='\[\e[33m\]' p='\[\e[33m\]' w='\[\e[35m\]' \
 	  b='\[\e[36m\]' x='\[\e[0m\]'
 
@@ -209,9 +210,13 @@ __ps1() {
     [[ $B = master || $B = main ]] && b="$r"
     [[ -n "$B" ]] && B="$g($b$B$g)"
 
-    short="$u\u$g$PROMPT_AT$h\h$g:$w$dir$B$p$P$x "
-    long="$g╔ $u\u$g$PROMPT_AT$h\h$g:$w$dir$B\n$g╚ $p$P$x "
-    double="$g╔ $u\u$g$PROMPT_AT$h\h$g:$w$dir\n$g║ $B\n$g╚ $p$P$x "
+    # short="$u\u$g$PROMPT_AT$h\h$g:$w$dir$B$p$P$x $w(λ) "
+    # long="$g╔ $u\u$g$PROMPT_AT$h\h$g:$w$dir$B\n$g╚ $p$P$x $w(λ) "
+    # double="$g╔ $u\u$g$PROMPT_AT$h\h$g:$w$dir\n$g║ $B\n$g╚ $p$P$x $w(λ) "
+
+    short="$u\u$g$PROMPT_AT$h\h$g:$w$dir$B$w($pλ$w)$x "
+    long="$g꧁  $u\u$g$PROMPT_AT$h\h$g⟐$w$dir$B\n$g꧂ $w($pλ$w)$x "
+    double="$g꧁ $u\u$g$PROMPT_AT$h\h$g⟐$w$dir\n$g║ $B\n$g꧂ $w($pλ$w)$x "
 
     if (( ${#countme} > PROMPT_MAX )); then
 	PS1="$double"
@@ -240,7 +245,7 @@ alias e="emacs --with-profile"
 alias ecf="$DOOMDIR/config"
 alias lynx="lynx --display_charset=utf-8"
 #### Directory easyeness
-alias scb='cd $SC_B'
+alias csb='. csb'
 alias elmb='cd $ELM_B'
 # alias emacs="emacsclient -t"
 #
@@ -497,3 +502,4 @@ newshell
 
 # Add the following line at the end of bashrc
 [[ ${BLE_VERSION-} ]] && ble-attach
+# source ~/.local/share/blesh/ble.sh

@@ -1,0 +1,6 @@
+#!/usr/bin/bash
+
+path=$(echo $CS_B)
+echo $path
+cd $path 
+ls

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-homonyms() { echo "ln $PWD/$1 $HOME/.$1"; }
-emacs-conf() { echo "ln $PWD/$1 $HOME/.$1.d"; }
+homonyms() { ln -s $PWD/$1 $HOME/.$1; }
+emacs_conf() { ln -s $PWD/$1 $HOME/.$1.d; }
 
 # Declare an array of string with type
 declare -a dots=("local" "config" "bashrc" "doom")
@@ -12,6 +12,6 @@ for dot in "${dots[@]}"; do
     if [[ "$dot" =~ ^(local|config|bashrc)$ ]]; then
         homonyms $dot
     else [ "$dot" == "doom" ]
-         emacs-conf $dot
+         emacs_conf $dot
     fi
 done

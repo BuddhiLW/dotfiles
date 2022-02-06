@@ -74,7 +74,7 @@
 
 (use-package! csv-mode)
 
-(use-package! undo-tree)
+;; (use-package! undo-tree)
 
 (load! "./my-func/fast-input-method.el")
 (load! "./my-func/org-roam.el")
@@ -129,15 +129,15 @@
           "~/PP/Notes/Agenda/Research.org"
           "~/PP/Notes/Agenda/CafeDoBem")))
 
-(use-package! conda
-  :config
-  (setq
-   conda-env-home-directory (expand-file-name "~/.conda/")
-   conda-env-subdirectory "envs")
-  (custom-set-variables '(conda-anaconda-home "/opt/anaconda/"))
-  (conda-env-initialize-interactive-shells)
-  (conda-env-initialize-eshell)
-  (conda-env-autoactivate-mode t))
+;; (use-package! conda
+;;   :config
+;;   (setq
+;;    conda-env-home-directory (expand-file-name "~/.conda/")
+;;    conda-env-subdirectory "envs")
+;;   (custom-set-variables '(conda-anaconda-home "/opt/anaconda/"))
+;;   (conda-env-initialize-interactive-shells)
+;;   (conda-env-initialize-eshell)
+;;   (conda-env-autoactivate-mode t))
 
 (load! "./my-func/ein-babel.el")
 
@@ -181,9 +181,14 @@
       :desc "Yank history" "y" #'consult-yank-from-kill-ring)
 
 (setq elfeed-feeds
-      '("http://nullprogram.com/feed/"
-        "https://planet.emacslife.com/atom.xml"
-        "https://arxiv.org/search/?query=physics+informed+neural+network&searchtype=all&source=header"))
+      '("https://www.democracynow.org/democracynow.rss"
+        "http://docuwiki.net/index.php?title=Special:Newpages&feed=rss"
+        "https://www.inovacaotecnologica.com.br/boletim/rss.php"
+        "http://feeds.nbcnews.com/feeds/topstories"))
+
+;; '("http://nullprogram.com/feed/")
+;; "https://planet.emacslife.com/atom.xml"
+;; "https://arxiv.org/search/?query=physics+informed+neural+network&searchtype=all&source=header"
 
 (setq org-latex-listings 'minted)
 
@@ -213,35 +218,35 @@
        (:prefix ("l" . "latex")
         :desc "Shell scape" "s" #'lw/TeX-command-toggle-shell-escape)))
 
-(use-package! helm-bibtex)
+;; (use-package! helm-bibtex)
 
-(use-package! gscholar-bibtex)
+;; (use-package! gscholar-bibtex)
 
-(use-package! bibtex-completion)
+;; (use-package! bibtex-completion)
 
-(use-package! org-ref
-  :config
-  (require 'org-ref-helm)
-  (require 'org-ref-arxiv)
-  (require 'org-ref-scopus)
-  (require 'org-ref-wos)
-  (map! :leader
-        (:prefix-map ("b" . "buddhi")
-         (:prefix ("l" . "latex")
-          (:prefix ("i" . "insert")
-           :desc "Bib-citation" "c" #'org-ref-insert-link
-           :desc "Auto-ref" "r" #'org-ref-insert-ref-link
-           :desc "Arxiv Search" "s" #'arxiv-search
-           :desc "Arxiv Download" "d" #'arxiv-download-pdf-export-bibtex
-           :desc "GScholar Search" "g" #'gscholar-bibtex))))
-  (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f")))
+;; (use-package! org-ref
+;;   :config
+;;   (require 'org-ref-helm)
+;;   (require 'org-ref-arxiv)
+;;   (require 'org-ref-scopus)
+;;   (require 'org-ref-wos)
+;;   (map! :leader
+;;         (:prefix-map ("b" . "buddhi")
+;;          (:prefix ("l" . "latex")
+;;           (:prefix ("i" . "insert")
+;;            :desc "Bib-citation" "c" #'org-ref-insert-link
+;;            :desc "Auto-ref" "r" #'org-ref-insert-ref-link
+;;            :desc "Arxiv Search" "s" #'arxiv-search
+;;            :desc "Arxiv Download" "d" #'arxiv-download-pdf-export-bibtex
+;;            :desc "GScholar Search" "g" #'gscholar-bibtex))))
+;;   (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f")))
 
-(use-package! arxiv-mode
-  :config
-  (setq arxiv-default-download-folder
-        (substitute-in-file-name "$HOME/Documents/Reseach/"))
-  (setq arxiv-default-bibliography
-        (substitute-in-file-name "$HOME/Bibliography/collection.bib")))
+;; (use-package! arxiv-mode
+;;   :config
+;;   (setq arxiv-default-download-folder
+;;         (substitute-in-file-name "$HOME/Documents/Reseach/"))
+;;   (setq arxiv-default-bibliography
+;;         (substitute-in-file-name "$HOME/Bibliography/collection.bib")))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
@@ -323,6 +328,8 @@
 (map! :leader
       :desc "Magit" "m" #'magit)
 
+(load! "./my-func/goto.el")
+
 (map! :leader
       (:prefix-map ("b" . "buddhi")
        (:prefix ("n" . "navigate to")
@@ -344,3 +351,37 @@
 ;; (with-eval-after-load 'company
 ;;         (add-to-list 'company-backends 'company-elm))
 ;; (add-hook 'elm-mode-hook #'elm-oracle-setup-completion)
+
+(use-package! eaf
+  :load-path "~/.doom.d/site-lisp/emacs-application-framework"
+  :custom
+  ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
+  (eaf-browser-continue-where-left-off t)
+  (eaf-browser-enable-adblocker t)
+  (browse-url-browser-function 'eaf-open-browser)
+  :config
+  (defalias 'browse-web #'eaf-open-browser))
+  ;; (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+  ;; (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+  ;; (eaf-bind-key take_photo "p" eaf-camera-keybinding)
+  ;; (eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
+
+(add-to-list 'load-path "~/.doom.d/site-lisp/emacs-application-framework/")
+
+(require 'eaf)
+(require 'eaf-browser)
+
+(use-package! conda
+  :config
+  (setq
+   conda-env-home-directory (expand-file-name "~/opt/anaconda2/")
+   conda-env-subdirectory "envs/")
+  (custom-set-variables '(conda-anaconda-home "/opt/anaconda2/"))
+  (conda-env-initialize-interactive-shells)
+  (conda-env-initialize-eshell)
+  (conda-env-autoactivate-mode t))
+
+(use-package! ewal-doom-themes)
+(use-package! doom-themes)
+(use-package! doom-modeline-now-playing)
+(use-package! doom-modeline)

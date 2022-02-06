@@ -112,14 +112,16 @@ The bindings for rapidly accessing these commands will live under =config.el=.
                     ((numberp (cdr alpha)) (cdr alpha))
                     ;; Also handle undocumented (<active> <inactive>) form.
                     ((numberp (cadr alpha)) (cadr alpha)))
-              100)
-         '(100 . 80) '(95 . 100)))))
+              90)
+         '(100 . 80) '(80 . 90)))))
 
 (global-set-key (kbd "C-c t") 'toggle-transparency)
-#+end_src
 
-#+RESULTS:
-: toggle-transparency
+(defun lw/transparency (value)
+  "Sets the transparency of the frame window. 0=transparent/100=opaque"
+  (interactive "nTransparency Value 0 - 100 opaque:")
+  (set-frame-parameter (selected-frame) 'alpha value))
+#+end_src
 
 * Vocabulary search
 
@@ -406,29 +408,27 @@ The bindings for rapidly accessing these commands will live under =config.el=.
            (lw/diary-day-entry))
         (find-file (lw/diary-day-entry)))
     (find-file (lw/diary-day-entry))))
-
-;; (defun fzl-create-empty-file-if-no-exist2022-01-16.orgs(filePath)
-;;    "Create a file with FILEPATH parameter."
-;;    (if (file-exists-p filePath)
-;;        (message (concat  "File " (concat filePath " already exists")))
-;;      (with-temp-buffer (write-file Pathfile))))
 #+end_src
+
+#+RESULTS:
+: lw/create-or-access-diary
+
 * Navigation to core files
 #+begin_src emacs-lisp :tangle goto.el
+
+
 (defun lw/goto-emacs-org ()
   "Open =Emacs.org= file which maps to init.el."
   (interactive)
   (find-file (expand-file-name "Emacs.org" doom-private-dir)))
-  ;; (goto-char
-  ;;  (or (save-excursion
-  ;;        (goto-char (point-min))
-  ;;        (search-forward "(doom!" nil t))
-  ;;      (point))))
 
 (defun lw/goto-my-func-org ()
   "Open =my-func.org= file which maps to homecooked function."
   (interactive)
   (find-file (expand-file-name "my-func/my-func.org" doom-private-dir)))
+
+(defun lw/goto-cs-books ())
+
 #+end_src
 * Ispell
 #+begin_src emacs-lisp

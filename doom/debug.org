@@ -1,0 +1,7 @@
+Warning (initialization): An error occurred while loading ‘/home/buddhilw/.emacs.d/init.el’:
+
+Error in private config: config.el, (file-missing Cannot open load file No such file or directory bing-dict)
+
+To ensure normal operation, you should investigate and remove the
+cause of the error in your initialization file.  Start Emacs with
+the ‘--debug-init’ option to view a complete error backtrace.

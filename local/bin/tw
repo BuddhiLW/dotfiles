@@ -1,0 +1,6 @@
+#!/usr/bin/bash
+
+base="https://www.twitch.tv/"
+user="$@"
+
+mpv "$base$user"

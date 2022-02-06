@@ -80,7 +80,7 @@
 
 (use-package! csv-mode)
 
-(use-package! undo-tree)
+;; (use-package! undo-tree)
 
 (load! "./my-func/fast-input-method.el")
 (load! "./my-func/org-roam.el")
@@ -136,10 +136,15 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 (add-hook! '+doom-dashboard-mode-hook (hide-mode-line-mode 1) (hl-line-mode -1))
 (setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
 #+end_src
+
 ** Transparency
 #+begin_src emacs-lisp
 (load! "./my-func/transparency.el")
 #+end_src
+
+#+RESULTS:
+: t
+
 ** Org
 #+begin_src emacs-lisp
 (use-package! org
@@ -160,15 +165,15 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 
 * Anaconda
 #+begin_src emacs-lisp
-(use-package! conda
-  :config
-  (setq
-   conda-env-home-directory (expand-file-name "~/.conda/")
-   conda-env-subdirectory "envs")
-  (custom-set-variables '(conda-anaconda-home "/opt/anaconda/"))
-  (conda-env-initialize-interactive-shells)
-  (conda-env-initialize-eshell)
-  (conda-env-autoactivate-mode t))
+;; (use-package! conda
+;;   :config
+;;   (setq
+;;    conda-env-home-directory (expand-file-name "~/.conda/")
+;;    conda-env-subdirectory "envs")
+;;   (custom-set-variables '(conda-anaconda-home "/opt/anaconda/"))
+;;   (conda-env-initialize-interactive-shells)
+;;   (conda-env-initialize-eshell)
+;;   (conda-env-autoactivate-mode t))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -253,10 +258,18 @@ Discussion on: https://emacs-china.org/t/org-mode/440/89
 * Elfeed
 #+begin_src emacs-lisp
 (setq elfeed-feeds
-      '("http://nullprogram.com/feed/"
-        "https://planet.emacslife.com/atom.xml"
-        "https://arxiv.org/search/?query=physics+informed+neural+network&searchtype=all&source=header"))
+      '("https://www.democracynow.org/democracynow.rss"
+        "http://docuwiki.net/index.php?title=Special:Newpages&feed=rss"
+        "https://www.inovacaotecnologica.com.br/boletim/rss.php"
+        "http://feeds.nbcnews.com/feeds/topstories"))
+
+;; '("http://nullprogram.com/feed/")
+;; "https://planet.emacslife.com/atom.xml"
+;; "https://arxiv.org/search/?query=physics+informed+neural+network&searchtype=all&source=header"
 #+end_src
+
+#+RESULTS:
+| https://www.democracynow.org/democracynow.rss | http://docuwiki.net/index.php?title=Special:Newpages&feed=rss | https://www.inovacaotecnologica.com.br/boletim/rss.php | http://feeds.nbcnews.com/feeds/topstories |
 
 * Minted
 
@@ -307,37 +320,37 @@ This change the default exportation options to =LaTeX=.
 : lw/TeX-command-toggle-shell-escape
 * Org-ref
 #+begin_src emacs-lisp
-(use-package! helm-bibtex)
+;; (use-package! helm-bibtex)
 
-(use-package! gscholar-bibtex)
+;; (use-package! gscholar-bibtex)
 
-(use-package! bibtex-completion)
+;; (use-package! bibtex-completion)
 
-(use-package! org-ref
-  :config
-  (require 'org-ref-helm)
-  (require 'org-ref-arxiv)
-  (require 'org-ref-scopus)
-  (require 'org-ref-wos)
-  (map! :leader
-        (:prefix-map ("b" . "buddhi")
-         (:prefix ("l" . "latex")
-          (:prefix ("i" . "insert")
-           :desc "Bib-citation" "c" #'org-ref-insert-link
-           :desc "Auto-ref" "r" #'org-ref-insert-ref-link
-           :desc "Arxiv Search" "s" #'arxiv-search
-           :desc "Arxiv Download" "d" #'arxiv-download-pdf-export-bibtex
-           :desc "GScholar Search" "g" #'gscholar-bibtex))))
-  (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f")))
+;; (use-package! org-ref
+;;   :config
+;;   (require 'org-ref-helm)
+;;   (require 'org-ref-arxiv)
+;;   (require 'org-ref-scopus)
+;;   (require 'org-ref-wos)
+;;   (map! :leader
+;;         (:prefix-map ("b" . "buddhi")
+;;          (:prefix ("l" . "latex")
+;;           (:prefix ("i" . "insert")
+;;            :desc "Bib-citation" "c" #'org-ref-insert-link
+;;            :desc "Auto-ref" "r" #'org-ref-insert-ref-link
+;;            :desc "Arxiv Search" "s" #'arxiv-search
+;;            :desc "Arxiv Download" "d" #'arxiv-download-pdf-export-bibtex
+;;            :desc "GScholar Search" "g" #'gscholar-bibtex))))
+;;   (setq org-latex-pdf-process (list "latexmk -shell-escape -bibtex -f -pdf %f")))
 #+end_src
 
 #+begin_src emacs-lisp
-(use-package! arxiv-mode
-  :config
-  (setq arxiv-default-download-folder
-        (substitute-in-file-name "$HOME/Documents/Reseach/"))
-  (setq arxiv-default-bibliography
-        (substitute-in-file-name "$HOME/Bibliography/collection.bib")))
+;; (use-package! arxiv-mode
+;;   :config
+;;   (setq arxiv-default-download-folder
+;;         (substitute-in-file-name "$HOME/Documents/Reseach/"))
+;;   (setq arxiv-default-bibliography
+;;         (substitute-in-file-name "$HOME/Bibliography/collection.bib")))
 #+end_src
 
 * Revert buffer
@@ -451,11 +464,15 @@ This change the default exportation options to =LaTeX=.
 #+RESULTS:
 : helm-pass
 * Navigation
-** Diary
+#+begin_src emacs-lisp
+(load! "./my-func/goto.el")
+#+end_src
 
 #+begin_src emacs-lisp
 (load! "./my-func/diary.el")
 #+end_src
+
+** Diary
 
 #+begin_src emacs-lisp
 (map! :leader
@@ -465,10 +482,6 @@ This change the default exportation options to =LaTeX=.
 ** Evil Deeds
 
 #+begin_src emacs-lisp
-(defun lw/find-evildeeds ()
-  (interactive)
-  (find-file (getenv "EVILDEEDS")))
-  
 (map! :leader
       (:prefix-map ("b" . "buddhi")
        (:prefix ("n" . "navigate to")
@@ -488,13 +501,8 @@ This change the default exportation options to =LaTeX=.
 
 #+RESULTS:
 : find-function-at-point
-* Magit
-#+begin_src emacs-lisp
-(map! :leader
-      :desc "Magit" "m" #'magit)
-#+end_src
+** Go to =Emacs.org= and =my-func.org=
 
-* Go to =Emacs.org= and =my-func.org=
 
 #+begin_src emacs-lisp
 (map! :leader
@@ -506,6 +514,12 @@ This change the default exportation options to =LaTeX=.
 
 #+RESULTS:
 : lw/goto-my-func-org
+* Magit
+#+begin_src emacs-lisp
+(map! :leader
+      :desc "Magit" "m" #'magit)
+#+end_src
+
 * Proof General and Coq
 #+begin_src emacs-lisp
 ;; (use-package! company-coq)
@@ -632,3 +646,64 @@ npm install -g elm-oracle
 # #+begin_src emacs-lisp
 #    (setq inferior-julia-program-name "julia")
 # #+end_src
+* Web browser
+#+begin_src emacs-lisp
+(use-package! eaf
+  :load-path "~/.doom.d/site-lisp/emacs-application-framework"
+  :custom
+  ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
+  (eaf-browser-continue-where-left-off t)
+  (eaf-browser-enable-adblocker t)
+  (browse-url-browser-function 'eaf-open-browser)
+  :config
+  (defalias 'browse-web #'eaf-open-browser))
+  ;; (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+  ;; (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+  ;; (eaf-bind-key take_photo "p" eaf-camera-keybinding)
+  ;; (eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
+#+end_src
+
+#+RESULTS:
+: t
+
+#+begin_src emacs-lisp
+(add-to-list 'load-path "~/.doom.d/site-lisp/emacs-application-framework/")
+#+end_src
+
+#+RESULTS:
+| ~/.doom.d/site-lisp/emacs-application-framework/ | ~/.doom.d/sit |
+
+#+begin_src emacs-lisp
+(require 'eaf)
+(require 'eaf-browser)
+#+end_src
+
+#+RESULTS:
+: eaf-browser
+* Python
+** Anaconda
+#+begin_src emacs-lisp
+(use-package! conda
+  :config
+  (setq
+   conda-env-home-directory (expand-file-name "~/opt/anaconda2/")
+   conda-env-subdirectory "envs/")
+  (custom-set-variables '(conda-anaconda-home "/opt/anaconda2/"))
+  (conda-env-initialize-interactive-shells)
+  (conda-env-initialize-eshell)
+  (conda-env-autoactivate-mode t))
+#+end_src
+
+#+RESULTS:
+: t
+
+* Xthemes
+#+begin_src emacs-lisp
+(use-package! ewal-doom-themes)
+(use-package! doom-themes)
+(use-package! doom-modeline-now-playing)
+(use-package! doom-modeline)
+#+end_src
+
+#+RESULTS:
+: doom-modeline

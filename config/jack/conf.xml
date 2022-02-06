@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!--
+JACK settings, as persisted by D-Bus object.
+You probably don't want to edit this because
+it will be overwritten next time jackdbus saves.
+-->
+<!-- Mon Feb  7 22:55:21 2022 -->
+<jack>
+ <engine>
+  <option name="driver">alsa</option>
+  <option name="realtime">true</option>
+  <option name="verbose">false</option>
+  <option name="sync">true</option>
+ </engine>
+ <drivers>
+  <driver name="alsa">
+   <option name="device">hw:0</option>
+   <option name="capture">hw:sofhdadsp,6</option>
+   <option name="playback">hw:Device,0</option>
+   <option name="nperiods">3</option>
+   <option name="hwmeter">false</option>
+   <option name="duplex">true</option>
+   <option name="softmode">false</option>
+   <option name="monitor">false</option>
+   <option name="dither">n</option>
+   <option name="shorts">false</option>
+   <option name="midi-driver">raw</option>
+  </driver>
+  <driver name="proxy">
+  </driver>
+  <driver name="netone">
+  </driver>
+  <driver name="net">
+  </driver>
+  <driver name="alsarawmidi">
+  </driver>
+  <driver name="dummy">
+   <option name="monitor">true</option>
+  </driver>
+  <driver name="loopback">
+  </driver>
+ </drivers>
+ <internals>
+  <internal name="netmanager">
+  </internal>
+  <internal name="audioadapter">
+  </internal>
+  <internal name="netadapter">
+  </internal>
+  <internal name="profiler">
+  </internal>
+ </internals>
+</jack>

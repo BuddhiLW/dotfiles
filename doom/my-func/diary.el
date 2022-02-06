@@ -12,9 +12,3 @@
            (lw/diary-day-entry))
         (find-file (lw/diary-day-entry)))
     (find-file (lw/diary-day-entry))))
-
-;; (defun fzl-create-empty-file-if-no-exist2022-01-16.orgs(filePath)
-;;    "Create a file with FILEPATH parameter."
-;;    (if (file-exists-p filePath)
-;;        (message (concat  "File " (concat filePath " already exists")))
-;;      (with-temp-buffer (write-file Pathfile))))

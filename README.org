@@ -5,6 +5,21 @@ work. Be aware this is a work on progress.
 
 OS intended: fresh pacman-derived (Manjaro, Arch, Artix etc.) distros
 
+*WM configs:* https://github.com/BuddhiLW/BuddhiDWM (/TODO:/ link them in local/src/)
+
+* Notes on performance
+The default build is not performance oriented. It's user friendly and aesthetic,
+at the same time that it's functional.
+
+** Sacrifices of performance
+*** =picom= is a program that gives blur behavior to windows. (very unperformant)
+To "solve" this,
+- go to =config/x11/xprofile= and comment the line =prime-run
+$(picom --experimental-backends) &=.
+- add =xcompmgr= into the =autostart= variable.
+
+Now, you will have a /light-weight/ solution to =focus= and =opacity= dynamics.
+
 * What the script does
 
 It should be self-explanatory. Any need of clarification, issue an issue in =github=.
@@ -44,7 +59,6 @@ installpkgyay purescript-bin
 ## LaTeX
 pip install Pygments
 #+end_src
-
 * Programs and dependencies
 
 ** Neomutt
