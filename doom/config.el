@@ -129,6 +129,16 @@
           "~/PP/Notes/Agenda/Research.org"
           "~/PP/Notes/Agenda/CafeDoBem")))
 
+(load! "./my-func/define-modules.el")
+
+(load! "./my-func/load-modules.el")
+
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("l" . "load module")
+        :desc "Chinese" "c" #'lw/load-chinese
+        :desc "LaTeX" "l" #'lw/load-latex)))
+
 ;; (use-package! conda
 ;;   :config
 ;;   (setq
@@ -140,36 +150,6 @@
 ;;   (conda-env-autoactivate-mode t))
 
 (load! "./my-func/ein-babel.el")
-
-(setq doom-font
-      (set-fontset-font "fontset-default" 'han
-                        (font-spec :family "Sarasa Mono Slab HC")))
-
-(load! "./my-func/lw_chdoom.el")
-
-(use-package! pyim-basedict)
-
-(use-package! pyim
-  :config
-  (require 'pyim-basedict) ; 拼音词库设置，五笔用户 *不需要* 此行设置
-  (pyim-basedict-enable)   ; 拼音词库，五笔用户 *不需要* 此行设置
-  (setq default-input-method "pyim")
-  (setq pyim-page-length 10)
-  (pyim-isearch-mode 1))
-
-(use-package! bing-dict
-  :config
-  (map! :leader
-        (:prefix-map ("b" . "buddhi")
-         (:prefix ("b" . "bing")
-          :desc "Bing dictionary brief" "d" #'lw/bing-dict-brief
-          :desc "Personal vocabulary" "p" #'lw/find-vocabulary)))
-  ;; :desc "Activate synonym" "s" #'lw/bing-synonym))))
-
-  (setq bing-dict-add-to-kill-ring t)
-  (setq bing-dict-show-thesaurus 'both)
-  (setq bing-dict-vocabulary-save t)
-  (setq bing-dict-vocabulary-file "~/PP/Notes/vocabulary.org"))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
@@ -189,34 +169,6 @@
 ;; '("http://nullprogram.com/feed/")
 ;; "https://planet.emacslife.com/atom.xml"
 ;; "https://arxiv.org/search/?query=physics+informed+neural+network&searchtype=all&source=header"
-
-(setq org-latex-listings 'minted)
-
-(setq org-latex-custom-lang-environments
-      '((emacs-lisp "common-lispcode")))
-
-(setq org-latex-minted-options
-      '(("fontsize" "\\scriptsize")
-        ("linenos" "false")
-        ("bgcolor" "LightGray")
-        ("frame" "lines")))
-
-;; (setq org-latex-to-pdf-process
-;;       '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-
-;; (add-to-list 'TeX-command-list
-;;                 '("LaTeX-scape" "-shell-escape %`%l%(mode)%' %T" TeX-run-TeX nil
-;;                         (latex-mode doctex-mode)
-;;                         :help "Run LaTeX with scape") t)
-
-;; (setq-default TeX-master nil ; by each new file AUCTEX will ask for a master fie.
-;;               TeX-PDF-mode t
-;;               TeX-engine 'xetex)     ; optional
-
-(map! :leader
-      (:prefix-map ("b" . "buddhi")
-       (:prefix ("l" . "latex")
-        :desc "Shell scape" "s" #'lw/TeX-command-toggle-shell-escape)))
 
 ;; (use-package! helm-bibtex)
 
@@ -305,16 +257,14 @@
       (:prefix-map ("b" . "buddhi")
        :desc "Password list" "p" #'helm-pass))
 
+(load! "./my-func/goto.el")
+
 (load! "./my-func/diary.el")
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
        :desc "Diary entry" "d" #'lw/create-or-access-diary))
 
-(defun lw/find-evildeeds ()
-  (interactive)
-  (find-file (getenv "EVILDEEDS")))
-  
 (map! :leader
       (:prefix-map ("b" . "buddhi")
        (:prefix ("n" . "navigate to")
@@ -326,15 +276,24 @@
         :desc "Function at point" "f" #'find-function-at-point)))
 
 (map! :leader
-      :desc "Magit" "m" #'magit)
-
-(load! "./my-func/goto.el")
-
-(map! :leader
       (:prefix-map ("b" . "buddhi")
        (:prefix ("n" . "navigate to")
         :desc "Emacs.org" "e"  #'lw/goto-emacs-org
         :desc "my-func.org" "F" #'lw/goto-my-func-org)))
+
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("n" . "navigate to")
+        :desc "Active CS book" "a"  #'lw/goto-cs-active
+        :desc "CS books" "c" #'lw/goto-cs-books)))
+
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("n" . "navigate to")
+        :desc "Book notes" "n"  #'lw/goto-book-notes)))
+
+(map! :leader
+      :desc "Magit" "m" #'magit)
 
 ;; (use-package! company-coq)
 ;; (use-package! coq-commenter)
@@ -385,3 +344,12 @@
 (use-package! doom-themes)
 (use-package! doom-modeline-now-playing)
 (use-package! doom-modeline)
+
+(use-package! w3m
+  :config
+  (setq w3m-search-default-engine "duckduckgo"))
+
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("s" . "search")
+        :desc "w3m search" "s" #'w3m-search)))

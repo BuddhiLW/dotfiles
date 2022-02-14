@@ -150,6 +150,10 @@ filetype plugin on
 " high contrast for streaming, etc.
 set background=dark
 
+
+" ============== Buddhi config
+set autochdir
+
 " base default color changes (gruvbox dark friendly)
 hi StatusLine ctermfg=black ctermbg=NONE
 hi StatusLineNC ctermfg=black ctermbg=NONE
@@ -334,6 +338,10 @@ endif
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 "au BufWritePost ~/.vimrc so ~/.vimrc
 
+" buddhilw - motion
+nmap <S-Space> O<Esc>
+nmap <C-Space> o<Esc>
+
 " functions keys
 map <F1> :set number!<CR> :set relativenumber!<CR>
 nmap <F2> :call <SID>SynStack()<CR>
@@ -342,7 +350,7 @@ map <F4> :set list!<CR>
 map <F5> :set cursorline!<CR>
 map <F7> :set spell!<CR>
 map <F12> :set fdm=indent<CR>
-
+map <;> :!fmt<CR>
 nmap <leader>2 :set paste<CR>i
 
 " disable arrow keys (vi muscle memory)
@@ -370,3 +378,4 @@ noremap <C-p> <C-b>
 set rtp^=~/.vimpersonal
 set rtp^=~/.vimprivate
 set rtp^=~/.vimwork
+set rtp^=~/.vbuddhi

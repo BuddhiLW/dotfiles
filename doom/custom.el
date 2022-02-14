@@ -470,6 +470,21 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ 
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ 
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ 
 ;; te-very-old-color nil
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -480,7 +495,7 @@
    ["#1e1e1e" "#D16969" "#579C4C" "#D7BA7D" "#339CDB" "#C586C0" "#85DDFF" "#d4d4d4"])
  '(conda-anaconda-home "/opt/anaconda/")
  '(custom-safe-themes
-   '("2035a16494e06636134de6d572ec47c30e26c3447eafeb6d3a9e8aee73732396" "8a379e7ac3a57e64de672dd744d4730b3bdb88ae328e8106f95cd81cbd44e0b6" default))
+   '("8d7b028e7b7843ae00498f68fad28f3c6258eda0650fe7e17bfb017d51d0e2a2" "3d54650e34fa27561eb81fc3ceed504970cc553cfd37f46e8a80ec32254a3ec3" "2035a16494e06636134de6d572ec47c30e26c3447eafeb6d3a9e8aee73732396" "8a379e7ac3a57e64de672dd744d4730b3bdb88ae328e8106f95cd81cbd44e0b6" default))
  '(exwm-floating-border-color "#252526")
  '(fci-rule-color "#37474F")
  '(helm-minibuffer-history-key "M-p")
@@ -495,7 +510,7 @@
      ("ein-julia" . julia)))
  '(objed-cursor-color "#D16969")
  '(package-selected-packages
-   '(ewal-evil-cursors pass pyim-basedict impatient-mode hidepw helm-pass flex-compile ewal-doom-themes erc-twitch erc-hl-nicks erc-colorize doom-modeline-now-playing conda celestial-mode-line bing-dict))
+   '(w3m ewal-evil-cursors pass pyim-basedict impatient-mode hidepw helm-pass flex-compile ewal-doom-themes erc-twitch erc-hl-nicks erc-colorize doom-modeline-now-playing conda celestial-mode-line bing-dict))
  '(pdf-view-midnight-colors (cons "#d4d4d4" "#1e1e1e"))
  '(rustic-ansi-faces
    ["#1e1e1e" "#D16969" "#579C4C" "#D7BA7D" "#339CDB" "#C586C0" "#85DDFF" "#d4d4d4"])

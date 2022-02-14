@@ -41,7 +41,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-dark+)
+(setq doom-theme 'ewal-doom-vibrant)
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -163,6 +163,32 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
           "~/PP/Notes/Agenda/CafeDoBem")))
 #+end_src
 
+* Shortcuts to load modules, as needed
+
+To create new loadable modules,
+
+#+begin_src emacs-lisp
+(load! "./my-func/define-modules.el")
+#+end_src
+
+#+begin_src emacs-lisp
+(load! "./my-func/load-modules.el")
+#+end_src
+
+#+RESULTS:
+: t
+
+#+begin_src emacs-lisp
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("l" . "load module")
+        :desc "Chinese" "c" #'lw/load-chinese
+        :desc "LaTeX" "l" #'lw/load-latex)))
+#+end_src
+
+#+RESULTS:
+: lw/load-latex
+
 * Anaconda
 #+begin_src emacs-lisp
 ;; (use-package! conda
@@ -183,63 +209,6 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 #+RESULTS:
 : t
 
-* Chinese font
-#+begin_src emacs-lisp
-(setq doom-font
-      (set-fontset-font "fontset-default" 'han
-                        (font-spec :family "Sarasa Mono Slab HC")))
-#+end_src
-
-#+begin_src emacs-lisp
-(load! "./my-func/lw_chdoom.el")
-#+end_src
-
-#+RESULTS:
-: t
-
-** Tables alignment
-
-Discussion on: https://emacs-china.org/t/org-mode/440/89
-#+begin_src emacs-lisp :tangle packages.el
-(package! zh-align
-  :recipe (:host github
-           :repo "chen-chao/zh-align.el"))      
-#+end_src
-
-#+RESULTS:
-| zh-align | :modules | ((:private . Emacs) (:private . modules)) | :recipe | (:host github :repo chen-chao/zh-align.el) |
-
-* Chinese setup with guesses
-** Input
-#+begin_src emacs-lisp
-(use-package! pyim-basedict)
-
-(use-package! pyim
-  :config
-  (require 'pyim-basedict) ; 拼音词库设置，五笔用户 *不需要* 此行设置
-  (pyim-basedict-enable)   ; 拼音词库，五笔用户 *不需要* 此行设置
-  (setq default-input-method "pyim")
-  (setq pyim-page-length 10)
-  (pyim-isearch-mode 1))
-
-#+end_src
-
-** Bing
-#+begin_src emacs-lisp
-(use-package! bing-dict
-  :config
-  (map! :leader
-        (:prefix-map ("b" . "buddhi")
-         (:prefix ("b" . "bing")
-          :desc "Bing dictionary brief" "d" #'lw/bing-dict-brief
-          :desc "Personal vocabulary" "p" #'lw/find-vocabulary)))
-  ;; :desc "Activate synonym" "s" #'lw/bing-synonym))))
-
-  (setq bing-dict-add-to-kill-ring t)
-  (setq bing-dict-show-thesaurus 'both)
-  (setq bing-dict-vocabulary-save t)
-  (setq bing-dict-vocabulary-file "~/PP/Notes/vocabulary.org"))
-#+end_src
 * Maps
 ** Font resize
 #+begin_src emacs-lisp
@@ -271,53 +240,6 @@ Discussion on: https://emacs-china.org/t/org-mode/440/89
 #+RESULTS:
 | https://www.democracynow.org/democracynow.rss | http://docuwiki.net/index.php?title=Special:Newpages&feed=rss | https://www.inovacaotecnologica.com.br/boletim/rss.php | http://feeds.nbcnews.com/feeds/topstories |
 
-* Minted
-
-This change the default exportation options to =LaTeX=.
-- =linenos= means each line in the code representations is numbered.
-
-#+begin_src emacs-lisp
-(setq org-latex-listings 'minted)
-
-(setq org-latex-custom-lang-environments
-      '((emacs-lisp "common-lispcode")))
-
-(setq org-latex-minted-options
-      '(("fontsize" "\\scriptsize")
-        ("linenos" "false")
-        ("bgcolor" "LightGray")
-        ("frame" "lines")))
-
-;; (setq org-latex-to-pdf-process
-;;       '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
-
-;; (add-to-list 'TeX-command-list
-;;                 '("LaTeX-scape" "-shell-escape %`%l%(mode)%' %T" TeX-run-TeX nil
-;;                         (latex-mode doctex-mode)
-;;                         :help "Run LaTeX with scape") t)
-#+end_src
-
-#+name: setup-minted
-
-
-#+begin_src emacs-lisp :exports both :silent
-;; (setq-default TeX-master nil ; by each new file AUCTEX will ask for a master fie.
-;;               TeX-PDF-mode t
-;;               TeX-engine 'xetex)     ; optional
-#+end_src
-
-#+RESULTS: setup-minted
-| pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f | pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f | pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f |
-
-#+begin_src emacs-lisp
-(map! :leader
-      (:prefix-map ("b" . "buddhi")
-       (:prefix ("l" . "latex")
-        :desc "Shell scape" "s" #'lw/TeX-command-toggle-shell-escape)))
-#+end_src
-
-#+RESULTS:
-: lw/TeX-command-toggle-shell-escape
 * Org-ref
 #+begin_src emacs-lisp
 ;; (use-package! helm-bibtex)
@@ -514,6 +436,26 @@ This change the default exportation options to =LaTeX=.
 
 #+RESULTS:
 : lw/goto-my-func-org
+** Navigate to books
+
+#+begin_src emacs-lisp
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("n" . "navigate to")
+        :desc "Active CS book" "a"  #'lw/goto-cs-active
+        :desc "CS books" "c" #'lw/goto-cs-books)))
+#+end_src
+
+#+RESULTS:
+: lw/goto-cs-books
+** Navigate to book notes
+#+begin_src emacs-lisp
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("n" . "navigate to")
+        :desc "Book notes" "n"  #'lw/goto-book-notes)))
+#+end_src
+
 * Magit
 #+begin_src emacs-lisp
 (map! :leader
@@ -694,9 +636,6 @@ npm install -g elm-oracle
   (conda-env-autoactivate-mode t))
 #+end_src
 
-#+RESULTS:
-: t
-
 * Xthemes
 #+begin_src emacs-lisp
 (use-package! ewal-doom-themes)
@@ -707,3 +646,19 @@ npm install -g elm-oracle
 
 #+RESULTS:
 : doom-modeline
+* W3M
+#+begin_src emacs-lisp
+(use-package! w3m
+  :config
+  (setq w3m-search-default-engine "duckduckgo"))
+#+end_src
+
+#+begin_src emacs-lisp
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("s" . "search")
+        :desc "w3m search" "s" #'w3m-search)))
+#+end_src
+
+#+RESULTS:
+: w3m-search

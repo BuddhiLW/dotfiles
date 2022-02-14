@@ -29,12 +29,13 @@ _source_if() { [[ -r "$1" ]] && source "$1"; }
 export USER="buddhilw"
 export BOOKS="$DOCUMENTS/Books"
 export CS_B="$BOOKS/CS"
-export CS_LANG_B="$CS_B/Languages"
-export ELM_B="$CS_LANG_B/Elm"
-export PP="$HOME/PP" #Programming Projects
+export BNOTES="$PP/Notes/Books"
 export BLOG="$PP/ClojureScript/Blobing"
 export CONTENT="$BLOG/content"
 export EVILDEEDS="$CONTENT/md/pages/US-tyranny.md"
+export ELM_B="$CS_LANG_B/Elm"
+export PP="$HOME/PP" #Programming Projects
+export CS_LANG_B="$CS_B/Languages"
 # export GITUSER="$USER"
 # export REPOS="$HOME/Repos"
 # export GHREPOS="$REPOS/github.com/$GITUSER"
@@ -78,6 +79,7 @@ export HRULEWIDTH=73
 # export GOPRIVATE="github.com/$GITUSER/*,gitlab.com/$GITUSER/*"
 export GOPATH="$HOME/go"
 export GOBIN="$HOME/go/bin"
+export NATIVEFIER="$HOME/.local/nativefier"
 # export GOROOT=/usr/lib/go
 # export PATH=$PATH:$GOROOT/bin
 export PATH="$PATH:$HOME/go/bin"
@@ -146,6 +148,7 @@ pathprepend \
     "$GOPATH" \
     "$GOBIN" \
     "$DOOMBIN" \
+    "$NATIVEFIER" \
     # "$GOROOT" \
     #"$GHREPOS/cmd-"* \
 
@@ -242,6 +245,7 @@ alias ed="emacs --with-profile default"
 alias ep="emacs --with-profile progress"
 alias edoom="emacs --with-profile doom"
 alias e="emacs --with-profile"
+alias zt="zathura"
 alias ecf="$DOOMDIR/config"
 alias lynx="lynx --display_charset=utf-8"
 #### Directory easyeness
@@ -273,6 +277,7 @@ alias grep="grep -P"
 alias minidockenv=". <(minikube docker-env)"
 alias pomo="pomodoro start"
 alias torb="start-tor-browser"
+alias books="cd $BOOKS"
 
 _have vim && alias vi=vim
 
