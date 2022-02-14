@@ -7,3 +7,9 @@
 [submodule "doom/julia-vterm.el"]
 	path = doom/julia-vterm.el
 	url = https://github.com/shg/julia-vterm.el.git
+[submodule "gitthings/dwm-primcol"]
+	path = gitthings/dwm-primcol
+	url = https://github.com/BogdanTheGeek/dwm-primcol
+[submodule "gitthings/picom"]
+	path = gitthings/picom
+	url = https://github.com/yshui/picom.git
