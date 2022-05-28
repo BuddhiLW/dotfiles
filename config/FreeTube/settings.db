@@ -1,6 +1,6 @@
 {"_id":"backendPreference","value":"invidious"}
 {"_id":"barColor","value":true}
-{"_id":"bounds","value":{"x":32,"y":44,"width":1856,"height":1024,"maximized":false}}
+{"_id":"bounds","value":{"x":32,"y":44,"width":1013,"height":1024,"maximized":false}}
 {"_id":"defaultInvidiousInstance","value":"https://yewtu.be"}
 {"_id":"defaultProfile","value":"xLlMTIh6EUM3JLN9"}
 {"_id":"defaultQuality","value":"1080"}
@@ -11,3 +11,4 @@
 {"_id":"uiScale","value":110}
 {"_id":"useProxy","value":false}
 {"_id":"useRssFeeds","value":true}
+{"_id":"bounds","value":{"x":1952,"y":44,"width":1856,"height":1024,"maximized":false}}

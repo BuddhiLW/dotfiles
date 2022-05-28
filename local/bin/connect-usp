@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+nmcli con add type wifi ifname wlan0 ssid eduroam wifi-sec.key-mgmt "wpa-eap" 802-1x.identity "9843240" 802-1x.password "$(pass USP/9843240)" 802-1x.system-ca-certs "yes" 802-1x.phase2-auth "mschapv2" 802-1x.eap "peap"
+

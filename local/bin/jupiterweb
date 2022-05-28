@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+cd $HOME/.local/nativefier/Jupiterweb
+exec ./Jupiterweb

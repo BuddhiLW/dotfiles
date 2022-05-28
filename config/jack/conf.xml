@@ -4,7 +4,7 @@ JACK settings, as persisted by D-Bus object.
 You probably don't want to edit this because
 it will be overwritten next time jackdbus saves.
 -->
-<!-- Fri Feb 11 21:20:43 2022 -->
+<!-- Sun May 15 12:14:58 2022 -->
 <jack>
  <engine>
   <option name="driver">alsa</option>
@@ -14,22 +14,18 @@ it will be overwritten next time jackdbus saves.
  </engine>
  <drivers>
   <driver name="alsa">
-   <option name="device">hw:Device,0</option>
-   <option name="capture">hw:sofhdadsp,0</option>
-   <option name="playback">hw:Device,0</option>
-   <option name="rate">44100</option>
-   <option name="period">1024</option>
-   <option name="nperiods">5</option>
+   <option name="device">hw:0</option>
+   <option name="capture">hw:0</option>
+   <option name="playback">hw:0</option>
+   <option name="nperiods">3</option>
    <option name="hwmon">false</option>
    <option name="hwmeter">false</option>
    <option name="duplex">true</option>
    <option name="softmode">false</option>
    <option name="monitor">false</option>
-   <option name="dither">s</option>
-   <option name="inchannels">0</option>
-   <option name="outchannels">0</option>
+   <option name="dither">n</option>
    <option name="shorts">false</option>
-   <option name="midi-driver">none</option>
+   <option name="midi-driver">raw</option>
   </driver>
   <driver name="proxy">
   </driver>
@@ -40,6 +36,7 @@ it will be overwritten next time jackdbus saves.
   <driver name="alsarawmidi">
   </driver>
   <driver name="dummy">
+   <option name="capture">0</option>
    <option name="monitor">true</option>
   </driver>
   <driver name="loopback">

@@ -95,7 +95,7 @@
        ;;gist              ; interacting with github gists
        lookup              ; navigate your code and its documentation
        lsp               ; M-x vscode
-       magit             ; a git porcelain for Emacs
+       ;; magit             ; a git porcelain for Emacs
        make              ; run make tasks from Emacs
        pass              ; password manager for nerds
        pdf               ; pdf enhancements
@@ -107,14 +107,14 @@
        ;;upload            ; map local to remote projects via ssh/ftp
 
        :os
-       (:if IS-MAC macos)  ; improve compatibility with macOS
        tty               ; improve the terminal Emacs experience
+       ;; (:if IS-MAC macos)  ; improve compatibility with macOS
 
        :lang
        ;;agda              ; types of types of types of types...
        ;;beancount         ; mind the GAAP
        cc                ; C > C++ == 1
-       ;; clojure           ; java with a lisp
+       clojure           ; java with a lisp
        ;; common-lisp       ; if you've seen one lisp, you've seen them all
        coq               ; proofs-as-programs
        ;;crystal           ; ruby at the speed of c
@@ -126,7 +126,7 @@
        elm               ; care for a cup of TEA?
        emacs-lisp        ; drown in parentheses
        ;;erlang            ; an elegant language for a more civilized age
-       ;; (ess +R +r)               ; emacs speaks statistics
+       (ess +R +r)               ; emacs speaks statistics
        ;;factor
        ;;faust             ; dsp, but you get to keep your soul
        ;;fortran           ; in FORTRAN, GOD is REAL (unless declared INTEGER)
@@ -150,7 +150,7 @@
        ;;nim               ; python + lisp at the speed of c
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;; ocaml             ; an objective camel
-       (org +roam2)               ; organize your plain life in plain text
+       org             ; organize your plain life in plain text +roam2
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
        ;; purescript        ; javascript, but functional

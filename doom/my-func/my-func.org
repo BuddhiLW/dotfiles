@@ -192,13 +192,11 @@ Therefore, I use a program to make this change in a key-stroke.
 (reload-alternative-input-methods)
 #+end_src
 
-#+RESULTS:
-
 * Fast =Mandarin= and =default= font size change
 
 The bindings for rapidly accessing these commands will live under =config.el=.
 
-#+begin_src emacs-lisp :tangle lw_chdoom.el
+#+begin_src emacs-lisp :tangle ../modules/chinese.el
 (defun lw/chdoom (fontsize)
   (interactive
    (list (read-number "Font size: "
@@ -214,6 +212,9 @@ The bindings for rapidly accessing these commands will live under =config.el=.
                       (or 200))))
   (set-face-attribute 'default nil :height  fontsize))
 #+end_src
+
+#+RESULTS:
+: lw/defdoom
 
 * Transparency toggle
 #+begin_src emacs-lisp :tangle transparency.el

@@ -51,14 +51,15 @@ yay -Sy ispell aspell aspell-en aspell-pt
 ## Go
 mkdir -p ~/go/src
 
-## Purescript
-installpkgyay purescript-bin
+# Purescript
+# installpkgyay purescript-bin
 #+end_src
 
 #+begin_src shell
 ## LaTeX
 pip install Pygments
 #+end_src
+
 * Programs and dependencies
 
 ** Neomutt

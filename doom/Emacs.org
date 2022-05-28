@@ -83,7 +83,7 @@
 ;; (use-package! undo-tree)
 
 (load! "./my-func/fast-input-method.el")
-(load! "./my-func/org-roam.el")
+;; (load! "./my-func/org-roam.el")
 
 (use-package! impatient-mode)
 
@@ -185,29 +185,6 @@ To create new loadable modules,
         :desc "Chinese" "c" #'lw/load-chinese
         :desc "LaTeX" "l" #'lw/load-latex)))
 #+end_src
-
-#+RESULTS:
-: lw/load-latex
-
-* Anaconda
-#+begin_src emacs-lisp
-;; (use-package! conda
-;;   :config
-;;   (setq
-;;    conda-env-home-directory (expand-file-name "~/.conda/")
-;;    conda-env-subdirectory "envs")
-;;   (custom-set-variables '(conda-anaconda-home "/opt/anaconda/"))
-;;   (conda-env-initialize-interactive-shells)
-;;   (conda-env-initialize-eshell)
-;;   (conda-env-autoactivate-mode t))
-#+end_src
-
-#+begin_src emacs-lisp
-(load! "./my-func/ein-babel.el")
-#+end_src
-
-#+RESULTS:
-: t
 
 * Maps
 ** Font resize
@@ -328,8 +305,9 @@ To create new loadable modules,
   :custom
   (deft-recursive t)
   (deft-use-filter-string-for-filename t)
-  (deft-default-extension "org")
-  (deft-directory org-roam-directory))
+  (deft-default-extension "org"))
+  ;; (deft-directory org-roam-directory))
+  
 #+end_src
 
 #+RESULTS:
@@ -470,6 +448,26 @@ To create new loadable modules,
 ;;   :config
 ;;   (add-hook! 'coq-mode-hook #'company-coq-mode)
 ;;   (add-hook! 'coq-mode-hook #'coq-commenter-mode))
+#+end_src
+
+#+RESULTS:
+: t
+
+* Anaconda
+#+begin_src emacs-lisp
+;; (use-package! conda
+;;   :config
+;;   (setq
+;;    conda-env-home-directory (expand-file-name "~/.conda/")
+;;    conda-env-subdirectory "envs")
+;;   (custom-set-variables '(conda-anaconda-home "/opt/anaconda/"))
+;;   (conda-env-initialize-interactive-shells)
+;;   (conda-env-initialize-eshell)
+;;   (conda-env-autoactivate-mode t))
+#+end_src
+
+#+begin_src emacs-lisp
+(load! "./my-func/ein-babel.el")
 #+end_src
 
 #+RESULTS:
@@ -635,7 +633,23 @@ npm install -g elm-oracle
   (conda-env-initialize-eshell)
   (conda-env-autoactivate-mode t))
 #+end_src
+* Haskell
+#+begin_src emacs-lisp
+(use-package! haskell-mode
+  :config
+  (define-key! map [?\C-c ?r] 'haskell-run))
+#+end_src
 
+#+RESULTS:
+: t
+
+* Go
+#+begin_src emacs-lisp
+(use-package! go-complete
+  :config
+ (add-hook 'completion-at-point-functions 'go-complete-at-point))
+
+#+end_src
 * Xthemes
 #+begin_src emacs-lisp
 (use-package! ewal-doom-themes)
@@ -652,13 +666,228 @@ npm install -g elm-oracle
   :config
   (setq w3m-search-default-engine "duckduckgo"))
 #+end_src
-
+* Types of Searches
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix-map ("b" . "buddhi")
        (:prefix ("s" . "search")
-        :desc "w3m search" "s" #'w3m-search)))
+        :desc "w3m search" "s" #'w3m-search
+        :desc "dictionary search" "d" #'dictionary-search)))
 #+end_src
 
 #+RESULTS:
-: w3m-search
+: dictionary-search
+
+* LaTeX
+** AUCTeX
+   #+begin_src emacs-lisp
+     (use-package! auctex
+       :ensure tex-mode
+       :hook (tex-mode . auctex-mode))
+     #+end_src
+
+     #+RESULTS:
+     | auctex-mode |
+** LaTeX Extra features for editing
+    #+begin_src emacs-lisp
+      ;; (use-package latex-extra)
+      #+end_src
+
+      #+RESULTS:
+** Pygments
+#+begin_src emacs-lisp
+  (eval-after-load "tex"
+    '(setcdr (assoc "LaTeX" TeX-command-list)
+            '("%`%l%(mode) -shell-escape%' %t"
+            TeX-run-TeX nil (latex-mode doctex-mode) :help "Run LaTeX")))
+#+end_src
+
+#+RESULTS:
+| %`%l%(mode) -shell-escape%' %t | TeX-run-TeX | nil | (latex-mode doctex-mode) | :help | Run LaTeX |
+
+
+ #+name: setup-minted
+ #+begin_src emacs-lisp :exports both :results silent
+(setq org-latex-listings 'minted)
+(setq org-latex-custom-lang-environments
+ '((emacs-lisp "common-lispcode")))
+(setq org-latex-minted-options
+      '(("frame" "lines")
+        ("fontsize" "\\scriptsize")
+        ("linenos" "false")
+        ("bgcolor" "LightGray")))
+(setq org-latex-to-pdf-process
+      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+ #+end_src
+
+** Output
+ #+begin_src emacs-lisp
+   ;; ; SyncTeX basics
+
+   ;; ; un-urlify and urlify-escape-only should be improved to handle all special characters, not only spaces.
+   ;; ; The fix for spaces is based on the first comment on http://emacswiki.org/emacs/AUCTeX#toc20
+
+   ;; (defun un-urlify (fname-or-url)
+   ;;   "Transform file:///absolute/path from Gnome into /absolute/path with very limited support for special characters"
+   ;;   (if (string= (substring fname-or-url 0 8) "file:///")
+   ;;       (url-unhex-string (substring fname-or-url 7))
+   ;;     fname-or-url))
+
+   ;; (defun urlify-escape-only (path)
+   ;;   "Handle special characters for urlify"
+   ;;   (replace-regexp-in-string " " "%20" path))
+
+   ;; (defun urlify (absolute-path)
+   ;;   "Transform /absolute/path to file:///absolute/path for Gnome with very limited support for special characters"
+   ;;   (if (string= (substring absolute-path 0 1) "/")
+   ;;       (concat "file://" (urlify-escape-only absolute-path))
+   ;;       absolute-path))
+
+
+   ;; ; SyncTeX backward search - based on http://emacswiki.org/emacs/AUCTeX#toc20, reproduced on https://tex.stackexchange.com/a/49840/21017
+
+   ;; (defun th-evince-sync (file linecol &rest ignored)
+   ;;   (let* ((fname (un-urlify file))
+   ;;          (buf (find-file fname))
+   ;;          (line (car linecol))
+   ;;          (col (cadr linecol)))
+   ;;     (if (null buf)
+   ;;         (message "[Synctex]: Could not open %s" fname)
+   ;;       (switch-to-buffer buf)
+   ;;       (goto-line (car linecol))
+   ;;       (unless (= col -1)
+   ;;         (move-to-column col)))))
+
+   ;; (defvar *dbus-evince-signal* nil)
+
+   ;; (defun enable-evince-sync ()
+   ;;   (require 'dbus)
+   ;;   ; cl is required for setf, taken from: http://lists.gnu.org/archive/html/emacs-orgmode/2009-11/msg01049.html
+   ;;   (require 'cl)
+   ;;   (when (and
+   ;;          (eq window-system 'x)
+   ;;          (fboundp 'dbus-register-signal))
+   ;;     (unless *dbus-evince-signal*
+   ;;       (setf *dbus-evince-signal*
+   ;;             (dbus-register-signal
+   ;;              ;; :session nil "/org/gnome/evince/Window/0"
+   ;;              "org.gnome.evince.Window" "SyncSource"
+   ;;              'th-evince-sync)))))
+
+   ;; (add-hook 'LaTeX-mode-hook 'enable-evince-sync)
+
+
+   ;; ; SyncTeX forward search - based on https://tex.stackexchange.com/a/46157
+
+   ;; ;; universal time, need by evince
+   ;; (defun utime ()
+   ;;   (let ((high (nth 0 (current-time)))
+   ;;         (low (nth 1 (current-time))))
+   ;;    (+ (* high (lsh 1 16) ) low)))
+
+   ;; ;; Forward search.
+   ;; ;; Adapted from http://dud.inf.tu-dresden.de/~ben/evince_synctex.tar.gz
+   ;; ;; (defun auctex-evince-forward-sync (pdffile texfile line)
+   ;; ;;   (let ((dbus-name
+   ;; ;;      (dbus-call-method :session
+   ;; ;;                "org.gnome.evince.Daemon"  ; service
+   ;; ;;                "/org/gnome/evince/Daemon" ; path
+   ;; ;;                "org.gnome.evince.Daemon"  ; interface
+   ;; ;;                "FindDocument"
+   ;; ;;                (urlify pdffile)
+   ;; ;;                t     ; Open a new window if the file is not opened.
+   ;; ;;                )))
+   ;; ;;     (dbus-call-method :session
+   ;; ;;           dbus-name
+   ;; ;;           "/org/gnome/evince/Window/0"
+   ;; ;;           "org.gnome.evince.Window"
+   ;; ;;           "SyncView"
+   ;; ;;           (urlify-escape-only texfile)
+   ;; ;;           (list :struct :int32 line :int32 1)
+   ;; ;;   (utime))))
+
+   ;; ;; (defun auctex-evince-view ()
+   ;; ;;   (let ((pdf (file-truename (concat default-directory
+   ;; ;;                     (TeX-master-file (TeX-output-extension)))))
+   ;; ;;     (tex (buffer-file-name))
+   ;; ;;     (line (line-number-at-pos)))
+   ;; ;;     (auctex-evince-forward-sync pdf tex line)))
+
+   ;; ;; New view entry: Evince via D-bus.
+   ;; (setq TeX-view-program-list '())
+   ;; (add-to-list 'TeX-view-program-list
+   ;;          '("evince" auctex-evince-view))
+
+   ;; ;; Prepend Evince via D-bus to program selection list
+   ;; ;; overriding other settings for PDF viewing.
+   ;; (setq TeX-view-program-selection '())
+   ;; (add-to-list 'TeX-view-program-selection
+   ;;          '(output-pdf "evince"))
+ #+end_src
+
+ #+RESULTS:
+ | output-pdf | evince |
+
+
+ #+begin_src emacs-lisp
+   (setq TeX-PDF-mode t)
+
+   (defun pdfevince ()
+      (add-to-list 'TeX-output-view-style
+                    '("^pdf$" "." "evince %o %(outpage)")))
+
+
+   (defun pdfokular ()
+      (add-to-list 'TeX-output-view-style
+                    '("^pdf$" "." "okular %o %(outpage)")))
+
+
+   ;; (add-hook  'LaTeX-mode-hook  'pdfevince  t) ; AUCTeX LaTeX mode
+   (add-hook  'LaTeX-mode-hook  'pdfokular  t) ; AUCTeX LaTeX mode
+ #+end_src
+
+ #+RESULTS:
+ | pdfevince |
+
+** Output evince setup
+ #+begin_src emacs-lisp
+   (load "auctex.el" nil t t)
+   ;; (load "preview-latex.el" nil t t)
+ #+end_src
+
+ #+RESULTS:
+ : t
+
+** Preview
+ #+begin_src emacs-lisp
+   (use-package! latex-preview-pane)
+   (use-package! latex-pretty-symbols)
+ #+end_src
+
+ #+RESULTS:
+
+
+ #+begin_src emacs-lisp
+   (setq TeX-PDF-mode t)
+   (require 'tex)
+   (TeX-global-PDF-mode t)
+ #+end_src
+
+ #+RESULTS:
+ : t
+** Auto-complete
+#+begin_src emacs-lisp
+(use-package! auto-complete-auctex)
+#+end_src
+
+#+RESULTS:
+* Pressentation
+** Org Reveal
+#+begin_src emacs-lisp
+(use-package ox-reveal)
+#+end_src
+
+#+RESULTS:
+: ox-reveal

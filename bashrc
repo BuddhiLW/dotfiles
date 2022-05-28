@@ -77,11 +77,12 @@ export HRULEWIDTH=73
 # export VISUAL=vi
 # export EDITOR_PREFIX=vi
 # export GOPRIVATE="github.com/$GITUSER/*,gitlab.com/$GITUSER/*"
+export GHCUP="$GHCUP_INSTALL_BASE_PREFIX/.ghcup/bin"
 export GOPATH="$HOME/go"
 export GOBIN="$HOME/go/bin"
 export NATIVEFIER="$HOME/.local/nativefier"
-# export GOROOT=/usr/lib/go
-# export PATH=$PATH:$GOROOT/bin
+export GOROOT="/usr/lib/go"
+export PATH=$PATH:$GOROOT/bin
 export PATH="$PATH:$HOME/go/bin"
 #export GOPROXY=direct
 #export CGO_ENABLED=0
@@ -149,7 +150,8 @@ pathprepend \
     "$GOBIN" \
     "$DOOMBIN" \
     "$NATIVEFIER" \
-    # "$GOROOT" \
+    "$GHCUP" \
+    "$GOROOT" \
     #"$GHREPOS/cmd-"* \
 
 pathappend \
@@ -163,7 +165,7 @@ pathappend \
     /usr/bin \
     /snap/bin \
     /sbin \
-    /bin
+    /bin \
 
 # ------------------------------ cdpath ------------------------------
 

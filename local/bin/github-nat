@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+cd "$HOME/dotfiles/Nativefiers/GitHub/"
+exec ./GitHub
