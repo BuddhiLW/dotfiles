@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Openbox Configuration Manager
+GenericName=Configuration Manager
+Comment=Tweak settings for Openbox
+Icon=obconf
+Exec=obconf %f
+Categories=DesktopSettings;GTK;Settings;
+MimeType=application/x-openbox-theme;
+StartupNotify=false
+Terminal=false
+NoDisplay=true

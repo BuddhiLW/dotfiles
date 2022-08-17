@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+#
+# Script name: dtos-colorscheme
+# Description: Change colorscheme in DTOS.
+# Dependencies: dmenu, dmscripts
+# GitLab: https://www.gitlab.com/dwt1/dtos
+# License: https://www.gitlab.com/dwt1/dtos/LICENSE
+# Contributors: Derek Taylor
+
+# Set with the flags "-e", "-u","-o pipefail" cause the script to fail
+# if certain things happen, which is a good thing.  Otherwise, we can
+# get hidden bugs that are hard to discover.
+set -euo pipefail
+
+# shellcheck disable=SC1091
+source "$HOME/.config/dmscripts/config"
+
+options=("DoomOne"
+"Dracula"
+"GruvboxDark"
+"MonokaiPro"
+"Nord"
+"OceanicNext"
+"Palenight"
+"SolarizedDark"
+"SolarizedLight"
+"TomorrowNight")
+
+choice=$(printf '%s\n' "${options[@]}" | ${DMENU} 'Choose color scheme:' "${@}")
+
+if [ "$choice" ]; then
+    sed  -i "s/import Colors.*/import Colors.$choice/g" "$HOME"/.config/xmonad/README.org || echo "Cannot modify README.org"
+    sed  -i "s/import Colors.*/import Colors.$choice/g" "$HOME"/.config/xmonad/xmonad.hs || echo "Cannot modify xmonad.hs"
+    xmonad --restart
+
+    sed -i "s/^colors: .*/colors: \*$choice/g" "$HOME"/.config/alacritty/alacritty.yml
+
+# DOOM EMACS
+
+# What to do if we just escape without choosing anything.
+else
+  echo "Program terminated." && exit 0
+fi

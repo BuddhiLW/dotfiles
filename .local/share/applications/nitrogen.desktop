@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=nitrogen
+GenericName=Wallpaper Setter
+Comment=Browse and set desktop backgrounds
+Icon=nitrogen
+Exec=nitrogen
+Categories=DesktopSettings;GTK;Utility;
+Keywords=background;desktop;
+StartupNotify=false
+Terminal=false
+NoDisplay=true

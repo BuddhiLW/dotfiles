@@ -1,0 +1,19 @@
+[Desktop Entry]
+Name=Quick System Info
+Name[am]=በፍጥነት ስርአት መረጃ
+Name[ca]=Informació ràpida del Sistema
+Name[de]=Quick System Info
+Name[el]=Συνοπτικές πληροφορίες συστήματος
+Name[es]=Rápida Información del Sistema
+Name[fr]=Informations systèmes
+Name[hu]=Gyors rendszerinformáció
+Name[nl]=Snelle Systeeminformatie
+Comment=Information about your hardware
+GenericName=system info
+Exec=urxvt -hold -e /usr/bin/inxi -F
+Icon=audio-card
+Type=Application
+StartupNotify=true
+Categories=GNOME;GTK;Settings;Security;X-GNOME-Settings-Panel;X-GNOME-SystemSettings;X-Unity-Settings-Panel;X-XFCE-SettingsDialog;X-XFCE-SystemSettings;
+MimeType=text/plain;
+Name[en_US.UTF-8]=Quick System Info

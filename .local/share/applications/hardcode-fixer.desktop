@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Fix Hardcoded Icons
+Comment=Change all hardcoded icons
+GenericName=change icons
+Exec=bash -c 'zenity --info --title="Fixing all hardcoded path icons" --text="An empty window means that all icons were already fixed.\n$(pkexec hardcode-fixer)" --width=500 --height=300' 
+Icon=apport
+Type=Application
+StartupNotify=true
+Categories=GNOME;GTK;Settings;Security;X-GNOME-Settings-Panel;X-GNOME-SystemSettings;X-Unity-Settings-Panel;X-XFCE-SettingsDialog;X-XFCE-SystemSettings;
+MimeType=text/plain;

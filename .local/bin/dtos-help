@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+#
+# Script name: dtos-help
+# Description: Get a list helpful videos related to DTOS and Linux in general.
+# Dependencies: dmenu, dmscripts and a web browser
+# GitLab: https://www.gitlab.com/dwt1/dtos
+# License: https://www.gitlab.com/dwt1/dtos/LICENSE
+# Contributors: Derek Taylor
+
+# Set with the flags "-e", "-u","-o pipefail" cause the script to fail
+# if certain things happen, which is a good thing.  Otherwise, we can
+# get hidden bugs that are hard to discover.
+set -euo pipefail
+
+# shellcheck disable=SC1091
+source "$HOME/.config/dmscripts/config"
+
+declare -A dtvids
+dtvids[Bash Scripting Variables, Arrays & If-Then-Else]="https://www.youtube.com/watch?v=xhI1qXUrAHw"
+dtvids[Begginers Guide To Gimp]="https://www.youtube.com/watch?v=YHwnlgD18kE"
+dtvids[Beginners Guide To Kdenlive]="https://www.youtube.com/watch?v=KI93ae_nnyY"
+dtvids[Beginners Guide To The Linux Terminal]="https://www.youtube.com/watch?v=s3ii48qYBxA"
+dtvids[Bookmarks, Buffers And Windows In Doom Emacs]="https://www.youtube.com/watch?v=F1iaskxcLNA"
+dtvids[Boost Productivity With Emacs, Org Mode and Org Agenda]="https://www.youtube.com/watch?v=Ea_-TaEGa7Y"
+dtvids[Command Line Shenanigans - Tomfoolery In The Terminal]="https://www.youtube.com/watch?v=_uJImlV-3os"
+dtvids[Command Line Tricks For Increased Speed]="https://www.youtube.com/watch?v=Y_6C-jowk8o"
+dtvids[Command Line Tricks With Caret And Exclamation]="https://www.youtube.com/watch?v=9B703VoFGLM"
+dtvids[CSS Stylesheets And Custom Userscripts In Qutebrowser]="https://www.youtube.com/watch?v=kFw64hlJkoI"
+dtvids[Doom Emacs For Noobs]="https://www.youtube.com/watch?v=iab2z21cRqA"
+dtvids[Doom Emacs - Org Mode Basics]="https://www.youtube.com/watch?v=34zODp_lhqg"
+dtvids[Doom Emacs - The Different Shells Available]="https://www.youtube.com/watch?v=2LzDgaen1cQ"
+dtvids[Doom Emacs - The Magit Git Client]="https://www.youtube.com/watch?v=X_iX5US1_xE"
+dtvids[Explaining Everything In My Xmonad Config]="https://www.youtube.com/watch?v=gPQ9mn9Nkpc"
+dtvids[File Globbing In Linux]="https://www.youtube.com/watch?v=hQyXuuBbCOo"
+dtvids[Font And Line Settings In Doom Emacs]="https://www.youtube.com/watch?v=Ey54ovJUdQ4"
+dtvids[Getting Started With Doom Emacs]="https://www.youtube.com/watch?v=dr_iBj91eeI"
+dtvids[Getting Started With Haskell]="https://www.youtube.com/watch?v=fJRBeWwdby8"
+dtvids[Getting Started With Qutebrowser]="https://www.youtube.com/watch?v=_OJKp4c5OLs"
+dtvids[Getting Started With Xmonad]="https://www.youtube.com/watch?v=3noK4GTmyMw"
+dtvids[Hacking On Xmonad - Custom Prompts & Server Mode]="https://www.youtube.com/watch?v=5N2x7_Xsr7U"
+dtvids[Hacking On Xmonad - GridSelect, ToggleStruts & ToggleBorders]="https://www.youtube.com/watch?v=qQ4CcMTLW-4"
+dtvids[Hacking On Xmonad - ManageHooks, Prompts and Hoogle]="https://www.youtube.com/watch?v=j7JWoS5onAY"
+dtvids[Hacking On Xmonad - Submaps & Search Prompts]="https://www.youtube.com/watch?v=ktrEK6dfi4I"
+dtvids[Hacking On Xmonad - TreeSelect]="https://www.youtube.com/watch?v=YxyRYZwudYs"
+dtvids[Im Replacing All Of My Programs With Emacs]="https://www.youtube.com/watch?v=HzFqZ0Gl0aw"
+dtvids[Learn The Basics Of Awk]="https://www.youtube.com/watch?v=9YOZmI-zWok"
+dtvids[Learn The Basics Of Cut And Tr]="https://www.youtube.com/watch?v=_0IFtMFYroU"
+dtvids[Learn The Basics Of Ed]="https://www.youtube.com/watch?v=Zpdo6We-_e0"
+dtvids[Learn The Basics Of Find and Locate]="https://www.youtube.com/watch?v=BZ5gsFiIKOQ"
+dtvids[Learn The Basics Of Grep]="https://www.youtube.com/watch?v=N05sWPgj-44"
+dtvids[Learn The Basics Of Sed]="https://www.youtube.com/watch?v=EACe7aiGczw"
+dtvids[Learn The Basics Of Shell Environment Variables]="https://www.youtube.com/watch?v=9ZpL8iDU7LY"
+dtvids[Learn The Basics Of Shuf, Sort & Uniq]="https://www.youtube.com/watch?v=31hGtM4s5JE"
+dtvids[Learn The Basics of SSH]="https://www.youtube.com/watch?v=2QXkrLVsRmk"
+dtvids[Learn The Basics Of Xargs]="https://www.youtube.com/watch?v=rp7jLi_kgPg"
+dtvids[Linux File Ownership And Permissions]="https://www.youtube.com/watch?v=fguV653wfqY"
+dtvids[Mounting Remote Filesystems With SSHFS]="https://www.youtube.com/watch?v=-0jyrvMl0Ic"
+dtvids[Recommended Settings For Qutebrowser]="https://www.youtube.com/watch?v=rMYMfnOpxP0"
+dtvids[Rewrite Your Configs In Org-Mode \(Literate Programming\)]="https://www.youtube.com/watch?v=pQe1ul51RM0"
+dtvids[Solve Problems With Shell Scripting And Dmenu]="https://www.youtube.com/watch?v=AwTmXP1tRgY"
+dtvids[Theming My Login Screen For Maximum Gains \(sddm\)]="https://www.youtube.com/watch?v=16nduwlYioc"
+dtvids[Trapped Inside Of Vim? \(Humor\)]="https://www.youtube.com/watch?v=8bGiiLW_ss4"
+dtvids[Vim Tutorial Part One]="https://www.youtube.com/watch?v=ER5JYFKkYDg"
+dtvids[Vim Tutorial Part Two]="https://www.youtube.com/watch?v=tExTz7GnpdQ"
+dtvids[Vim Command Mode, Ranges & \'g\']="https://www.youtube.com/watch?v=JgZu5-FNeMk"
+dtvids[Vim Managing Your Splits]="https://www.youtube.com/watch?v=Zir28KFCSQw"
+dtvids[Vim Makes Everything Better]="https://www.youtube.com/watch?v=a4scYdubKbo"
+dtvids[Vim Plugins Lightline, Vifm and VimWiki]="https://www.youtube.com/watch?v=RGOsE3UWqhI"
+dtvids[What Many Linux Users Putting In Their Config Files]="https://www.youtube.com/watch?v=P7Jd0iNSCQA"
+
+title=$(printf '%s\n' "${!dtvids[@]}" | sort | ${DMENU} 'DTOS Help:' "$@")
+
+if [ "$title" ]; then
+  url="${dtvids["${title}"]}"
+  # shellcheck disable=SC2154
+  $DMBROWSER "${url}"
+# What to do if we just escape without choosing anything.
+else
+  echo "Program terminated." && exit 0
+fi

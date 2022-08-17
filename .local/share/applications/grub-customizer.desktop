@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Grub Customizer
+Comment=Customize the bootloader (GRUB2 or BURG)
+Exec=grub-customizer
+Terminal=false
+X-MultipleArgs=false
+Type=Application
+StartupNotify=false
+Categories=GNOME;GTK;Settings;Security;X-GNOME-Settings-Panel;X-GNOME-SystemSettings;X-Unity-Settings-Panel;X-XFCE-SettingsDialog;X-XFCE-SystemSettings;
+Icon=grub-customizer

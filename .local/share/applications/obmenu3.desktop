@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Openbox Menu Editor
+GenericName=Menu Editor
+Comment=GUI Menu Editor for Openbox
+Icon=obmenu3
+Exec=obmenu3 %f
+NoDisplay=true
+Categories=DesktopSettings;GTK;Settings;
+StartupNotify=false
+Terminal=false

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xbel version="1.0"
+      xmlns:bookmark="http://www.freedesktop.org/standards/desktop-bookmarks"
+      xmlns:mime="http://www.freedesktop.org/standards/shared-mime-info"
+>
+  <bookmark href="file:///home/buddhilw/.screenlayout/default" added="2022-08-16T23:59:43.548383Z" modified="2022-08-16T23:59:43.548393Z" visited="2022-08-16T23:59:43.548384Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/octet-stream"/>
+        <bookmark:applications>
+          <bookmark:application name="arandr" exec="&apos;arandr %u&apos;" modified="2022-08-16T23:59:43.548388Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/buddhilw/Pictures/ArcoLinux-2022-08-16-1660700350_screenshot_4480x1080.jpg" added="2022-08-17T01:40:51.119387Z" modified="2022-08-17T01:40:51.143875Z" visited="2022-08-17T01:40:51.119389Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="image/jpeg"/>
+        <bookmark:applications>
+          <bookmark:application name="xdg-desktop-portal-gtk" exec="&apos;xdg-desktop-portal-gtk %u&apos;" modified="2022-08-17T01:40:51.143871Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/buddhilw/.screenlayout/default.sh" added="2022-08-17T12:54:17.065568Z" modified="2022-08-17T12:54:17.065578Z" visited="2022-08-17T12:54:17.065569Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/x-shellscript"/>
+        <bookmark:applications>
+          <bookmark:application name="arandr" exec="&apos;arandr %u&apos;" modified="2022-08-17T12:54:17.065573Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+</xbel>

@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Tint2
+GenericName=Tint2 panel
+Comment=Lightweight panel
+Icon=tint2
+Exec=tint2
+Categories=System;
+StartupNotify=false
+Terminal=false
+NoDisplay=true

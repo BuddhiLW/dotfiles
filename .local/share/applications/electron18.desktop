@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Electron 18
+Icon=electron18
+Exec=electron18 %u
+Categories=Development;GTK;
+StartupNotify=true
+NoDisplay=true
