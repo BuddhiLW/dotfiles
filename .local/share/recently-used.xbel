@@ -23,12 +23,102 @@
       </metadata>
     </info>
   </bookmark>
-  <bookmark href="file:///home/buddhilw/.screenlayout/default.sh" added="2022-08-17T12:54:17.065568Z" modified="2022-08-17T12:54:17.065578Z" visited="2022-08-17T12:54:17.065569Z">
+  <bookmark href="file:///home/buddhilw/.screenlayout/default.sh" added="2022-08-17T12:54:17.065568Z" modified="2022-08-17T21:26:05.697101Z" visited="2022-08-17T12:54:17.065569Z">
     <info>
       <metadata owner="http://freedesktop.org">
         <mime:mime-type type="application/x-shellscript"/>
         <bookmark:applications>
-          <bookmark:application name="arandr" exec="&apos;arandr %u&apos;" modified="2022-08-17T12:54:17.065573Z" count="1"/>
+          <bookmark:application name="arandr" exec="&apos;arandr %u&apos;" modified="2022-08-17T21:26:05.697097Z" count="4"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/buddhilw/PP/Meta-backend-course/img/git-blame-format.png" added="2022-08-17T20:04:12.282959Z" modified="2022-08-17T20:04:12.282970Z" visited="2022-08-17T20:04:12.282961Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="image/png"/>
+        <bookmark:applications>
+          <bookmark:application name="xfce4-screenshooter" exec="&apos;xfce4-screenshooter %u&apos;" modified="2022-08-17T20:04:12.282964Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/buddhilw/Documents/Certificates/Coursera%20S4SD93X9WM34.pdf" added="2022-08-17T21:59:15.208739Z" modified="2022-08-17T21:59:15.459248Z" visited="2022-08-17T21:59:15.208741Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/octet-stream"/>
+        <bookmark:applications>
+          <bookmark:application name="xdg-desktop-portal-gtk" exec="&apos;gio open %u&apos;" modified="2022-08-17T21:59:15.459243Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/buddhilw/screen-delayed.mp4" added="2022-08-18T01:35:45.905572Z" modified="2022-08-18T01:38:39.546237Z" visited="2022-08-18T01:35:45.905573Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="video/mp4"/>
+        <bookmark:applications>
+          <bookmark:application name="xdg-desktop-portal-gtk" exec="&apos;xdg-desktop-portal-gtk %u&apos;" modified="2022-08-18T01:38:39.546236Z" count="6"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/buddhilw/working.mp4" added="2022-08-18T01:37:28.527077Z" modified="2022-08-18T01:37:28.554334Z" visited="2022-08-18T01:37:28.527079Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="video/mp4"/>
+        <bookmark:applications>
+          <bookmark:application name="xdg-desktop-portal-gtk" exec="&apos;xdg-desktop-portal-gtk %u&apos;" modified="2022-08-18T01:37:28.554332Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/buddhilw/working2.mp4" added="2022-08-18T01:38:13.001305Z" modified="2022-08-18T01:38:13.024376Z" visited="2022-08-18T01:38:13.001307Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="video/mp4"/>
+        <bookmark:applications>
+          <bookmark:application name="xdg-desktop-portal-gtk" exec="&apos;xdg-desktop-portal-gtk %u&apos;" modified="2022-08-18T01:38:13.024373Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/buddhilw/PP/GoCoursera/img/gorountines.png" added="2022-08-18T13:50:22.238962Z" modified="2022-08-18T13:50:22.238976Z" visited="2022-08-18T13:50:22.238964Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="image/png"/>
+        <bookmark:applications>
+          <bookmark:application name="xfce4-screenshooter" exec="&apos;xfce4-screenshooter %u&apos;" modified="2022-08-18T13:50:22.238969Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/buddhilw/PP/GoCoursera/img/go-runtime-scheduler.png" added="2022-08-18T13:53:36.108101Z" modified="2022-08-18T13:53:36.108111Z" visited="2022-08-18T13:53:36.108102Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="image/png"/>
+        <bookmark:applications>
+          <bookmark:application name="xfce4-screenshooter" exec="&apos;xfce4-screenshooter %u&apos;" modified="2022-08-18T13:53:36.108106Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/buddhilw/PP/GoCoursera/img/race-conditions-interleavings.png" added="2022-08-18T13:59:43.348201Z" modified="2022-08-18T13:59:43.348212Z" visited="2022-08-18T13:59:43.348202Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="image/png"/>
+        <bookmark:applications>
+          <bookmark:application name="xfce4-screenshooter" exec="&apos;xfce4-screenshooter %u&apos;" modified="2022-08-18T13:59:43.348206Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/buddhilw/PP/GoCoursera/img/data-sharing-in-concurrency.png" added="2022-08-18T14:03:41.259602Z" modified="2022-08-18T14:05:47.612441Z" visited="2022-08-18T14:03:41.259603Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="image/png"/>
+        <bookmark:applications>
+          <bookmark:application name="xfce4-screenshooter" exec="&apos;xfce4-screenshooter %u&apos;" modified="2022-08-18T14:05:47.612437Z" count="2"/>
         </bookmark:applications>
       </metadata>
     </info>
