@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: go-Request 
+# key: r
+# --
+r *http.Request

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: clj-require
+# key: req
+# --
+(:require $0)

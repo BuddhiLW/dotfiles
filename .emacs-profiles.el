@@ -1,4 +1,4 @@
-(("default" . ((user-emacs-directory . "~/.emacs.default")))
+(("default" . ((user-emacs-directory . "~/.emacs.d")))
  ("spacemacs" . ((user-emacs-directory . "~/spacemacs")))
  ("progress" . ((user-emacs-directory . "~/.ep")))
  ("doom" . ((user-emacs-directory . "~/.edoom")))

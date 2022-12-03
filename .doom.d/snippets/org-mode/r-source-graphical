@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: r-sourceblock-graphical 
+# key: <rg
+# --
+#+begin_src R :session :results file graphics
+$0
+#+end_src

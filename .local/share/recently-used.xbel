@@ -123,4 +123,149 @@
       </metadata>
     </info>
   </bookmark>
+<<<<<<< HEAD
+=======
+  <bookmark href="file:///home/buddhilw/PP/GoCoursera/Mod3Week3/assignment.go" added="2022-08-19T01:35:05.285319Z" modified="2022-08-19T01:37:07.851691Z" visited="2022-08-19T01:35:05.285321Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/x-go"/>
+        <bookmark:applications>
+          <bookmark:application name="xdg-desktop-portal-gtk" exec="&apos;xdg-desktop-portal-gtk %u&apos;" modified="2022-08-19T01:37:07.851690Z" count="4"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/buddhilw/PP/GoCoursera/Reviews/assignment-sorting-parallel1.go" added="2022-08-19T01:39:06.103934Z" modified="2022-08-19T01:39:06.354191Z" visited="2022-08-19T01:39:06.103936Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/octet-stream"/>
+        <bookmark:applications>
+          <bookmark:application name="xdg-desktop-portal-gtk" exec="&apos;gio open %u&apos;" modified="2022-08-19T01:39:06.354186Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/buddhilw/PP/GoCoursera/Reviews/assignment-sorting-parallel2.go" added="2022-08-19T01:43:27.011017Z" modified="2022-08-19T01:43:27.262052Z" visited="2022-08-19T01:43:27.011019Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/octet-stream"/>
+        <bookmark:applications>
+          <bookmark:application name="xdg-desktop-portal-gtk" exec="&apos;gio open %u&apos;" modified="2022-08-19T01:43:27.262048Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/buddhilw/go/pkg/mod/github.com/BuddhiLW/CourseraGo/assigment3-week2/assignment3-w2.go" added="2022-08-19T16:31:45.173657Z" modified="2022-08-19T16:31:45.206942Z" visited="2022-08-19T16:31:45.173659Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/x-go"/>
+        <bookmark:applications>
+          <bookmark:application name="xdg-desktop-portal-gtk" exec="&apos;xdg-desktop-portal-gtk %u&apos;" modified="2022-08-19T16:31:45.206938Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/buddhilw/PP/GoCoursera/Reviews/racecondition.go" added="2022-08-19T16:37:08.522914Z" modified="2022-08-19T16:37:08.773180Z" visited="2022-08-19T16:37:08.522916Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/octet-stream"/>
+        <bookmark:applications>
+          <bookmark:application name="xdg-desktop-portal-gtk" exec="&apos;gio open %u&apos;" modified="2022-08-19T16:37:08.773176Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/buddhilw/PP/GoCoursera/Reviews/gorut.go" added="2022-08-19T16:38:40.843839Z" modified="2022-08-19T16:38:41.096086Z" visited="2022-08-19T16:38:40.843840Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/octet-stream"/>
+        <bookmark:applications>
+          <bookmark:application name="xdg-desktop-portal-gtk" exec="&apos;gio open %u&apos;" modified="2022-08-19T16:38:41.096080Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/buddhilw/print.png" added="2022-08-19T17:09:05.999184Z" modified="2022-08-19T17:11:01.543121Z" visited="2022-08-19T17:09:05.999186Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="image/png"/>
+        <bookmark:applications>
+          <bookmark:application name="xfce4-screenshooter" exec="&apos;xfce4-screenshooter %u&apos;" modified="2022-08-19T17:09:05.999190Z" count="1"/>
+          <bookmark:application name="xdg-desktop-portal-gtk" exec="&apos;xdg-desktop-portal-gtk %u&apos;" modified="2022-08-19T17:11:01.543119Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/buddhilw/ArcoLinux_2022-08-19_15-27-42.png" added="2022-08-19T18:27:47.728975Z" modified="2022-08-19T18:27:47.728984Z" visited="2022-08-19T18:27:47.728977Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="image/png"/>
+        <bookmark:applications>
+          <bookmark:application name="xfce4-screenshooter" exec="&apos;xfce4-screenshooter %u&apos;" modified="2022-08-19T18:27:47.728980Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/buddhilw/PP/GoCoursera/img/racing.png" added="2022-08-19T18:30:09.643336Z" modified="2022-08-19T18:30:09.643347Z" visited="2022-08-19T18:30:09.643337Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="image/png"/>
+        <bookmark:applications>
+          <bookmark:application name="xfce4-screenshooter" exec="&apos;xfce4-screenshooter %u&apos;" modified="2022-08-19T18:30:09.643342Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/buddhilw/go/pkg/mod/github.com/BuddhiLW/CourseraGo/assignment3-w3-2.go" added="2022-08-19T18:32:13.733587Z" modified="2022-08-19T18:32:13.758778Z" visited="2022-08-19T18:32:13.733588Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/x-go"/>
+        <bookmark:applications>
+          <bookmark:application name="xdg-desktop-portal-gtk" exec="&apos;xdg-desktop-portal-gtk %u&apos;" modified="2022-08-19T18:32:13.758775Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/buddhilw/PP/GoCoursera/img/racing-gamma.png" added="2022-08-19T18:43:22.677560Z" modified="2022-08-19T18:44:01.852999Z" visited="2022-08-19T18:43:22.677562Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="image/png"/>
+        <bookmark:applications>
+          <bookmark:application name="xfce4-screenshooter" exec="&apos;xfce4-screenshooter %u&apos;" modified="2022-08-19T18:43:22.677566Z" count="1"/>
+          <bookmark:application name="Firefox" exec="&apos;firefox %u&apos;" modified="2022-08-19T18:44:01.852989Z" count="1"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/buddhilw/go/pkg/mod/github.com/BuddhiLW/CourseraGo/assignment3-w3.go" added="2022-08-19T19:35:38.717598Z" modified="2022-08-19T19:44:27.546831Z" visited="2022-08-19T19:35:38.717599Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="text/x-go"/>
+        <bookmark:applications>
+          <bookmark:application name="xdg-desktop-portal-gtk" exec="&apos;xdg-desktop-portal-gtk %u&apos;" modified="2022-08-19T19:44:27.546823Z" count="4"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/buddhilw/Pictures/NationalGeographic_1769870.webp" added="2022-08-19T20:49:29.975809Z" modified="2022-08-19T20:49:30.384911Z" visited="2022-08-19T20:49:29.975811Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="image/webp"/>
+        <bookmark:applications>
+          <bookmark:application name="Firefox" exec="&apos;firefox %u&apos;" modified="2022-08-19T20:49:30.384908Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+  <bookmark href="file:///home/buddhilw/Pictures/center.png" added="2022-08-19T20:54:49.195846Z" modified="2022-08-19T20:54:49.445976Z" visited="2022-08-19T20:54:49.195848Z">
+    <info>
+      <metadata owner="http://freedesktop.org">
+        <mime:mime-type type="application/octet-stream"/>
+        <bookmark:applications>
+          <bookmark:application name="xdg-desktop-portal-gtk" exec="&apos;gio open %u&apos;" modified="2022-08-19T20:54:49.445972Z" count="2"/>
+        </bookmark:applications>
+      </metadata>
+    </info>
+  </bookmark>
+>>>>>>> fb5db91 (rebase -- remove heavy files)
 </xbel>

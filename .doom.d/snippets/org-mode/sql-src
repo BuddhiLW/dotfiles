@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: sql-src
+# key: <sql
+# --
+#+begin_src sql
+$0
+#+end_src

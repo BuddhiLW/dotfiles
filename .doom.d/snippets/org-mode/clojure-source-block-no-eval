@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: clojure-source-block-no-eval
+# key: <cljne
+# --
+#+begin_src clojure :eval no
+$0
+#+end_src

@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: emacs-lisp :tangle packages.el
+# key: <elp
+# --
+#+begin_src emacs-lisp :tangle ./packages.el
+$0
+#+end_src

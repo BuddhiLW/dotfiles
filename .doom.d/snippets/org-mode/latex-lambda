@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name:latex-lambda 
+# key: \la
+# --
+\lambda{} $0

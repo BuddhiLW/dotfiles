@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: go src block 
+# key: <go
+# --
+#+begin_src go
+$0
+#+end_src

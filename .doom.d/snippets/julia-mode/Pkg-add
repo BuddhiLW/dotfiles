@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Pkg.add 
+# key: add
+# --
+Pkg.add(\"$1\")

@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name:latex-equation 
+# key:<eq
+# --
+
+\begin{equation}
+	\begin{aligned}
+	$1
+	\end{aligned}
+\end{equation}

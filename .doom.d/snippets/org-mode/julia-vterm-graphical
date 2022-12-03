@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: julia-vterm-graphical
+# key: <vjg
+# --
+#+BEGIN_SRC julia :results file graphics :file dumb-image.png :output-dir figs :session main
+$1
+save(term="png", output="./figs/dumb-img.png", size="800,800", linewidth=1, background="white")
+#+end_src

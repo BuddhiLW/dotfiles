@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: Common-lisp src block 
+# key: <l
+# --
+#+begin_src lisp :results output
+$0
+#+end_src

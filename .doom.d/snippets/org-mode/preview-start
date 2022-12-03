@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: start in preview
+# key: <start
+# --
+#+STARTUP: latexpreview
+#+STARTUP: inlineimages

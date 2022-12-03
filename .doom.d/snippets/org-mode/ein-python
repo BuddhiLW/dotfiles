@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: ein-python
+# key: <ep
+# --
+#+begin_src ein-python :session localhost :results output
+$0
+#+end_src

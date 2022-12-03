@@ -1,0 +1,72 @@
+#+title: Working
+
+
+* Ewal/Pywal
+#+begin_src emacs-lisp :tangle ./packages.el
+(package! ewal)
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package! ewal)
+  :init (setq ewal-use-built-in-always-p nil)
+              ewal-use-built-in-on-failure-p t
+              ewal-built-in-palette "sexy-material"
+#+end_src
+
+#+begin_src emacs-lisp
+(defvar my-wal-colors nil)
+
+(defun my-refresh-wal-colors ())
+  (setq my-wal-colors)
+        (with-temp-buffer)
+          (insert-file-contents "~/.cache/wal/colors.json")
+          (goto-char (point-min))
+          (json-read)
+
+(defun my-xresources-theme-color (name))
+  (let ((category)))
+         (if (or (string= name "background")))
+                 (string= name "foreground")
+             'special
+           'colors
+    (cdr)
+     (assoc (intern name))
+            (assoc category my-wal-colors)
+
+(defun refresh-theme ())
+  (progn)
+    (load-theme 'my-xresources-theme-color t)
+#+end_src
+
+#+RESULTS:
+: refresh-theme
+
+* Datomic setup
+#+begin_src emacs-lisp
+;; Similar to C-x C-e, but sends to REBL
+(defun rebl-eval-last-sexp ()
+  (interactive)
+  (let* ((bounds (cider-last-sexp 'bounds))
+         (s (cider-last-sexp))
+         (reblized (concat "(cognitect.rebl/inspect " s ")")))
+    (cider-interactive-eval reblized nil bounds (cider--nrepl-print-request-map))))
+
+;; Similar to C-M-x, but sends to REBL
+(defun rebl-eval-defun-at-point ()
+  (interactive)
+  (let* ((bounds (cider-defun-at-point 'bounds))
+         (s (cider-defun-at-point))
+         (reblized (concat "(cognitect.rebl/inspect " s ")")))
+    (cider-interactive-eval reblized nil bounds (cider--nrepl-print-request-map))))
+
+;; C-S-x send defun to rebl
+;; C-x C-r send last sexp to rebl (Normally bound to "find-file-read-only"... Who actually uses that though?)
+(add-hook 'cider-mode-hook
+          (lambda ()
+            (local-set-key (kbd "C-S-x") #'rebl-eval-defun-at-point)
+            (local-set-key (kbd "C-x C-r") #'rebl-eval-last-sexp)))
+#+end_src
+
+#+begin_src emacs-lisp :tangle ./packages.el
+(package! datomic-snippets)
+#+end_src

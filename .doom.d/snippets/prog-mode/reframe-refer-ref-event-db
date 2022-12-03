@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: reframe-refer-ref-event-db
+# key: rfrefeventdb
+# --
+[re-frame.core :refer [reg-event-db]]
