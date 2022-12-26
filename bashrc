@@ -2,8 +2,7 @@
 # ~/.bashrc
 #
 # Add the following line at the beginning of bashrc
-[[ $- == *i* ]] &&
-    source "$HOME/.local/share/blesh/ble.sh" --attach=none
+[[ $- == *i* ]] && source /usr/share/blesh/ble.sh --noattach
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
@@ -280,6 +279,7 @@ alias minidockenv=". <(minikube docker-env)"
 alias pomo="pomodoro start"
 alias torb="start-tor-browser"
 alias books="cd $BOOKS"
+alias zp="zhpron"
 
 _have vim && alias vi=vim
 
@@ -344,31 +344,19 @@ _source_if "$HOME/.bash_private"
 _source_if "$HOME/.bash_work"
 
 
-# Luke Smith's zsh configs !/bin/zsh
-
-# profile file. Runs on login. Environmental variables are set here.
-
-# If you don't plan on reverting to bash, you can remove the link in ~/.profile
-# to clean up.
-
-# Adds `~/.local/bin` to $PATH
-# export PATH="$PATH:${$(find ~/.local/bin -type d -printf %p:)%%:}"
-
-# unsetopt PROMPT_SP
-
 # Default programs:
-# export EDITOR="nvim"
-export EDITOR="emacsclient -t"                  # $EDITOR opens in terminal
-export VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI mode
+export EDITOR="vim"
+export VISUAL="vim"
+## export EDITOR="emacsclient -t"                  # $EDITOR opens in terminal
+## export VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI mode
 export TERMINAL="st"
-export BROWSER="nyxt"
+export BROWSER="qutebrowser"
 
 # ~/ Clean-up:
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XINITRC="${XDG_CONFIG_HOME:-$HOME/.config}/x11/xinitrc"
-#export XAUTHORITY="$XDG_RUNTIME_DIR/Xauthority" # This line will break some DMs.
 export NOTMUCH_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/notmuch-config"
 export GTK2_RC_FILES="${XDG_CONFIG_HOME:-$HOME/.config}/gtk-2.0/gtkrc-2.0"
 export LESSHISTFILE="-"
@@ -510,3 +498,19 @@ newshell
 # Add the following line at the end of bashrc
 [[ ${BLE_VERSION-} ]] && ble-attach
 # source ~/.local/share/blesh/ble.sh
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/opt/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/opt/miniconda3/etc/profile.d/conda.sh" ]; then
+        . "/opt/miniconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/opt/miniconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+

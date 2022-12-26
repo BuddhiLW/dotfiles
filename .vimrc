@@ -1,1 +1,1 @@
-/home/buddhilw/.local/dotfiles-rob/vim/.vimrc
+/home/buddhilw/.config/vim/.vimrc
