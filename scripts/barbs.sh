@@ -17,7 +17,7 @@ while getopts ":a:r:b:p:h" o; do case "${o}" in
 
 [ -z "$dotfilesrepo" ] && dotfilesrepo="https://github.com/lukesmithxyz/voidrice.git"
 [ -z "$progsfile" ] && progsfile="https://raw.githubusercontent.com/LukeSmithxyz/LARBS/master/progs.csv"
-[ -z "$aurhelper" ] && aurhelper="yay"
+[ -z "$aurhelper" ] && aurhelper="apt-get install"
 [ -z "$repobranch" ] && repobranch="master"
 
 ### FUNCTIONS ###
@@ -133,7 +133,7 @@ gitmakeinstall() {
 aurinstall() { \
 	dialog --title "LARBS Installation" --infobox "Installing \`$1\` ($n of $total) from the AUR. $1 $2" 5 70
 	echo "$aurinstalled" | grep -q "^$1$" && return 1
-	sudo -u "$name" $aurhelper -S --noconfirm "$1" >/dev/null 2>&1
+	sudo -u "$name" $aurhelper -y "$1" >/dev/null 2>&1
 }
 
 pipinstall() { \

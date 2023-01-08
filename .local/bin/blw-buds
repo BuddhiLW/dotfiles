@@ -1,4 +1,5 @@
 #!/usr/bin/bash
+
 dev_id="A0:AC:69:2A:F3:A1"
 
 echo -e "power on\n" | bluetoothctl

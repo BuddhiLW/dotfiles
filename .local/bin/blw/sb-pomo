@@ -1,0 +1,33 @@
+#!/usr/bin/sh
+
+# pomod info | sed 's|;| |g' | awk '{print $1}'
+
+# get a pomodoro clock 🍅 running in status bar
+# Pre-requisites: yay -S openpomodoro-cli 🍅
+
+# case $BLOCK_BUTTON in
+#     1) setsid -f "$TERMINAL" -e
+
+clock="⏰"
+
+if [ ! -z "$(pomodoro status --format %r)" ] && [ "$(pomodoro status --format %r)" != "0:00" ]; then # Not empty string and is running (not zero)
+    pomodoro status --format "%d -- %r 🍅"
+fi
+
+if [ ! -z "$(pomodoro status --format %r)" ] && [ "$(pomodoro status --format %r)" = "0:00" ]; then
+    pomodoro status --format "%d -- %r 🍅"
+    sleep 2
+
+    notify-send "Pomodoro finished! 🏃"
+    pomodoro finish
+
+    # sleep 4
+    # TODO: will you have a break?
+    # pomodoro break > /tmp/pomodoro-break
+    notify-send "Start break!"
+fi
+
+if [ -z "$(pomodoro status)" ] && [ ! -z "$(pidof pomodoro)" ]; then
+    time=$(cat /tmp/pomodoro-break | awk -F ":" '{printf $(NF-2) ":" $(NF)}' | cut -c 3-)
+    printf "%s %s" "$time $clock"
+fi && printf "\\n"

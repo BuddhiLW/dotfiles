@@ -80,7 +80,7 @@ export GHCUP="$GHCUP_INSTALL_BASE_PREFIX/.ghcup/bin"
 export GOPATH="$HOME/go"
 export GOBIN="$HOME/go/bin"
 export NATIVEFIER="$HOME/.local/nativefier"
-export GOROOT="/usr/lib/go"
+export GOROOT="/usr/local/go"
 export PATH=$PATH:$GOROOT/bin
 export PATH="$PATH:$HOME/go/bin"
 #export GOPROXY=direct
@@ -138,9 +138,12 @@ pathprepend() {
 } && export pathprepend
 
 # remember last arg will be first in path
+# "for 'fontfor' program and rust installs with cargo.
 pathprepend \
-    /usr/local/go/bin \
+    "$HOME/.local/share/cargo/bin" \
     "$HOME/.local/bin" \
+    "$HOME/.local/bin/blw" \
+    "$HOME/.local/bin/rob-scripts/" \
     "$HOME/.local/bin/statusbar" \
     "$SCRIPTS" \
     "$SCRIPTS_INSTALL" \
@@ -151,6 +154,7 @@ pathprepend \
     "$NATIVEFIER" \
     "$GHCUP" \
     "$GOROOT" \
+    /usr/local/go/bin \
     #"$GHREPOS/cmd-"* \
 
 pathappend \
@@ -480,15 +484,15 @@ ex=🎯:\
 
 [ -f ${XDG_CONFIG_HOME}/shell/shortcutrc ] || shortcuts >/dev/null 2>&1 &
 
-if pacman -Qs libxft-bgra >/dev/null 2>&1; then
-    # Start graphical server on user's current tty if not already running.
-    [ "$(tty)" = "/dev/tty1" ] && ! pidof -s Xorg >/dev/null 2>&1 && exec startx "$XINITRC"
-else
-    echo "\033[31mIMPORTANT\033[0m: Note that \033[32m\`libxft-bgra\`\033[0m must be installed for this build of dwm.
-Please run:
-	\033[32mparu -S libxft-bgra-git\033[0m
-and replace \`libxft\`. Afterwards, you may start the graphical server by running \`startx\`."
-fi
+# if pacman -Qs libxft-bgra >/dev/null 2>&1; then
+#     # Start graphical server on user's current tty if not already running.
+#     [ "$(tty)" = "/dev/tty1" ] && ! pidof -s Xorg >/dev/null 2>&1 && exec startx "$XINITRC"
+# else
+#     echo "\033[31mIMPORTANT\033[0m: Note that \033[32m\`libxft-bgra\`\033[0m must be installed for this build of dwm.
+# Please run:
+# 	\033[32mparu -S libxft-bgra-git\033[0m
+# and replace \`libxft\`. Afterwards, you may start the graphical server by running \`startx\`."
+# fi
 
 # Switch escape and caps if tty and no passwd required:
 sudo -n loadkeys ${XDG_DATA_HOME/share}/larbs/ttymaps.kmap 2>/dev/null
@@ -501,16 +505,25 @@ newshell
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$('/home/buddhilw/.conda/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/opt/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/opt/miniconda3/etc/profile.d/conda.sh"
+    if [ -f "/home/buddhilw/.conda/etc/profile.d/conda.sh" ]; then
+        . "/home/buddhilw/.conda/etc/profile.d/conda.sh"
     else
-        export PATH="/opt/miniconda3/bin:$PATH"
+        export PATH="/home/buddhilw/.conda/bin:$PATH"
     fi
 fi
 unset __conda_setup
 # <<< conda initialize <<<
+
+
+complete -C keg keg
+
+conda activate default
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+
+source ~/.local/share/blesh/ble.sh
 
