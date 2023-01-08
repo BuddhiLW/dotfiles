@@ -2,9 +2,9 @@
 -- This is one of the xmobar configurations for DTOS.
 -- This config is packaged in the DTOS repo as 'dtos-xmobar'
 -- Color scheme: Doom One
--- Dependencies: 
-   -- otf-font-awesome 
-   -- ttf-mononoki 
+-- Dependencies:
+   -- otf-font-awesome
+   -- ttf-mononoki
    -- ttf-ubuntu-font-family
    -- htop
    -- emacs
@@ -13,9 +13,8 @@
    -- 'dtos-local-bin' (from dtos-core-repo)
 
 Config { font            = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:hinting=true"
-       , additionalFonts = [ "xft:Mononoki:pixelsize=11:antialias=true:hinting=true"
-                           , "xft:Font Awesome 6 Free Solid:pixelsize=12"
-                           , "xft:Font Awesome 6 Brands:pixelsize=12"
+       , additionalFonts = [ "xft:Mononoki:pixelsize=16:antialias=true:hinting=true"
+                           , "xft:FontAwesome:pixelsize=16:antialias=true:hinting=true"
                            ]
        , bgColor      = "#282c34"
        , fgColor      = "#ff6c6b"
@@ -31,14 +30,7 @@ Config { font            = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:h
        , persistent   = True
        , iconRoot     = ".xmonad/xpm/"  -- default: "."
        , commands = [
-                        -- Echos a "messages" icon in front of the notify-log output.
-                      Run Com "echo" ["<fn=3>\xf099</fn>"] "messages" 3600
-                        -- View notify.log file (~/.log/notify-log/notify.log)
-                    , Run Com "echo" ["View Notifications"]  "notify-log" 3600
-                        -- Echos a "penguin" icon in front of the kernel output.
-                    , Run Com "echo" ["<fn=3>\xf17c</fn>"] "penguin" 3600
-                        -- Get kernel version (script found in .local/bin)
-                    , Run Com ".local/bin/kernel" [] "kernel" 36000
+                    Run Com ".local/bin/kernel" [] "kernel" 36000
                         -- Cpu usage in percent
                     , Run Cpu ["-t", "<fn=2>\xf108</fn>  cpu: (<total>%)","-H","50","--high","red"] 20
                         -- Ram used number and percent
@@ -58,7 +50,7 @@ Config { font            = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:h
                         -- Battery
                     , Run BatteryP ["BAT0"] ["-t", "<acstatus><watts> (<left>%)"] 360
                         -- Time and date
-                    , Run Date "<fn=2>\xf017</fn>  %b %d %Y - (%H:%M) " "date" 50
+                    , Run Date "<fn=2>\xf017</fn>  %d %b %Y - (%H:%M) " "date" 50
                         -- Script that dynamically adjusts xmobar padding depending on number of trayer icons.
                     , Run Com ".config/xmobar/trayer-padding-icon.sh" [] "trayerpad" 20
                         -- Prints out the left side items such as workspaces, layout, etc.
@@ -66,5 +58,5 @@ Config { font            = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:h
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = " %UnsafeStdinReader% }{ <box type=Bottom width=2 mb=2 color=#98be65><fc=#98be65>%messages%  <action=`alacritty -e nvim .log/notify.log`>%notify-log%</action></fc></box>    <box type=Bottom width=2 mb=2 color=#51afef><fc=#51afef>%penguin%  %kernel%</fc></box>    <box type=Bottom width=2 mb=2 color=#ecbe7b><fc=#ecbe7b><action=`alacritty -e htop`>%cpu%</action></fc></box>    <box type=Bottom width=2 mb=2 color=#ff6c6b><fc=#ff6c6b><action=`alacritty -e htop`>%memory%</action></fc></box>    <box type=Bottom width=2 mb=2 color=#a9a1e1><fc=#a9a1e1>%disku%</fc></box>    <box type=Bottom width=2 mb=2 color=#98be65><fc=#98be65>%uparrow%  %uptime%</fc></box>    <box type=Bottom width=2 mb=2 color=#c678dd><fc=#c678dd>%bell%  <action=`alacritty -e sudo pacman -Syu`>%pacupdate%</action></fc></box>   <box type=Bottom width=2 mb=2 color=#da8548><fc=#da8548>%baticon%  %battery%</fc></box>    <box type=Bottom width=2 mb=2 color=#46d9ff><fc=#46d9ff><action=`emacsclient -c -a 'emacs' --eval '(doom/window-maximize-buffer(dt/year-calendar))'`>%date%</action></fc></box> %trayerpad%"
+       , template = "<box type=Bottom width=2 mb=1 ml=2><action=`dm-run`><icon=haskell_20.xpm/> </action> </box>  <fc=#666666>|</fc> %UnsafeStdinReader%}{<box type=Bottom width=2 mb=4 color=#ecbe7b><fc=#ecbe7b><action=`alacritty -e htop`>%cpu%</action></fc></box>    <box type=Bottom width=2 mb=2 color=#ff6c6b><fc=#ff6c6b><action=`alacritty -e htop`>%memory%</action></fc></box>    <box type=Bottom width=2 mb=2 color=#a9a1e1><fc=#a9a1e1>%disku%</fc></box>    <box type=Bottom width=2 mb=2 color=#da8548><fc=#da8548>%baticon%  %battery%</fc></box>    <box type=Bottom width=2 mb=2 color=#46d9ff><fc=#46d9ff><action=`emacsclient -c -a 'emacs' --eval '(doom/window-maximize-buffer(dt/year-calendar))'`>%date%</action></fc></box> %trayerpad%"
        }

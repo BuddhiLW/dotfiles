@@ -2,7 +2,6 @@
 # ~/.bashrc
 #
 # Add the following line at the beginning of bashrc
-[[ $- == *i* ]] && source /usr/share/blesh/ble.sh --noattach
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
@@ -141,6 +140,7 @@ pathprepend() {
 # "for 'fontfor' program and rust installs with cargo.
 pathprepend \
     "$HOME/.local/share/cargo/bin" \
+    "$HOME/.emacs.d/bin/" \
     "$HOME/.local/bin" \
     "$HOME/.local/bin/blw" \
     "$HOME/.local/bin/rob-scripts/" \
@@ -244,6 +244,8 @@ _have setxkbmap && test -n "$DISPLAY" && \
 
 # ------------------------------ aliases -----------------------------
 #      (use exec scripts instead, which work from vim and subprocs)
+
+uim-fep
 
 unalias -a
 alias ed="emacs --with-profile default"
@@ -501,7 +503,7 @@ newshell
 
 # Add the following line at the end of bashrc
 [[ ${BLE_VERSION-} ]] && ble-attach
-# source ~/.local/share/blesh/ble.sh
+source ~/.local/share/blesh/ble.sh
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
@@ -525,5 +527,4 @@ conda activate default
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 
-source ~/.local/share/blesh/ble.sh
 

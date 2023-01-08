@@ -1,0 +1,9 @@
+#!/bin/bash
+
+picom --experimental-backend &
+
+. "$HOME/.screenlayout/edp-1.sh" 
+sleep 5
+. "$HOME/.screenlayout/default.sh"
+
+setbg $HOME/Pictures/Wallpaper/cypus.jpg
