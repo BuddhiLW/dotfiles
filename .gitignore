@@ -102,3 +102,6 @@ gitthings/lutris
 gitthings/st
 .local/src/st
 .vim/pack/bundle/start/vim-snippets
+
+.local/bin/stack
+.local/bin/xmonad
