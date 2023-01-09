@@ -1,0 +1,13 @@
+[restore-stream]
+Input/Audio:application.id:org.gnome.VolumeControl:channelMap=MONO;
+Input/Audio:application.id:org.gnome.VolumeControl:channelVolumes=1.0;
+Input/Audio:application.id:org.gnome.VolumeControl:mute=false
+Input/Audio:application.id:org.gnome.VolumeControl:volume=1.0
+Output/Audio:media.role:Notification:channelMap=FL;FR;
+Output/Audio:media.role:Notification:channelVolumes=1.0;1.0;
+Output/Audio:media.role:Notification:mute=false
+Output/Audio:media.role:Notification:volume=1.0
+Output/Audio:media.role:Test:channelMap=FL;
+Output/Audio:media.role:Test:channelVolumes=1.0;
+Output/Audio:media.role:Test:mute=false
+Output/Audio:media.role:Test:volume=1.0

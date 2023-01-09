@@ -526,5 +526,4 @@ complete -C keg keg
 conda activate default
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
-
-
+export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/fontconfig.pc
