@@ -1,21 +1,34 @@
-## General development
 vim
 
-## st dependencies
+
+
 build-essential
+
 pkg-config
-fontconfig 
+
+fontconfig
+
 fontconfig-config
+
 libharfbuzz-dev
+
 libfontconfig1-dev
-libx11-dev 
+
+libx11-dev
+
 libxft-dev
 
-## bashrc deps
+
+
 figlet
+
 lolcat
+
 fortune
+
 gawk
 
-## systems
+
+
 lynx
+
