@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+INSTALL=$DOTFILES/scripts/install
+
+bash $INSTALL/make-deps
+

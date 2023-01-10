@@ -1,34 +1,18 @@
 vim
-
-
+emacs
+lynx
 
 build-essential
-
 pkg-config
-
 fontconfig
-
 fontconfig-config
-
 libharfbuzz-dev
-
 libfontconfig1-dev
-
 libx11-dev
-
 libxft-dev
 
-
-
 figlet
-
 lolcat
-
 fortune
-
 gawk
-
-
-
-lynx
 

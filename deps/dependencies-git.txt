@@ -1,2 +1,3 @@
 https://github.com/LukeSmithxyz/st
 https://github.com/akinomyoga/ble.sh
+https://github.com/doomemacs/doomemacs

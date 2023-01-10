@@ -37,7 +37,7 @@ export CS_LANG_B="$CS_B/Languages"
 # export GITUSER="$USER"
 # export REPOS="$HOME/Repos"
 # export GHREPOS="$REPOS/github.com/$GITUSER"
-export DOTFILES="$HOME/.local/"
+export DOTFILES="$HOME/dotfiles/"
 export DOOMDIR="$HOME/.doom.d/"
 export DOOM="$HOME/.edoom/"
 export DOOMBIN="$DOOM/bin/"
@@ -519,7 +519,6 @@ unset __conda_setup
 
 complete -C keg keg
 
-# conda activate default
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/fontconfig.pc

@@ -1,0 +1,9 @@
+#!/usr/bin/bash
+
+rm -rf $HOME/.emacs.d
+git clone --depth 1 https://github.com/doomemacs/doomemacs $HOME/.emacs.d
+$HOME/.emacs.d/bin/doom install
+
+rm -rf $HOME/.doom.d
+ln -sf $HOME/dotfiles/.doom.d $HOME
+

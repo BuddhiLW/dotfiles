@@ -1,5 +1,7 @@
 ## General development
 vim
+emacs
+lynx
 
 ## st dependencies
 build-essential
@@ -17,5 +19,3 @@ lolcat
 fortune
 gawk
 
-## systems
-lynx

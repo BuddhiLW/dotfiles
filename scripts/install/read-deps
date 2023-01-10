@@ -1,0 +1,11 @@
+#!/usr/bin/bash
+file="$@"
+
+while read -r line; do
+  if [[ $line =~ ^## ]]; then
+    continue
+  else
+    echo $line 
+  fi
+done <$file
+

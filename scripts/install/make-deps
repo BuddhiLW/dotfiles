@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+SH=$DOTFILES/scripts/install
+DEPS=$DOTFILES/deps
+bash $SH/read-deps $DEPS/dependencie-scratch.txt > $DEPS/dep-out.txt
