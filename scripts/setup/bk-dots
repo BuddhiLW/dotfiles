@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+
+BACKUP=$HOME/dotbk-$(date +%s)
+mkdir $BACKUP
+
+mv "$HOME/.config" "$BACKUP/config"
+mv "$HOME/.local"  "$BACKUP/local"

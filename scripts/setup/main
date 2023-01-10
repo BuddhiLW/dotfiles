@@ -1,0 +1,9 @@
+#!/usr/bin/bash
+SH=$DOTFILES/scripts/
+SETUP=$DOTFILES/scripts/setup
+
+bash $SETUP/bk-dots
+bash $SETUP/init
+bash $SETUP/link-config
+bash $SH/main
+

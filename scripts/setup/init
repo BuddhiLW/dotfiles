@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+
+link() {
+  echo "ln -sf $DOTFILES$1 $HOME"
+}
+
+link ".config"
+link ".local"

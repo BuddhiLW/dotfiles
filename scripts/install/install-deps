@@ -1,1 +1,2 @@
-xargs -rxa $HOME/dotfiles/dep-out.txt -- sudo apt-get install --
+#!/usr/bin/bash
+xargs -rxa $DOTFILES/dep-out.txt -- sudo apt-get install --

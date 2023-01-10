@@ -2,4 +2,6 @@
 INSTALL=$DOTFILES/scripts/install
 
 bash $INSTALL/make-deps
-
+bash $INSTALL/install-deps
+bash $INSTALL/doom
+bash $INSTALL/ble
