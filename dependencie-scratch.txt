@@ -11,3 +11,8 @@ libfontconfig1-dev
 libx11-dev 
 libxft-dev
 
+## bashrc deps
+figlet
+lolcat
+fortune
+gawk

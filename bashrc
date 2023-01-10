@@ -1,7 +1,7 @@
-#
+# BuddhiLW's setup
 # ~/.bashrc
 #
-# Add the following line at the beginning of bashrc
+[[ $- == *i* ]] && source /home/buddhilw/dotfiles/gitthings/ble.sh/out/ble.sh --noattach
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
@@ -245,7 +245,7 @@ _have setxkbmap && test -n "$DISPLAY" && \
 # ------------------------------ aliases -----------------------------
 #      (use exec scripts instead, which work from vim and subprocs)
 
-uim-fep
+# uim-fep
 
 unalias -a
 alias ed="emacs --with-profile default"
@@ -501,10 +501,6 @@ sudo -n loadkeys ${XDG_DATA_HOME/share}/larbs/ttymaps.kmap 2>/dev/null
 
 newshell
 
-# Add the following line at the end of bashrc
-[[ ${BLE_VERSION-} ]] && ble-attach
-source ~/.local/share/blesh/ble.sh
-
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
 __conda_setup="$('/home/buddhilw/.conda/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
@@ -523,7 +519,9 @@ unset __conda_setup
 
 complete -C keg keg
 
-conda activate default
+# conda activate default
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/fontconfig.pc
+
+[[ ${BLE_VERSION-} ]] && ble-attach
