@@ -92,8 +92,8 @@
 
 .local/dot
 
-.config/xmonad/xmonad-contrib
-.config/xmonad/xmonad
+# .config/xmonad/xmonad-contrib
+# .config/xmonad/xmonad
 
 .local/src/ble.sh
 gitthigns/obs-autoupload/
@@ -105,3 +105,5 @@ gitthings/st
 
 .local/bin/stack
 .local/bin/xmonad
+
+.config/ibus/

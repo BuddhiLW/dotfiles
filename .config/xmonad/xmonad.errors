@@ -1,0 +1,1 @@
+$ stack build --silent --stack-yaml /home/buddhilw/dotfiles/.config/xmonad/stack.yaml

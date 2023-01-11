@@ -2,6 +2,10 @@
 vim
 emacs
 lynx
+gh
+curl
+wget
+build-essential
 
 ## st dependencies
 build-essential
@@ -19,3 +23,18 @@ lolcat
 fortune
 gawk
 
+## General programs
+qutebrowser
+xwallpaper
+
+## xmonad dependencies
+xmonad
+libghc-xmonad-contrib-dev
+xterm 
+suckless-tools
+libx11-dev 
+libxft-dev 
+libxinerama-dev 
+libxrandr-dev 
+libxss-dev
+haskell-stack

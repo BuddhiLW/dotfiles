@@ -13,3 +13,9 @@
 [submodule "gitthings/picom"]
 	path = gitthings/picom
 	url = https://github.com/yshui/picom.git
+[submodule ".config/xmonad/xmonad"]
+	path = .config/xmonad/xmonad
+	url = https://github.com/xmonad/xmonad
+[submodule ".config/xmonad/xmonad-contrib"]
+	path = .config/xmonad/xmonad-contrib
+	url = https://github.com/xmonad/xmonad-contrib
