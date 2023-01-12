@@ -14,8 +14,8 @@
         </monitorspec>
         <mode>
           <width>1920</width>
-          <height>1200</height>
-          <rate>59.885</rate>
+          <height>1080</height>
+          <rate>59.963</rate>
         </mode>
       </monitor>
     </logicalmonitor>

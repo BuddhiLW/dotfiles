@@ -91,7 +91,7 @@ myModMask :: KeyMask
 myModMask = mod4Mask        -- Sets modkey to super/windows key
 
 myTerminal :: String
-myTerminal = "alacritty"    -- Sets default terminal
+myTerminal = "st"    -- Sets default terminal
 
 myBrowser :: String
 myBrowser = "qutebrowser "  -- Sets qutebrowser as browser
@@ -510,7 +510,7 @@ myKeys c =
   [ ("M-C-r", addName "Recompile XMonad"       $ spawn "xmonad --recompile")
   , ("M-S-r", addName "Restart XMonad"         $ spawn "xmonad --restart")
   , ("M-S-q", addName "Quit XMonad"            $ sequence_ [spawn (mySoundPlayer ++ shutdownSound), io exitSuccess])
-  , ("M-S-c", addName "Kill focused window"    $ kill1)
+  , ("M-q", addName "Kill focused window"    $ kill1)
   , ("M-S-a", addName "Kill all windows on WS" $ killAll)
   , ("M-S-<Return>", addName "Run prompt"      $ sequence_ [spawn (mySoundPlayer ++ dmenuSound), spawn "~/.local/bin/dm-run"])
   , ("M-S-b", addName "Toggle bar show/hide"   $ sendMessage ToggleStruts)
@@ -576,7 +576,7 @@ myKeys c =
 
   ^++^ subKeys "Favorite programs"
   [ ("M-<Return>", addName "Launch terminal"   $ spawn (myTerminal))
-  , ("M-b", addName "Launch web browser"       $ spawn (myBrowser))
+  , ("M-w", addName "Launch web browser"       $ spawn (myBrowser))
   , ("M-M1-h", addName "Launch htop"           $ spawn (myTerminal ++ " -e htop"))]
 
   ^++^ subKeys "Monitors"
@@ -695,7 +695,7 @@ myKeys c =
 main :: IO ()
 main = do
   -- Launching three instances of xmobar on their monitors.
-  xmproc0 <- spawnPipe ("xmobar -x 0 $HOME/.config/xmobar/" ++ colorScheme ++ "-xmobarrc")
+  xmproc0 <- spawnPipe ("xmobar -x 0 $HOME/.config/xmobar/doom-one-xmobarrc")
   xmproc1 <- spawnPipe ("xmobar -x 1 $HOME/.config/xmobar/" ++ colorScheme ++ "-xmobarrc")
   xmproc2 <- spawnPipe ("xmobar -x 2 $HOME/.config/xmobar/" ++ colorScheme ++ "-xmobarrc")
   -- the xmonad, ya know...what the WM is named after!
