@@ -1,4 +1,0 @@
-# particularly useful for psql
-set editing-mode vi
-#set bell-style none          # MAKE IT STOP!!
-set keymap vi

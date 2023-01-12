@@ -1,4 +1,0 @@
-#!/usr/bin/bash
-
-cd $HOME/.local/nativefier/Soundcloud
-exec ./Soundcloud

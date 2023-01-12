@@ -1,6 +1,0 @@
-#!/usr/bin/bash
-
-cd $HOME/.local/nativefier/ArtosisChat/
-exec ./Twitch
-
-

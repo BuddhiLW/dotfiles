@@ -1,7 +1,0 @@
-#!/bin/sh
-for font in /usr/share/figlet/*.flf; do
-  clear
-  echo "FONT: $font"
-  figlet -f "${font}" hello
-  read line
-done

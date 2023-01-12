@@ -1,6 +1,0 @@
-#!/usr/bin/sh
-
-col1="#812a1e"
-col2="#ff7337"
-
-echo "^c${col1}^^f3^^c${col2}^$(date "+%a %m/%d")"

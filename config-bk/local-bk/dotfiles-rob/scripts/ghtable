@@ -1,6 +1,0 @@
-#!/usr/bin/perl -F\|
-use v5.14;
-<STDIN>;
-chomp;
-say;
-say '|:-:' x ($#F+1) . '|';

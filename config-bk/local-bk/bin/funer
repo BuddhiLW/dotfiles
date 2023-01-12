@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-[ $# -lt 2 ] && echo "wrong number of args" && exit 1
-file=$1
-var=$2
-while read line; do
-    if  echo "$line" | grep -q "$var"; then echo "$line"; fi
-done < "$file"
-exit 0

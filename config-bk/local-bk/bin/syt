@@ -1,4 +1,0 @@
-#!/bin/sh
-
-search=$(echo "$*" | python ~/.local/bin/youtube-search.py)
-freetube $search

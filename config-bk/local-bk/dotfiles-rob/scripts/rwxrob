@@ -1,9 +1,0 @@
-#!/bin/bash
-
-url="https://github.com/rwxrob/rwxrob/search?q=$(urlencode $*)"
-
-if [[ -n $MYVIMRC ]]; then
-  echo "$url"
-else
-   wee "$url"
-fi

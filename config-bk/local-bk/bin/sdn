@@ -1,4 +1,0 @@
-#!/usr/bin/bash
-
-sleep 140m 
-sudo shutdown -h now

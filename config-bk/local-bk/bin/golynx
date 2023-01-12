@@ -1,4 +1,0 @@
-#!/usr/bin/bash
-
-godoc -http=:8000
-lynx https://localhost:8000

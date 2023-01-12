@@ -1,16 +1,18 @@
 #!/usr/bin/bash
 
-curl -L "https://gitlab.com/dwt1/dotfiles/-/archive/master/dotfiles-master.zip?path=.config/xmonad" --output xmonad
-unzip xmonad
-mv dotfiles-master-.config-xmonad/.config/xmonad $DOTFILES/.config/xmonad
-rm dotfiles-master-.config-xmonad
+# curl -L "https://gitlab.com/dwt1/dotfiles/-/archive/master/dotfiles-master.zip?path=.config/xmonad" --output xmonad
+# unzip xmonad
+# mv dotfiles-master-.config-xmonad/.config/xmonad $DOTFILES/.config/xmonad
+# rm dotfiles-master-.config-xmonad
 cd $HOME/.config/xmonad
 
+rm -rf xmonad
+rm -rf xmonad-contrib
 git clone https://github.com/xmonad/xmonad
 git clone https://github.com/xmonad/xmonad-contrib
 
 stack init
-
+stack build
 
 
 

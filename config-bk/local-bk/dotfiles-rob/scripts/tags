@@ -1,4 +1,0 @@
-#!/bin/sh
-echo Local: $(git tag | semver-sort)
-echo Remote: $(git ls-remote --tags | pae 's,.*/,,' | semver-sort)
-

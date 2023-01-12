@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-# ffmpeg -i "$@".mp4 -c:v libx264 -profile:v baseline -level 3.0 -pix_fmt yuv420p "$@"-yt.mp4
-ffmpeg -i "$@" -c:v libx264 -profile:v baseline -level 3.0 -pix_fmt yuv420p "${@%.*}"-yt.mp4

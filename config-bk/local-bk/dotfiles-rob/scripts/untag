@@ -1,3 +1,0 @@
-#!/bin/sh
-test -z "$1" && echo "usage: untag <tag>" && exit 1
-git tag -d "$1" && git push --delete origin "$1"

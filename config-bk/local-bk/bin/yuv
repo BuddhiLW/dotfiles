@@ -1,8 +1,0 @@
-#!/bin/sh
-
-ffmpeg -i $1.mp4 \
-       -c:v libx264 \
-       -profile:v baseline \
-       -level 3.0 \
-       -pix_fmt yuv420p \
-       $1-yt.mp4

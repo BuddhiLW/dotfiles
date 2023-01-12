@@ -1,5 +1,0 @@
-#!/bin/sh
-cmd="$1"; shift
-buf="$*"
-tell "**usage:** *$cmd* $buf"
-echo

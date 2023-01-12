@@ -1,6 +1,0 @@
-#!/opt/anaconda/bin/python
-
-from argostranslategui import gui
-
-gui.main()
-

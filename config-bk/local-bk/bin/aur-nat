@@ -1,5 +1,0 @@
-#!/usr/bin/bash
-
-cd "$HOME/dotfiles/Nativefiers/AUR/"
-exec ./AUR
-

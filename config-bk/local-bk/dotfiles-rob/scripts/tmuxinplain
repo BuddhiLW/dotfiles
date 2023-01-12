@@ -1,3 +1,0 @@
-#!/bin/sh
-unset TMUX
-exec /usr/bin/tmux -L plain -f ~/.tmux-plain.conf -u "$@"

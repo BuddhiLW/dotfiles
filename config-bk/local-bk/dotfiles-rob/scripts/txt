@@ -1,2 +1,0 @@
-#!/bin/sh
-exec pandoc -t plain --wrap=none

@@ -1,5 +1,0 @@
-#!/usr/bin/bash
-
-cd $DOTFILES/src/dwm/
-sudo make install && make clean
-fk dwm

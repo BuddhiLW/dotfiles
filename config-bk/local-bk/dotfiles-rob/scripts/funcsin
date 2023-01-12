@@ -1,7 +1,0 @@
-#!/bin/sh
-
-#TODO rewrite without subprocs
-
-egrep '^[-_[:alpha:]]+ ?\(' $1 | while read line; do
-  echo ${line%%[ (]*}
-done

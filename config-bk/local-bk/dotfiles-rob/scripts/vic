@@ -1,3 +1,0 @@
-#!/bin/sh
-cmd=$(command -v $1)
-test -n "$cmd" && vim "$cmd"

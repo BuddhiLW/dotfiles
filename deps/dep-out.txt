@@ -1,6 +1,10 @@
 vim
 emacs
 lynx
+gh
+curl
+wget
+build-essential
 
 build-essential
 pkg-config
@@ -16,3 +20,17 @@ lolcat
 fortune
 gawk
 
+qutebrowser
+xwallpaper
+
+xmonad
+xmobar
+libghc-xmonad-contrib-dev
+xterm
+suckless-tools
+libx11-dev
+libxft-dev
+libxinerama-dev
+libxrandr-dev
+libxss-dev
+haskell-stack

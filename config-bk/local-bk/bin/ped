@@ -1,3 +1,0 @@
-#!/usr/bin/bash
-
-prime-run $(emacs --with-profile=doom)

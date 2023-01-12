@@ -1,9 +1,0 @@
-#!/bin/sh 
-  
-case "$PLATFORM" in
-  mac)
-    netstat -an -ptcp | grep LISTEN
-    lsof -i -P | grep -i "listen"
-    ;;
-  *) netstat -tulpn |grep LISTEN ;;
-esac

@@ -1,2 +1,0 @@
-#!/bin/sh
-exec wee go get "$(config def.github)/$1"

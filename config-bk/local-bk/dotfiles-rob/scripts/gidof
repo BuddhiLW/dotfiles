@@ -1,2 +1,0 @@
-#!/bin/sh
-exec stat --printf "%g\n" "$1"

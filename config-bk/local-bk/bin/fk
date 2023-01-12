@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-prog="$@"
-kill -9 $(pidof $prog)

@@ -1,3 +1,0 @@
-#!/bin/sh
-
-pomodoro break > /tmp/pomodoro-break
