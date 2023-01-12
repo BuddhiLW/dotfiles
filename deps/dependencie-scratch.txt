@@ -29,6 +29,7 @@ xwallpaper
 
 ## xmonad dependencies
 xmonad
+xmobar
 libghc-xmonad-contrib-dev
 xterm 
 suckless-tools
