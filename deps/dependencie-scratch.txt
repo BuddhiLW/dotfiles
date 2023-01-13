@@ -53,6 +53,8 @@ haskell-stack
 ## fonts
 cargo
 fonts-noto-core
+ttf-ancient-fonts
+ttf-bitstream-vera
 
 ## virtual box deps
 virtualbox-guest-x11 virtualbox-guest-utils

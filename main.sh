@@ -1,4 +1,6 @@
 #/usr/bin/bash
+
+rm -rf $DOTFILES/gitthings
 SC="$DOTFILES/scripts/"
 cd $SC
 bash ./setup/bk-dots
