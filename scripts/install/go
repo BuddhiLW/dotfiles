@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+
+git clone https://github.com/udhos/update-golang $DOTFILES/gitthings/update-golang
+cd $DOTFILES/gitthings/update-golang
+wget -qO hash.txt https://raw.githubusercontent.com/udhos/update-golang/master/update-golang.sh.sha256sha256sum -c hash.txt
+mkdir ~/go
+DESTINATION=~/go PROFILED=~/.profile ./update-golang.sh
+rm -rf $DOTFILES/gitthings/update-golang

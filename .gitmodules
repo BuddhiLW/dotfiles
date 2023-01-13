@@ -19,3 +19,6 @@
 [submodule ".config/xmonad/xmonad-contrib"]
 	path = .config/xmonad/xmonad-contrib
 	url = https://github.com/xmonad/xmonad-contrib
+[submodule "gitthings/dmenu"]
+	path = gitthings/dmenu
+	url = https://gitlab.com/dwt1/dmenu-distrotube.git

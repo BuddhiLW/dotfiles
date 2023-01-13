@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+
+link-eslint
+link-elocal
+link-jsconfig

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+cd $DOTFILES/gitthings
+
+git clone https://gitlab.com/dwt1/dmenu-distrotube.git dmenu
+cd $DOTFILES/gitthings/dmenu
+sudo make clean install && rm config.h

@@ -3,9 +3,16 @@ vim
 emacs
 lynx
 gh
+
+## Build tools et al
 curl
 wget
 build-essential
+cmake
+libtool
+libtool-bin
+pass
+gnupg2
 
 ## st dependencies
 build-essential
@@ -26,6 +33,9 @@ gawk
 ## General programs
 qutebrowser
 xwallpaper
+dunst
+arandr
+imagemagick
 
 ## xmonad dependencies
 xmonad
@@ -39,3 +49,13 @@ libxinerama-dev
 libxrandr-dev 
 libxss-dev
 haskell-stack
+
+## fonts
+cargo
+fonts-noto-core
+
+## virtual box deps
+virtualbox-guest-x11 virtualbox-guest-utils
+
+## js dev deps
+npm

@@ -1,0 +1,4 @@
+2023-01-13 09:25:55.332 [info] update#setState idle
+2023-01-13 09:25:57.480 [info] Starting extension host with pid 51787 (fork() took 11 ms).
+2023-01-13 09:26:10.384 [warning] Sending IPC message to channel 'vscode:electron-main->shared-process=exit' for shared process window that is destroyed
+2023-01-13 09:26:10.388 [info] Waiting for extension host with pid 51787 to exit.

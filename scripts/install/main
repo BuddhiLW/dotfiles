@@ -3,6 +3,10 @@ INSTALL=$DOTFILES/scripts/install
 
 bash $INSTALL/make-deps
 bash $INSTALL/install-deps
+bash $INSTALL/go
+bash $INSTALL/st
 bash $INSTALL/doom
 bash $INSTALL/ble
 bash $INSTALL/anaconda
+bash $INSTALL/pywal
+bash $INSTALL/pomodoro

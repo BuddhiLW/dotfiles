@@ -497,3 +497,11 @@
 (evil-mode)
 
 ;; (use-package impatient-mode)
+
+(add-hook 'typescript-mode-hook 'eslint-rc-mode)
+(add-hook 'js2-mode-hook 'eslint-rc-mode)
+(add-hook 'web-mode-hook 'eslint-rc-mode)
+
+;; (setup facti-js-mode
+;;    (:option js-indent-level 2)
+;;    (:hook js-mode-hook))

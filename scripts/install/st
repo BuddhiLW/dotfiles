@@ -1,0 +1,9 @@
+#/usr/bin/bash
+
+GITT=$DOTFILES/gitthings
+
+git clone https://github.com/LukeSmithxyz/st.git  $GITT/st
+cd $GITT/st
+
+sudo make install
+

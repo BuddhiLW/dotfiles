@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+go get -u github.com/open-pomodoro/openpomodoro-cli/cmd/pomodoro

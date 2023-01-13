@@ -1,9 +1,11 @@
 #/usr/bin/bash
 SC="$DOTFILES/scripts/"
 cd $SC
-basg ./setup/bk-dots
+bash ./setup/bk-dots
 bash ./setup/init
 bash ./install/main
+
+fc-cache -vf
 bash ./setup/link-config
 bash ./setup/xmonad
 

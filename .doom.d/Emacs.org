@@ -1065,3 +1065,31 @@ To create new loadable modules,
 #+begin_src emacs-lisp
 ;; (use-package impatient-mode)
 #+end_src
+* JavaScript
+#+begin_src emacs-lisp :tangle packages.el
+(package! eslint-rc)
+(package! setup)
+;; (use-package! flymake-eslint
+;;   :config
+;;   (add-hook web-mode-hook flymake-eslint-enable))
+#+end_src
+
+#+begin_src emacs-lisp
+(add-hook 'typescript-mode-hook 'eslint-rc-mode)
+(add-hook 'js2-mode-hook 'eslint-rc-mode)
+(add-hook 'web-mode-hook 'eslint-rc-mode)
+#+end_src
+
+#+begin_src emacs-lisp :tangle ~/dotfiles/.config/facti/.dir-local.el
+;; dir-local.el for facti's js setup
+((rjsx-mode . ((eval . (setq js-indent-level 2))
+               (eval . (setq indent-tabs-mode nil))
+               (eval . (setq tab-width 4))
+               (eval . (setq indent-line-function 'insert-tab))))) 
+#+end_src
+
+#+begin_src emacs-lisp
+;; (setup facti-js-mode
+;;    (:option js-indent-level 2)
+;;    (:hook js-mode-hook))
+#+end_src

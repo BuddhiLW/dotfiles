@@ -53,3 +53,9 @@
 (package! ox-reveal)
 (package! impatient-mode)
 ;; (package! httpd)
+
+(package! eslint-rc)
+(package! setup)
+;; (use-package! flymake-eslint
+;;   :config
+;;   (add-hook web-mode-hook flymake-eslint-enable))
