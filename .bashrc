@@ -143,6 +143,7 @@ pathprepend \
     "$HOME/.emacs.d/bin/" \
     "$HOME/.local/bin" \
     "$HOME/.local/bin/blw" \
+    "$HOME/.local/bin/larbs" \
     "$HOME/.local/bin/rob-scripts/" \
     "$HOME/.local/bin/statusbar" \
     "$SCRIPTS" \

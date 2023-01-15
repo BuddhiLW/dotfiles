@@ -36,6 +36,7 @@ xwallpaper
 dunst
 arandr
 imagemagick
+unclutter
 
 ## xmonad dependencies
 xmonad

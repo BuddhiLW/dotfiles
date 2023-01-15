@@ -1,13 +1,22 @@
 #!/usr/bin/sh
 
-LINKS=("tmux/.tmux.conf" "vim/.vimrc")
+LINKSC=("tmux/.tmux.conf" "vim/.vimrc")
 
-link() {
+linkc() {
   ln -sf $HOME/.config/$1 $HOME
 }
 
-for i in "${LINKS[@]}"; do
-  link $i
+for i in "${LINKSC[@]}"; do
+  linkc $i
 done
 
-link -sf $DOTFILES/.bashrc $HOME
+LINKSD=(".bashrc" ".vim")
+
+linkd() {
+  ln -sf $DOTFILES/$1 $HOME
+}
+
+for i in "${LINKSD[@]}"; do
+  linkd $i
+done
+
