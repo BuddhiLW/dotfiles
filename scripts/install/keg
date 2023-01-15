@@ -1,0 +1,3 @@
+#!/bin/bash
+
+go install github.com/rwxrob/keg/cmd/keg@latest

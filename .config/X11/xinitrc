@@ -1,9 +1,16 @@
 #!/bin/bash
 
-picom --experimental-backend &
+sh "$HOME/.screenlayout/dual.sh" &
+sleep 1
 
-. "$HOME/.screenlayout/edp-1.sh" 
-sleep 5
-. "$HOME/.screenlayout/default.sh"
+if [[ -n $(pgrep picom) ]]; 
+then
+  kill -9 $(pidof picom)
+  picom --experimental-backends &
+else
+  picom --experimental-backends &
+fi
 
-setbg $HOME/Pictures/Wallpaper/cypus.jpg
+if [[ -n $(pgreg xmonad) ]]; then
+exec xmonad 
+fi

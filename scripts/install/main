@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 INSTALL=$DOTFILES/scripts/install
+mkdir $DOTFILES/gitthings
 
 bash $INSTALL/make-deps
 bash $INSTALL/install-deps
@@ -10,3 +11,6 @@ bash $INSTALL/ble
 bash $INSTALL/anaconda
 bash $INSTALL/pywal
 bash $INSTALL/pomodoro
+bash $INSTALL/keg
+bash $INSTALL/libxft-bgra
+bash $INSTALL/joypixels

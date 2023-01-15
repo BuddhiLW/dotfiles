@@ -1,0 +1,20 @@
+#!/usr/bin/bash
+mkdir $DOTFILES/build
+cd $DOTFILES/build
+git clone https://github.com/uditkarode/libxft-bgra
+cd libxft-bgra
+sh autogen.sh --sysconfdir=/etc --prefix=/usr/local --mandir=/usr/share/man
+sudo make install
+
+rm -rf $DOTFILES/build
+
+# # 1. Download the latest version
+# wget https://github.com/13rac1/twemoji-color-font/releases/download/v14.0.2/TwitterColorEmoji-SVGinOT-Linux-14.0.2.tar.gz
+# # 2. Uncompress the file
+# tar zxf TwitterColorEmoji-SVGinOT-Linux-14.0.2.tar.gz
+# # 3. Run the installer
+# cd TwitterColorEmoji-SVGinOT-Linux-14.0.2
+# ./install.sh
+# 
+# rm -rf $DOTFILES/tmp
+# fc-cache -vf

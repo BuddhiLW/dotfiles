@@ -1,0 +1,7 @@
+#!/bin/bash
+
+mkdir $DOTFILES/tmp && cd $DOTFILES/tmp
+wget https://cdn.joypixels.com/arch-linux/font/7.0.0/joypixels-android.ttf
+mv joypixels-android.ttf ~/.local/share/fonts/
+fc-cache -vf
+rm -rf $DOTFILES/tmp

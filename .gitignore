@@ -96,7 +96,6 @@
 # .config/xmonad/xmonad
 
 .local/src/ble.sh
-gitthigns/obs-autoupload/
 
 gitthings/lutris
 gitthings/st
@@ -107,3 +106,4 @@ gitthings/st
 .local/bin/xmonad
 
 .config/ibus/
+gitthings
