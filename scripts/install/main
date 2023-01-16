@@ -14,3 +14,4 @@ bash $INSTALL/pomodoro
 bash $INSTALL/keg
 bash $INSTALL/libxft-bgra
 bash $INSTALL/joypixels
+bash $INSTALL/mongo
