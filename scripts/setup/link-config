@@ -10,7 +10,7 @@ for i in "${LINKSC[@]}"; do
   linkc $i
 done
 
-LINKSD=(".bashrc" ".vim")
+LINKSD=(".bashrc" ".vim" ".doom.d")
 
 linkd() {
   ln -sf $DOTFILES/$1 $HOME

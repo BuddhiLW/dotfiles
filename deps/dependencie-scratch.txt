@@ -9,6 +9,8 @@ curl
 wget
 build-essential
 cmake
+gawk
+pkg-config
 libtool
 libtool-bin
 pass

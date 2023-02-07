@@ -1,5 +1,6 @@
 .local/share
 .emacs.d
+.doom.d
 .config/BdTranslateClient
 .config/BraveSoftware
 .config/Cadence
@@ -106,4 +107,5 @@ gitthings/st
 .local/bin/xmonad
 
 .config/ibus/
-gitthings
+gitthings/
+gitthings/st
