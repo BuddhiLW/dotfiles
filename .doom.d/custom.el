@@ -3,14 +3,23 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ispell-dictionary nil)
  '(package-selected-packages
-   '(impatient-mode ox-reveal sqlformat nov bing-dict pyim-basedict flymd emojify))
+   '(rjsx-mode elgrep neotree impatient-mode ox-reveal sqlformat nov bing-dict pyim-basedict flymd emojify))
+ '(safe-local-variable-values
+   '((cider-shadow-cljs-default-options . "app")
+     (cider-default-cljs-repl . shadow)))
  '(warning-suppress-log-types
    '((doom-first-input-hook)
      (doom-first-input-hook)
      (defvaralias)))
  '(warning-suppress-types '((doom-first-input-hook) (defvaralias))))
-(custom-set-faces)
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
@@ -71,3 +80,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ 
+(put 'customize-variable 'disabled nil)

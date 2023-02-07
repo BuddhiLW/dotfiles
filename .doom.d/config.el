@@ -496,12 +496,83 @@
 (load! "./my-func/fast-input-method.el")
 (evil-mode)
 
+(require 'ox-reveal)
+
 ;; (use-package impatient-mode)
 
 (add-hook 'typescript-mode-hook 'eslint-rc-mode)
 (add-hook 'js2-mode-hook 'eslint-rc-mode)
 (add-hook 'web-mode-hook 'eslint-rc-mode)
 
-;; (setup facti-js-mode
-;;    (:option js-indent-level 2)
-;;    (:hook js-mode-hook))
+(map! :after evil-mode
+      :map tide-mode-map
+      "C-." nil)
+
+(map! :map tide-mode-map
+      "C-." 'tide-jump-to-definition
+      "C-," 'tide-jump-back)
+
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("j" . "javascript")
+        :desc "go-to definition" "." #'tide-jump-to-definition
+        :desc "go-to implementation" "," #'tide-jump-implementation
+        :desc "back from go-to" "," #'tide-jump-back)))
+
+(add-hook 'rjsx-mode-hook 'tide-mode)
+
+;; use web-mode for .jsx files
+(add-to-list 'auto-mode-alist '("\\.jsx$" . web-mode))
+
+;; http://www.flycheck.org/manual/latest/index.html
+(require 'flycheck)
+
+;; turn on flychecking globally
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
+;; disable jshint since we prefer eslint checking
+(setq-default flycheck-disabled-checkers
+  (append flycheck-disabled-checkers
+    '(javascript-jshint)))
+
+;; use eslint with web-mode for jsx files
+(flycheck-add-mode 'javascript-eslint 'web-mode)
+
+;; customize flycheck temp file prefix
+(setq-default flycheck-temp-prefix ".flycheck")
+
+;; disable json-jsonlist checking for json files
+(setq-default flycheck-disabled-checkers
+  (append flycheck-disabled-checkers
+    '(json-jsonlist)))
+
+;; https://github.com/purcell/exec-path-from-shell
+;; only need exec-path-from-shell on OSX
+;; this hopefully sets up path and other vars better
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
+
+(add-hook 'web-mode-hook 'lsp-defered)
+
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("w" . "web")
+        :desc "attribute match" "m" #'web-mode-tag-match)))
+
+;; accept completion from copilot and fallback to company
+(use-package! copilot
+  :hook (prog-mode . copilot-mode)
+  :bind (("C-TAB" . 'copilot-accept-completion-by-word)
+         ("C-<tab>" . 'copilot-accept-completion-by-word)
+         :map copilot-completion-map
+         ("<tab>" . 'copilot-accept-completion)
+         ("TAB" . 'copilot-accept-completion)))
+
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("c" . "Co-pilot")
+        :desc "Accept full completion" "TAB" #'copilot-accept-completion)))
+
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+        :desc "Accept full completion" "TAB" #'copilot-accept-completion))

@@ -1,0 +1,158 @@
+2023-02-05 12:06:52.807 [info] Log level: Info
+2023-02-05 12:06:52.807 [info] Validating found git in: "git"
+2023-02-05 12:06:52.807 [info] Using git "2.37.2" from "git"
+2023-02-05 12:06:52.818 [info] > git rev-parse --show-toplevel [15ms]
+2023-02-05 12:06:52.818 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:52.853 [info] > git rev-parse --show-toplevel [14ms]
+2023-02-05 12:06:52.853 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:52.919 [info] > git rev-parse --show-toplevel [39ms]
+2023-02-05 12:06:52.919 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:52.978 [info] > git rev-parse --show-toplevel [36ms]
+2023-02-05 12:06:53.008 [info] > git rev-parse --git-dir --git-common-dir [4ms]
+2023-02-05 12:06:53.031 [info] Open repository: /home/buddhilw/.emacs.d
+2023-02-05 12:06:53.134 [info] > git config --get commit.template [40ms]
+2023-02-05 12:06:53.137 [info] > git rev-parse --show-toplevel [75ms]
+2023-02-05 12:06:53.137 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:53.213 [info] > git rev-parse --show-toplevel [57ms]
+2023-02-05 12:06:53.213 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:53.248 [info] > git rev-parse --show-toplevel [14ms]
+2023-02-05 12:06:53.248 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:53.265 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [55ms]
+2023-02-05 12:06:53.300 [info] > git rev-parse --show-toplevel [36ms]
+2023-02-05 12:06:53.300 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:53.321 [info] > git rev-parse --show-toplevel [7ms]
+2023-02-05 12:06:53.321 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:53.340 [info] > git rev-parse --show-toplevel [7ms]
+2023-02-05 12:06:53.341 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:53.359 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [61ms]
+2023-02-05 12:06:53.368 [info] > git rev-parse --show-toplevel [10ms]
+2023-02-05 12:06:53.368 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:53.392 [info] > git rev-parse --show-toplevel [6ms]
+2023-02-05 12:06:53.392 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:53.489 [info] > git rev-parse --show-toplevel [26ms]
+2023-02-05 12:06:53.489 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:53.503 [info] > git status -z -uall [224ms]
+2023-02-05 12:06:53.535 [info] > git rev-parse --show-toplevel [33ms]
+2023-02-05 12:06:53.535 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:53.557 [info] > git rev-parse --show-toplevel [6ms]
+2023-02-05 12:06:53.557 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:53.575 [info] > git config --get commit.template [40ms]
+2023-02-05 12:06:53.581 [info] > git rev-parse --show-toplevel [7ms]
+2023-02-05 12:06:53.581 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:53.608 [info] > git rev-parse --show-toplevel [16ms]
+2023-02-05 12:06:53.608 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:53.622 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [18ms]
+2023-02-05 12:06:53.653 [info] > git status -z -uall [19ms]
+2023-02-05 12:06:53.654 [info] > git rev-parse --show-toplevel [34ms]
+2023-02-05 12:06:53.654 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:53.681 [info] > git rev-parse --show-toplevel [16ms]
+2023-02-05 12:06:53.681 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:53.692 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [41ms]
+2023-02-05 12:06:53.700 [info] > git check-ignore -v -z --stdin [22ms]
+2023-02-05 12:06:53.706 [info] > git rev-parse --show-toplevel [14ms]
+2023-02-05 12:06:53.706 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:53.736 [info] > git rev-parse --show-toplevel [14ms]
+2023-02-05 12:06:53.736 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:53.769 [info] > git rev-parse --show-toplevel [4ms]
+2023-02-05 12:06:53.769 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:53.792 [info] > git rev-parse --show-toplevel [6ms]
+2023-02-05 12:06:53.792 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:53.812 [info] > git rev-parse --show-toplevel [6ms]
+2023-02-05 12:06:53.812 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:53.839 [info] > git rev-parse --show-toplevel [10ms]
+2023-02-05 12:06:53.839 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:53.861 [info] > git rev-parse --show-toplevel [7ms]
+2023-02-05 12:06:53.861 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:53.880 [info] > git rev-parse --show-toplevel [10ms]
+2023-02-05 12:06:53.903 [info] > git rev-parse --git-dir --git-common-dir [5ms]
+2023-02-05 12:06:53.912 [info] Open repository: /home/buddhilw/dotfiles
+2023-02-05 12:06:53.987 [info] > git config --get commit.template [26ms]
+2023-02-05 12:06:53.988 [info] > git rev-parse --show-toplevel [50ms]
+2023-02-05 12:06:53.988 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:54.037 [info] > git rev-parse --show-toplevel [25ms]
+2023-02-05 12:06:54.037 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:54.069 [info] > git rev-parse --show-toplevel [4ms]
+2023-02-05 12:06:54.069 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:54.081 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/ubuntu-xmonad refs/remotes/ubuntu-xmonad [45ms]
+2023-02-05 12:06:54.114 [info] > git rev-parse --show-toplevel [35ms]
+2023-02-05 12:06:54.166 [info] > git rev-parse --git-dir --git-common-dir [23ms]
+2023-02-05 12:06:54.207 [info] Open repository: /home/buddhilw/keg
+2023-02-05 12:06:54.233 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [121ms]
+2023-02-05 12:06:54.261 [info] > git rev-parse --show-toplevel [29ms]
+2023-02-05 12:06:54.261 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:06:54.277 [info] > git config --get commit.template [19ms]
+2023-02-05 12:06:54.353 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/main refs/remotes/main [52ms]
+2023-02-05 12:06:54.388 [info] > git status -z -uall [25ms]
+2023-02-05 12:06:54.395 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [9ms]
+2023-02-05 12:06:54.869 [info] > git check-ignore -v -z --stdin [85ms]
+2023-02-05 12:06:54.872 [info] > git check-ignore -v -z --stdin [65ms]
+2023-02-05 12:06:54.874 [info] > git check-ignore -v -z --stdin [33ms]
+2023-02-05 12:06:54.995 [info] > git status -z -uall [898ms]
+2023-02-05 12:06:55.541 [info] > git rev-parse --show-toplevel [5ms]
+2023-02-05 12:06:55.563 [info] > git rev-parse --show-toplevel [8ms]
+2023-02-05 12:06:55.586 [info] > git rev-parse --show-toplevel [4ms]
+2023-02-05 12:06:55.622 [info] > git rev-parse --show-toplevel [4ms]
+2023-02-05 12:06:55.638 [info] > git rev-parse --git-dir --git-common-dir [4ms]
+2023-02-05 12:06:55.647 [info] Open repository: /home/buddhilw/dotfiles/gitthings/picom
+2023-02-05 12:06:55.681 [info] > git rev-parse --show-toplevel [22ms]
+2023-02-05 12:06:55.709 [info] > git config --get commit.template [29ms]
+2023-02-05 12:06:55.735 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/next refs/remotes/next [12ms]
+2023-02-05 12:06:55.767 [info] > git status -z -uall [17ms]
+2023-02-05 12:06:55.768 [info] > git rev-parse --git-dir --git-common-dir [61ms]
+2023-02-05 12:06:55.774 [info] Open repository: /home/buddhilw/dotfiles/.config/xmonad/xmonad
+2023-02-05 12:06:55.833 [info] > git rev-parse --show-toplevel [39ms]
+2023-02-05 12:06:55.860 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [91ms]
+2023-02-05 12:06:55.897 [info] > git rev-parse --git-dir --git-common-dir [40ms]
+2023-02-05 12:06:55.923 [info] Open repository: /home/buddhilw/dotfiles/.config/xmonad/xmonad-contrib
+2023-02-05 12:06:55.979 [info] > git config --get commit.template [156ms]
+2023-02-05 12:06:56.038 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [40ms]
+2023-02-05 12:06:56.105 [info] > git rev-parse --show-toplevel [125ms]
+2023-02-05 12:06:56.124 [info] > git status -z -uall [64ms]
+2023-02-05 12:06:56.125 [info] > git config --get commit.template [94ms]
+2023-02-05 12:06:56.201 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [97ms]
+2023-02-05 12:06:56.227 [info] > git rev-parse --git-dir --git-common-dir [106ms]
+2023-02-05 12:06:56.261 [info] Open repository: /home/buddhilw/dotfiles/gitthings/dmenu
+2023-02-05 12:06:56.399 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [202ms]
+2023-02-05 12:06:56.463 [info] > git check-ignore -v -z --stdin [133ms]
+2023-02-05 12:06:56.465 [info] > git check-ignore -v -z --stdin [108ms]
+2023-02-05 12:06:56.467 [info] > git check-ignore -v -z --stdin [89ms]
+2023-02-05 12:06:56.469 [info] > git status -z -uall [57ms]
+2023-02-05 12:06:56.469 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [45ms]
+2023-02-05 12:06:56.479 [info] > git config --get commit.template [82ms]
+2023-02-05 12:06:56.532 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/master refs/remotes/master [14ms]
+2023-02-05 12:06:56.569 [info] > git status -z -uall [22ms]
+2023-02-05 12:06:56.596 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [28ms]
+2023-02-05 12:06:57.032 [info] > git check-ignore -v -z --stdin [38ms]
+2023-02-05 12:06:57.034 [info] > git check-ignore -v -z --stdin [19ms]
+2023-02-05 12:06:57.039 [info] > git check-ignore -v -z --stdin [13ms]
+2023-02-05 12:07:43.022 [info] > git rev-parse --show-toplevel [10ms]
+2023-02-05 12:07:43.050 [info] > git rev-parse --git-dir --git-common-dir [16ms]
+2023-02-05 12:07:43.057 [info] Open repository: /home/buddhilw/PP/facti/linfo-fresh
+2023-02-05 12:07:43.086 [info] > git config --get commit.template [18ms]
+2023-02-05 12:07:43.098 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/134-prestacao-de-contas-portaria-5275 refs/remotes/134-prestacao-de-contas-portaria-5275 [22ms]
+2023-02-05 12:07:43.170 [info] > git for-each-ref --sort -committerdate --format %(refname) %(objectname) %(*objectname) [45ms]
+2023-02-05 12:07:43.180 [info] > git status -z -uall [74ms]
+2023-02-05 12:07:44.957 [info] > git show --textconv :pdfPC/README.md [343ms]
+2023-02-05 12:07:44.962 [info] > git ls-files --stage -- /home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md [290ms]
+2023-02-05 12:07:45.142 [info] > git cat-file -s 0123f91823f131a354870a640eb2909ded8c6648 [55ms]
+2023-02-05 12:07:45.290 [info] > git check-ignore -v -z --stdin [64ms]
+2023-02-05 12:07:46.724 [info] > git check-ignore -v -z --stdin [10ms]
+2023-02-05 12:07:49.973 [info] > git check-ignore -v -z --stdin [156ms]
+2023-02-05 12:08:09.859 [info] > git rev-parse --show-toplevel [15ms]
+2023-02-05 12:08:09.859 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:08:39.596 [info] > git rev-parse --show-toplevel [25ms]
+2023-02-05 12:08:39.596 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:08:40.938 [info] > git rev-parse --show-toplevel [32ms]
+2023-02-05 12:08:40.938 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:10:53.932 [info] > git show --textconv :pdfPC/src/app/views.cljs [72ms]
+2023-02-05 12:10:53.938 [info] > git ls-files --stage -- /home/buddhilw/PP/facti/linfo-fresh/pdfPC/src/app/views.cljs [7ms]
+2023-02-05 12:10:53.976 [info] > git cat-file -s 84c37dff5318c80c1d298aa8600b60ccf6870327 [16ms]
+2023-02-05 12:10:54.311 [info] > git check-ignore -v -z --stdin [13ms]
+2023-02-05 12:15:36.164 [info] > git rev-parse --show-toplevel [26ms]
+2023-02-05 12:15:36.164 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:15:46.435 [info] > git rev-parse --show-toplevel [21ms]
+2023-02-05 12:15:46.435 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:16:20.344 [info] > git rev-parse --show-toplevel [5ms]
+2023-02-05 12:16:20.344 [info] fatal: not a git repository (or any of the parent directories): .git
+2023-02-05 12:16:25.868 [info] > git rev-parse --show-toplevel [5ms]
+2023-02-05 12:16:25.868 [info] fatal: not a git repository (or any of the parent directories): .git

@@ -1,0 +1,32 @@
+[Trace 15:07:45.868] VsCodeClientWorkspace: TextDocument.onDidOpen: file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md
+[Trace 15:07:45.872] VsCodeClientWorkspace: TextDocument.onDidChanceContent: file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md
+[Trace 15:07:45.888] Server: connection.languages.diagnostics.on: file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md
+[Trace 15:07:45.953] Server: connection.languages.diagnostics.on: file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md
+[Trace 15:07:48.238] DocumentSymbolProvider: provideDocumentSymbols — file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md 1
+[Debug 15:07:48.238] LinkProvider: compute - file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md
+[Debug 15:07:48.931] MdFoldingProvider: provideFoldingRanges — file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md 1
+[Debug 15:07:48.932] TableOfContentsProvider: create - file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md
+[Trace 15:07:49.970] DocumentSymbolProvider: provideDocumentSymbols — file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md 1
+[Debug 15:07:52.939] MdFoldingProvider: provideFoldingRanges — file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md 1
+[Trace 15:07:56.421] VsCodeClientWorkspace: TextDocument.onDidChanceContent: file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md
+[Trace 15:07:56.421] Server: connection.languages.diagnostics.on: file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md
+[Debug 15:07:56.685] LinkProvider: compute - file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md
+[Trace 15:07:56.834] VsCodeClientWorkspace: TextDocument.onDidChanceContent: file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md
+[Trace 15:07:56.835] Server: connection.languages.diagnostics.on: file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md
+[Debug 15:07:57.094] LinkProvider: compute - file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md
+[Trace 15:07:57.200] VsCodeClientWorkspace: TextDocument.onDidChanceContent: file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md
+[Trace 15:07:57.200] Server: connection.languages.diagnostics.on: file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md
+[Debug 15:07:57.456] LinkProvider: compute - file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md
+[Trace 15:07:57.477] VsCodeClientWorkspace: TextDocument.onDidChanceContent: file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md
+[Trace 15:07:57.477] Server: connection.languages.diagnostics.on: file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md
+[Debug 15:07:57.720] LinkProvider: compute - file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md
+[Debug 15:07:58.357] MdFoldingProvider: provideFoldingRanges — file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md 5
+[Debug 15:07:58.357] TableOfContentsProvider: create - file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md
+[Trace 15:07:58.826] DocumentSymbolProvider: provideDocumentSymbols — file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md 5
+[Trace 15:08:06.850] Server: connection.languages.diagnostics.on: file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md
+[Trace 15:08:11.499] Server: connection.languages.diagnostics.on: file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md
+[Debug 15:08:12.909] MdFoldingProvider: provideFoldingRanges — file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md 5
+[Trace 15:10:53.623] Server: connection.languages.diagnostics.on: file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md
+[Trace 15:26:25.042] Server: connection.languages.diagnostics.on: file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md
+[Debug 15:26:25.511] MdFoldingProvider: provideFoldingRanges — file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md 5
+[Trace 15:26:26.073] Server: connection.languages.diagnostics.on: file:///home/buddhilw/PP/facti/linfo-fresh/pdfPC/README.md

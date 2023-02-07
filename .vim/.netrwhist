@@ -1,5 +1,7 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =5
+let g:netrw_dirhistcnt =7
+let g:netrw_dirhist_7='/home/buddhilw/dotfiles/.local/bin/blw'
+let g:netrw_dirhist_6='/home/buddhilw/PP/Notes'
 let g:netrw_dirhist_5='/home/buddhilw'
 let g:netrw_dirhist_4='/home/buddhilw/.local/src/st'
 let g:netrw_dirhist_3='/home/buddhilw/.config/xmonad/xmonad'

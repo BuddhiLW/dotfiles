@@ -1063,9 +1063,16 @@ To create new loadable modules,
 #+end_src
 
 #+begin_src emacs-lisp
+(require 'ox-reveal)
+#+end_src
+#
+# #+RESULTS:
+# : ox-reveal
+#+begin_src emacs-lisp
 ;; (use-package impatient-mode)
 #+end_src
 * JavaScript
+** Eslint
 #+begin_src emacs-lisp :tangle packages.el
 (package! eslint-rc)
 (package! setup)
@@ -1088,8 +1095,113 @@ To create new loadable modules,
                (eval . (setq indent-line-function 'insert-tab))))) 
 #+end_src
 
+** Keymaps
 #+begin_src emacs-lisp
-;; (setup facti-js-mode
-;;    (:option js-indent-level 2)
-;;    (:hook js-mode-hook))
+(map! :after evil-mode
+      :map tide-mode-map
+      "C-." nil)
+
+(map! :map tide-mode-map
+      "C-." 'tide-jump-to-definition
+      "C-," 'tide-jump-back)
 #+end_src
+
+
+#+begin_src emacs-lisp
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("j" . "javascript")
+        :desc "go-to definition" "." #'tide-jump-to-definition
+        :desc "go-to implementation" "," #'tide-jump-implementation
+        :desc "back from go-to" "," #'tide-jump-back)))
+#+end_src
+
+** Hooks
+#+begin_src emacs-lisp
+(add-hook 'rjsx-mode-hook 'tide-mode)
+#+end_src
+
+** JSX
+#+begin_src emacs-lisp
+;; use web-mode for .jsx files
+(add-to-list 'auto-mode-alist '("\\.jsx$" . web-mode))
+
+;; http://www.flycheck.org/manual/latest/index.html
+(require 'flycheck)
+
+;; turn on flychecking globally
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
+;; disable jshint since we prefer eslint checking
+(setq-default flycheck-disabled-checkers
+  (append flycheck-disabled-checkers
+    '(javascript-jshint)))
+
+;; use eslint with web-mode for jsx files
+(flycheck-add-mode 'javascript-eslint 'web-mode)
+
+;; customize flycheck temp file prefix
+(setq-default flycheck-temp-prefix ".flycheck")
+
+;; disable json-jsonlist checking for json files
+(setq-default flycheck-disabled-checkers
+  (append flycheck-disabled-checkers
+    '(json-jsonlist)))
+
+;; https://github.com/purcell/exec-path-from-shell
+;; only need exec-path-from-shell on OSX
+;; this hopefully sets up path and other vars better
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
+#+end_src
+
+#+begin_src emacs-lisp
+(add-hook 'web-mode-hook 'lsp-defered)
+#+end_src
+
+#+RESULTS:
+| lsp-defered | er/add-web-mode-expansions | er/add-html-mode-expansions | +web--fix-js-comments-h | eslint-rc-mode | doom--enable-+web-wordpress-mode-in-web-mode-h | doom--enable-+web-django-mode-in-web-mode-h | doom--enable-+web-jekyll-mode-in-web-mode-h | emmet-mode | doom--enable-+javascript-npm-mode-in-web-mode-h |
+
+* General Web Dev
+** Keymaps
+#+begin_src emacs-lisp
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("w" . "web")
+        :desc "attribute match" "m" #'web-mode-tag-match)))
+#+end_src
+
+#+RESULTS:
+: web-mode-tag-match
+
+* Copilot
+#+begin_src emacs-lisp :tangle packages.el
+(package! copilot
+  :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
+#+end_src
+
+#+begin_src emacs-lisp
+;; accept completion from copilot and fallback to company
+(use-package! copilot
+  :hook (prog-mode . copilot-mode)
+  :bind (("C-TAB" . 'copilot-accept-completion-by-word)
+         ("C-<tab>" . 'copilot-accept-completion-by-word)
+         :map copilot-completion-map
+         ("<tab>" . 'copilot-accept-completion)
+         ("TAB" . 'copilot-accept-completion)))
+#+end_src
+
+** Keymaps
+#+begin_src emacs-lisp
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("c" . "Co-pilot")
+        :desc "Accept full completion" "TAB" #'copilot-accept-completion)))
+
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+        :desc "Accept full completion" "TAB" #'copilot-accept-completion))
+#+end_src
+
+#+RESULTS:
+: copilot-accept-completion

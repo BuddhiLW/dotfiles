@@ -1,0 +1,13 @@
+2023-02-05 12:06:31.377 [info] update#setState idle
+2023-02-05 12:06:36.405 [info] [UtilityProcess id: 1, type: extensionHost, pid: <none>]: creating new...
+2023-02-05 12:06:36.505 [info] [UtilityProcess id: 1, type: extensionHost, pid: 150496]: successfully created
+2023-02-05 12:07:01.381 [info] update#setState checking for updates
+2023-02-05 12:07:01.387 [info] update#setState idle
+2023-02-05 13:07:01.389 [info] update#setState checking for updates
+2023-02-05 13:07:01.399 [info] update#setState idle
+2023-02-05 13:12:14.629 [info] [UtilityProcess id: 1, type: extensionHost, pid: 150496]: waiting to exit...
+2023-02-05 13:12:20.655 [info] [UtilityProcess id: 1, type: extensionHost, pid: 150496]: did not exit within ${maxWaitTimeMs}ms, will kill it now...
+2023-02-05 13:12:20.657 [info] [UtilityProcess id: 1, type: extensionHost, pid: 150496]: attempting to kill the process...
+2023-02-05 13:12:20.661 [info] [UtilityProcess id: 1, type: extensionHost, pid: 150496]: successfully killed the process
+2023-02-05 13:12:20.718 [info] [UtilityProcess id: 1, type: extensionHost, pid: 150496]: received exit event with code 0
+2023-02-05 13:12:20.719 [info] Extension host with pid 150496 exited with code: 0, signal: unknown.

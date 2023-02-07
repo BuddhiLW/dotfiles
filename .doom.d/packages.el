@@ -59,3 +59,6 @@
 ;; (use-package! flymake-eslint
 ;;   :config
 ;;   (add-hook web-mode-hook flymake-eslint-enable))
+
+(package! copilot
+  :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))

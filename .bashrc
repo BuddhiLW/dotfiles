@@ -249,6 +249,7 @@ _have setxkbmap && test -n "$DISPLAY" && \
 # uim-fep
 
 unalias -a
+alias fctd="cd $HOME/PP/facti/linfo-ppi/"
 alias ed="emacs --with-profile default"
 alias ep="emacs --with-profile progress"
 alias edoom="emacs --with-profile doom"

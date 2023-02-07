@@ -1,0 +1,1 @@
+{"_id":"35ea44c7-5bdb-4438-ba22-ff681f58c115","filter":{"email":{"$regularExpression":{"pattern":"pedro","options":""}}},"_lastExecuted":{"$date":"2023-01-17T14:12:21.010Z"},"_ns":"gestao-ppi-dev.usuarios","_host":"localhost:27017"}
