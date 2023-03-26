@@ -1,0 +1,1 @@
+{"_id":"8297af35-ebe2-44e9-ae58-52e50b9bccfc","filter":{"_id":{"$oid":"63c55cdfb53761cbca712bfe"}},"_lastExecuted":{"$date":"2023-02-24T11:47:11.073Z"},"_ns":"gestao-ppi-dev.termodecooperacaos","_host":"localhost:27017"}

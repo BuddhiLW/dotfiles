@@ -1,0 +1,1 @@
+{"_id":"e9402581-67d5-48bf-bf99-5deab0f5674c","filter":{"id":{"$oid":"63c5381bc27290f9ddf32c95"}},"_lastExecuted":{"$date":"2023-02-24T11:57:18.461Z"},"_ns":"gestao-ppi-dev.prestacaodecontas","_host":"localhost:27017"}

@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+lazywal-cli -D 1920x1080+0 ~/Videos/Wallpaper/perfectly-looping-psychedelic-trippy-gifs-debG3O4.gif
+

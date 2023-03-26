@@ -16,8 +16,8 @@
 
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
-(setq user-full-name "Pedro Branquinho"
-      user-mail-address "pedrogbranquinho@gmail.com")
+(setq user-full-name "Pedro Branquinho")
+(setq user-mail-address "pedrogbranquinho@gmail.com")
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
@@ -35,7 +35,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-;; (setq doom-theme 'doom-acario-dark) -> edit "(use-pacakge doom-themes)" instead.
+(setq doom-theme 'doom-monokai-pro) ;;-> edit "(use-pacakge doom-themes)" instead.
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -46,8 +46,7 @@
 (setq display-line-numbers-type nil)
 
 ;; Default face size
-(set-face-attribute 'default nil :height 170)
-
+(set-face-attribute 'default nil :height 90)
 ;; Tecosaur snippet -- start --
 
 (setq-default
@@ -65,32 +64,9 @@
 
 (display-time-mode 1)                             ; Enable time in the mode-line
 
-(unless (string-match-p "^Power N/A" (battery))   ; On laptops...
-  (display-battery-mode 1))                       ; it's nice to know how much power you have
+(display-battery-mode 1)                          ; it's nice to know how much power you have
 
 (global-subword-mode 1)                           ; Iterate through CamelCase words
-
-;; Tecosaur snippet -- end --
-
-;; (use-package! csv-mode)
-
-;; (use-package! undo-tree)
-
-;; (load! "./my-func/org-roam.el")
-
-;; (use-package! impatient-mode)
-
-
-;; (use-package! org-roam
-;;         :config
-;;         (org-roam-directory "~/buddhi-roam")
-;;         :bind! (("C-c n l" . org-roam-buffer-toggle
-;;                  ("C-c n f" . org-roam-node-find)
-;;                  ("C-c n g" . org-roam-graph)
-;;                  ("C-c n i" . org-roam-node-insert)))
-;;         :config
-;;         (org-roam-db-autosyc-mode)
-;;         (require 'org-roam-protocol))
 
 (map! :map evil-window-map
       "SPC" #'rotate-layout
@@ -504,21 +480,6 @@
 (add-hook 'js2-mode-hook 'eslint-rc-mode)
 (add-hook 'web-mode-hook 'eslint-rc-mode)
 
-(map! :after evil-mode
-      :map tide-mode-map
-      "C-." nil)
-
-(map! :map tide-mode-map
-      "C-." 'tide-jump-to-definition
-      "C-," 'tide-jump-back)
-
-(map! :leader
-      (:prefix-map ("b" . "buddhi")
-       (:prefix ("j" . "javascript")
-        :desc "go-to definition" "." #'tide-jump-to-definition
-        :desc "go-to implementation" "," #'tide-jump-implementation
-        :desc "back from go-to" "," #'tide-jump-back)))
-
 (add-hook 'rjsx-mode-hook 'tide-mode)
 
 ;; use web-mode for .jsx files
@@ -554,6 +515,21 @@
 
 (add-hook 'web-mode-hook 'lsp-defered)
 
+(map! :after evil-mode
+      :map tide-mode-map
+      "C-." nil)
+
+(map! :map tide-mode-map
+      "C-." 'tide-jump-to-definition
+      "C-," 'tide-jump-back)
+
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("j" . "javascript")
+        :desc "go-to definition" "." #'tide-jump-to-definition
+        :desc "go-to implementation" "," #'tide-jump-implementation
+        :desc "back from go-to" "," #'tide-jump-back)))
+
 (map! :leader
       (:prefix-map ("b" . "buddhi")
        (:prefix ("w" . "web")
@@ -576,3 +552,262 @@
 (map! :leader
       (:prefix-map ("b" . "buddhi")
         :desc "Accept full completion" "TAB" #'copilot-accept-completion))
+
+;; From  time.el -> display-time-mode
+(defun lw/display-time-event-handler ()
+  (display-time-update)
+  (let* ((current (current-time))
+	 (timer display-time-timer)
+	 ;; Compute the time when this timer will run again, next.
+	 (next-time (timer-relative-time
+		     (list (aref timer 1) (aref timer 2) (aref timer 3))
+		     (* 5 (aref timer 4)) 0)))
+    ;; If the activation time is not in the future,
+    ;; skip executions until we reach a time in the future.
+    ;; This avoids a long pause if Emacs has been suspended for hours.
+    (or (time-less-p current next-time)
+	(progn
+	  (timer-set-time timer (timer-next-integral-multiple-of-time
+				 current display-time-interval)
+			  display-time-interval)
+	  (timer-activate timer)))))
+
+(defun lw/timer-pomo ()
+  (let ((pomo-output (shell-command-to-string "sb-pomo | tr -d '\n'")))
+    (if (equal "" pomo-output)
+        (progn
+          (cancel-function-timers 'lw/timer-pomo)
+          (setq-default mode-line-misc-info "No pomodoro running"))
+        (setq-default mode-line-misc-info pomo-output))))
+
+(defun lw/pomodoro-echo ()
+  (interactive
+   (run-at-time t 1 'lw/display-time-event-handler)
+   (run-with-timer 0 1 'lw/timer-pomo)))
+
+(defun lw/kill-pomo-updates ()
+  (interactive
+   (progn
+     (cancel-function-timers 'lw/timer-pomo)
+     (setq-default mode-line-misc-info nil))))
+
+(use-package! org-bullets
+  :after org
+  ;; :hook (org-mode . org-bullets)
+  :custom
+  ;; (org-superstar-remove-leading-stars t)
+  (org-bullets-bullet-list '("家" "ॐ" "同" "Ø" "א" "҉ " "҈ ")))
+
+(use-package! org-superstar
+  ;; :if (not dw/is-termux)
+  :after org
+  :hook (org-mode . org-superstar-mode)
+  :custom
+  (org-superstar-remove-leading-stars t)
+  (org-superstar-headline-bullets-list '("家" "ॐ" "同" "Ø" "א" "҉ " "҈ ")))
+                                       ;; Make sure org-indent face is available
+(require 'org-indent)
+;; (require 'org-indent
+;; Ensure that anything that should be fixed-pitch in Org files appears that way
+(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-table nil  :inherit 'fixed-pitch)
+(set-face-attribute 'org-formula nil  :inherit 'fixed-pitch)
+(set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
+(set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+
+;; Get rid of the background on column views
+(set-face-attribute 'org-column nil :background nil)
+(set-face-attribute 'org-column-title nil :background nil)
+
+;; Install visual-fill-column
+(unless (package-installed-p 'visual-fill-column)
+  (package-install 'visual-fill-column))
+
+
+(defun dw/org-present-start ()
+  ;; Center the presentation and wrap lines
+  (visual-fill-column-mode 1)
+  (visual-line-mode 1))
+
+(defun dw/org-present-end ()
+  ;; Stop centering the document
+  (visual-fill-column-mode 0)
+  (visual-line-mode 0))
+
+
+(defun dw/org-present-prepare-slide ()
+  (org-overview)
+  (org-show-entry)
+  (org-show-children))
+
+(defun dw/org-present-hook ()
+       ;; Configure fill width
+  (setq visual-fill-column-width 110
+      visual-fill-column-center-text t)
+  (setq-local face-remapping-alist '((default (:height 1.5) variable-pitch)
+					  (header-line (:height 4.5) variable-pitch)
+					  (org-document-title (:height 1.75) org-document-title)
+					  (org-code (:height 1.55) org-code)
+					  (org-verbatim (:height 1.55) org-verbatim)
+					  (org-block (:height 1.25) org-block)
+					  (org-block-begin-line (:height 0.7) org-block)))
+  (setq header-line-format " ")
+  (org-appear-mode -1)
+  (org-display-inline-images)
+  (dw/org-present-prepare-slide))
+
+(defun dw/org-present-quit-hook ()
+  (setq-local face-remapping-alist '((default variable-pitch default)))
+  (setq header-line-format nil)
+  (org-present-small)
+  (org-remove-inline-images)
+  (org-appear-mode 1))
+
+(defun dw/org-present-prev ()
+  (interactive)
+  (org-present-prev)
+  (dw/org-present-prepare-slide))
+
+(defun dw/org-present-next ()
+  (interactive)
+  (org-present-next)
+  (dw/org-present-prepare-slide))
+
+(use-package! org-present
+  :bind (:map org-present-mode-keymap
+		   ("C-c C-j" . dw/org-present-next)
+		   ("C-c C-k" . dw/org-present-prev))
+  :hook ((org-present-mode . dw/org-present-hook)
+     (org-present-mode-quit . dw/org-present-quit-hook)
+     (org-present-mode-hook . dw/org-present-start)
+     (org-present-mode-quit-hook . dw/org-present-end)))
+;; Register hooks with org-present
+;; (add-hook 'org-present-mode-hook 'my/org-present-start)
+;; (add-hook 'org-present-mode-quit-hook 'my/org-present-end)
+
+;;; Theme and Fonts ----------------------------------------
+
+;; ;; Install doom-themes
+;; (unless (package-installed-p 'doom-themes)
+;;   (package-install 'doom-themes))
+
+;; ;; Load up doom-palenight for the System Crafters look
+;; (load-theme 'doom-palenight t)
+
+;; ;; Set reusable font name variables
+;; (defvar my/fixed-width-font "JetBrains Mono"
+;;   "The font to use for monospaced (fixed width) text.")
+
+;; (defvar my/variable-width-font "Iosevka Aile"
+;;   "The font to use for variable-pitch (document) text.")
+
+;; ;; NOTE: These settings might not be ideal for your machine, tweak them as needed!
+;; (set-face-attribute 'default nil :font my/fixed-width-font :weight 'light :height 100)
+;; (set-face-attribute 'fixed-pitch nil :font my/fixed-width-font :weight 'light :height 110)
+;; (set-face-attribute 'variable-pitch nil :font my/variable-width-font :weight 'light)
+
+;;; Org Mode Appearance ------------------------------------
+
+;; Load org-faces to make sure we can set appropriate faces
+(require 'org-faces)
+
+;; Hide emphasis markers on formatted text
+(setq org-hide-emphasis-markers t)
+
+;; Resize Org headings
+(dolist (face '((org-level-1 . 1.2)
+                (org-level-2 . 1.1)
+                (org-level-3 . 1.05)
+                (org-level-4 . 1.0)
+                (org-level-5 . 1.1)
+                (org-level-6 . 1.1)
+                (org-level-7 . 1.1)
+                (org-level-8 . 1.1))))
+  ;; (set-face-attribute (car face) nil :font my/variable-width-font :weight 'medium :height (cdr face)))
+
+;; Make the document title a bit bigger
+;; (set-face-attribute 'org-document-title nil :font my/variable-width-font :weight 'bold :height 1.3)
+
+;; Make sure certain org faces use the fixed-pitch face when variable-pitch-mode is on
+(set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-table nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-formula nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+(set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+(set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
+
+;;; Centering Org Documents --------------------------------
+
+;; Install visual-fill-column
+(unless (package-installed-p 'visual-fill-column)
+  (package-install 'visual-fill-column))
+
+;; Configure fill width
+(setq visual-fill-column-width 110
+      visual-fill-column-center-text t)
+
+;;; Org Present --------------------------------------------
+
+;; Install org-present if needed
+(unless (package-installed-p 'org-present)
+  (package-install 'org-present))
+
+(defun my/org-present-prepare-slide (buffer-name heading)
+  ;; Show only top-level headlines
+  (org-overview)
+
+  ;; Unfold the current entry
+  (org-show-entry)
+
+  ;; Show only direct subheadings of the slide but don't expand them
+  (org-show-children))
+
+(defun my/org-present-start ()
+  ;; Tweak font sizes
+  (setq-local face-remapping-alist '((default (:height 1.5) variable-pitch)
+                                     (header-line (:height 4.0) variable-pitch)
+                                     (org-document-title (:height 1.75) org-document-title)
+                                     (org-code (:height 1.55) org-code)
+                                     (org-verbatim (:height 1.55) org-verbatim)
+                                     (org-block (:height 1.25) org-block)
+                                     (org-block-begin-line (:height 0.7) org-block)))
+
+  ;; Set a blank header line string to create blank space at the top
+  (setq header-line-format " ")
+
+  ;; Display inline images automatically
+  (org-display-inline-images)
+
+  ;; Center the presentation and wrap lines
+  (visual-fill-column-mode 1)
+  (visual-line-mode 1))
+
+(defun my/org-present-end ()
+  ;; Reset font customizations
+  (setq-local face-remapping-alist '((default variable-pitch default)))
+
+  ;; Clear the header line string so that it isn't displayed
+  (setq header-line-format nil)
+
+  ;; Stop displaying inline images
+  (org-remove-inline-images)
+
+  ;; Stop centering the document
+  (visual-fill-column-mode 0)
+  (visual-line-mode 0))
+
+;; Turn on variable pitch fonts in Org Mode buffers
+(add-hook 'org-mode-hook 'variable-pitch-mode)
+
+;; Register hooks with org-present
+(add-hook 'org-present-mode-hook 'my/org-present-start)
+(add-hook 'org-present-mode-quit-hook 'my/org-present-end)
+(add-hook 'org-present-after-navigate-functions 'my/org-present-prepare-slide)
+
+(setq org-hide-emphasis-markers t)

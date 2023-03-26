@@ -224,8 +224,8 @@ __ps1() { # g='\[\e[30m\]'
     # double="$g╔ $u\u$g$PROMPT_AT$h\h$g:$w$dir\n$g║ $B\n$g╚ $p$P$x $w(λ) "
 
     short="$u\u$g$PROMPT_AT$h\h$g:$w$dir$B$w($pλ$w)$x "
-    long="$g꧁  $u\u$g$PROMPT_AT$h\h$g⟐$w$dir$B\n$g꧂ $w($pλ$w)$x "
-    double="$g꧁ $u\u$g$PROMPT_AT$h\h$g⟐$w$dir\n$g║ $B\n$g꧂ $w($pλ$w)$x "
+    long="$g꧁  $u\u$g$PROMPT_AT$h\h$g ⟐ $w$dir$B\n$g꧂ $w($pλ$w)$x "
+    double="$g꧁ $u\u$g$PROMPT_AT$h\h$g ⟐ $w$dir\n$g║ $B\n$g꧂ $w($pλ$w)$x "
 
     if (( ${#countme} > PROMPT_MAX )); then
 	PS1="$double"
@@ -250,6 +250,8 @@ _have setxkbmap && test -n "$DISPLAY" && \
 
 unalias -a
 alias fctd="cd $HOME/PP/facti/linfo-ppi/"
+alias reitfiles="cd $HOME/PP/Clojure/learn-reitit-course-files/"
+alias reitpro="cd $HOME/Videos/Courses/Reitit-Pro"
 alias ed="emacs --with-profile default"
 alias ep="emacs --with-profile progress"
 alias edoom="emacs --with-profile doom"
@@ -359,6 +361,9 @@ export VISUAL="vim"
 ## export VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI mode
 export TERMINAL="st"
 export BROWSER="qutebrowser"
+
+# PPI related
+export LINFO="$HOME/facti/linfo-ppi"
 
 # ~/ Clean-up:
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -526,3 +531,4 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/fontconfig.pc
 
 [[ ${BLE_VERSION-} ]] && ble-attach
+. "/home/buddhilw/.local/share/cargo/env"

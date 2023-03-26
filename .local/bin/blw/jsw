@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+cd ~/facti/linfo-ppi/
+npm run makeInterfaceJsBundleWatching &

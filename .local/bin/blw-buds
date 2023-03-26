@@ -1,11 +1,14 @@
 #!/usr/bin/bash
+rfkill block bluetooth
+rfkill unblock bluetooth
+sudo systemctl stop bluetooth.service
 
 dev_id="A0:AC:69:2A:F3:A1"
 
 echo -e "power on\n" | bluetoothctl
-sleep 0.2
+sleep 1
 echo -e "scan on\n" | bluetoothctl
-sleep 0.5
+sleep 3
 echo -e "connect A0:AC:69:2A:F3:A1\n" | bluetoothctl
-sleep 0.5
+sleep 1
 echo -e "quit\n" | bluetoothctl

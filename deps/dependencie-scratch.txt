@@ -29,7 +29,7 @@ libxft-dev
 ## bashrc deps
 figlet
 lolcat
-fortune
+fortune fortune-mod fortunes-br display-dhammapada fortune-anarchism fortune-mod
 gawk
 
 ## General programs
@@ -39,6 +39,7 @@ dunst
 arandr
 imagemagick
 unclutter
+maim
 
 ## xmonad dependencies
 xmonad
@@ -78,3 +79,20 @@ libxext-dev libxcb1-dev libxcb-damage0-dev libxcb-dpms0-dev libxcb-xfixes0-dev l
 ## mongodb
 wget curl gnupg2 software-properties-common apt-transport-https ca-certificates lsb-release
 
+# remaining
+picom
+
+# emacs 
+texinfo
+libgccjit-12-dev 
+libjpeg-dev 
+libgif-dev 
+libtiff-dev 
+gnutls-bin
+tidy
+gopls 
+grip 
+markdown 
+pipenv 
+shfmt 
+shellcheck

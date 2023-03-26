@@ -6,3 +6,5 @@ wget -qO hash.txt https://raw.githubusercontent.com/udhos/update-golang/master/u
 mkdir ~/go
 DESTINATION=~/go PROFILED=~/.profile ./update-golang.sh
 rm -rf $DOTFILES/gitthings/update-golang
+
+sudo ln -sf $HOME/go /usr/local/go

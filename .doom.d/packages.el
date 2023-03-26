@@ -60,5 +60,12 @@
 ;;   :config
 ;;   (add-hook web-mode-hook flymake-eslint-enable))
 
+(package! indium)
+
 (package! copilot
   :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
+
+(package! org-bullets)
+(package! org-superstar)
+
+(package! org-present)

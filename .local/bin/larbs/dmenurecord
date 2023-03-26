@@ -102,11 +102,12 @@ videoselected()
 	read -r X Y W H < /tmp/slop
 	rm /tmp/slop
 
+#	-i :0.0+"$X"+"$Y" \
 	ffmpeg \
-	-f x11grab \
+  -f alsa -i default \
+	-s x11grab \
 	-framerate 60 \
-	-video_size "$W"x"$H" \
-	-i :0.0+"$X,$Y" \
+	-video_size "$W"x"$H"+"$X"+"$Y" \
 	-c:v libx264 -qp 0 -r 30 \
 	"$HOME/box-$(date '+%y%m%d-%H%M-%S').mkv" &
 	echo $! > /tmp/recordingpid
