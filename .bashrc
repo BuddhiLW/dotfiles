@@ -156,6 +156,7 @@ pathprepend \
     "$GHCUP" \
     "$GOROOT" \
     /usr/local/go/bin \
+    "$HOME/julia/bin/" \
     #"$GHREPOS/cmd-"* \
 
 pathappend \

@@ -1,0 +1,1 @@
+{"_id":"d8e00bc6-6744-4465-a11a-df6fa846b5c7","filter":{"_id":{"$oid":"61cb307af409e351287aee80"}},"_lastExecuted":{"$date":"2023-04-14T18:27:19.354Z"},"_ns":"gestao-ppi-dev.programaprioritarios","_host":"localhost:27017"}

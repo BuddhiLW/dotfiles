@@ -1,0 +1,1 @@
+{"_id":"bdfc3b77-ab72-4e5b-80f0-8d9f11abd986","filter":{"_id":{"$oid":"64399b8b6b22eb72ecc64864"}},"_lastExecuted":{"$date":"2023-04-14T18:33:15.984Z"},"_ns":"gestao-ppi-dev.planodeutilizacaos","_host":"localhost:27017"}

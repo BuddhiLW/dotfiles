@@ -1,3 +1,8 @@
+;; (add-to-list 'package-archives '( "jcs-elpa" . "https://jcs-emacs.github.io/jcs-elpa/packages/") t)
+
+;; (setq package-archive-priorities '(("melpa"    . 5)
+;;                                    ("jcs-elpa" . 0)))
+
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
 ;; Here are some additional functions/macros that could help you configure Doom:
@@ -36,6 +41,10 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-monokai-pro) ;;-> edit "(use-pacakge doom-themes)" instead.
+(setq doom-font (font-spec :family "JetBrains Mono" :size 16 :weight 'regular)
+      doom-variable-pitch-font (font-spec :family "JetBrains Mono" :weight 'thin) ; inherits `doom-font''s :size
+      doom-unicode-font (font-spec :family "JoyPixels" :size 25)
+      doom-big-font (font-spec :family "Fira Mono" :size 19))
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -62,10 +71,8 @@
       ;; scroll-preserve-screen-position 'always     ; Don't have `point' jump around
       scroll-margin 2)                            ; It's nice to maintain a little margin
 
-(display-time-mode 1)                             ; Enable time in the mode-line
-
-(display-battery-mode 1)                          ; it's nice to know how much power you have
-
+(display-time-mode 0)                             ; Enable time in the mode-line
+(display-battery-mode 0)                          ; it's nice to know how much power you have
 (global-subword-mode 1)                           ; Iterate through CamelCase words
 
 (map! :map evil-window-map
@@ -102,7 +109,8 @@
           "~/PP/Notes/Agenda/ProcSel.org"
           "~/PP/Notes/Agenda/University.org"
           "~/PP/Notes/Agenda/Research.org"
-          "~/PP/Notes/Agenda/CafeDoBem")))
+          "~/PP/Notes/Agenda/CafeDoBem.org"
+          "~/PP/Notes/Agenda/Facti.org")))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
@@ -300,13 +308,24 @@
 (setq gofmt-command "goimports")
 (add-hook 'before-save-hook 'gofmt-before-save)
 
+(use-package! doom-modeline
+  :config
+  ;; (setq doom-modeline-height 20)
+  ;; (setq doom-modeline-bar-width 3)
+  ;; (setq doom-modeline-height 1) ; optional
+  (setq doom-modeline-buffer-file-name-style 'truncate-upto-root)
+  (custom-set-faces
+    '(mode-line ((t (:family "Gayathri" :size 13)))) ;; Free Sans
+    '(mode-line-active ((t (:family "Gayathri" :size 13)))) ; For 29+
+    '(mode-line-inactive ((t (:family "Gayathri" :size 13))))))
+
 (use-package doom-themes
   :ensure t
   :config
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (load-theme 'doom-acario-dark t)
+  (load-theme 'doom-monokai-pro t)
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
@@ -432,8 +451,17 @@
    ;; (add-to-list 'TeX-view-program-selection
    ;;          '(output-pdf "evince"))
 
-   ;; (use-package! latex-preview-pane)
-   ;; (use-package! latex-pretty-symbols)
+(use-package! latex-preview-pane)
+(use-package! latex-pretty-symbols)
+(defun my-pretty-lambda ()
+  "make some word or string show as pretty Unicode symbols"
+  (setq prettify-symbols-alist
+        '(
+          ("lambda" . 955) ; λ
+          )))
+
+;;(add-hook 'scheme-mode-hook 'my-pretty-lambda)
+(global-prettify-symbols-mode 1)
 
 ;; (use-package! auto-complete-auctex)
 
@@ -515,6 +543,14 @@
 
 (add-hook 'web-mode-hook 'lsp-defered)
 
+;; (use-package! slime
+;;   :config (setq inferior-lisp-program "sbcl"))
+
+(defun insert-file-name ()
+  "Insert the full path file name into the current buffer."
+  (interactive)
+  (insert (concat (buffer-file-name (window-buffer (minibuffer-selected-window))) " " (what-line))))
+
 (map! :after evil-mode
       :map tide-mode-map
       "C-." nil)
@@ -529,6 +565,14 @@
         :desc "go-to definition" "." #'tide-jump-to-definition
         :desc "go-to implementation" "," #'tide-jump-implementation
         :desc "back from go-to" "," #'tide-jump-back)))
+
+;; Insert file name:
+;; To easily point out stuff in files, in documentation processes
+;; and team alignments etc.
+
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       :desc "insert file name" "n" #'insert-file-name))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
@@ -582,13 +626,14 @@
 
 (defun lw/pomodoro-echo ()
   (interactive
-   (run-at-time t 1 'lw/display-time-event-handler)
-   (run-with-timer 0 1 'lw/timer-pomo)))
+   (run-with-timer 0 1 'lw/timer-pomo)
+   (run-at-time t 1 'lw/display-time-event-handler)))
 
 (defun lw/kill-pomo-updates ()
   (interactive
    (progn
      (cancel-function-timers 'lw/timer-pomo)
+     (cancel-function-timers 'lw/display-time-event-handler)
      (setq-default mode-line-misc-info nil))))
 
 (use-package! org-bullets
@@ -649,11 +694,11 @@
   (setq visual-fill-column-width 110
       visual-fill-column-center-text t)
   (setq-local face-remapping-alist '((default (:height 1.5) variable-pitch)
-					  (header-line (:height 4.5) variable-pitch)
+					  (header-line (:height 4.0) variable-pitch)
 					  (org-document-title (:height 1.75) org-document-title)
 					  (org-code (:height 1.55) org-code)
 					  (org-verbatim (:height 1.55) org-verbatim)
-					  (org-block (:height 1.25) org-block)
+					  (org-block (:height 1.40) org-block)
 					  (org-block-begin-line (:height 0.7) org-block)))
   (setq header-line-format " ")
   (org-appear-mode -1)
@@ -727,7 +772,7 @@
                 (org-level-6 . 1.1)
                 (org-level-7 . 1.1)
                 (org-level-8 . 1.1))))
-  ;; (set-face-attribute (car face) nil :font my/variable-width-font :weight 'medium :height (cdr face)))
+;; (set-face-attribute (car face) nil :font my/variable-width-font :weight 'medium :height (cdr face)))
 
 ;; Make the document title a bit bigger
 ;; (set-face-attribute 'org-document-title nil :font my/variable-width-font :weight 'bold :height 1.3)
@@ -771,7 +816,7 @@
 (defun my/org-present-start ()
   ;; Tweak font sizes
   (setq-local face-remapping-alist '((default (:height 1.5) variable-pitch)
-                                     (header-line (:height 4.0) variable-pitch)
+                                     (header-line (:height 2.0) variable-pitch)
                                      (org-document-title (:height 1.75) org-document-title)
                                      (org-code (:height 1.55) org-code)
                                      (org-verbatim (:height 1.55) org-verbatim)
@@ -811,3 +856,32 @@
 (add-hook 'org-present-after-navigate-functions 'my/org-present-prepare-slide)
 
 (setq org-hide-emphasis-markers t)
+
+;; if you are using the "pass" password manager
+(setq chatgpt-shell-openai-key
+        (nth 0 (process-lines "pass" "show" "AI/open")))
+(setq openai-key (nth 0 (process-lines "pass" "show" "AI/open")))
+
+;; (add-to-list 'loa-path "~/.emacs.d/lisp/")
+(require 'codegpt)
+(require 'chatgpt)
+;; (package! chatgtp
+;;   :recipe (:host jcs-elpa
+;;            :repo "https://jcs-emacs.github.io/jcs-elpa/packages/")) ;; Optional: specify a specific commit or version
+
+;; (package! codegtp)
+  ;; :recipe (:host jcs-elpa))
+           ;; :repo "https://github.com/emacs-openai/codegpt")) ;; Optional: specify a specific commit or version
+
+;; (package! chatgtp
+;;   :recipe
+;;   (:host github
+;;    :repo "emacs-openai/chatgtp"))
+;; (package! codegtp)
+
+(add-to-list 'package-archives '( "jcs-elpa" . "https://jcs-emacs.github.io/jcs-elpa/packages/") t)
+(setq package-archive-priorities '(("melpa"    . 5)
+                                   ("jcs-elpa" . 0)))
+
+;; (require 'chatgpt-shell)
+;; (require 'dall-e-shell)

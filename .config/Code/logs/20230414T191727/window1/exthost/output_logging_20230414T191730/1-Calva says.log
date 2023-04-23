@@ -1,0 +1,22 @@
+Welcome to Calva. Happy Clojure and ClojureScript coding! ❤️
+
+Please check these resources out:
+  Calva Documentation: https://calva.io/
+  #calva at the Clojurians Slack: https://clojurians.slack.com/messages/calva/
+  Bug reports: https://github.com/BetterThanTomorrow/calva/issues
+
+If you like Calva, please consider how you can contribute: https://github.com/BetterThanTomorrow/calva/wiki/How-to-Contribute
+
+Calva is utilizing cider-nrepl and clojure-lsp to create this VS Code experience.
+  nREPL dependencies configured:
+    nrepl: 1.0.0
+    cider-nrepl: 0.28.5
+    cider/piggieback: 0.5.3
+  clojure-lsp version configured: latest
+
+If you are new to Calva, please see: https://calva.io/getting-started/
+  And please consider the command: **Calva: Fire up the Getting Started REPL**
+
+Calva version used: v2.0.351
+clojure-lsp version used: 2023.02.27-13.12.12
+clj-kondo version used: 2023.02.17

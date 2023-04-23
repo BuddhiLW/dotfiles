@@ -116,7 +116,7 @@
        ;;beancount         ; mind the GAAP
        ;;cc                ; C > C++ == 1
        (clojure +lsp)           ; java with a lisp
-       ;; common-lisp       ; if you've seen one lisp, you've seen them all
+       common-lisp       ; if you've seen one lisp, you've seen them all
        ;;coq               ; proofs-as-programs
        ;;crystal           ; ruby at the speed of c
        ;;csharp            ; unity, .NET, and mono shenanigans
@@ -141,7 +141,7 @@
        ;;json              ; At least it ain't XML
        ;; (java +lsp +tree-sitter +meghanada) ; the poster child for carpal tunnel syndrome
        (javascript +lsp +tree-sitter)        ; all(hope(abandon(ye(who(enter(here))))))
-       ;; (julia +lsp +tree-sitter)             ; a better, faster MATLAB
+       (julia +lsp +tree-sitter)             ; a better, faster MATLAB
        ;;kotlin            ; a better, slicker Java(Script)
        latex             ; writing papers in Emacs has never been so fun
        ;;lean              ; for folks with too much to prove

@@ -4,13 +4,14 @@
         "workspaces": [],
         "folders": [
             {
-                "folderUri": "file:///home/buddhilw/PP/facti/linfo-fresh"
-            },
-            {
                 "folderUri": "file:///home/buddhilw"
             }
         ],
-        "emptyWindows": []
+        "emptyWindows": [
+            {
+                "backupFolder": "1681510648280"
+            }
+        ]
     },
     "lastKnownMenubarData": {
         "menus": {
@@ -122,7 +123,8 @@
                     },
                     {
                         "id": "saveAll",
-                        "label": "Save A&&ll"
+                        "label": "Save A&&ll",
+                        "enabled": false
                     },
                     {
                         "id": "vscode.menubar.separator"
@@ -206,11 +208,6 @@
                                     }
                                 },
                                 {
-                                    "id": "workbench.userDataSync.actions.manage",
-                                    "label": "Settings Sync is On",
-                                    "checked": true
-                                },
-                                {
                                     "id": "vscode.menubar.separator"
                                 },
                                 {
@@ -255,10 +252,6 @@
                                 {
                                     "id": "settings.filterByOnline",
                                     "label": "&&Online Services Settings"
-                                },
-                                {
-                                    "id": "settings.filterByTelemetry",
-                                    "label": "Telemetry Settings"
                                 }
                             ]
                         }
@@ -311,6 +304,18 @@
                     {
                         "id": "editor.action.clipboardCopyAction",
                         "label": "&&Copy"
+                    },
+                    {
+                        "id": "submenuitem.MenubarCopy",
+                        "label": "Copy As",
+                        "submenu": {
+                            "items": [
+                                {
+                                    "id": "calva.copyHtmlAsHiccup",
+                                    "label": "Copy HTML code as Hiccup"
+                                }
+                            ]
+                        }
                     },
                     {
                         "id": "editor.action.clipboardPasteAction",
@@ -452,7 +457,8 @@
                             "items": [
                                 {
                                     "id": "workbench.action.toggleFullScreen",
-                                    "label": "&&Full Screen"
+                                    "label": "&&Full Screen",
+                                    "checked": true
                                 },
                                 {
                                     "id": "workbench.action.toggleZenMode",
@@ -612,6 +618,13 @@
                                     "id": "vscode.menubar.separator"
                                 },
                                 {
+                                    "id": "workbench.action.splitEditorInGroup",
+                                    "label": "Split in &&Group"
+                                },
+                                {
+                                    "id": "vscode.menubar.separator"
+                                },
+                                {
                                     "id": "workbench.action.editorLayoutSingle",
                                     "label": "&&Single"
                                 },
@@ -677,6 +690,10 @@
                         "label": "E&&xtensions"
                     },
                     {
+                        "id": "workbench.view.extension.test",
+                        "label": "T&&esting"
+                    },
+                    {
                         "id": "vscode.menubar.separator"
                     },
                     {
@@ -700,8 +717,7 @@
                     },
                     {
                         "id": "editor.action.toggleWordWrap",
-                        "label": "&&Word Wrap",
-                        "enabled": false
+                        "label": "&&Word Wrap"
                     },
                     {
                         "id": "editor.action.toggleStickyScroll",
@@ -791,54 +807,45 @@
                                 },
                                 {
                                     "id": "workbench.action.focusThirdEditorGroup",
-                                    "label": "Group &&3",
-                                    "enabled": false
+                                    "label": "Group &&3"
                                 },
                                 {
                                     "id": "workbench.action.focusFourthEditorGroup",
-                                    "label": "Group &&4",
-                                    "enabled": false
+                                    "label": "Group &&4"
                                 },
                                 {
                                     "id": "workbench.action.focusFifthEditorGroup",
-                                    "label": "Group &&5",
-                                    "enabled": false
+                                    "label": "Group &&5"
                                 },
                                 {
                                     "id": "vscode.menubar.separator"
                                 },
                                 {
                                     "id": "workbench.action.focusNextGroup",
-                                    "label": "&&Next Group",
-                                    "enabled": false
+                                    "label": "&&Next Group"
                                 },
                                 {
                                     "id": "workbench.action.focusPreviousGroup",
-                                    "label": "&&Previous Group",
-                                    "enabled": false
+                                    "label": "&&Previous Group"
                                 },
                                 {
                                     "id": "vscode.menubar.separator"
                                 },
                                 {
                                     "id": "workbench.action.focusLeftGroup",
-                                    "label": "Group &&Left",
-                                    "enabled": false
+                                    "label": "Group &&Left"
                                 },
                                 {
                                     "id": "workbench.action.focusRightGroup",
-                                    "label": "Group &&Right",
-                                    "enabled": false
+                                    "label": "Group &&Right"
                                 },
                                 {
                                     "id": "workbench.action.focusAboveGroup",
-                                    "label": "Group &&Above",
-                                    "enabled": false
+                                    "label": "Group &&Above"
                                 },
                                 {
                                     "id": "workbench.action.focusBelowGroup",
-                                    "label": "Group &&Below",
-                                    "enabled": false
+                                    "label": "Group &&Below"
                                 }
                             ]
                         }
@@ -1361,6 +1368,10 @@
                 "label": "Ctrl+B",
                 "userSettingsLabel": "ctrl+b"
             },
+            "workbench.action.toggleAuxiliaryBar": {
+                "label": "Ctrl+Alt+B",
+                "userSettingsLabel": "ctrl+alt+b"
+            },
             "workbench.action.togglePanel": {
                 "label": "Ctrl+J",
                 "userSettingsLabel": "ctrl+j"
@@ -1377,6 +1388,16 @@
                 "label": "Ctrl+NumPad0",
                 "isNative": false,
                 "userSettingsLabel": "ctrl+numpad0"
+            },
+            "workbench.action.splitEditorUp": {
+                "label": "Ctrl+K Ctrl+\\",
+                "isNative": false,
+                "userSettingsLabel": "ctrl+k ctrl+\\"
+            },
+            "workbench.action.splitEditorInGroup": {
+                "label": "Ctrl+K Ctrl+Shift+\\",
+                "isNative": false,
+                "userSettingsLabel": "ctrl+k ctrl+shift+\\"
             },
             "workbench.action.toggleEditorGroupLayout": {
                 "label": "Shift+Alt+0",
@@ -1594,17 +1615,13 @@
                 "label": "Ctrl+K Ctrl+R",
                 "isNative": false,
                 "userSettingsLabel": "ctrl+k ctrl+r"
-            },
-            "workbench.action.toggleDevTools": {
-                "label": "Ctrl+Shift+I",
-                "userSettingsLabel": "ctrl+shift+i"
             }
         }
     },
     "theme": "vs-dark",
     "themeBackground": "#1e1e1e",
     "windowSplash": {
-        "zoomLevel": 2,
+        "zoomLevel": 4,
         "baseTheme": "vs-dark",
         "colorInfo": {
             "foreground": "#cccccc",
@@ -1615,15 +1632,6 @@
             "sideBarBackground": "#252526",
             "statusBarBackground": "#007acc",
             "statusBarNoFolderBackground": "#68217a"
-        },
-        "layoutInfo": {
-            "sideBarSide": "left",
-            "editorPartMinWidth": 220,
-            "titleBarHeight": 0,
-            "activityBarWidth": 48,
-            "sideBarWidth": 170,
-            "statusBarHeight": 22,
-            "windowBorder": false
         }
     },
     "windowsState": {
@@ -1631,11 +1639,12 @@
             "folder": "file:///home/buddhilw",
             "backupPath": "/home/buddhilw/.config/Code/Backups/cf8663a34fc46820e1b7066b58d8bc1b",
             "uiState": {
-                "mode": 1,
-                "x": 3210,
-                "y": 48,
+                "mode": 3,
+                "display": 4,
                 "width": 1252,
-                "height": 1014
+                "height": 1014,
+                "x": 3210,
+                "y": 48
             }
         },
         "openedWindows": []
@@ -1645,7 +1654,9 @@
         "workspaces": {
             "file:///home/buddhilw": "__default__profile__"
         },
-        "emptyWindows": {}
+        "emptyWindows": {
+            "1681510648280": "__default__profile__"
+        }
     },
     "profileAssociationsMigration": true
 }

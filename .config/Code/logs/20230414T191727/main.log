@@ -1,0 +1,29 @@
+2023-04-14 19:17:28.008 [info] [SharedProcess] using utility process
+2023-04-14 19:17:28.095 [info] update#setState idle
+2023-04-14 19:17:29.212 [info] [UtilityProcess type: shared-process, pid: <none>]: creating new...
+2023-04-14 19:17:29.220 [info] [UtilityProcess id: 2, type: fileWatcher, pid: <none>]: creating new...
+2023-04-14 19:17:29.226 [info] [UtilityProcess type: shared-process, pid: 1201266]: successfully created
+2023-04-14 19:17:29.226 [info] [UtilityProcess id: 2, type: fileWatcher, pid: 1201267]: successfully created
+2023-04-14 19:17:29.332 [info] [UtilityProcess id: 1, type: fileWatcher, pid: <none>]: creating new...
+2023-04-14 19:17:29.337 [info] [UtilityProcess id: 1, type: fileWatcher, pid: 1201339]: successfully created
+2023-04-14 19:17:29.344 [info] [UtilityProcess id: 1, type: extensionHost, pid: <none>]: creating new...
+2023-04-14 19:17:29.355 [info] [UtilityProcess id: 1, type: extensionHost, pid: 1201340]: successfully created
+2023-04-14 19:17:29.435 [error] vscode-file: Refused to load resource /snap/code/118/usr/share/code/resources/app/extensions/theme-seti/icons/seti.woff from vscode-file: protocol (original URL: vscode-file://vscode-app/snap/code/118/usr/share/code/resources/app/extensions/theme-seti/icons/seti.woff)
+2023-04-14 19:17:29.490 [info] [UtilityProcess id: 2, type: extensionHost, pid: <none>]: creating new...
+2023-04-14 19:17:29.506 [info] [UtilityProcess id: 2, type: extensionHost, pid: 1201500]: successfully created
+2023-04-14 19:17:29.857 [error] vscode-file: Refused to load resource /snap/code/118/usr/share/code/resources/app/extensions/theme-seti/icons/seti.woff from vscode-file: protocol (original URL: vscode-file://vscode-app/snap/code/118/usr/share/code/resources/app/extensions/theme-seti/icons/seti.woff)
+2023-04-14 19:17:58.095 [info] update#setState checking for updates
+2023-04-14 19:17:58.299 [info] update#setState idle
+2023-04-14 19:20:45.537 [info] [UtilityProcess id: 1, type: extensionHost, pid: 1201340]: received exit event with code 0
+2023-04-14 19:20:45.537 [info] Extension host with pid 1201340 exited with code: 0, signal: unknown.
+2023-04-14 19:20:45.556 [info] [UtilityProcess id: 2, type: fileWatcher, pid: 1201267]: attempting to kill the process...
+2023-04-14 19:20:45.558 [info] [UtilityProcess id: 2, type: fileWatcher, pid: 1201267]: successfully killed the process
+2023-04-14 19:20:45.581 [info] [UtilityProcess id: 2, type: fileWatcher, pid: 1201267]: received exit event with code 15
+2023-04-14 19:20:45.582 [error] [UtilityProcessWorker]: terminated unexpectedly with code 15, signal: unknown
+2023-04-14 19:20:45.582 [error] [UtilityProcess id: 2, type: fileWatcher, pid: 1201267]: crashed with code 15 and reason 'killed'
+2023-04-14 19:44:37.437 [info] [UtilityProcess id: 2, type: extensionHost, pid: 1201500]: waiting to exit...
+2023-04-14 19:44:37.438 [info] [UtilityProcess id: 1, type: fileWatcher, pid: 1201339]: attempting to kill the process...
+2023-04-14 19:44:37.438 [info] [UtilityProcess id: 1, type: fileWatcher, pid: 1201339]: successfully killed the process
+2023-04-14 19:44:37.449 [info] [UtilityProcess id: 2, type: extensionHost, pid: 1201500]: received exit event with code 0
+2023-04-14 19:44:37.449 [info] Extension host with pid 1201500 exited with code: 0, signal: unknown.
+2023-04-14 19:44:37.450 [info] [UtilityProcess id: 1, type: fileWatcher, pid: 1201339]: received exit event with code 0

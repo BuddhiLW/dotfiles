@@ -7,6 +7,10 @@
 (package! doom-modeline-now-playing)
 (package! doom-modeline)
 
+(package! latex-preview-pane)
+(package! latex-pretty-symbols)
+(package! pretty-symbols)
+
 (package! ox-reveal)
 (package! impatient-mode)
 (package! celestial-mode-line)
@@ -62,6 +66,14 @@
 
 (package! indium)
 
+;; (package! sly :disable t)
+;; (package! sly-macrostep :disable t)
+;; (package! sly-repl-ansi-color :disable t)
+;; (package! slime)
+;; (package! slime-js
+;;         :recipe (:host github
+;;                  :repo "swank-js/swank-js"))
+
 (package! copilot
   :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
 
@@ -69,3 +81,20 @@
 (package! org-superstar)
 
 (package! org-present)
+
+;; (package! chatgpt-shell
+;;   :recipe
+;;   (:host github
+;;    :repo "xenodium/chatgpt-shell"))
+
+;; (package! dall-e
+;;   :recipe
+;;   (:host github
+;;    :repo "emacs-openai/dall-e"
+;;    :files ("*.el")))
+
+;; (package! chatgpt
+;;   :recipe
+;;   (:host github
+;;    :repo "emacs-openai/chatgpt"
+;;    :files ("*.el")))

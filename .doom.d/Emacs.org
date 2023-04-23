@@ -2,6 +2,14 @@
 #+PROPERTY: header-args:emacs-lisp :tangle ./config.el
 
 * Base
+** JCS
+#+begin_src emacs-lisp
+;; (add-to-list 'package-archives '( "jcs-elpa" . "https://jcs-emacs.github.io/jcs-elpa/packages/") t)
+
+;; (setq package-archive-priorities '(("melpa"    . 5)
+;;                                    ("jcs-elpa" . 0)))
+#+end_src
+
 ** DOOM initial setup
 #+begin_src emacs-lisp
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
@@ -42,6 +50,10 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-monokai-pro) ;;-> edit "(use-pacakge doom-themes)" instead.
+(setq doom-font (font-spec :family "JetBrains Mono" :size 16 :weight 'regular)
+      doom-variable-pitch-font (font-spec :family "JetBrains Mono" :weight 'thin) ; inherits `doom-font''s :size
+      doom-unicode-font (font-spec :family "JoyPixels" :size 25)
+      doom-big-font (font-spec :family "Fira Mono" :size 19))
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -68,15 +80,10 @@
       ;; scroll-preserve-screen-position 'always     ; Don't have `point' jump around
       scroll-margin 2)                            ; It's nice to maintain a little margin
 
-(display-time-mode 1)                             ; Enable time in the mode-line
-
-(display-battery-mode 1)                          ; it's nice to know how much power you have
-
+(display-time-mode 0)                             ; Enable time in the mode-line
+(display-battery-mode 0)                          ; it's nice to know how much power you have
 (global-subword-mode 1)                           ; Iterate through CamelCase words
 #+end_src
-
-#+RESULTS:
-: t
 
 ** Window management
 #+begin_src emacs-lisp
@@ -138,7 +145,9 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
           "~/PP/Notes/Agenda/ProcSel.org"
           "~/PP/Notes/Agenda/University.org"
           "~/PP/Notes/Agenda/Research.org"
-          "~/PP/Notes/Agenda/CafeDoBem")))
+          "~/PP/Notes/Agenda/CafeDoBem.org"
+          "~/PP/Notes/Agenda/Facti.org")))
+
 #+end_src
 
 * Maps
@@ -621,13 +630,29 @@ npm install -g elm-oracle
 : doom-modeline
 
 #+begin_src emacs-lisp
+(use-package! doom-modeline
+  :config
+  ;; (setq doom-modeline-height 20)
+  ;; (setq doom-modeline-bar-width 3)
+  ;; (setq doom-modeline-height 1) ; optional
+  (setq doom-modeline-buffer-file-name-style 'truncate-upto-root)
+  (custom-set-faces
+    '(mode-line ((t (:family "Gayathri" :size 13)))) ;; Free Sans
+    '(mode-line-active ((t (:family "Gayathri" :size 13)))) ; For 29+
+    '(mode-line-inactive ((t (:family "Gayathri" :size 13))))))
+#+end_src
+
+#+RESULTS:
+: t
+
+#+begin_src emacs-lisp
 (use-package doom-themes
   :ensure t
   :config
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (load-theme 'doom-acario-dark t)
+  (load-theme 'doom-monokai-pro t)
 
   ;; Enable flashing mode-line on errors
   (doom-themes-visual-bell-config)
@@ -638,6 +663,8 @@ npm install -g elm-oracle
   ;; (doom-themes-treemacs-config)
   ;; Corrects (and improves) org-mode's native fontification.
   (doom-themes-org-config))
+
+
 #+end_src
 * W3M
 #+begin_src emacs-lisp
@@ -845,12 +872,28 @@ npm install -g elm-oracle
 : t
 
 ** Preview
+#+begin_src emacs-lisp :tangle packages.el
+(package! latex-preview-pane)
+(package! latex-pretty-symbols)
+(package! pretty-symbols)
+#+end_src
+
 #+begin_src emacs-lisp
-   ;; (use-package! latex-preview-pane)
-   ;; (use-package! latex-pretty-symbols)
+(use-package! latex-preview-pane)
+(use-package! latex-pretty-symbols)
+(defun my-pretty-lambda ()
+  "make some word or string show as pretty Unicode symbols"
+  (setq prettify-symbols-alist
+        '(
+          ("lambda" . 955) ; λ
+          )))
+
+;;(add-hook 'scheme-mode-hook 'my-pretty-lambda)
+(global-prettify-symbols-mode 1)
 #+end_src
 
 #+RESULTS:
+: t
 
 
 #+begin_src emacs-lisp :tangle no
@@ -1124,7 +1167,36 @@ To create new loadable modules,
 (package! indium)
 #+end_src
 
+** Slime-js
+#+begin_src emacs-lisp :tangle packages.el
+;; (package! sly :disable t)
+;; (package! sly-macrostep :disable t)
+;; (package! sly-repl-ansi-color :disable t)
+;; (package! slime)
+;; (package! slime-js
+;;         :recipe (:host github
+;;                  :repo "swank-js/swank-js"))
+#+end_src
+
+#+begin_src emacs-lisp
+;; (use-package! slime
+;;   :config (setq inferior-lisp-program "sbcl"))
+#+end_src
+
+#+RESULTS:
+: t
+
 ** Keymaps
+#+begin_src emacs-lisp
+(defun insert-file-name ()
+  "Insert the full path file name into the current buffer."
+  (interactive)
+  (insert (concat (buffer-file-name (window-buffer (minibuffer-selected-window))) " " (what-line))))
+#+end_src
+
+#+RESULTS:
+: insert-file-name
+
 #+begin_src emacs-lisp
 (map! :after evil-mode
       :map tide-mode-map
@@ -1143,7 +1215,18 @@ To create new loadable modules,
         :desc "go-to definition" "." #'tide-jump-to-definition
         :desc "go-to implementation" "," #'tide-jump-implementation
         :desc "back from go-to" "," #'tide-jump-back)))
+
+;; Insert file name:
+;; To easily point out stuff in files, in documentation processes
+;; and team alignments etc.
+
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       :desc "insert file name" "n" #'insert-file-name))
 #+end_src
+
+#+RESULTS:
+: insert-file-name
 
 * General Web Dev
 ** Keymaps
@@ -1216,15 +1299,19 @@ To create new loadable modules,
 
 (defun lw/pomodoro-echo ()
   (interactive
-   (run-at-time t 1 'lw/display-time-event-handler)
-   (run-with-timer 0 1 'lw/timer-pomo)))
+   (run-with-timer 0 1 'lw/timer-pomo)
+   (run-at-time t 1 'lw/display-time-event-handler)))
 
 (defun lw/kill-pomo-updates ()
   (interactive
    (progn
      (cancel-function-timers 'lw/timer-pomo)
+     (cancel-function-timers 'lw/display-time-event-handler)
      (setq-default mode-line-misc-info nil))))
 #+end_src
+
+#+RESULTS:
+: lw/kill-pomo-updates
 
 * Org
 #+begin_src emacs-lisp :tangle packages.el
@@ -1297,11 +1384,11 @@ To create new loadable modules,
   (setq visual-fill-column-width 110
       visual-fill-column-center-text t)
   (setq-local face-remapping-alist '((default (:height 1.5) variable-pitch)
-					  (header-line (:height 4.5) variable-pitch)
+					  (header-line (:height 4.0) variable-pitch)
 					  (org-document-title (:height 1.75) org-document-title)
 					  (org-code (:height 1.55) org-code)
 					  (org-verbatim (:height 1.55) org-verbatim)
-					  (org-block (:height 1.25) org-block)
+					  (org-block (:height 1.40) org-block)
 					  (org-block-begin-line (:height 0.7) org-block)))
   (setq header-line-format " ")
   (org-appear-mode -1)
@@ -1471,3 +1558,77 @@ To create new loadable modules,
 
 #+RESULTS:
 : t
+
+# * Funcs #+begin_src emacs-lisp
+# #+end_src
+
+# #+RESULTS:
+# : insert-file-name
+#
+* OpenAI
+#+begin_src emacs-lisp
+;; if you are using the "pass" password manager
+(setq chatgpt-shell-openai-key
+        (nth 0 (process-lines "pass" "show" "AI/open")))
+(setq openai-key (nth 0 (process-lines "pass" "show" "AI/open")))
+#+end_src
+
+#+begin_src emacs-lisp
+;; (add-to-list 'loa-path "~/.emacs.d/lisp/")
+(require 'codegpt)
+(require 'chatgpt)
+;; (package! chatgtp
+;;   :recipe (:host jcs-elpa
+;;            :repo "https://jcs-emacs.github.io/jcs-elpa/packages/")) ;; Optional: specify a specific commit or version
+
+;; (package! codegtp)
+  ;; :recipe (:host jcs-elpa))
+           ;; :repo "https://github.com/emacs-openai/codegpt")) ;; Optional: specify a specific commit or version
+
+;; (package! chatgtp
+;;   :recipe
+;;   (:host github
+;;    :repo "emacs-openai/chatgtp"))
+;; (package! codegtp)
+#+end_src
+
+#+RESULTS:
+: chatgpt
+
+#+begin_src emacs-lisp :tangle packages.el
+;; (package! chatgpt-shell
+;;   :recipe
+;;   (:host github
+;;    :repo "xenodium/chatgpt-shell"))
+#+end_src
+
+#+begin_src emacs-lisp
+(add-to-list 'package-archives '( "jcs-elpa" . "https://jcs-emacs.github.io/jcs-elpa/packages/") t)
+(setq package-archive-priorities '(("melpa"    . 5)
+                                   ("jcs-elpa" . 0)))
+#+end_src
+
+#+RESULTS:
+: ((melpa . http://melpa.org/packages/) (org . http://orgmode.org/elpa/) (gnu . https://elpa.gnu.org/packages/) (jcs-elpa . https://jcs-emacs.github.io/jcs-elpa/packages/))
+
+#+begin_src emacs-lisp :tangle packages.el
+;; (package! dall-e
+;;   :recipe
+;;   (:host github
+;;    :repo "emacs-openai/dall-e"
+;;    :files ("*.el")))
+
+;; (package! chatgpt
+;;   :recipe
+;;   (:host github
+;;    :repo "emacs-openai/chatgpt"
+;;    :files ("*.el")))
+#+end_src
+
+#+begin_src emacs-lisp
+;; (require 'chatgpt-shell)
+;; (require 'dall-e-shell)
+#+end_src
+
+#+RESULTS:
+: dall-e-shell

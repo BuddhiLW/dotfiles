@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+git add .
+git commit -m "$@"
+git push "https://pedro.branquinho:$(pass Gitlab/facti)@scv.facti.com.br/pedro.branquinho/linfo-ppi.git"
