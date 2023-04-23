@@ -1,6 +1,5 @@
 .local/share
 .emacs.d
-.doom.d
 .config/BdTranslateClient
 .config/BraveSoftware
 .config/Cadence
