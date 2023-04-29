@@ -3,12 +3,11 @@
 sh "$HOME/.screenlayout/dual.sh" &
 sleep 1
 
-setbg $HOME/Pictures/Wallpapers/ &
+setbg "$HOME/Pictures/Wallpapers" &
 
 dunst &
 
-if [[ -n $(pgrep picom) ]]; 
-then
+if [[ -n $(pgrep picom) ]]; then
   kill -9 $(pidof picom)
   picom --experimental-backends &
 else
@@ -16,7 +15,5 @@ else
 fi
 
 if [[ -n $(pgreg xmonad) ]]; then
-exec xmonad 
+  exec xmonad
 fi
-
-

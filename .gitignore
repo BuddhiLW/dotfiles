@@ -108,3 +108,6 @@ gitthings/st
 .config/ibus/
 gitthings/
 gitthings/st
+
+.config/MongoDB Compass
+.config/Code
