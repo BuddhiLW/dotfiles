@@ -121,6 +121,12 @@
 (map! :leader
       :desc "Yank history" "y" #'consult-yank-from-kill-ring)
 
+(custom-set-faces!
+  '(font-lock-comment-face :slant italic)
+  '(font-lock-keyword-face :slant italic))
+
+(add-to-list 'image-types 'svg)
+
 (setq elfeed-feeds
       '("https://www.democracynow.org/democracynow.rss"
         "http://docuwiki.net/index.php?title=Special:Newpages&feed=rss"
@@ -328,9 +334,9 @@
   (load-theme 'doom-monokai-pro t)
 
   ;; Enable flashing mode-line on errors
-  (doom-themes-visual-bell-config)
+  ;; (doom-themes-visual-bell-config)
   ;; Enable custom neotree theme (all-the-icons must be installed!)
-  (doom-themes-neotree-config)
+  ;; (doom-themes-neotree-config)
   ;; or for treemacs users
   ;; (setq doom-themes-treemacs-theme "doom-atom") ; use "doom-colors" for less minimal icon theme
   ;; (doom-themes-treemacs-config)
@@ -472,8 +478,82 @@
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-        :desc "centered-cursor-mode" "C-l" #'centered-cursor-mode)
-      (:desc "anzu-replace" "r" #'anzu-replace-at-cursor-thing))
+        :desc "centered-cursor-mode" "C-l" #'centered-cursor-mode))
+        ;; :desc "anzu-replace" "r" #'anzu-replace-at-cursor-thing))
+
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("m" . "Multiple Cursors")
+          :desc "mc/mark-next-like-this" "n" #'mc/mark-next-like-this
+          :desc "mc/mark-previous-like-this" "p" #'mc/mark-previous-like-this
+          :desc "mc/mark-all-like-this" "a" #'mc/mark-all-like-this)))
+
+(map! :after multiple-cursors-mode
+      :map multiple-cursors-map
+      "C-n" 'mc/mark-next-like-this
+      "C-p" 'mc/mark-previous-like-this
+      "C-a" 'mc/mark-all-like-this)
+;; (when (modulep! :editor multiple-cursors)
+;;   (map! "C->"   #'mc/mark-next-like-this
+;;         "C-<"   #'mc/mark-previous-like-this
+;;         "C-M->" #'mc/skip-to-next-like-this
+;;         "C-M-<" #'mc/skip-to-previous-like-this
+;;         "M-<mouse-1>" #'mc/add-cursor-on-click)
+;;   (map! :leader
+;;         :prefix "m"
+;;         :desc "Pop mark"                        "SPC"   #'mc/mark-pop
+;;         :desc "Mark all above"                  "<"     #'mc/mark-all-above
+;;         :desc "Mark all below"                  ">"     #'mc/mark-all-below
+;;         :desc "Mark words like this"            "W"     #'mc/mark-all-words-like-this
+;;         :desc "Mark symbols like this"          "S"     #'mc/mark-all-symbols-like-this
+;;         :desc "Mark words like this in defun"   "C-w"   #'mc/mark-all-words-like-this-in-defun
+;;         :desc "Mark symbols like this in defun" "C-s"   #'mc/mark-all-symbols-like-this-in-defun
+;;         :desc "Mark next sexps"                 "C-M-f" #'mc/mark-next-sexps
+;;         :desc "Mark previous sexps"             "C-M-b" #'mc/mark-previous-sexps
+;;         :desc "Mark regexp"                     "%"     #'mc/mark-all-in-region-regexp)
+;;   (after! multiple-cursors-core
+;;     (dolist (cmd '(doom/delete-backward-word
+;;                    doom/forward-to-last-non-comment-or-eol mark-sexp
+;;                    eros-eval-last-sexp eval-last-sexp cae-eval-last-sexp
+;;                    forward-sentence backward-sentence kill-sentence
+;;                    sentex-forward-sentence sentex-backward-sentence
+;;                    sentex-kill-sentence parrot-rotate-next-word-at-point
+;;                    cae-delete-char cae-modeline-rotate-next-word-at-point
+;;                    cae-modeline-rotate-prev-word-at-point
+;;                    forward-sexp backward-sexp backward-list forward-list))
+;;       (add-to-list 'mc/cmds-to-run-for-all cmd))
+;;     (dolist (cmd '(+workspace/new +workspace/load +workspace/save
+;;                    +workspace/cycle +workspace/other +workspace/delete
+;;                    +workspace/rename +workspace/display +workspace/new-named
+;;                    +workspace/swap-left +workspace/switch-to
+;;                    +workspace/swap-right +workspace/switch-left
+;;                    +workspace/switch-to-0 +workspace/switch-to-1
+;;                    +workspace/switch-to-2 +workspace/switch-to-3
+;;                    +workspace/switch-to-4 +workspace/switch-to-5
+;;                    +workspace/switch-to-6 +workspace/switch-to-7
+;;                    +workspace/switch-to-8 +workspace/kill-session
+;;                    +workspace/switch-right +workspace/switch-to-final
+;;                    +workspace/restore-last-session +workspace/kill-session-and-quit
+;;                    +workspace/close-woutdow-or-workspace read-only-mode
+;;                    save-buffers-kill-terminal))
+;;       (add-to-list 'mc/cmds-to-run-once cmd))
+;;     (dolist (mode '(cae-completion-mode symbol-overlay-mode goggles-mode
+;;                     lispy-mode corfu-mode hungry-delete-mode
+;;                     worf-mode isearch-mb-mode))
+;;       (add-to-list 'mc/unsupported-minor-modes mode))
+;;     (define-key mc/keymap (kbd "C-. .")     #'mc/move-to-column)
+;;     (define-key mc/keymap (kbd "C-. =")     #'mc/compare-chars)
+;;     (define-key mc/keymap (kbd "C-. C-.")   #'mc/freeze-fake-cursors-dwim)
+;;     (define-key mc/keymap (kbd "C-. C-d")   #'mc/remove-current-cursor)
+;;     (define-key mc/keymap (kbd "C-. C-k")   #'mc/remove-cursors-at-eol)
+;;     (define-key mc/keymap (kbd "C-. C-o")   #'mc/remove-cursors-on-blank-lines)
+;;     (define-key mc/keymap (kbd "C-. d")     #'mc/remove-duplicated-cursors)
+;;     (define-key mc/keymap (kbd "C-. l")     #'mc/insert-letters)
+;;     (define-key mc/keymap (kbd "C-. n")     #'mc/insert-numbers)
+;;     (define-key mc/keymap (kbd "C-. s")     #'mc/sort-regions)
+;;     (define-key mc/keymap (kbd "C-. r")     #'mc/reverse-regions)
+;;     (define-key mc/keymap (kbd "C-. [")     #'mc/vertical-align-with-space)
+;;     (define-key mc/keymap (kbd "C-. {")     #'mc/vertical-align)))
 
 (load! "./my-func/define-modules.el")
 
@@ -862,7 +942,7 @@
         (nth 0 (process-lines "pass" "show" "AI/open")))
 (setq openai-key (nth 0 (process-lines "pass" "show" "AI/open")))
 
-;; (add-to-list 'loa-path "~/.emacs.d/lisp/")
+;; (add-to-list 'load-path "~/.emacs.d/lisp/")
 (require 'codegpt)
 (require 'chatgpt)
 ;; (package! chatgtp
@@ -885,3 +965,37 @@
 
 ;; (require 'chatgpt-shell)
 ;; (require 'dall-e-shell)
+
+(defun blw/insert-code-file-line-number ()
+  (interactive)
+  (insert (format "%s-%s"
+                  (buffer-file-name)
+                  (what-line))))
+
+;; '(require 'clojure-mode-extra-font-locking)
+;; (eval-after-load 'clojure-mode '(require 'clojure-mode-extra-font-locking))
+;; (add-hook! clojure-mode #'clojure-mode-extra-font-locking)
+
+(defmacro lw/define-user-eval-reitit (fn-name command)
+  `(defun ,fn-name ()
+    (interactive)
+    (cider-eval-file (format (concat (getenv "CLJ_PLAYGROUND") "dev/src/user.clj"))) ;; "/path-to/dev/src/user.clj"
+    (cider-interactive-eval
+      (format (concat "(" ,command ")")
+              (cider-last-sexp)))))
+
+(lw/define-user-eval-reitit lw/eval-go "go")
+(lw/define-user-eval-reitit lw/eval-halt "halt")
+(lw/define-user-eval-reitit lw/eval-reset "reset")
+;; (define-key cider-mode-map (kbd "C-c g") 'lw/eval-go)
+
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("c" . "clojure")
+        :desc "go - start reitit" "g" #'lw/eval-go
+        :desc "halt reitit server" "h" #'lw/eval-halt
+        :desc "restart reitit server" "r" #'lw/eval-restart)))
+
+;; (getenv "CLJ")
+;; (format (concat (getenv "CLJ_PLAYGROUND") "dev/src/user.clj"))
+;; (getenv "CLJ_PLAYGROUND")

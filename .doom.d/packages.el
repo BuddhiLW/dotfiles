@@ -76,11 +76,14 @@
 
 (package! copilot
   :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
+  ;; :pin "0160a1108b3bc3fff7e9fe1ebb67e71c0c2a334d")
 
 (package! org-bullets)
 (package! org-superstar)
 
 (package! org-present)
+
+(package! tblui)
 
 ;; (package! chatgpt-shell
 ;;   :recipe
@@ -98,3 +101,9 @@
 ;;   (:host github
 ;;    :repo "emacs-openai/chatgpt"
 ;;    :files ("*.el")))
+
+(package! clojure-mode-extra-font-locking)
+
+(package! neotree)
+
+;; (package! treemacs :pin "7c6628a241845cd8f626d2603f747f777de4eefb")

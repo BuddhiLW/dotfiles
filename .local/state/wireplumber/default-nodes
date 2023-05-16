@@ -1,6 +1,7 @@
 [default-nodes]
-default.configured.audio.sink=alsa_output.pci-0000_05_00.6.analog-stereo
-default.configured.audio.sink.0=alsa_output.pci-0000_05_00.6.analog-stereo
-default.configured.audio.sink.1=bluez_output.A0_AC_69_2A_F3_A1.1
+default.configured.audio.sink=bluez_output.A0_AC_69_2A_F3_A1.1
+default.configured.audio.sink.0=bluez_output.A0_AC_69_2A_F3_A1.1
+default.configured.audio.sink.1=alsa_output.pci-0000_05_00.6.analog-stereo
+default.configured.audio.sink.2=alsa_output.pci-0000_01_00.1.hdmi-stereo
 default.configured.audio.source=bluez_input.A0_AC_69_2A_F3_A1.0
 default.configured.audio.source.0=bluez_input.A0_AC_69_2A_F3_A1.0

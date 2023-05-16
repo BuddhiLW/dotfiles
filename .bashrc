@@ -18,7 +18,7 @@ esac
 
 # ---------------------- local utility functions ---------------------
 
-_have()      { type "$1" &>/dev/null; }
+_have() { type "$1" &>/dev/null; }
 _source_if() { [[ -r "$1" ]] && source "$1"; }
 
 # ----------------------- environment variables ----------------------
@@ -79,7 +79,7 @@ export GHCUP="$GHCUP_INSTALL_BASE_PREFIX/.ghcup/bin"
 export GOPATH="$HOME/go"
 export GOBIN="$HOME/go/bin"
 export NATIVEFIER="$HOME/.local/nativefier"
-export GOROOT="/usr/local/go"
+export GOROOT="$GOPATH/go" # /usr/local/go
 export PATH=$PATH:$GOROOT/bin
 export PATH="$PATH:$HOME/go/bin"
 #export GOPROXY=direct
@@ -88,10 +88,10 @@ export PATH="$PATH:$HOME/go/bin"
 export LC_COLLATE=C
 export LESS_TERMCAP_mb="[35m" # magenta
 export LESS_TERMCAP_md="[33m" # yellow
-export LESS_TERMCAP_me="" # "0m"
-export LESS_TERMCAP_se="" # "0m"
+export LESS_TERMCAP_me=""      # "0m"
+export LESS_TERMCAP_se=""      # "0m"
 export LESS_TERMCAP_so="[34m" # blue
-export LESS_TERMCAP_ue="" # "0m"
+export LESS_TERMCAP_ue=""      # "0m"
 export LESS_TERMCAP_us="[4m"  # underline
 
 [[ -d /.vim/spell ]] && export VIMSPELL=("$HOME/.vim/spell/*.add")
@@ -99,17 +99,17 @@ export LESS_TERMCAP_us="[4m"  # underline
 # ------------------------------- pager ------------------------------
 
 if [[ -x /usr/bin/lesspipe ]]; then
-    export LESSOPEN="| /usr/bin/lesspipe %s";
-    export LESSCLOSE="/usr/bin/lesspipe %s %s";
+    export LESSOPEN="| /usr/bin/lesspipe %s"
+    export LESSCLOSE="/usr/bin/lesspipe %s %s"
 fi
 
 # ----------------------------- dircolors ----------------------------
 
 if _have dircolors; then
     if [[ -r "$HOME/.dircolors" ]]; then
-	eval "$(dircolors -b "$HOME/.dircolors")"
+        eval "$(dircolors -b "$HOME/.dircolors")"
     else
-	eval "$(dircolors -b)"
+        eval "$(dircolors -b)"
     fi
 fi
 
@@ -118,21 +118,21 @@ fi
 pathappend() {
     declare arg
     for arg in "$@"; do
-	test -d "$arg" || continue
-	PATH=${PATH//":$arg:"/:}
-	PATH=${PATH/#"$arg:"/}
-	PATH=${PATH/%":$arg"/}
-	export PATH="${PATH:+"$PATH:"}$arg"
+        test -d "$arg" || continue
+        PATH=${PATH//":$arg:"/:}
+        PATH=${PATH/#"$arg:"/}
+        PATH=${PATH/%":$arg"/}
+        export PATH="${PATH:+"$PATH:"}$arg"
     done
 } && export pathappend
 
 pathprepend() {
     for arg in "$@"; do
-	test -d "$arg" || continue
-	PATH=${PATH//:"$arg:"/:}
-	PATH=${PATH/#"$arg:"/}
-	PATH=${PATH/%":$arg"/}
-	export PATH="$arg${PATH:+":${PATH}"}"
+        test -d "$arg" || continue
+        PATH=${PATH//:"$arg:"/:}
+        PATH=${PATH/#"$arg:"/}
+        PATH=${PATH/%":$arg"/}
+        export PATH="$arg${PATH:+":${PATH}"}"
     done
 } && export pathprepend
 
@@ -156,8 +156,8 @@ pathprepend \
     "$GHCUP" \
     "$GOROOT" \
     /usr/local/go/bin \
-    "$HOME/julia/bin/" \
-    #"$GHREPOS/cmd-"* \
+    "$HOME/julia/bin/"
+#"$GHREPOS/cmd-"* \
 
 pathappend \
     /usr/local/opt/coreutils/libexec/gnubin \
@@ -170,7 +170,7 @@ pathappend \
     /usr/bin \
     /snap/bin \
     /sbin \
-    /bin \
+    /bin
 
 # ------------------------------ cdpath ------------------------------
 
@@ -202,12 +202,11 @@ PROMPT_LONG=20
 PROMPT_MAX=95
 PROMPT_AT=' ፠ ' # @ 𝄏 𖣐 ⌯
 
-
 __ps1() { # g='\[\e[30m\]'
-    local P='$' dir="${PWD##*/}" B countme short long double\
-	  r='\[\e[31m\]' g='\[\e[37m\]' h='\[\e[34m\]' \
-	  u='\[\e[33m\]' p='\[\e[33m\]' w='\[\e[35m\]' \
-	  b='\[\e[36m\]' x='\[\e[0m\]'
+    local P='$' dir="${PWD##*/}" B countme short long double \
+        r='\[\e[31m\]' g='\[\e[37m\]' h='\[\e[34m\]' \
+        u='\[\e[33m\]' p='\[\e[33m\]' w='\[\e[35m\]' \
+        b='\[\e[36m\]' x='\[\e[0m\]'
 
     [[ $EUID == 0 ]] && P='#' && u=$r && p=$u # root
     [[ $PWD = / ]] && dir=/
@@ -228,12 +227,12 @@ __ps1() { # g='\[\e[30m\]'
     long="$g꧁  $u\u$g$PROMPT_AT$h\h$g ⟐ $w$dir$B\n$g꧂ $w($pλ$w)$x "
     double="$g꧁ $u\u$g$PROMPT_AT$h\h$g ⟐ $w$dir\n$g║ $B\n$g꧂ $w($pλ$w)$x "
 
-    if (( ${#countme} > PROMPT_MAX )); then
-	PS1="$double"
-    elif (( ${#countme} > PROMPT_LONG )); then
-	PS1="$long"
+    if ((${#countme} > PROMPT_MAX)); then
+        PS1="$double"
+    elif ((${#countme} > PROMPT_LONG)); then
+        PS1="$long"
     else
-	PS1="$short"
+        PS1="$short"
     fi
 }
 
@@ -241,7 +240,7 @@ PROMPT_COMMAND="__ps1"
 
 # ----------------------------- keyboard -----------------------------
 
-_have setxkbmap && test -n "$DISPLAY" && \
+_have setxkbmap && test -n "$DISPLAY" &&
     setxkbmap -option caps:escape &>/dev/null
 
 # ------------------------------ aliases -----------------------------
@@ -300,11 +299,11 @@ envx() {
     local envfile="${1:-"$HOME/.env"}"
     [[ ! -e "$envfile" ]] && echo "$envfile not found" && return 1
     while IFS= read -r line; do
-	name=${line%%=*}
-	value=${line#*=}
-	[[ -z "${name}" || $name =~ ^# ]] && continue
-	export "$name"="$value"
-    done < "$envfile"
+        name=${line%%=*}
+        value=${line#*=}
+        [[ -z "${name}" || $name =~ ^# ]] && continue
+        export "$name"="$value"
+    done <"$envfile"
 } && export -f envx
 
 [[ -e "$HOME/.env" ]] && envx "$HOME/.env"
@@ -314,9 +313,9 @@ new-from() {
     local name="$2"
     ! _have gh && echo "gh command not found" && return 1
     [[ -z "$name" ]] && echo "usage: $0 <name>" && return 1
-#    [[ -z "$GHREPOS" ]] && echo "GHREPOS not set" && return 1
-#    [[ ! -d "$GHREPOS" ]] && echo "Not found: $GHREPOS" && return 1
-#    cd "$GHREPOS" || return 1
+    #    [[ -z "$GHREPOS" ]] && echo "GHREPOS not set" && return 1
+    #    [[ ! -d "$GHREPOS" ]] && echo "Not found: $GHREPOS" && return 1
+    #    cd "$GHREPOS" || return 1
     [[ -e "$name" ]] && echo "exists: $name" && return 1
     gh repo create -p "$template" "$name"
     cd "$name" || return 1
@@ -354,7 +353,6 @@ _source_if "$HOME/.bash_personal"
 _source_if "$HOME/.bash_private"
 _source_if "$HOME/.bash_work"
 
-
 # Default programs:
 export EDITOR="vim"
 export VISUAL="vim"
@@ -365,6 +363,10 @@ export BROWSER="qutebrowser"
 
 # PPI related
 export LINFO="$HOME/facti/linfo-ppi"
+
+# Clojure related
+export CLJ="$HOME/PP/Clojure/"
+export CLJ_PLAYGROUND="$CLJ/cljs-reagent-template/"
 
 # ~/ Clean-up:
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -406,10 +408,10 @@ export LESS_TERMCAP_se="$(printf '%b' '[0m')"
 export LESS_TERMCAP_us="$(printf '%b' '[1;32m')"
 export LESS_TERMCAP_ue="$(printf '%b' '[0m')"
 export LESSOPEN="| /usr/bin/highlight -O ansi %s 2>/dev/null"
-export QT_QPA_PLATFORMTHEME="gtk2"	# Have QT use gtk2 theme.
-export MOZ_USE_XINPUT2="1"		# Mozilla smooth scrolling/touchpads.
-export AWT_TOOLKIT="MToolkit wmname LG3D"	#May have to install wmname
-export _JAVA_AWT_WM_NONREPARENTING=1	# Fix for Java applications in dwm
+export QT_QPA_PLATFORMTHEME="gtk2"        # Have QT use gtk2 theme.
+export MOZ_USE_XINPUT2="1"                # Mozilla smooth scrolling/touchpads.
+export AWT_TOOLKIT="MToolkit wmname LG3D" #May have to install wmname
+export _JAVA_AWT_WM_NONREPARENTING=1      # Fix for Java applications in dwm
 
 # This is the list for lf icons:
 export LF_ICONS="di=📁:\
@@ -505,13 +507,13 @@ ex=🎯:\
 # fi
 
 # Switch escape and caps if tty and no passwd required:
-sudo -n loadkeys ${XDG_DATA_HOME/share}/larbs/ttymaps.kmap 2>/dev/null
+sudo -n loadkeys ${XDG_DATA_HOME/share/}/larbs/ttymaps.kmap 2>/dev/null
 
 newshell
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/buddhilw/.conda/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$('/home/buddhilw/.conda/bin/conda' 'shell.bash' 'hook' 2>/dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
@@ -524,12 +526,18 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
-
 complete -C keg keg
-
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/fontconfig.pc
 
 [[ ${BLE_VERSION-} ]] && ble-attach
 . "/home/buddhilw/.local/share/cargo/env"
+
+# pnpm
+export PNPM_HOME="/home/buddhilw/.local/share/pnpm"
+case ":$PATH:" in
+    *":$PNPM_HOME:"*) ;;
+    *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
