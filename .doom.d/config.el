@@ -994,8 +994,16 @@
        (:prefix ("c" . "clojure")
         :desc "go - start reitit" "g" #'lw/eval-go
         :desc "halt reitit server" "h" #'lw/eval-halt
-        :desc "restart reitit server" "r" #'lw/eval-restart)))
+        :desc "reset reitit server" "r" #'lw/eval-reset)))
 
 ;; (getenv "CLJ")
 ;; (format (concat (getenv "CLJ_PLAYGROUND") "dev/src/user.clj"))
 ;; (getenv "CLJ_PLAYGROUND")
+
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("c" . "clojure")
+        (:prefix ("t" . "tests")
+          :desc "Run all tests" "p" #'cider-test-run-project-tests
+          :desc "Run tests in namespace" "n" #'cider-test-run-ns-tests
+          :desc "Run test under point" "t" #'cider-test-run-test))))

@@ -1779,9 +1779,6 @@ To create new loadable modules,
         :desc "reset reitit server" "r" #'lw/eval-reset)))
 #+end_src
 
-#+RESULTS:
-: lw/eval-reset
-
 #+begin_src emacs-lisp
 ;; (getenv "CLJ")
 ;; (format (concat (getenv "CLJ_PLAYGROUND") "dev/src/user.clj"))
@@ -1789,6 +1786,20 @@ To create new loadable modules,
 #+end_src
 
 #+RESULTS:
+** Unit testing
+*** Cider
+#+begin_src emacs-lisp
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("c" . "clojure")
+        (:prefix ("t" . "tests")
+          :desc "Run all tests" "p" #'cider-test-run-project-tests
+          :desc "Run tests in namespace" "n" #'cider-test-run-ns-tests
+          :desc "Run test under point" "t" #'cider-test-run-test))))
+#+end_src
+
+#+RESULTS:
+: cider-test-run-test
 
 * Neo-tree
 #+begin_src emacs-lisp :tangle packages.el

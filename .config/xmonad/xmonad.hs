@@ -516,7 +516,8 @@ myKeys c =
   , ("M-/", addName "DTOS Help"                $ spawn "~/.local/bin/dtos-help")]
 
   ^++^ subKeys "BLW keys"
-  [ ("M-b M-s", addName "Take a screenshot"      $ spawn "~/.local/bin/blw/maimpick")]
+  [ ("M-b M-s", addName "Take a screenshot"      $ spawn "~/.local/bin/blw/maimpick")
+  , ("M-b M-p", addName "Take a screenshot"      $ spawn "xfce4-screenshooter")
   ^++^ subKeys "Switch to workspace"
   [ ("M-1", addName "Switch to workspace 1"    $ (windows $ W.greedyView $ myWorkspaces !! 0))
   , ("M-2", addName "Switch to workspace 2"    $ (windows $ W.greedyView $ myWorkspaces !! 1))
