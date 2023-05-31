@@ -1,0 +1,11 @@
+account pedrogbranquinho@gmail.com
+host smtp.gmail.com
+port 465
+from pedrogbranquinho@gmail.com
+user pedrogbranquinho@gmail.com
+passwordeval "pass pedrogbranquinho@gmail.com"
+auth on
+tls on
+tls_trust_file	/etc/ssl/certs/ca-certificates.crt
+logfile /home/buddhilw/.local/state/msmtp/msmtp.log
+tls_starttls off

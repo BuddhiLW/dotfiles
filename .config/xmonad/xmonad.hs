@@ -512,12 +512,13 @@ myKeys c =
   , ("M-q", addName "Kill focused window"    $ kill1)
   , ("M-S-a", addName "Kill all windows on WS" $ killAll)
   , ("M-S-<Return>", addName "Run prompt"      $ sequence_ [spawn (mySoundPlayer ++ dmenuSound), spawn "~/.local/bin/dm-run"])
-  , ("M-S-b", addName "Toggle bar show/hide"   $ sendMessage ToggleStruts)
+  -- sendMessage ToggleStruts
+  , ("M-S-b", addName "Toggle bar show/hide"   $ spawn "dbus-send --session --dest=org.Xmobar.Control --type=method_call --print-reply '/org/Xmobar/Control' org.Xmobar.Control.SendSignal \"string:Toggle -1\"" >> (broadcastMessage $ ToggleStruts) >> refresh)
   , ("M-/", addName "DTOS Help"                $ spawn "~/.local/bin/dtos-help")]
 
   ^++^ subKeys "BLW keys"
   [ ("M-b M-s", addName "Take a screenshot"      $ spawn "~/.local/bin/blw/maimpick")
-  , ("M-b M-p", addName "Take a screenshot"      $ spawn "xfce4-screenshooter")
+  , ("M-b M-p", addName "Take a screenshot"      $ spawn "xfce4-screenshooter")]
   ^++^ subKeys "Switch to workspace"
   [ ("M-1", addName "Switch to workspace 1"    $ (windows $ W.greedyView $ myWorkspaces !! 0))
   , ("M-2", addName "Switch to workspace 2"    $ (windows $ W.greedyView $ myWorkspaces !! 1))

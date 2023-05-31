@@ -478,8 +478,10 @@
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-        :desc "centered-cursor-mode" "C-l" #'centered-cursor-mode))
-        ;; :desc "anzu-replace" "r" #'anzu-replace-at-cursor-thing))
+        :desc "centered-cursor-mode" "C-l" #'centered-cursor-mode)
+      (:prefix-map ("b" . "buddhi")
+        (:prefix ("u" . "utilities")
+          :desc "cfw with google calendar sync" "a" #'blw/calendar)))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
@@ -1007,3 +1009,15 @@
           :desc "Run all tests" "p" #'cider-test-run-project-tests
           :desc "Run tests in namespace" "n" #'cider-test-run-ns-tests
           :desc "Run test under point" "t" #'cider-test-run-test))))
+
+;; (use-package! calfw-ical)
+(defun blw/calendar ()
+  (interactive)
+  (cfw:open-calendar-buffer
+   :contents-sources
+   (list
+    (cfw:org-create-source "Green")  ; orgmode source
+    ;; (cfw:howm-create-source "Blue")  ; howm source
+    ;; (cfw:cal-create-source "Orange") ; diary source
+    ;; (cfw:ical-create-source "Moon" "~/moon.ics" "Gray")  ; ICS source1
+    (cfw:ical-create-source "gcal" (nth 0 (process-lines "pass" "show" "CALFW/gmail-ical-url")) "Blue")))) ; google calendar ICS

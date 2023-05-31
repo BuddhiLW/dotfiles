@@ -156,7 +156,8 @@ pathprepend \
     "$GHCUP" \
     "$GOROOT" \
     /usr/local/go/bin \
-    "$HOME/julia/bin/"
+    "$HOME/julia/bin/"\
+    "$HOME/.emacs.d/pen.el/scripts/"
 #"$GHREPOS/cmd-"* \
 
 pathappend \
@@ -541,3 +542,4 @@ case ":$PATH:" in
     *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+stty stop undef 2>/dev/null; stty start undef 2>/dev/null

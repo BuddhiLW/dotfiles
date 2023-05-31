@@ -111,3 +111,4 @@ gitthings/st
 
 .config/MongoDB Compass
 .config/Code
+.local/state/*
