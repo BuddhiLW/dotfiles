@@ -83,6 +83,12 @@
 
 (package! org-present)
 
+(package! clojure-mode-extra-font-locking)
+
+(package! neotree)
+
+(package! khoj)
+
 (package! tblui)
 
 ;; (package! chatgpt-shell
@@ -102,12 +108,35 @@
 ;;    :repo "emacs-openai/chatgpt"
 ;;    :files ("*.el")))
 
-(package! clojure-mode-extra-font-locking)
-
-(package! neotree)
-
 ;; (package! treemacs :pin "7c6628a241845cd8f626d2603f747f777de4eefb")
 
 (package! calfw)
 (package! calfw-org)
 (package! calfw-ical)
+
+(package! exwm)
+
+  ;; (package! edwina)
+  ;; (package! evil-multiedit)
+  ;; (package! all-the-icons-completion)
+  ;; (package! all-the-icons-ivy)
+  ;; (package! all-the-icons-ibuffer)
+  ;; (package! dashboard)
+  ;; (package! quelpa-use-package)
+  ;; (package! eaf)
+  ;; (package! epc)
+  ;; (package! ctable)
+  ;; (package! deferred)
+  ;; (package! s)
+  ;; (package! elmacro)
+  ;; ;; (package! chembalance)
+  ;; (package! chemtable)
+  ;; (package! calfw-org)
+  ;; (package! calfw-cal)
+  ;; (package! calfw-ical)
+  ;; (package! calfw-gcal)
+  ;; (package! ox-reveal)
+  ;; (package! htmlize)
+  ;; (package! celestial-mode-line)
+  ;; (package! sunshine)
+  ;; (package! evil-nerd-commenter)

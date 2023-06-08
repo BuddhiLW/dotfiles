@@ -693,9 +693,7 @@
     ;; This avoids a long pause if Emacs has been suspended for hours.
     (or (time-less-p current next-time)
 	(progn
-	  (timer-set-time timer (timer-next-integral-multiple-of-time
-				 current display-time-interval)
-			  display-time-interval)
+	  (timer-set-time timer (timer-next-integral-multiple-of-time current display-time-interval) display-time-interval)
 	  (timer-activate timer)))))
 
 (defun lw/timer-pomo ()
@@ -939,35 +937,6 @@
 
 (setq org-hide-emphasis-markers t)
 
-;; if you are using the "pass" password manager
-(setq chatgpt-shell-openai-key
-        (nth 0 (process-lines "pass" "show" "AI/open")))
-(setq openai-key (nth 0 (process-lines "pass" "show" "AI/open")))
-
-;; (add-to-list 'load-path "~/.emacs.d/lisp/")
-(require 'codegpt)
-(require 'chatgpt)
-;; (package! chatgtp
-;;   :recipe (:host jcs-elpa
-;;            :repo "https://jcs-emacs.github.io/jcs-elpa/packages/")) ;; Optional: specify a specific commit or version
-
-;; (package! codegtp)
-  ;; :recipe (:host jcs-elpa))
-           ;; :repo "https://github.com/emacs-openai/codegpt")) ;; Optional: specify a specific commit or version
-
-;; (package! chatgtp
-;;   :recipe
-;;   (:host github
-;;    :repo "emacs-openai/chatgtp"))
-;; (package! codegtp)
-
-(add-to-list 'package-archives '( "jcs-elpa" . "https://jcs-emacs.github.io/jcs-elpa/packages/") t)
-(setq package-archive-priorities '(("melpa"    . 5)
-                                   ("jcs-elpa" . 0)))
-
-;; (require 'chatgpt-shell)
-;; (require 'dall-e-shell)
-
 (defun blw/insert-code-file-line-number ()
   (interactive)
   (insert (format "%s-%s"
@@ -1010,6 +979,35 @@
           :desc "Run tests in namespace" "n" #'cider-test-run-ns-tests
           :desc "Run test under point" "t" #'cider-test-run-test))))
 
+;; if you are using the "pass" password manager
+;; (setq chatgpt-shell-openai-key
+;;         (nth 0 (process-lines "pass" "show" "AI/open")))
+;; (setq openai-key (nth 0 (process-lines "pass" "show" "AI/open")))
+
+;; (add-to-list 'load-path "~/.emacs.d/lisp/")
+;; (require 'codegpt)
+;; (require 'chatgpt)
+;; (package! chatgtp
+;;   :recipe (:host jcs-elpa
+;;            :repo "https://jcs-emacs.github.io/jcs-elpa/packages/")) ;; Optional: specify a specific commit or version
+
+;; (package! codegtp)
+  ;; :recipe (:host jcs-elpa))
+           ;; :repo "https://github.com/emacs-openai/codegpt")) ;; Optional: specify a specific commit or version
+
+;; (package! chatgtp
+;;   :recipe
+;;   (:host github
+;;    :repo "emacs-openai/chatgtp"))
+;; (package! codegtp)
+
+(add-to-list 'package-archives '( "jcs-elpa" . "https://jcs-emacs.github.io/jcs-elpa/packages/") t)
+(setq package-archive-priorities '(("melpa"    . 5)
+                                   ("jcs-elpa" . 0)))
+
+;; (require 'chatgpt-shell)
+;; (require 'dall-e-shell)
+
 ;; (use-package! calfw-ical)
 (defun blw/calendar ()
   (interactive)
@@ -1020,4 +1018,41 @@
     ;; (cfw:howm-create-source "Blue")  ; howm source
     ;; (cfw:cal-create-source "Orange") ; diary source
     ;; (cfw:ical-create-source "Moon" "~/moon.ics" "Gray")  ; ICS source1
+    ;; (cfw:ical-create-source "gcal" (nth 0 (process-lines "pass" "show" "CALFW/gmail-ical-url-facti" "Red")))
     (cfw:ical-create-source "gcal" (nth 0 (process-lines "pass" "show" "CALFW/gmail-ical-url")) "Blue")))) ; google calendar ICS
+
+;; EXWM init function
+(load! "./my-func/exwm-init.el")
+
+(add-hook 'exwm-init 'blw/exwm-init)
+
+  ;; Make sure the server is started (better to do this in your main Emacs config!)
+  (server-start)
+
+  (defvar efs/polybar-process nil
+    "Holds the process of the running Polybar instance, if any")
+
+  (defun efs/kill-panel ()
+    (interactive)
+    (when efs/polybar-process
+      (ignore-errors
+        (kill-process efs/polybar-process)))
+    (setq efs/polybar-process nil))
+
+  (defun efs/start-panel ()
+    (interactive)
+    (efs/kill-panel)
+    (setq efs/polybar-process (start-process-shell-command "polybar" nil "polybar panel")))
+
+  (defun efs/send-polybar-hook (module-name hook-index)
+    (start-process-shell-command "polybar-msg" nil (format "polybar-msg hook %s %s" module-name hook-index)))
+
+  (defun efs/send-polybar-exwm-workspace ()
+    (efs/send-polybar-hook "exwm-workspace" 1))
+
+  ;; Update panel indicator when workspace changes
+  (add-hook 'exwm-workspace-switch-hook #'efs/send-polybar-exwm-workspace)
+
+  ;; "/run/user/1000/tmux-1000/default"
+
+  ;; (use-package! evil-nerd-commenter)

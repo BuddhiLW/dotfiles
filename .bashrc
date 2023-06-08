@@ -1,7 +1,7 @@
 # BuddhiLW's setup
 # ~/.bashrc
 #
-[[ $- == *i* ]] && source /home/buddhilw/dotfiles/gitthings/ble.sh/out/ble.sh --noattach
+[[ $- == *i* ]] && source ~/.local/share/blesh/ble.sh
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
@@ -39,7 +39,7 @@ export CS_LANG_B="$CS_B/Languages"
 # export GHREPOS="$REPOS/github.com/$GITUSER"
 export DOTFILES="$HOME/dotfiles/"
 export DOOMDIR="$HOME/.doom.d/"
-export DOOM="$HOME/.edoom/"
+export DOOM="$HOME/doom-emacs/"
 export DOOMBIN="$DOOM/bin/"
 export SCRIPTS="$DOTFILES/bin/"
 export SCRIPTS_INSTALL="$DOTFILES/bin-install/"
@@ -156,7 +156,7 @@ pathprepend \
     "$GHCUP" \
     "$GOROOT" \
     /usr/local/go/bin \
-    "$HOME/julia/bin/"\
+    "$HOME/julia/bin/" \
     "$HOME/.emacs.d/pen.el/scripts/"
 #"$GHREPOS/cmd-"* \
 
@@ -260,6 +260,7 @@ alias e="emacs --with-profile"
 alias zt="zathura"
 alias ecf="$DOOMDIR/config"
 alias lynx="lynx --display_charset=utf-8"
+alias emacs="emacs-30.0.50"
 #### Directory easyeness
 alias csb='. csb'
 alias elmb='cd $ELM_B'
@@ -416,96 +417,86 @@ export _JAVA_AWT_WM_NONREPARENTING=1      # Fix for Java applications in dwm
 
 # This is the list for lf icons:
 export LF_ICONS="di=📁:\
-fi=📃:\
-tw=🤝:\
-ow=📂:\
-ln=⛓:\
-or=❌:\
-ex=🎯:\
-*.txt=✍:\
-*.mom=✍:\
-*.me=✍:\
-*.ms=✍:\
-*.png=🖼:\
-*.webp=🖼:\
-*.ico=🖼:\
-*.jpg=📸:\
-*.jpe=📸:\
-*.jpeg=📸:\
-*.gif=🖼:\
-*.svg=🗺:\
-*.tif=🖼:\
-*.tiff=🖼:\
-*.xcf=🖌:\
-*.html=🌎:\
-*.xml=📰:\
-*.gpg=🔒:\
-*.css=🎨:\
-*.pdf=📚:\
-*.djvu=📚:\
-*.epub=📚:\
-*.csv=📓:\
-*.xlsx=📓:\
-*.tex=📜:\
-*.md=📘:\
-*.r=📊:\
-*.R=📊:\
-*.rmd=📊:\
-*.Rmd=📊:\
-*.m=📊:\
-*.mp3=🎵:\
-*.opus=🎵:\
-*.ogg=🎵:\
-*.m4a=🎵:\
-*.flac=🎼:\
-*.wav=🎼:\
-*.mkv=🎥:\
-*.mp4=🎥:\
-*.webm=🎥:\
-*.mpeg=🎥:\
-*.avi=🎥:\
-*.mov=🎥:\
-*.mpg=🎥:\
-*.wmv=🎥:\
-*.m4b=🎥:\
-*.flv=🎥:\
-*.zip=📦:\
-*.rar=📦:\
-*.7z=📦:\
-*.tar.gz=📦:\
-*.z64=🎮:\
-*.v64=🎮:\
-*.n64=🎮:\
-*.gba=🎮:\
-*.nes=🎮:\
-*.gdi=🎮:\
-*.1=ℹ:\
-*.nfo=ℹ:\
-*.info=ℹ:\
-*.log=📙:\
-*.iso=📀:\
-*.img=📀:\
-*.bib=🎓:\
-*.ged=👪:\
-*.part=💔:\
-*.torrent=🔽:\
-*.jar=♨:\
-*.java=♨:\
-"
+    fi=📃:\
+    tw=🤝:\
+    ow=📂:\
+    ln=⛓:\
+    or=❌:\
+    ex=🎯:\
+    *.txt=✍:\
+    *.mom=✍:\
+    *.me=✍:\
+    *.ms=✍:\
+    *.png=🖼:\
+    *.webp=🖼:\
+    *.ico=🖼:\
+    *.jpg=📸:\
+    *.jpe=📸:\
+    *.jpeg=📸:\
+    *.gif=🖼:\
+    *.svg=🗺:\
+    *.tif=🖼:\
+    *.tiff=🖼:\
+    *.xcf=🖌:\
+    *.html=🌎:\
+    *.xml=📰:\
+    *.gpg=🔒:\
+    *.css=🎨:\
+    *.pdf=📚:\
+    *.djvu=📚:\
+    *.epub=📚:\
+    *.csv=📓:\
+    *.xlsx=📓:\
+    *.tex=📜:\
+    *.md=📘:\
+    *.r=📊:\
+    *.R=📊:\
+    *.rmd=📊:\
+    *.Rmd=📊:\
+    *.m=📊:\
+    *.mp3=🎵:\
+    *.opus=🎵:\
+    *.ogg=🎵:\
+    *.m4a=🎵:\
+    *.flac=🎼:\
+    *.wav=🎼:\
+    *.mkv=🎥:\
+    *.mp4=🎥:\
+    *.webm=🎥:\
+    *.mpeg=🎥:\
+    *.avi=🎥:\
+    *.mov=🎥:\
+    *.mpg=🎥:\
+    *.wmv=🎥:\
+    *.m4b=🎥:\
+    *.flv=🎥:\
+    *.zip=📦:\
+    *.rar=📦:\
+    *.7z=📦:\
+    *.tar.gz=📦:\
+    *.z64=🎮:\
+    *.v64=🎮:\
+    *.n64=🎮:\
+    *.gba=🎮:\
+    *.nes=🎮:\
+    *.gdi=🎮:\
+    *.1=ℹ:\
+    *.nfo=ℹ:\
+    *.info=ℹ:\
+    *.log=📙:\
+    *.iso=📀:\
+    *.img=📀:\
+    *.bib=🎓:\
+    *.ged=👪:\
+    *.part=💔:\
+    *.torrent=🔽:\
+    *.jar=♨:\
+    *.java=♨:\
+    "
 
 [ -f $HOME/.config/shell/shortcutrc ] && . $HOME/.config/shell/shortcutrc
 
 [ -f ${XDG_CONFIG_HOME}/shell/shortcutrc ] || shortcuts >/dev/null 2>&1 &
-
-# if pacman -Qs libxft-bgra >/dev/null 2>&1; then
-#     # Start graphical server on user's current tty if not already running.
-#     [ "$(tty)" = "/dev/tty1" ] && ! pidof -s Xorg >/dev/null 2>&1 && exec startx "$XINITRC"
-# else
-#     echo "\033[31mIMPORTANT\033[0m: Note that \033[32m\`libxft-bgra\`\033[0m must be installed for this build of dwm.
-# Please run:
-# 	\033[32mparu -S libxft-bgra-git\033[0m
-# and replace \`libxft\`. Afterwards, you may start the graphical server by running \`startx\`."
-# fi
 
 # Switch escape and caps if tty and no passwd required:
 sudo -n loadkeys ${XDG_DATA_HOME/share/}/larbs/ttymaps.kmap 2>/dev/null
@@ -532,14 +523,19 @@ complete -C keg keg
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/fontconfig.pc
 
-[[ ${BLE_VERSION-} ]] && ble-attach
 . "/home/buddhilw/.local/share/cargo/env"
 
-# pnpm
-export PNPM_HOME="/home/buddhilw/.local/share/pnpm"
-case ":$PATH:" in
-    *":$PNPM_HOME:"*) ;;
-    *) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
-stty stop undef 2>/dev/null; stty start undef 2>/dev/null
+# Automatically added by the Guix install script.
+if [ -n "$GUIX_ENVIRONMENT" ]; then
+    if [[ $PS1 =~ (.*)"\\$" ]]; then
+        PS1="${BASH_REMATCH[1]} [env]\\\$ "
+    fi
+fi
+
+# Environmental variable for GUIX
+export GUIX_PROFILE="/home/buddhilw/.config/guix/current"
+. "$GUIX_PROFILE/etc/profile"
+export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
+# guix install glibc-locales
+
+[[ ${BLE_VERSION-} ]] && ble-attach

@@ -1391,9 +1391,7 @@ To create new loadable modules,
     ;; This avoids a long pause if Emacs has been suspended for hours.
     (or (time-less-p current next-time)
 	(progn
-	  (timer-set-time timer (timer-next-integral-multiple-of-time
-				 current display-time-interval)
-			  display-time-interval)
+	  (timer-set-time timer (timer-next-integral-multiple-of-time current display-time-interval) display-time-interval)
 	  (timer-activate timer)))))
 
 (defun lw/timer-pomo ()
@@ -1416,9 +1414,6 @@ To create new loadable modules,
      (cancel-function-timers 'lw/display-time-event-handler)
      (setq-default mode-line-misc-info nil))))
 #+end_src
-
-#+RESULTS:
-: lw/kill-pomo-updates
 
 * Org
 #+begin_src emacs-lisp :tangle packages.el
@@ -1666,12 +1661,96 @@ To create new loadable modules,
 #+RESULTS:
 : t
 
-* OpenAI
+* Utils
+#+begin_src emacs-lisp
+(defun blw/insert-code-file-line-number ()
+  (interactive)
+  (insert (format "%s-%s"
+                  (buffer-file-name)
+                  (what-line))))
+#+end_src
+
+#+RESULTS:
+: blw/insert-code-file-line-number
+
+* Clojure
+** More colors (for native functions)
+
+# ;;   (add-hook! erc-twitch-mode-hook #'erc-colorize-enable)
+#+begin_src emacs-lisp :tangle packages.el
+(package! clojure-mode-extra-font-locking)
+#+end_src
+
+#+begin_src emacs-lisp
+;; '(require 'clojure-mode-extra-font-locking)
+;; (eval-after-load 'clojure-mode '(require 'clojure-mode-extra-font-locking))
+;; (add-hook! clojure-mode #'clojure-mode-extra-font-locking)
+#+end_src
+
+#+RESULTS:
+** User evals on-the-fly, (Reitit course inspired)
+#+begin_src emacs-lisp
+(defmacro lw/define-user-eval-reitit (fn-name command)
+  `(defun ,fn-name ()
+    (interactive)
+    (cider-eval-file (format (concat (getenv "CLJ_PLAYGROUND") "dev/src/user.clj"))) ;; "/path-to/dev/src/user.clj"
+    (cider-interactive-eval
+      (format (concat "(" ,command ")")
+              (cider-last-sexp)))))
+
+(lw/define-user-eval-reitit lw/eval-go "go")
+(lw/define-user-eval-reitit lw/eval-halt "halt")
+(lw/define-user-eval-reitit lw/eval-reset "reset")
+;; (define-key cider-mode-map (kbd "C-c g") 'lw/eval-go)
+
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("c" . "clojure")
+        :desc "go - start reitit" "g" #'lw/eval-go
+        :desc "halt reitit server" "h" #'lw/eval-halt
+        :desc "reset reitit server" "r" #'lw/eval-reset)))
+#+end_src
+
+#+RESULTS:
+: lw/eval-reset
+
+#+begin_src emacs-lisp
+;; (getenv "CLJ")
+;; (format (concat (getenv "CLJ_PLAYGROUND") "dev/src/user.clj"))
+;; (getenv "CLJ_PLAYGROUND")
+#+end_src
+
+#+RESULTS:
+** Unit testing
+*** Cider
+#+begin_src emacs-lisp
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("c" . "clojure")
+        (:prefix ("t" . "tests")
+          :desc "Run all tests" "p" #'cider-test-run-project-tests
+          :desc "Run tests in namespace" "n" #'cider-test-run-ns-tests
+          :desc "Run test under point" "t" #'cider-test-run-test))))
+#+end_src
+
+#+RESULTS:
+: cider-test-run-test
+
+* Neo-tree
+#+begin_src emacs-lisp :tangle packages.el
+(package! neotree)
+#+end_src
+* AI
+** Khoj
+#+begin_src emacs-lisp :tangle packages.el
+(package! khoj)
+#+end_src
+** OpenAI
 #+begin_src emacs-lisp
 ;; if you are using the "pass" password manager
-(setq chatgpt-shell-openai-key
-        (nth 0 (process-lines "pass" "show" "AI/open")))
-(setq openai-key (nth 0 (process-lines "pass" "show" "AI/open")))
+;; (setq chatgpt-shell-openai-key
+;;         (nth 0 (process-lines "pass" "show" "AI/open")))
+;; (setq openai-key (nth 0 (process-lines "pass" "show" "AI/open")))
 #+end_src
 
 #+begin_src emacs-lisp :tangle packages.el
@@ -1680,8 +1759,8 @@ To create new loadable modules,
 
 #+begin_src emacs-lisp
 ;; (add-to-list 'load-path "~/.emacs.d/lisp/")
-(require 'codegpt)
-(require 'chatgpt)
+;; (require 'codegpt)
+;; (require 'chatgpt)
 ;; (package! chatgtp
 ;;   :recipe (:host jcs-elpa
 ;;            :repo "https://jcs-emacs.github.io/jcs-elpa/packages/")) ;; Optional: specify a specific commit or version
@@ -1735,79 +1814,6 @@ To create new loadable modules,
 ;; (require 'dall-e-shell)
 #+end_src
 
-* Utils
-#+begin_src emacs-lisp
-(defun blw/insert-code-file-line-number ()
-  (interactive)
-  (insert (format "%s-%s"
-                  (buffer-file-name)
-                  (what-line))))
-#+end_src
-* Clojure
-** More colors (for native functions)
-
-# ;;   (add-hook! erc-twitch-mode-hook #'erc-colorize-enable)
-#+begin_src emacs-lisp :tangle packages.el
-(package! clojure-mode-extra-font-locking)
-#+end_src
-
-#+begin_src emacs-lisp
-;; '(require 'clojure-mode-extra-font-locking)
-;; (eval-after-load 'clojure-mode '(require 'clojure-mode-extra-font-locking))
-;; (add-hook! clojure-mode #'clojure-mode-extra-font-locking)
-#+end_src
-
-#+RESULTS:
-** User evals on-the-fly, (Reitit course inspired)
-#+begin_src emacs-lisp
-(defmacro lw/define-user-eval-reitit (fn-name command)
-  `(defun ,fn-name ()
-    (interactive)
-    (cider-eval-file (format (concat (getenv "CLJ_PLAYGROUND") "dev/src/user.clj"))) ;; "/path-to/dev/src/user.clj"
-    (cider-interactive-eval
-      (format (concat "(" ,command ")")
-              (cider-last-sexp)))))
-
-(lw/define-user-eval-reitit lw/eval-go "go")
-(lw/define-user-eval-reitit lw/eval-halt "halt")
-(lw/define-user-eval-reitit lw/eval-reset "reset")
-;; (define-key cider-mode-map (kbd "C-c g") 'lw/eval-go)
-
-(map! :leader
-      (:prefix-map ("b" . "buddhi")
-       (:prefix ("c" . "clojure")
-        :desc "go - start reitit" "g" #'lw/eval-go
-        :desc "halt reitit server" "h" #'lw/eval-halt
-        :desc "reset reitit server" "r" #'lw/eval-reset)))
-#+end_src
-
-#+begin_src emacs-lisp
-;; (getenv "CLJ")
-;; (format (concat (getenv "CLJ_PLAYGROUND") "dev/src/user.clj"))
-;; (getenv "CLJ_PLAYGROUND")
-#+end_src
-
-#+RESULTS:
-** Unit testing
-*** Cider
-#+begin_src emacs-lisp
-(map! :leader
-      (:prefix-map ("b" . "buddhi")
-       (:prefix ("c" . "clojure")
-        (:prefix ("t" . "tests")
-          :desc "Run all tests" "p" #'cider-test-run-project-tests
-          :desc "Run tests in namespace" "n" #'cider-test-run-ns-tests
-          :desc "Run test under point" "t" #'cider-test-run-test))))
-#+end_src
-
-#+RESULTS:
-: cider-test-run-test
-
-* Neo-tree
-#+begin_src emacs-lisp :tangle packages.el
-(package! neotree)
-#+end_src
-
 * Pins
 #+begin_src emacs-lisp :tangle packages.el
 ;; (package! treemacs :pin "7c6628a241845cd8f626d2603f747f777de4eefb")
@@ -1832,8 +1838,210 @@ To create new loadable modules,
     ;; (cfw:howm-create-source "Blue")  ; howm source
     ;; (cfw:cal-create-source "Orange") ; diary source
     ;; (cfw:ical-create-source "Moon" "~/moon.ics" "Gray")  ; ICS source1
+    ;; (cfw:ical-create-source "gcal" (nth 0 (process-lines "pass" "show" "CALFW/gmail-ical-url-facti" "Red")))
     (cfw:ical-create-source "gcal" (nth 0 (process-lines "pass" "show" "CALFW/gmail-ical-url")) "Blue")))) ; google calendar ICS
 #+end_src
 
 #+RESULTS:
-: my-open-calendar
+: blw/calendar
+* EXWM
+** Basic loading
+#+begin_src emacs-lisp :tangle packages.el
+(package! exwm)
+#+end_src
+
+#+begin_src emacs-lisp
+;; EXWM init function
+(load! "./my-func/exwm-init.el")
+#+end_src
+
+#+begin_src emacs-lisp
+(add-hook 'exwm-init 'blw/exwm-init)
+#+end_src
+
+#+begin_src emacs-lisp :tangle ./my-func/exwm-init.el
+  (defun blw/exwm-init ()
+    (interactive)
+    (load! "$HOME/.doom.d/my-func/exwm.el"))
+;; (load! "$HOME/.doom.d/desktop.el"))
+
+  (defun efs/exwm-update-class ()
+    (exwm-workspace-rename-buffer exwm-class-name))
+#+end_src
+
+** Configs
+
+
+*** Workspace
+#+begin_src emacs-lisp :tangle ./my-func/exwm.el
+;;; ../dotfiles/.doom.d/my-func/exwm.el -*- lexical-binding: t; -*-
+(setq exwm-workspace-number 5)
+
+;; When window "class" updates, use it to set the buffer name
+(add-hook 'exwm-update-class-hook #'efs/exwm-update-class)
+
+;; Rebind CapsLock to Ctrl
+;;(start-process-shell-command "xmodmap" nil "xmodmap ~/.emacs.d/exwm/Xmodmap")
+
+;; Load the system tray before exwm-init
+(require 'exwm-systemtray)
+(exwm-systemtray-enable)
+
+;; These keys should always pass through to Emacs
+(setq exwm-input-prefix-keys
+    '(?\C-x
+        ?\C-u
+        ?\C-h
+        ?\M-x
+        ?\M-`
+        ?\M-&
+        ?\M-:
+        ?\C-\M-j  ;; Buffer list
+        ?\C-\ ))  ;; Ctrl+Space
+
+;; Ctrl+Q will enable the next key to be sent directly
+(define-key exwm-mode-map [?\C-q] 'exwm-input-send-next-key)
+
+;; Set up global key bindings.  These always work, no matter the input state!
+;; Keep in mind that changing this list after EXWM initializes has no effect.
+(setq exwm-input-global-keys
+      `(
+        ;; Reset to line-mode (C-c C-k switches to char-mode via exwm-input-release-keyboard)
+        ([?\s-r] . exwm-reset)
+
+        ;; Move between windows
+        ([s-left] . windmove-left)
+        ([s-right] . windmove-right)
+        ([s-up] . windmove-up)
+        ([s-down] . windmove-down)
+
+        ;; Launch applications via shell command
+        ([?\s-&] . (lambda (command)
+                     (interactive (list (read-shell-command "$ ")))
+                     (start-process-shell-command command nil command)))
+
+        ;; Switch workspace
+        ([?\s-w] . exwm-workspace-switch)
+        ([?\s-`] . (lambda () (interactive) (exwm-workspace-switch-create 0)))
+
+        ;; 's-N': Switch to certain workspace with Super (Win) plus a number key (0 - 9)
+        ,@(mapcar (lambda (i)
+                    `(,(kbd (format "s-%d" i)) .
+                      (lambda ()
+                        (interactive)
+                        (exwm-workspace-switch-create ,i))))
+                  (number-sequence 0 9))))
+
+(exwm-enable)
+#+end_src
+
+*** Monitor setup
+#+begin_src emacs-lisp :tangle ./my-func/exwm.el
+(require 'exwm-randr)
+(setq exwm-randr-workspace-output-plist '(0 "eDP1"))
+(add-hook 'exwm-randr-screen-change-hook
+      (lambda ()
+        (start-process-shell-command
+         "xrandr" nil "xrandr --output eDP1 --right-of HDMI-1-0 --auto")))
+(start-process-shell-command "xrandr" nil "xrandr --output eDP-1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output DP-1 --off --output DP-2 --off --output HDMI-1 --mode 2560x1080 --pos 1920x0 --rotate normal")
+(setq exwm-randr-workspace-monitor-plist '(2 "eDP-1" 3 "HDMI-1"))
+(exwm-randr-enable)
+#+end_src
+*** Polybar
+#+begin_src emacs-lisp
+  ;; Make sure the server is started (better to do this in your main Emacs config!)
+  (server-start)
+
+  (defvar efs/polybar-process nil
+    "Holds the process of the running Polybar instance, if any")
+
+  (defun efs/kill-panel ()
+    (interactive)
+    (when efs/polybar-process
+      (ignore-errors
+        (kill-process efs/polybar-process)))
+    (setq efs/polybar-process nil))
+
+  (defun efs/start-panel ()
+    (interactive)
+    (efs/kill-panel)
+    (setq efs/polybar-process (start-process-shell-command "polybar" nil "polybar panel")))
+
+  (defun efs/send-polybar-hook (module-name hook-index)
+    (start-process-shell-command "polybar-msg" nil (format "polybar-msg hook %s %s" module-name hook-index)))
+
+  (defun efs/send-polybar-exwm-workspace ()
+    (efs/send-polybar-hook "exwm-workspace" 1))
+
+  ;; Update panel indicator when workspace changes
+  (add-hook 'exwm-workspace-switch-hook #'efs/send-polybar-exwm-workspace)
+#+end_src
+
+#+RESULTS:
+| efs/send-polybar-exwm-workspace | exwm-systemtray--on-workspace-switch |
+*** Inits
+#+begin_src emacs-lisp :tangle ./my-func/exwm.el
+(defun efs/exwm-init-hook ()
+  ;;   ;; Make workspace 1 be the one where we land at startup
+  (exwm-workspace-switch-create 1)
+
+  ;;   ;; Open eshell by default
+  ;;   ;; (eshell)
+
+  ;;   ;; NOTE: The next two are disabled because we now use Polybar!
+
+  ;;   ;; Show battery status in the mode line
+  (display-battery-mode 1)
+
+  ;;   ;; Show the time and date in modeline
+  (setq display-time-day-and-date t)
+  (display-time-mode 1)
+  ;;   ;; Also take a look at display-time-format and format-time-string
+
+  ;;   ;; Start the Polybar panel
+  ;; (efs/start-panel)
+
+  ;;   ;; Launch apps that will run in the background
+  (efs/run-in-background "dunst")
+  (efs/run-in-background "nm-applet")
+  (efs/run-in-background "pasystray")
+  (efs/run-in-background "blueman-applet")
+  (efs/start-panel))
+#+end_src
+
+** TMUX
+#+begin_src emacs-lisp
+  ;; "/run/user/1000/tmux-1000/default"
+#+end_src
+
+* Packages dependencies
+#+begin_src emacs-lisp :tangle packages.el
+  ;; (package! edwina)
+  ;; (package! evil-multiedit)
+  ;; (package! all-the-icons-completion)
+  ;; (package! all-the-icons-ivy)
+  ;; (package! all-the-icons-ibuffer)
+  ;; (package! dashboard)
+  ;; (package! quelpa-use-package)
+  ;; (package! eaf)
+  ;; (package! epc)
+  ;; (package! ctable)
+  ;; (package! deferred)
+  ;; (package! s)
+  ;; (package! elmacro)
+  ;; ;; (package! chembalance)
+  ;; (package! chemtable)
+  ;; (package! calfw-org)
+  ;; (package! calfw-cal)
+  ;; (package! calfw-ical)
+  ;; (package! calfw-gcal)
+  ;; (package! ox-reveal)
+  ;; (package! htmlize)
+  ;; (package! celestial-mode-line)
+  ;; (package! sunshine)
+  ;; (package! evil-nerd-commenter)
+#+end_src
+
+#+begin_src emacs-lisp
+  ;; (use-package! evil-nerd-commenter)
+#+end_src
