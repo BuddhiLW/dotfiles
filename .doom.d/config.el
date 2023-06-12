@@ -1008,6 +1008,24 @@
 ;; (require 'chatgpt-shell)
 ;; (require 'dall-e-shell)
 
+(eval-after-load "tex"
+  '(setcdr (assoc "LaTeX" TeX-command-list)
+    '("%`%l%(mode) -shell-escape%' %t"
+      TeX-run-TeX nil (latex-mode doctex-mode) :help "Run LaTeX")))
+
+(setq org-latex-listings 'minted)
+(setq org-latex-custom-lang-environments
+      '((emacs-lisp "common-lispcode")))
+(setq org-latex-minted-options
+      '(("frame" "lines")
+        ("fontsize" "\\scriptsize")
+        ("linenos" "false")
+        ("bgcolor" "LightGray")))
+(setq org-latex-to-pdf-process
+      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+
 ;; (use-package! calfw-ical)
 (defun blw/calendar ()
   (interactive)
