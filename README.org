@@ -1,90 +1,59 @@
 #+TITLE: Install documentation
 
-These are my configurations. They don't work as automatically as I aim them to
-work. Be aware this is a work on progress.
+OS intended: =Ubuntu= (Debian based, with access to standard =ppa=), =Guix=
 
-OS intended: fresh pacman-derived (Manjaro, Arch, Artix etc.) distros
+The main script currently works out of the batch, in a fresh =Ubuntu= installation.
 
-*WM configs:* https://github.com/BuddhiLW/BuddhiDWM (/TODO:/ link them in local/src/)
+1. Clone the repository, =git clone https://github.com/BuddhiLW/dotfiles.git=;
+2. =cd dotfiles=;
+3. Execute main script: =bash main.sh=;
 
-* Notes on performance
-The default build is not performance oriented. It's user friendly and aesthetic,
-at the same time that it's functional.
+That's it.
 
-** Sacrifices of performance
-*** =picom= is a program that gives blur behavior to windows. (very unperformant)
-To "solve" this,
-- go to =config/x11/xprofile= and comment the line =prime-run
-$(picom --experimental-backends) &=.
-- add =xcompmgr= into the =autostart= variable.
-
-Now, you will have a /light-weight/ solution to =focus= and =opacity= dynamics.
+Feel free to issue any requests or issues, if you encounter trouble installing, from a =Vanilla Ubuntu=.
 
 * What the script does
+It's a cascade of =bash= scripts to install programs from source, or from Debian repositories (=PPAs=).
 
-It should be self-explanatory. Any need of clarification, issue an issue in =github=.
+In the future, the script will work both from =Ubuntu= and =Guix=, with no need of telling in which system you are in. You could override the default to =Guix=, even if you are in =Ubuntu=, or any other system, though, imagining you want to try out the *system-install*, by using =Guix=.
 
-#+begin_src shell :tangle no
-#!/usr/bin/env bash
-## Helper function: install with dependency; no questions asked; errors are shown to &1
-installpkg(){ pacman --noconfirm --needed -S "$1" >/dev/null 2>&1 ;}
-installpkgyay(){ yay --noconfirm --needed -S "$1" >/dev/null 2>&1 ;}
+#+begin_src shell :tangle ./main.sh
+#!/usr/bin/bash
+UBUNTU=${uname-a | grep "Ubuntu"}
 
-opt="--needed --noconfirm"
+rm -rf $DOTFILES/gitthings
+SC="$DOTFILES/scripts/"
+cd $SC
+bash ./setup/bk-dots
+bash ./setup/init
+bash ./install/main
+fc-cache -vf
+bash ./setup/link-config
+bash ./setup/xmonad
 
-## bash start setup
-yay -Sy figlet lolcat fortune
-#### TODO: run script installing ble.sh (https://github.com/akinomyoga/ble.sh)
-
-## us intl with modfier keys
-sudo cp $PWD/low-level/00-keyboard.conf /etc/X11/xorg.conf.d/
-
-## Management tools
-## This pomodoro program integrated with my build of the status bar; e.g., $ pomo "new task"; or $ pomob)
-yay -Sy openpomodoro
-
-### Spell checking
-yay -S hunspell hunspell-en_us hunspell-pt-br ispell
-yay -Sy ispell aspell aspell-en aspell-pt
-
-## Programming languages
-## Go
-mkdir -p ~/go/src
-
-# Purescript
-# installpkgyay purescript-bin
+echo "Congrats. If everything went well, you have the newest Buddhi WM installed."
 #+end_src
 
-#+begin_src shell
-## LaTeX
-pip install Pygments
-#+end_src
+To understand the motive of using the variable =$UBUNTU=, read my =KEG= node[fn:1].
 
 * Programs and dependencies
+** KEG
+The =Knowledge Exchange Graph= is developed by =rwxrob=[fn:2]. I will resume it into a way to document yourself and exchange it with other people. It's pretty net, fast and easy-to-use.
 
-** Neomutt
-#+begin_src shell
-yay -S neomutt curl isync msmtp pass pam-gnupg notmuch abook urlview
-#+end_src
+It's where-with I document my thoughts and ideas.
 
-** ffsubsync (mpv)
-*** pip
-#+begin_src shell
-pip install --upgrade ffsubsync
-#+end_src
-*** gitclone (mpv configs)
-#+begin_src shell
-git clone 'https://github.com/Ajatt-Tools/autosubsync-mpv' ~/.config/mpv/scripts/auto
-#+end_src
-*** How to use it,
+It's installed as such, after the =go= installation (in =dotfiles/scripts/install/keg=):
+#+begin_src shell :tangle ./scripts/install/keg
+#!/bin/bash
 
-#+begin_src shell
-mpv Documentaries/The-War-on-Democracy.mp4  --sub-paths=subs/TheWarOnDem
-ocracy/TheWD.srt
+go install github.com/rwxrob/keg/cmd/keg@latest
+
+chmod a+rwx $HOME/.local/bin/keg
 #+end_src
 
-** lf (list file)
-*** Previewing
-#+begin_src shell
-yay -Sy chafa bat ffmpegthumbnailer poppler epub-thumbnailer-git wkhtmltopdf catdoc docx2tex docx2txt odt2tex gnumeric exiftool iso-info transmission-cli
-#+end_src
+** TODO Pomodoro
+
+* Footnotes
+
+[fn:1] [[https://github.com/BuddhiLW/blw-zet/tree/main/67][67 Creation of a bootstraping/ricing system]]
+[fn:2] [[	https://github.com/rwxrob][https://github.com/rwxrob]]
