@@ -1,0 +1,61 @@
+(define-module (st)
+  #:use-module (gnu packages)
+  #:use-module (gnu packages fonts)
+  #:use-module (gnu packages fontutils)
+  #:use-module (gnu packages gtk)
+  #:use-module (gnu packages ncurses)
+  #:use-module (gnu packages pkg-config)
+  #:use-module (gnu packages xorg)
+  #:use-module (guix build-system cargo)
+  #:use-module (guix build-system glib-or-gtk)
+  #:use-module (guix build-system gnu)
+  #:use-module (guix download)
+  #:use-module (guix gexp)
+  #:use-module (guix git-download)
+  #:use-module ((guix licenses) #:prefix license:)
+  #:use-module (guix utils)
+  #:use-module (guix packages))
+
+(define-public st
+  (package
+    (name "st")
+    (version "0.8.5")
+    (source
+     (origin
+       (method git-fetch)
+       (uri (git-reference
+             (url "https://github.com/BuddhiLW/st")
+             (commit "50ac254157e9ea5e7ed40fc87a53d0e244f10d62")))
+       (sha256
+        (base32
+         "1c3fwmhpcx3l79wkj1bbv6pnh47jvwzlhr54s3nr00lxcksrkjng"))))
+    (build-system gnu-build-system)
+    (arguments
+     `(#:tests? #f                      ; no tests
+       #:make-flags
+       (list (string-append "CC=" ,(cc-for-target))
+             (string-append "TERMINFO="
+                            (assoc-ref %outputs "out")
+                            "/share/terminfo")
+             (string-append "PREFIX=" %output))
+       #:phases
+       (modify-phases %standard-phases
+         (delete 'configure))))
+    (inputs
+     `(("libx11" ,libx11)
+       ("libxft" ,libxft)
+       ("fontconfig" ,fontconfig)
+       ("freetype" ,freetype)
+       ("harfbuzz" ,harfbuzz)
+       ))
+    (native-inputs
+     (list ncurses ;provides tic program
+           pkg-config))
+    (home-page "https://st.suckless.org/")
+    (synopsis "Simple terminal emulator")
+    (description
+     "St implements a simple and lightweight terminal emulator.  It
+implements 256 colors, most VT10X escape sequences, utf8, X11 copy/paste,
+antialiased fonts (using fontconfig), fallback fonts, resizing, and line
+drawing.")
+    (license license:x11)))

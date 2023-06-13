@@ -1,2 +1,2 @@
 #!/usr/bin/bash
-xargs -rxa "$DOTFILES/deps/dep-out.txt" -- sudo apt-get install --
+xargs -rxa "$DOTFILES/deps/dep-out.txt" -- guix install --
