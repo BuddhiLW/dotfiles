@@ -88,7 +88,7 @@
       (path-separator . ":")
       (null-device . "/dev/null"))))
  '(package-selected-packages
-   '(khoj sunshine evil-nerd-commenter emms-soundcloud soundcloud emms tmux-pane visual-fill-column org-present exwm)))
+   '(guix khoj sunshine evil-nerd-commenter emms-soundcloud soundcloud emms tmux-pane visual-fill-column org-present exwm)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

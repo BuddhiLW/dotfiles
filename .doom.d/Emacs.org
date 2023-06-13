@@ -1813,7 +1813,34 @@ To create new loadable modules,
 ;; (require 'chatgpt-shell)
 ;; (require 'dall-e-shell)
 #+end_src
+* LaTeX (Org/Markdown PDF exports with rich code-colors)
+** Pygments
+#+begin_src emacs-lisp
+(eval-after-load "tex"
+  '(setcdr (assoc "LaTeX" TeX-command-list)
+    '("%`%l%(mode) -shell-escape%' %t"
+      TeX-run-TeX nil (latex-mode doctex-mode) :help "Run LaTeX")))
+#+end_src
 
+#+RESULTS:
+| %`%l%(mode) -shell-escape%' %t | TeX-run-TeX | nil | (latex-mode doctex-mode) | :help | Run LaTeX |
+
+
+#+name: setup-minted
+#+begin_src emacs-lisp :exports both :results silent
+(setq org-latex-listings 'minted)
+(setq org-latex-custom-lang-environments
+      '((emacs-lisp "common-lispcode")))
+(setq org-latex-minted-options
+      '(("frame" "none")
+        ("fontsize" "\\scriptsize")
+        ("linenos" "false")
+        ("bgcolor" "LightGray")))
+(setq org-latex-to-pdf-process
+      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+#+end_src
 * Pins
 #+begin_src emacs-lisp :tangle packages.el
 ;; (package! treemacs :pin "7c6628a241845cd8f626d2603f747f777de4eefb")

@@ -1,4 +1,5 @@
-#/usr/bin/bash
+#!/usr/bin/bash
+UBUNTU=${uname-a | grep "Ubuntu"}
 
 rm -rf $DOTFILES/gitthings
 SC="$DOTFILES/scripts/"
@@ -11,4 +12,3 @@ bash ./setup/link-config
 bash ./setup/xmonad
 
 echo "Congrats. If everything went well, you have the newest Buddhi WM installed."
-
