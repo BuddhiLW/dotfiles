@@ -1,0 +1,81 @@
+2 1. Blementary Theory of Probability,
+
+the system of axioms and in the further development of the
+theory, then the postulational concepts of a random event and
+its probability seem the most suitable. There are other postula-
+tional systems of the theory of probability, particularly those in
+‘which the concept of probability is not treated as one of the basic.
+‘concepts, but is itself expressed by means of other concepts.’
+However, in that case, the aim is different, namely, to tie up as
+closely as possible the mathematical theory with the empirical
+development of the theory of probability.
+
+$1. Axioms
+
+Let 5 be a collection of elements é,», ¢,..., which we shall call
+elementary events, and a set of subsets of H; the elements of
+the set § will be called random events,
+
+1. isa field of sets.
+UL. § contains the set E.
+IIL. To each set A in fis assigned a non-negative real number
+P(A). This number P(A) is called the probability of the event A,
+IV. P(E) equals 1.
+V. If A and B have no element in common, then
+P(A+B) =P(A) +P(B)
+
+A system of sets, , together with a definite assignment of
+numbers P(A), satisfying Axioms I-V, is called a field of prob-
+ability.
+
+Our system of Axioms I-V is consistent. This is proved by the
+following example. Let E consist of the single element ¢ and let
+consist of F and the null set 0. P(E) is then set equal to 1 and
+P(O) equals 0.
+
+For example, B. von Misea(1)and (2) and S. Bernstein (1).
+The render who wishes from the outeet to give a concrete meaning to the
+tataging eons i refered fo 8.
+
+product of 4 and Bt
+ip the general case
+
+{$2 The Relation to Experimental Data 2
+
+Our system of axioms is not, however, complete, for in various
+problems in the theory of probability different fields of proba-
+bility have to be examined.
+
+‘The Construction of Fields of Probability. The simplest fields
+of probability are constructed as follows. We take an arbitrary
+finite set B= (2, &,...»a) and an arbitrary set (Pa. --~ Pu)
+of non-negative numbers with the sum p.+ pst. .-+ Pe= 1.
+{is taken as the set ofall subsets in E, and we put
+
+PEE Baro bis) = A + Ba ton + Pe
+
+In such cases, p,, Ps. .- » Py are called the probabilities of the
+elementary events , é,- . .» & or simply elementary probabil
+ties. In this way are derived all possible finite fields of probability
+in which consists of the set of all subsets of E. (The field of
+probability is called finite if the set £ is finite.) For further
+‘examples see Chap. II, § 3.
+
+§2. The Relation to Experimental Data
+
+We apply the theory of probability to the actual world of
+experiments in the following manner:
+
+1) There is assumed a complex of conditions, 6, which allows
+of any number of repetitions.
+
+2) We study a definite set of events which could take place as
+a result of the establishment of the conditions 6. In individual
+cases where the conditions are realized, the events occur, gener-
+ally, in different ways. Let E be the set of all possible variants
+4, & « -- of the outcome of the given events. Some of these vari-
+ants might in general not occur. We include in set all the vari-
+ants which we regard a priori as possible.
+
+3) If the variant of the events which has actually occurred
+
