@@ -1,7 +1,3 @@
 #!/usr/bin/bash
 
-if [ -n "$UBUNTU" ]; then
-    xargs -rxa "$DOTFILES/deps/dep-out.txt" -- sudo apt-get install --
-else
-    xargs -rxa "$DOTFILES/deps/dep-out-guix.txt" -- guix install --
-fi
+xargs -rxa "$DOTFILES/deps/dep-out.txt" -- sudo apt-get install --

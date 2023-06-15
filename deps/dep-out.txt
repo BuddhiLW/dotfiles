@@ -66,10 +66,8 @@ libxext-dev libxcb1-dev libxcb-damage0-dev libxcb-dpms0-dev libxcb-xfixes0-dev l
 
 wget curl gnupg2 software-properties-common apt-transport-https ca-certificates lsb-release
 
-# remaining
 picom
 
-# emacs
 texinfo
 libgccjit-12-dev
 libjpeg-dev
@@ -78,7 +76,7 @@ libtiff-dev
 gnutls-bin
 tidy
 gopls
-grip
+grep
 markdown
 pipenv
 shfmt

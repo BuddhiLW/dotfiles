@@ -91,7 +91,7 @@ libtiff-dev
 gnutls-bin
 tidy
 gopls 
-grip 
+grep 
 markdown 
 pipenv 
 shfmt 

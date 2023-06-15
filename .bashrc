@@ -122,15 +122,16 @@ pathprepend() {
 
 # remember last arg will be first in path
 # "for 'fontfor' program and rust installs with cargo.
+# "$HOME/.emacs.d/bin/" \
+# "$HOME/.guix-profile/bin/"
+# "$HOME/.local/share/cargo/bin" \
+# "$HOME/.local/bin" \
 pathprepend \
-    "$HOME/.local/share/cargo/bin" \
-    "$HOME/.emacs.d/bin/" \
-    "$HOME/.guix-profile/bin/"
-    "$HOME/.local/bin" \
-    "$HOME/.local/bin/blw" \
-    "$HOME/.local/bin/larbs" \
-    "$HOME/.local/bin/rob-scripts/" \
-    "$HOME/.local/bin/statusbar" \
+    "$DOTFILES/.local/bin/" \
+    "$DOTFILES/.local/bin/blw" \
+    "$DOTFILES/.local/bin/larbs" \
+    "$DOTFILES/.local/bin/rob-scripts/" \
+    "$DOTFILES/.local/bin/statusbar" \
     "$SCRIPTS" \
     "$SCRIPTS_INSTALL" \
     "$SCRIPTSROB" \
@@ -142,8 +143,7 @@ pathprepend \
     "$GOROOT" \
     /usr/local/go/bin \
     "$HOME/julia/bin/" \
-    "$HOME/.emacs.d/pen.el/scripts/"
-#"$GHREPOS/cmd-"* \
+    "$HOME/.emacs.d/pen.el/scripts/"\
 
 pathappend \
     /usr/local/opt/coreutils/libexec/gnubin \
@@ -235,7 +235,6 @@ _have setxkbmap && test -n "$DISPLAY" &&
 # uim-fep
 
 unalias -a
-alias c99="pcc"
 alias fctd="cd $HOME/PP/facti/linfo-ppi/"
 alias reitfiles="cd $HOME/PP/Clojure/learn-reitit-course-files/"
 alias reitpro="cd $HOME/Videos/Courses/Reitit-Pro"
@@ -505,25 +504,23 @@ unset __conda_setup
 # <<< conda initialize <<<
 
 complete -C keg keg
-complete -C guix guix
+# complete -C guix guix
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
-export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/fontconfig.pc
-export CMAKE_C_COMPILER=$CMAKE_C_COMPILER:c99
-export CC=$HOME/.local/bin/blw/c99
+#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+#export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/fontconfig.pc
 
 # . "/home/lw/.local/share/cargo/env"
 
 # Automatically added by the Guix install script.
-if [ -n "$GUIX_ENVIRONMENT" ]; then
-    if [[ $PS1 =~ (.*)"\\$" ]]; then
-        PS1="${BASH_REMATCH[1]} [env]\\\$ "
-    fi
-fi
+#if [ -n "$GUIX_ENVIRONMENT" ]; then
+#    if [[ $PS1 =~ (.*)"\\$" ]]; then
+#        PS1="${BASH_REMATCH[1]} [env]\\\$ "
+#    fi
+#fi
 
 # Environmental variable for GUIX
-export GUIX_PROFILE="/home/lw/.guix-profile"
-. "$GUIX_PROFILE/etc/profile"
+#export GUIX_PROFILE="/home/lw/.guix-profile"
+#. "$GUIX_PROFILE/etc/profile"
 # export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
 # guix install glibc-locales
 
