@@ -17,9 +17,9 @@
             (openpgp-fingerprint
               "2A39 3FFF 68F4 EF7A 3D29  12AF 6F51 20A0 22FB B2D5")))))
 
-(cons
- (channel
-  (name 'buddhilw)
-  (url "https://github.com/BuddhiLW/guix-programs")
-  (branch "main"))
- %default-channels)
+;; (cons
+;;  (channel
+;;   (name 'buddhilw)
+;;   (url "https://github.com/BuddhiLW/guix-programs")
+;;   (branch "main"))
+;;  %default-channels)

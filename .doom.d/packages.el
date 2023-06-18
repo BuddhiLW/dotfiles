@@ -38,9 +38,10 @@
 ;; (package! datomic-snippets)
 
 (package! flymd)
-
-(package! nov)
-
+(package! nov
+  :recipe (:host github
+           :repo "emacs-pe/nov.el"))
+	  
 (package! emojify)
 
 (package! pyim-basedict)

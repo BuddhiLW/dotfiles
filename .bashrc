@@ -37,6 +37,7 @@ export CS_LANG_B="$CS_B/Languages"
 # export GITUSER="$USER"
 # export REPOS="$HOME/Repos"
 # export GHREPOS="$REPOS/github.com/$GITUSER"
+export GUIX_PROFILE="/home/lw/.guix-profile" # Environmental variable for GUIX
 export DOTFILES="$HOME/dotfiles/"
 export DOOMDIR="$HOME/.doom.d/"
 export DOOM="$HOME/doom-emacs/"
@@ -120,12 +121,16 @@ pathprepend() {
     done
 } && export pathprepend
 
+
+ 
 # remember last arg will be first in path
 # "for 'fontfor' program and rust installs with cargo.
-# "$HOME/.emacs.d/bin/" \
-# "$HOME/.guix-profile/bin/"
+# # "$HOME/.guix-profile/bin/"
 # "$HOME/.local/share/cargo/bin" \
 # "$HOME/.local/bin" \
+# "$HOME/.emacs.d/pen.el/scripts/" \
+. "$GUIX_PROFILE/etc/profile"
+
 pathprepend \
     "$DOTFILES/.local/bin/" \
     "$DOTFILES/.local/bin/blw" \
@@ -143,7 +148,8 @@ pathprepend \
     "$GOROOT" \
     /usr/local/go/bin \
     "$HOME/julia/bin/" \
-    "$HOME/.emacs.d/pen.el/scripts/"\
+    "$GUIX_PROFILE/bin" \
+    "$HOME/.emacs.d/bin/" \
 
 pathappend \
     /usr/local/opt/coreutils/libexec/gnubin \
@@ -518,11 +524,14 @@ complete -C keg keg
 #    fi
 #fi
 
-# Environmental variable for GUIX
-#export GUIX_PROFILE="/home/lw/.guix-profile"
-#. "$GUIX_PROFILE/etc/profile"
 # export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
 # guix install glibc-locales
 
+# uim: univeral input method
+#export GTK_IM_MODULE=uim
+#export QT_IM_MODULE=uim
+#uim-xim &
+export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
+#export XMODIFIERS=@im=uim
 
 [[ ${BLE_VERSION-} ]] && ble-attach
