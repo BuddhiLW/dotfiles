@@ -112,3 +112,6 @@ gitthings/st
 .config/MongoDB Compass
 .config/Code
 .local/state/*
+
+
+.config/github-copilot/hosts.json

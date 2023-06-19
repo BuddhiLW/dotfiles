@@ -1748,9 +1748,9 @@ To create new loadable modules,
 ** OpenAI
 #+begin_src emacs-lisp
 ;; if you are using the "pass" password manager
-;; (setq chatgpt-shell-openai-key
-;;         (nth 0 (process-lines "pass" "show" "AI/open")))
-;; (setq openai-key (nth 0 (process-lines "pass" "show" "AI/open")))
+(setq chatgpt-shell-openai-key
+        (nth 0 (process-lines "pass" "show" "AI/open")))
+(setq openai-key (nth 0 (process-lines "pass" "show" "AI/open")))
 #+end_src
 
 #+begin_src emacs-lisp :tangle packages.el
@@ -1758,9 +1758,9 @@ To create new loadable modules,
 #+end_src
 
 #+begin_src emacs-lisp
-;; (add-to-list 'load-path "~/.emacs.d/lisp/")
-;; (require 'codegpt)
-;; (require 'chatgpt)
+;; (add-to-list 'load-path "~/doom-emacs/lisp/")
+(require 'codegpt)
+(require 'chatgpt)
 ;; (package! chatgtp
 ;;   :recipe (:host jcs-elpa
 ;;            :repo "https://jcs-emacs.github.io/jcs-elpa/packages/")) ;; Optional: specify a specific commit or version
