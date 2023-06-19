@@ -1,11 +1,12 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =9
+let g:netrw_dirhistcnt =3
+let g:netrw_dirhist_3='/home/lw/dotfiles/.local/bin/blw'
+let g:netrw_dirhist_2='/home/lw/tmp/lw/dotfiles/.config/torcat'
+let g:netrw_dirhist_1='/home/lw/dotfiles/.local/bin'
+let g:netrw_dirhist_0='/home/lw/dotfiles/.config/picom'
 let g:netrw_dirhist_9='/home/buddhilw/dotfiles/.local/bin/blw'
 let g:netrw_dirhist_8='/home/buddhilw/dotfiles/.config/tmux'
 let g:netrw_dirhist_7='/home/buddhilw/dotfiles/.local/bin/blw'
 let g:netrw_dirhist_6='/home/buddhilw/PP/Notes'
 let g:netrw_dirhist_5='/home/buddhilw'
 let g:netrw_dirhist_4='/home/buddhilw/.local/src/st'
-let g:netrw_dirhist_3='/home/buddhilw/.config/xmonad/xmonad'
-let g:netrw_dirhist_2='/home/buddhilw/.vim'
-let g:netrw_dirhist_1='/home/buddhilw/.local/bin'

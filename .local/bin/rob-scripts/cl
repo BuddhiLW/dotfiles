@@ -1,2 +1,1 @@
-#!/bin/sh
-exec wee /buffer clear
+/gnu/store/ngabry6c962dz9zm539srzsr4c40wgxw-profile/bin/pcc

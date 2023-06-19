@@ -113,5 +113,5 @@ gitthings/st
 .config/Code
 .local/state/*
 
-
 .config/github-copilot/hosts.json
+.config/google-chrome

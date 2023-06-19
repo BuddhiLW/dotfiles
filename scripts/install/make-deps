@@ -2,8 +2,4 @@
 SH=$DOTFILES/scripts/install
 DEPS=$DOTFILES/deps
 
-if [ -n "$UBUNTU" ]; then
-    bash $SH/read-deps $DEPS/dependencie-scratch.txt >$DEPS/dep-out.txt
-else
-    bash $SH/read-deps $DEPS/dependencie-scratch-guix.txt >$DEPS/dep-out-guix.txt
-fi
+bash $SH/read-deps $DEPS/dependencie-scratch.txt >$DEPS/dep-out.txt

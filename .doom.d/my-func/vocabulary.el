@@ -39,5 +39,5 @@
                         'bing-dict-brief-cb
                         `(,(decode-coding-string word 'utf-8))
                         t
-                        t)))))
-  (lw/find-vocabulary))
+                        t))))))
+  ;; (lw/find-vocabulary))

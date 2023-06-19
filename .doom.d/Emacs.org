@@ -1,4 +1,4 @@
-#+TITLE: Emacs
+j#+TITLE: Emacs
 #+PROPERTY: header-args:emacs-lisp :tangle ./config.el
 
 * Base
@@ -1147,7 +1147,10 @@ To create new loadable modules,
 #+end_src
 * EPUB reader
 #+begin_src emacs-lisp :tangle packages.el
-(package! nov)
+(package! nov
+  :recipe (:host github
+           :repo "emacs-pe/nov.el"))
+	   )
 #+end_src
 
 #+begin_src emacs-lisp

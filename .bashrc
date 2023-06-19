@@ -1,7 +1,7 @@
 # BuddhiLW's setup
 # ~/.bashrc
 #
-[[ $- == *i* ]] && source ~/.local/share/blesh/ble.sh
+[[ $- == *i* ]] && source ~/dotfiles/gitthings/ble.sh/out/ble.sh
 
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
@@ -24,7 +24,7 @@ _source_if() { [[ -r "$1" ]] && source "$1"; }
 # ----------------------- environment variables ----------------------
 #                           (also see envx)
 
-export USER="buddhilw"
+export USER="lw"
 export BOOKS="$DOCUMENTS/Books"
 export CS_B="$BOOKS/CS"
 export BNOTES="$PP/Notes/Books"
@@ -37,6 +37,7 @@ export CS_LANG_B="$CS_B/Languages"
 # export GITUSER="$USER"
 # export REPOS="$HOME/Repos"
 # export GHREPOS="$REPOS/github.com/$GITUSER"
+export GUIX_PROFILE="/home/lw/.guix-profile" # Environmental variable for GUIX
 export DOTFILES="$HOME/dotfiles/"
 export DOOMDIR="$HOME/.doom.d/"
 export DOOM="$HOME/doom-emacs/"
@@ -60,21 +61,8 @@ export PICTURES="$HOME/Pictures"
 export MUSIC="$HOME/Music"
 export VIDEOS="$HOME/Videos"
 export GODEV=""
-# export PDFS="$DOCUMENTS/PDFS"
-# export VIRTUALMACHINES="$HOME/VirtualMachines"
-# export WORKSPACES="$HOME/Workspaces" # container home dirs for mounting
-# export ZETDIR="$GHREPOS/zet"
-# export ZETTELCASTS="$VIDEOS/ZettelCasts"
-# export CLIP_DIR="$VIDEOS/Clips"
-# export CLIP_DATA="$GHREPOS/cmd-clip/data"
-# export CLIP_VOLUME=0
-# export CLIP_SCREEN=0
 export TERM=xterm-256color
 export HRULEWIDTH=73
-# export EDITOR="emacsclient -at"
-# export VISUAL=vi
-# export EDITOR_PREFIX=vi
-# export GOPRIVATE="github.com/$GITUSER/*,gitlab.com/$GITUSER/*"
 export GHCUP="$GHCUP_INSTALL_BASE_PREFIX/.ghcup/bin"
 export GOPATH="$HOME/go"
 export GOBIN="$HOME/go/bin"
@@ -82,9 +70,6 @@ export NATIVEFIER="$HOME/.local/nativefier"
 export GOROOT="$GOPATH/go" # /usr/local/go
 export PATH=$PATH:$GOROOT/bin
 export PATH="$PATH:$HOME/go/bin"
-#export GOPROXY=direct
-#export CGO_ENABLED=0
-#export PYTHONDONTWRITEBYTECODE=2 # fucking shit-for-brains var name
 export LC_COLLATE=C
 export LESS_TERMCAP_mb="[35m" # magenta
 export LESS_TERMCAP_md="[33m" # yellow
@@ -136,16 +121,22 @@ pathprepend() {
     done
 } && export pathprepend
 
+
+ 
 # remember last arg will be first in path
 # "for 'fontfor' program and rust installs with cargo.
+# # "$HOME/.guix-profile/bin/"
+# "$HOME/.local/share/cargo/bin" \
+# "$HOME/.local/bin" \
+# "$HOME/.emacs.d/pen.el/scripts/" \
+. "$GUIX_PROFILE/etc/profile"
+
 pathprepend \
-    "$HOME/.local/share/cargo/bin" \
-    "$HOME/.emacs.d/bin/" \
-    "$HOME/.local/bin" \
-    "$HOME/.local/bin/blw" \
-    "$HOME/.local/bin/larbs" \
-    "$HOME/.local/bin/rob-scripts/" \
-    "$HOME/.local/bin/statusbar" \
+    "$DOTFILES/.local/bin/" \
+    "$DOTFILES/.local/bin/blw" \
+    "$DOTFILES/.local/bin/larbs" \
+    "$DOTFILES/.local/bin/rob-scripts/" \
+    "$DOTFILES/.local/bin/statusbar" \
     "$SCRIPTS" \
     "$SCRIPTS_INSTALL" \
     "$SCRIPTSROB" \
@@ -157,8 +148,8 @@ pathprepend \
     "$GOROOT" \
     /usr/local/go/bin \
     "$HOME/julia/bin/" \
-    "$HOME/.emacs.d/pen.el/scripts/"
-#"$GHREPOS/cmd-"* \
+    "$GUIX_PROFILE/bin" \
+    "$HOME/.emacs.d/bin/" \
 
 pathappend \
     /usr/local/opt/coreutils/libexec/gnubin \
@@ -260,7 +251,7 @@ alias e="emacs --with-profile"
 alias zt="zathura"
 alias ecf="$DOOMDIR/config"
 alias lynx="lynx --display_charset=utf-8"
-alias emacs="emacs-30.0.50"
+# alias emacs="emacs-30.0.50"
 #### Directory easyeness
 alias csb='. csb'
 alias elmb='cd $ELM_B'
@@ -505,37 +496,42 @@ newshell
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/buddhilw/.conda/bin/conda' 'shell.bash' 'hook' 2>/dev/null)"
+__conda_setup="$('/home/lw/.conda/bin/conda' 'shell.bash' 'hook' 2>/dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/home/buddhilw/.conda/etc/profile.d/conda.sh" ]; then
-        . "/home/buddhilw/.conda/etc/profile.d/conda.sh"
+    if [ -f "/home/lw/.conda/etc/profile.d/conda.sh" ]; then
+        . "/home/lw/.conda/etc/profile.d/conda.sh"
     else
-        export PATH="/home/buddhilw/.conda/bin:$PATH"
+        export PATH="/home/lw/.conda/bin:$PATH"
     fi
 fi
 unset __conda_setup
 # <<< conda initialize <<<
 
 complete -C keg keg
+# complete -C guix guix
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
-export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/fontconfig.pc
+#export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+#export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/fontconfig.pc
 
-. "/home/buddhilw/.local/share/cargo/env"
+# . "/home/lw/.local/share/cargo/env"
 
 # Automatically added by the Guix install script.
-if [ -n "$GUIX_ENVIRONMENT" ]; then
-    if [[ $PS1 =~ (.*)"\\$" ]]; then
-        PS1="${BASH_REMATCH[1]} [env]\\\$ "
-    fi
-fi
+#if [ -n "$GUIX_ENVIRONMENT" ]; then
+#    if [[ $PS1 =~ (.*)"\\$" ]]; then
+#        PS1="${BASH_REMATCH[1]} [env]\\\$ "
+#    fi
+#fi
 
-# Environmental variable for GUIX
-export GUIX_PROFILE="/home/buddhilw/.config/guix/current"
-. "$GUIX_PROFILE/etc/profile"
-export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
+# export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
 # guix install glibc-locales
+
+# uim: univeral input method
+#export GTK_IM_MODULE=uim
+#export QT_IM_MODULE=uim
+#uim-xim &
+export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
+#export XMODIFIERS=@im=uim
 
 [[ ${BLE_VERSION-} ]] && ble-attach

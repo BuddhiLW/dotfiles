@@ -2,7 +2,7 @@
 file="$@"
 
 while read -r line; do
-  if [[ $line =~ ^## ]]; then
+  if [[ $line =~ ^## || $line =~ ^# ]]; then
     continue
   else
     echo $line 
