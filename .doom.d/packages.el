@@ -1,3 +1,5 @@
+(package! elfeed)
+
 (package! conda)
 
 (package! ein)
@@ -38,10 +40,11 @@
 ;; (package! datomic-snippets)
 
 (package! flymd)
-(package! nov
-  :recipe (:host github
-           :repo "emacs-pe/nov.el"))
-	  
+
+(package! nov)
+  ;; :recipe (:host github
+  ;;          :repo "emacs-pe/nov.el"))
+
 (package! emojify)
 
 (package! pyim-basedict)

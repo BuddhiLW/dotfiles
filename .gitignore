@@ -115,3 +115,5 @@ gitthings/st
 
 .config/github-copilot/hosts.json
 .config/google-chrome
+
+.config/torcat

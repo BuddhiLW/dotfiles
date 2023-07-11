@@ -96,21 +96,22 @@
 
 (load! "./my-func/transparency.el")
 
-(use-package! org
-  :config
-  (setq org-ellipsis " ▾")
-  (setq org-agenda-start-with-log-mode t)
-  (setq org-log-done 'time)
-  (setq org-log-into-drawer t)
-  (setq org-agenda-files
-        '("~/PP/Notes/Agenda/Tasks.org"
-          "~/PP/Notes/Agenda/Habits.org"
-          "~/PP/Notes/Agenda/IMPA.org"
-          "~/PP/Notes/Agenda/ProcSel.org"
-          "~/PP/Notes/Agenda/University.org"
-          "~/PP/Notes/Agenda/Research.org"
-          "~/PP/Notes/Agenda/CafeDoBem.org"
-          "~/PP/Notes/Agenda/Facti.org")))
+;; (use-package! org
+;;   :config
+;;   (setq org-ellipsis " ▾")
+;;   (setq org-agenda-start-with-log-mode t)
+;;   (setq org-log-done 'time)
+;;   (setq org-log-into-drawer t)
+;;   (setq org-agenda-files   '()))
+        ;; '(
+        ;;   ;; "~/PP/Notes/Agenda/Tasks.org"
+        ;;   "~/PP/Notes/Agenda/Habits.org"
+        ;;   "~/PP/Notes/Agenda/IMPA.org"
+        ;;   "~/PP/Notes/Agenda/ProcSel.org"
+        ;;   "~/PP/Notes/Agenda/University.org"
+        ;;   "~/PP/Notes/Agenda/Research.org"
+        ;;   "~/PP/Notes/Agenda/CafeDoBem.org"
+        ;;   "~/PP/Notes/Agenda/Facti.org")))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
@@ -980,13 +981,13 @@
           :desc "Run test under point" "t" #'cider-test-run-test))))
 
 ;; if you are using the "pass" password manager
-;; (setq chatgpt-shell-openai-key
-;;         (nth 0 (process-lines "pass" "show" "AI/open")))
-;; (setq openai-key (nth 0 (process-lines "pass" "show" "AI/open")))
+(setq chatgpt-shell-openai-key
+        (nth 0 (process-lines "pass" "show" "AI/open")))
+(setq openai-key (nth 0 (process-lines "pass" "show" "AI/open")))
 
-;; (add-to-list 'load-path "~/.emacs.d/lisp/")
-;; (require 'codegpt)
-;; (require 'chatgpt)
+;; (add-to-list 'load-path "~/doom-emacs/lisp/")
+(require 'codegpt)
+(require 'chatgpt)
 ;; (package! chatgtp
 ;;   :recipe (:host jcs-elpa
 ;;            :repo "https://jcs-emacs.github.io/jcs-elpa/packages/")) ;; Optional: specify a specific commit or version
@@ -1017,7 +1018,7 @@
 (setq org-latex-custom-lang-environments
       '((emacs-lisp "common-lispcode")))
 (setq org-latex-minted-options
-      '(("frame" "lines")
+      '(("frame" "none")
         ("fontsize" "\\scriptsize")
         ("linenos" "false")
         ("bgcolor" "LightGray")))

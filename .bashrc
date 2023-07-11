@@ -24,7 +24,7 @@ _source_if() { [[ -r "$1" ]] && source "$1"; }
 # ----------------------- environment variables ----------------------
 #                           (also see envx)
 
-export USER="lw"
+export USER="buddhilw"
 export BOOKS="$DOCUMENTS/Books"
 export CS_B="$BOOKS/CS"
 export BNOTES="$PP/Notes/Books"
@@ -37,7 +37,7 @@ export CS_LANG_B="$CS_B/Languages"
 # export GITUSER="$USER"
 # export REPOS="$HOME/Repos"
 # export GHREPOS="$REPOS/github.com/$GITUSER"
-export GUIX_PROFILE="/home/lw/.guix-profile" # Environmental variable for GUIX
+export GUIX_PROFILE="/home/$USER/.guix-profile" # Environmental variable for GUIX
 export DOTFILES="$HOME/dotfiles/"
 export DOOMDIR="$HOME/.doom.d/"
 export DOOM="$HOME/doom-emacs/"
@@ -46,6 +46,7 @@ export SCRIPTS="$DOTFILES/bin/"
 export SCRIPTS_INSTALL="$DOTFILES/bin-install/"
 export SCRIPTSROB="$DOTFILES/dotfiles-rob/scripts"
 export SNIPPETS="$DOTFILES/snippets"
+export SEARX_SETTINGS_PATH="$HOME/.config/searx/"
 export SNIPPETSROB="$DOTFILES/dotfiles-rob/snippets"
 export HELP_BROWSER=lynx
 export DESKTOP="$HOME/Desktop"
@@ -146,6 +147,7 @@ pathprepend \
     "$NATIVEFIER" \
     "$GHCUP" \
     "$GOROOT" \
+    "$SEARX_SETTINGS_PATH" \
     /usr/local/go/bin \
     "$HOME/julia/bin/" \
     "$GUIX_PROFILE/bin" \
@@ -387,7 +389,7 @@ export HISTFILE="${XDG_DATA_HOME:-$HOME/.local/share}/history"
 export WEECHAT_HOME="${XDG_CONFIG_HOME:-$HOME/.config}/weechat"
 export MBSYNCRC="${XDG_CONFIG_HOME:-$HOME/.config}/mbsync/config"
 export ELECTRUMDIR="${XDG_DATA_HOME:-$HOME/.local/share}/electrum"
-
+export SEARX_SETTINGS_PATH="${XDG_DATA_HOME:-$HOME/.config}/searx"
 # Other program settings:
 export DICS="/usr/share/stardict/dic/"
 export SUDO_ASKPASS="$HOME/.local/bin/dmenupass"
@@ -496,14 +498,14 @@ newshell
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/lw/.conda/bin/conda' 'shell.bash' 'hook' 2>/dev/null)"
+__conda_setup="$('/home/buddhilw/.conda/bin/conda' 'shell.bash' 'hook' 2>/dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/home/lw/.conda/etc/profile.d/conda.sh" ]; then
-        . "/home/lw/.conda/etc/profile.d/conda.sh"
+    if [ -f "/home/buddhilw/.conda/etc/profile.d/conda.sh" ]; then
+        . "/home/buddhilw/.conda/etc/profile.d/conda.sh"
     else
-        export PATH="/home/lw/.conda/bin:$PATH"
+        export PATH="/home/buddhilw/.conda/bin:$PATH"
     fi
 fi
 unset __conda_setup
