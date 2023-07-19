@@ -1,4 +1,5 @@
 (package! elfeed)
+(package! webfeeder)
 
 (package! conda)
 
@@ -117,6 +118,8 @@
 (package! calfw)
 (package! calfw-org)
 (package! calfw-ical)
+
+(package! highlight-indentation)
 
 (package! exwm)
 

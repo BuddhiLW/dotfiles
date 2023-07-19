@@ -85,7 +85,8 @@
       (null-device . "/dev/null"))))
  '(custom-safe-themes
    '("7a424478cb77a96af2c0f50cfb4e2a88647b3ccca225f8c650ed45b7f50d9525" default))
- '(package-selected-packages '(nov guix khoj org-present visual-fill-column)))
+ '(package-selected-packages
+   '(highlight-indentation nov guix khoj org-present visual-fill-column)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

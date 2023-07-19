@@ -41,10 +41,10 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-monokai-pro) ;;-> edit "(use-pacakge doom-themes)" instead.
-(setq doom-font (font-spec :family "JetBrains Mono" :size 16 :weight 'regular)
-      doom-variable-pitch-font (font-spec :family "JetBrains Mono" :weight 'thin) ; inherits `doom-font''s :size
-      doom-unicode-font (font-spec :family "JoyPixels" :size 25)
-      doom-big-font (font-spec :family "Fira Mono" :size 19))
+(setq doom-font (font-spec :family "Noto Mono" :size 20 :weight 'regular)
+      doom-variable-pitch-font (font-spec :family "Fantasque Sans Mono" :weight 'regular) ; inherits `doom-font''s :size
+      doom-unicode-font (font-spec :family "JoyPixels" :size 20)
+      doom-big-font (font-spec :family "FreeMono" :size 20))
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -1039,6 +1039,12 @@
     ;; (cfw:ical-create-source "Moon" "~/moon.ics" "Gray")  ; ICS source1
     ;; (cfw:ical-create-source "gcal" (nth 0 (process-lines "pass" "show" "CALFW/gmail-ical-url-facti" "Red")))
     (cfw:ical-create-source "gcal" (nth 0 (process-lines "pass" "show" "CALFW/gmail-ical-url")) "Blue")))) ; google calendar ICS
+
+(use-package! highlight-indentation
+  :hook (prog-mode . highlight-indentation-mode)
+  :config
+   (set-face-background 'highlight-indentation-face "#0eeeAA")  
+   (set-face-background 'highlight-indentation-current-column-face "#c3b3b3"))
 
 ;; EXWM init function
 (load! "./my-func/exwm-init.el")
