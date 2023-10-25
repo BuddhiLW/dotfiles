@@ -67,8 +67,9 @@ export GHCUP="$GHCUP_INSTALL_BASE_PREFIX/.ghcup/bin"
 export GOPATH="$HOME/go"
 export GOBIN="$HOME/go/bin"
 export NATIVEFIER="$HOME/.local/nativefier"
-export GOROOT="$GOPATH/go" # /usr/local/go
-export PATH=$PATH:$GOROOT/bin
+#"/usr/local/go"
+export GOROOT="/usr/local/go"
+export PATH="$PATH:$GOROOT/bin"
 export PATH="$PATH:$HOME/go/bin"
 export LC_COLLATE=C
 export LESS_TERMCAP_mb="[35m" # magenta
@@ -121,15 +122,13 @@ pathprepend() {
     done
 } && export pathprepend
 
-
- 
 # remember last arg will be first in path
 # "for 'fontfor' program and rust installs with cargo.
 # # "$HOME/.guix-profile/bin/"
 # "$HOME/.local/share/cargo/bin" \
 # "$HOME/.local/bin" \
 # "$HOME/.emacs.d/pen.el/scripts/" \
-. "$GUIX_PROFILE/etc/profile"
+# . "$GUIX_PROFILE/etc/profile"
 
 pathprepend \
     "$DOTFILES/.local/bin/" \
@@ -137,6 +136,7 @@ pathprepend \
     "$DOTFILES/.local/bin/larbs" \
     "$DOTFILES/.local/bin/rob-scripts/" \
     "$DOTFILES/.local/bin/statusbar" \
+    "$DOTFILES/.local/julia/bin/" \
     "$SCRIPTS" \
     "$SCRIPTS_INSTALL" \
     "$SCRIPTSROB" \
@@ -147,9 +147,9 @@ pathprepend \
     "$GHCUP" \
     "$GOROOT" \
     /usr/local/go/bin \
-    "$HOME/julia/bin/" \
+    "$HOME/programs/julia/bin/" \
     "$GUIX_PROFILE/bin" \
-    "$HOME/.emacs.d/bin/" \
+    "$HOME/.emacs.d/bin/"
 
 pathappend \
     /usr/local/opt/coreutils/libexec/gnubin \
@@ -535,3 +535,9 @@ export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
 #export XMODIFIERS=@im=uim
 
 [[ ${BLE_VERSION-} ]] && ble-attach
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/lw/google-cloud-sdk/path.bash.inc' ]; then . '/home/lw/google-cloud-sdk/path.bash.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/home/lw/google-cloud-sdk/completion.bash.inc' ]; then . '/home/lw/google-cloud-sdk/completion.bash.inc'; fi

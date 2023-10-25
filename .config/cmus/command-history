@@ -1,0 +1,9 @@
+filter 
+add ~/Music/flac/
+q
+s
+add ./
+help 
+player-next
+live-filter 
+a .

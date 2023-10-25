@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+find . -name '*.flac' -exec mv -t ~/Music/flac/ -- {} +

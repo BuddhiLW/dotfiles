@@ -1,0 +1,80 @@
+{
+ "ConfigPath": {
+  "Path": "/home/lw/.config/containers/podman/machine/qemu/podman-machine-default.json"
+ },
+ "CmdLine": [
+  "/usr/bin/qemu-system-x86_64",
+  "-m",
+  "2048",
+  "-smp",
+  "1",
+  "-fw_cfg",
+  "name=opt/com.coreos/config,file=/home/lw/.config/containers/podman/machine/qemu/podman-machine-default.ign",
+  "-qmp",
+  "unix:/run/user/1000/podman/qmp_podman-machine-default.sock,server=on,wait=off",
+  "-netdev",
+  "socket,id=vlan,fd=3",
+  "-device",
+  "virtio-net-pci,netdev=vlan,mac=5a:94:ef:e4:0c:ee",
+  "-device",
+  "virtio-serial",
+  "-chardev",
+  "socket,path=/run/user/1000/podman/podman-machine-default_ready.sock,server=on,wait=off,id=apodman-machine-default_ready",
+  "-device",
+  "virtserialport,chardev=apodman-machine-default_ready,name=org.fedoraproject.port.0",
+  "-pidfile",
+  "/run/user/1000/podman/podman-machine-default_vm.pid",
+  "-accel",
+  "kvm",
+  "-cpu",
+  "host",
+  "-virtfs",
+  "local,path=/home/lw,mount_tag=vol0,security_model=mapped-xattr",
+  "-drive",
+  "if=virtio,file=/home/lw/.local/share/containers/podman/machine/qemu/podman-machine-default_fedora-coreos-38.20230625.2.0-qemu.x86_64.qcow2"
+ ],
+ "Rootful": false,
+ "UID": 1000,
+ "IgnitionFilePath": {
+  "Path": "/home/lw/.config/containers/podman/machine/qemu/podman-machine-default.ign"
+ },
+ "ImageStream": "testing",
+ "ImagePath": {
+  "Path": "/home/lw/.local/share/containers/podman/machine/qemu/podman-machine-default_fedora-coreos-38.20230625.2.0-qemu.x86_64.qcow2"
+ },
+ "Mounts": [
+  {
+   "ReadOnly": false,
+   "Source": "/home/lw",
+   "Tag": "vol0",
+   "Target": "/home/lw",
+   "Type": "9p"
+  }
+ ],
+ "Name": "podman-machine-default",
+ "PidFilePath": {
+  "Path": "/run/user/1000/podman/podman-machine-default_proxy.pid"
+ },
+ "VMPidFilePath": {
+  "Path": "/run/user/1000/podman/podman-machine-default_vm.pid"
+ },
+ "QMPMonitor": {
+  "Address": {
+   "Path": "/run/user/1000/podman/qmp_podman-machine-default.sock"
+  },
+  "Network": "unix",
+  "Timeout": 2000000000
+ },
+ "ReadySocket": {
+  "Path": "/run/user/1000/podman/podman-machine-default_ready.sock"
+ },
+ "CPUs": 1,
+ "DiskSize": 100,
+ "Memory": 2048,
+ "IdentityPath": "/home/lw/.ssh/podman-machine-default",
+ "Port": 35673,
+ "RemoteUsername": "core",
+ "Starting": false,
+ "Created": "2023-07-05T15:48:01.585916269-03:00",
+ "LastUp": "2023-07-05T15:48:01.585916269-03:00"
+}

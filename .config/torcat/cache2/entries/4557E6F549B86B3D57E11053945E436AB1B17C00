@@ -1,0 +1,414 @@
+/*
+	Paginator 3000
+	- idea by ecto (ecto.ru)
+	- coded by karaboz (karaboz.ru)
+
+	How to implement:
+	<div class="paginator" id="paginator_example"></div>
+	<script type="text/javascript">
+		paginator_example = new Paginator('paginator_example', 2048, 10, 1, 'http://www.yourwebsite.com/pages/');
+	</script>
+
+	Be sure that width of your paginator does not change after page is loaded
+	If it happens you must call Paginator.resizePaginator(paginator_example) function to redraw paginator
+
+*/
+
+/*
+	Paginator class
+		paginatorHolderId - id of the html element where paginator will be placed as innerHTML (String): required
+		pagesTotal - number of pages (Number, required)
+		pagesSpan - number of pages which are visible at once (Number, required) 
+		pageCurrent - the number of current page (Number, required)
+		baseUrl - the url of the website (String)
+			if baseUrl is 'http://www.yourwebsite.com/pages/' the links on the pages will be:
+			http://www.yourwebsite.com/pages/1, http://www.yourwebsite.com/pages/2,	etc
+*/
+var Paginator = function(paginatorHolderId, pagesTotal, pagesSpan, pageCurrent, baseUrl){
+	if(!document.getElementById(paginatorHolderId) || !pagesTotal || !pagesSpan) return false;
+
+	this.inputData = {
+		paginatorHolderId: paginatorHolderId,
+		pagesTotal: pagesTotal,
+		pagesSpan: pagesSpan < pagesTotal ? pagesSpan : pagesTotal,
+		pageCurrent: pageCurrent,
+		baseUrl: baseUrl ? baseUrl : '/pages/'
+	};
+
+	this.html = {
+		holder: null,
+
+		table: null,
+		trPages: null, 
+		trScrollBar: null,
+		tdsPages: null,
+
+		scrollBar: null,
+		scrollThumb: null,
+			
+		pageCurrentMark: null
+	};
+
+
+	this.prepareHtml();
+
+	this.initScrollThumb();
+	this.initPageCurrentMark();
+	this.initEvents();
+
+	this.scrollToPageCurrent();
+} 
+
+/*
+	Set all .html properties (links to dom objects)
+*/
+Paginator.prototype.prepareHtml = function(){
+
+	this.html.holder = document.getElementById(this.inputData.paginatorHolderId);
+	this.html.holder.innerHTML = this.makePagesTableHtml();
+
+	this.html.table = this.html.holder.getElementsByTagName('table')[0];
+
+	var trPages = this.html.table.getElementsByTagName('tr')[0]; 
+	this.html.tdsPages = trPages.getElementsByTagName('td');
+
+	this.html.scrollBar = getElementsByClassName(this.html.table, 'div', 'scroll_bar')[0];
+	this.html.scrollThumb = getElementsByClassName(this.html.table, 'div', 'scroll_thumb')[0];
+	this.html.pageCurrentMark = getElementsByClassName(this.html.table, 'div', 'current_page_mark')[0];
+
+	// hide scrollThumb if there is no scroll (we see all pages at once)
+	if(this.inputData.pagesSpan == this.inputData.pagesTotal){
+		addClass(this.html.holder, 'fullsize');
+	}
+}
+
+/*
+	Make html for pages (table) 
+*/
+Paginator.prototype.makePagesTableHtml = function(){
+	var tdWidth = (100 / this.inputData.pagesSpan) + '%';
+
+	var html = '' +
+	'<table width="100%">' +
+		'<tr>' 
+			for (var i=1; i<=this.inputData.pagesSpan; i++){
+				html += '<td width="' + tdWidth + '"></td>';
+			}
+			html += '' + 
+		'</tr>' +
+		'<tr>' +
+			'<td colspan="' + this.inputData.pagesSpan + '">' +
+				'<div class="scroll_bar">' + 
+					'<div class="scroll_trough"></div>' + 
+					'<div class="scroll_thumb">' + 
+						'<div class="scroll_knob"></div>' + 
+					'</div>' + 
+					'<div class="current_page_mark"></div>' + 
+				'</div>' +
+			'</td>' +
+		'</tr>' +
+	'</table>';
+
+	return html;
+}
+
+/*
+	Set all needed properties for scrollThumb and it's width
+*/
+Paginator.prototype.initScrollThumb = function(){
+	this.html.scrollThumb.widthMin = '8'; // minimum width of the scrollThumb (px)
+	this.html.scrollThumb.widthPercent = this.inputData.pagesSpan/this.inputData.pagesTotal * 100;
+
+	this.html.scrollThumb.xPosPageCurrent = (this.inputData.pageCurrent - Math.round(this.inputData.pagesSpan/2))/this.inputData.pagesTotal * this.html.table.offsetWidth;
+	this.html.scrollThumb.xPos = this.html.scrollThumb.xPosPageCurrent;
+
+	this.html.scrollThumb.xPosMin = 0;
+	this.html.scrollThumb.xPosMax;
+
+	this.html.scrollThumb.widthActual;
+
+	this.setScrollThumbWidth();
+	
+}
+
+Paginator.prototype.setScrollThumbWidth = function(){
+	// Try to set width in percents
+	this.html.scrollThumb.style.width = this.html.scrollThumb.widthPercent + "%";
+
+	// Fix the actual width in px
+	this.html.scrollThumb.widthActual = this.html.scrollThumb.offsetWidth;
+
+	// If actual width less then minimum which we set
+	if(this.html.scrollThumb.widthActual < this.html.scrollThumb.widthMin){
+		this.html.scrollThumb.style.width = this.html.scrollThumb.widthMin + 'px';
+	}
+
+	this.html.scrollThumb.xPosMax = this.html.table.offsetWidth - this.html.scrollThumb.widthActual;
+}
+
+Paginator.prototype.moveScrollThumb = function(){
+	this.html.scrollThumb.style.left = this.html.scrollThumb.xPos + "px";
+}
+
+
+/*
+	Set all needed properties for pageCurrentMark, it's width and move it
+*/
+Paginator.prototype.initPageCurrentMark = function(){
+	this.html.pageCurrentMark.widthMin = '3';
+	this.html.pageCurrentMark.widthPercent = 100 / this.inputData.pagesTotal;
+	this.html.pageCurrentMark.widthActual;
+
+	this.setPageCurrentPointWidth();
+	this.movePageCurrentPoint();
+}
+
+Paginator.prototype.setPageCurrentPointWidth = function(){
+	// Try to set width in percents
+	this.html.pageCurrentMark.style.width = this.html.pageCurrentMark.widthPercent + '%';
+
+	// Fix the actual width in px
+	this.html.pageCurrentMark.widthActual = this.html.pageCurrentMark.offsetWidth;
+
+	// If actual width less then minimum which we set
+	if(this.html.pageCurrentMark.widthActual < this.html.pageCurrentMark.widthMin){
+		this.html.pageCurrentMark.style.width = this.html.pageCurrentMark.widthMin + 'px';
+	}
+}
+
+Paginator.prototype.movePageCurrentPoint = function(){
+	if(this.html.pageCurrentMark.widthActual < this.html.pageCurrentMark.offsetWidth){
+		this.html.pageCurrentMark.style.left = (this.inputData.pageCurrent - 1)/this.inputData.pagesTotal * this.html.table.offsetWidth - this.html.pageCurrentMark.offsetWidth/2 + "px";
+	} else {
+		this.html.pageCurrentMark.style.left = (this.inputData.pageCurrent - 1)/this.inputData.pagesTotal * this.html.table.offsetWidth + "px";
+	}
+}
+
+
+
+/*
+	Drag, click and resize events
+*/
+Paginator.prototype.initEvents = function(){
+	var _this = this;
+
+	this.html.scrollThumb.onmousedown = function(e){
+		if (!e) var e = window.event;
+		e.cancelBubble = true;
+		if (e.stopPropagation) e.stopPropagation();
+
+		var dx = getMousePosition(e).x - this.xPos;
+		document.onmousemove = function(e){
+			if (!e) var e = window.event;
+			_this.html.scrollThumb.xPos = getMousePosition(e).x - dx;
+
+			// the first: draw pages, the second: move scrollThumb (it was logically but ie sucks!)
+			_this.moveScrollThumb();
+			_this.drawPages();
+			
+			
+		}
+		document.onmouseup = function(){
+			document.onmousemove = null;
+			_this.enableSelection();
+		}
+		_this.disableSelection();
+	}
+
+	this.html.scrollBar.onmousedown = function(e){
+		if (!e) var e = window.event;
+		if(matchClass(_this.paginatorBox, 'fullsize')) return;
+		
+		_this.html.scrollThumb.xPos = getMousePosition(e).x - getPageX(_this.html.scrollBar) - _this.html.scrollThumb.offsetWidth/2;
+		
+		_this.moveScrollThumb();
+		_this.drawPages();
+		
+		
+	}
+
+	// Comment the row beneath if you set paginator width fixed
+	addEvent(window, 'resize', function(){Paginator.resizePaginator(_this)});
+}
+
+/*
+	Redraw current span of pages
+*/
+Paginator.prototype.drawPages = function(){
+	var percentFromLeft = this.html.scrollThumb.xPos/(this.html.table.offsetWidth);
+	var cellFirstValue = Math.round(percentFromLeft * this.inputData.pagesTotal);
+	
+	var html = "";
+	// drawing pages control the position of the scrollThumb on the edges!
+	if(cellFirstValue < 1){
+		cellFirstValue = 1;
+		this.html.scrollThumb.xPos = 0;
+		this.moveScrollThumb();
+	} else if(cellFirstValue >= this.inputData.pagesTotal - this.inputData.pagesSpan) {
+		cellFirstValue = this.inputData.pagesTotal - this.inputData.pagesSpan + 1;
+		this.html.scrollThumb.xPos = this.html.table.offsetWidth - this.html.scrollThumb.offsetWidth;
+		this.moveScrollThumb();
+	}
+
+	
+
+	for(var i=0; i<this.html.tdsPages.length; i++){
+		var cellCurrentValue = cellFirstValue + i;
+		if(cellCurrentValue == this.inputData.pageCurrent){
+			html = "<span>" + "<strong>" + cellCurrentValue + "</strong>" + "</span>";
+		} else {
+			html = "<span>" + "<a href='" + this.inputData.baseUrl + cellCurrentValue + "'>" + cellCurrentValue + "</a>" + "</span>";
+		}
+		this.html.tdsPages[i].innerHTML = html;
+	}
+}
+
+/*
+	Scroll to current page
+*/
+Paginator.prototype.scrollToPageCurrent = function(){
+	this.html.scrollThumb.xPosPageCurrent = (this.inputData.pageCurrent - Math.round(this.inputData.pagesSpan/2))/this.inputData.pagesTotal * this.html.table.offsetWidth;
+	this.html.scrollThumb.xPos = this.html.scrollThumb.xPosPageCurrent;
+	
+	this.moveScrollThumb();
+	this.drawPages();
+	
+}
+
+
+
+Paginator.prototype.disableSelection = function(){
+	document.onselectstart = function(){
+		return false;
+	}
+	this.html.scrollThumb.focus();	
+}
+
+Paginator.prototype.enableSelection = function(){
+	document.onselectstart = function(){
+		return true;
+	}
+}
+
+/*
+	Function is used when paginator was resized (window.onresize fires it automatically)
+	Use it when you change paginator with DHTML
+	Do not use it if you set fixed width of paginator
+*/
+Paginator.resizePaginator = function (paginatorObj){
+
+	paginatorObj.setPageCurrentPointWidth();
+	paginatorObj.movePageCurrentPoint();
+
+	paginatorObj.setScrollThumbWidth();
+	paginatorObj.scrollToPageCurrent();
+}
+
+
+
+
+/*
+	Global functions which are used
+*/
+function getElementsByClassName(objParentNode, strNodeName, strClassName){
+	var nodes = objParentNode.getElementsByTagName(strNodeName);
+	if(!strClassName){
+		return nodes;	
+	}
+	var nodesWithClassName = [];
+	for(var i=0; i<nodes.length; i++){
+		if(matchClass( nodes[i], strClassName )){
+			nodesWithClassName[nodesWithClassName.length] = nodes[i];
+		}	
+	}
+	return nodesWithClassName;
+}
+
+
+function addClass( objNode, strNewClass ) {
+	replaceClass( objNode, strNewClass, '' );
+}
+
+function removeClass( objNode, strCurrClass ) {
+	replaceClass( objNode, '', strCurrClass );
+}
+
+function replaceClass( objNode, strNewClass, strCurrClass ) {
+	var strOldClass = strNewClass;
+	if ( strCurrClass && strCurrClass.length ){
+		strCurrClass = strCurrClass.replace( /\s+(\S)/g, '|$1' );
+		if ( strOldClass.length ) strOldClass += '|';
+		strOldClass += strCurrClass;
+	}
+	objNode.className = objNode.className.replace( new RegExp('(^|\\s+)(' + strOldClass + ')($|\\s+)', 'g'), '$1' );
+	objNode.className += ( (objNode.className.length)? ' ' : '' ) + strNewClass;
+}
+
+function matchClass( objNode, strCurrClass ) {
+	return ( objNode && objNode.className.length && objNode.className.match( new RegExp('(^|\\s+)(' + strCurrClass + ')($|\\s+)') ) );
+}
+
+
+function addEvent(objElement, strEventType, ptrEventFunc) {
+	if (objElement.addEventListener)
+		objElement.addEventListener(strEventType, ptrEventFunc, false);
+	else if (objElement.attachEvent)
+		objElement.attachEvent('on' + strEventType, ptrEventFunc);
+}
+function removeEvent(objElement, strEventType, ptrEventFunc) {
+	if (objElement.removeEventListener) objElement.removeEventListener(strEventType, ptrEventFunc, false);
+		else if (objElement.detachEvent) objElement.detachEvent('on' + strEventType, ptrEventFunc);
+}
+
+
+function getPageY( oElement ) {
+	var iPosY = oElement.offsetTop;
+	while ( oElement.offsetParent != null ) {
+		oElement = oElement.offsetParent;
+		iPosY += oElement.offsetTop;
+		if (oElement.tagName == 'BODY') break;
+	}
+	return iPosY;
+}
+
+function getPageX( oElement ) {
+	var iPosX = oElement.offsetLeft;
+	while ( oElement.offsetParent != null ) {
+		oElement = oElement.offsetParent;
+		iPosX += oElement.offsetLeft;
+		if (oElement.tagName == 'BODY') break;
+	}
+	return iPosX;
+}
+
+function getMousePosition(e) {
+	if (e.pageX || e.pageY){
+		var posX = e.pageX;
+		var posY = e.pageY;
+	}else if (e.clientX || e.clientY) 	{
+		var posX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+		var posY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+	}
+	return {x:posX, y:posY}	
+}¥7@x      d©ƒyd©ƒyEÇÚd©•j   h    O^firstPartyDomain=libgen.li&partitionKey=%28https%2Clibgen.li%29,:https://libgen.li/js/paginator3000.js strongly-framed 1 security-info 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 request-method GET response-head HTTP/1.1 200 OK
+Server: nginx
+Date: Sat, 01 Jul 2023 16:57:15 GMT
+Content-Type: application/javascript
+Content-Length: 12004
+Last-Modified: Mon, 08 Apr 2013 01:24:46 GMT
+ETag: "51621c5e-2ee4"
+Expires: Sat, 08 Jul 2023 16:57:15 GMT
+Cache-Control: max-age=604800
+Accept-Ranges: bytes
+Content-Security-Policy: report-uri https://0.0.0.0/tprb_csp/0;manifest-src 'none';block-all-mixed-content
+ original-response-headers Server: nginx
+Date: Sat, 01 Jul 2023 16:57:15 GMT
+Content-Type: application/javascript
+Content-Length: 12004
+Last-Modified: Mon, 08 Apr 2013 01:24:46 GMT
+Connection: keep-alive
+ETag: "51621c5e-2ee4"
+Expires: Sat, 08 Jul 2023 16:57:15 GMT
+Cache-Control: max-age=604800
+Accept-Ranges: bytes
+ ctid 2 uncompressed-len 0 net-response-time-onstart 851 net-response-time-onstop 853   .ä

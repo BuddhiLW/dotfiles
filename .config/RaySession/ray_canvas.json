@@ -1,0 +1,69 @@
+{
+  "group_positions": [
+    {
+      "port_types_view": 15,
+      "group_name": "system",
+      "null_zone": "",
+      "in_zone": "",
+      "out_zone": "",
+      "null_xy": [
+        200,
+        0
+      ],
+      "in_xy": [
+        400,
+        0
+      ],
+      "out_xy": [
+        0,
+        0
+      ],
+      "flags": 4,
+      "layout_mode": 0
+    },
+    {
+      "port_types_view": 15,
+      "group_name": "PulseAudio JACK Sink",
+      "null_zone": "",
+      "in_zone": "",
+      "out_zone": "",
+      "null_xy": [
+        165,
+        -29
+      ],
+      "in_xy": [
+        400,
+        26
+      ],
+      "out_xy": [
+        0,
+        26
+      ],
+      "flags": 0,
+      "layout_mode": 0
+    },
+    {
+      "port_types_view": 15,
+      "group_name": "PulseAudio JACK Source",
+      "null_zone": "",
+      "in_zone": "",
+      "out_zone": "",
+      "null_xy": [
+        165,
+        16
+      ],
+      "in_xy": [
+        400,
+        26
+      ],
+      "out_xy": [
+        0,
+        26
+      ],
+      "flags": 0,
+      "layout_mode": 0
+    }
+  ],
+  "portgroups": [],
+  "version": "0.13.0"
+}

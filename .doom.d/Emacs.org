@@ -1,4 +1,4 @@
-j#+TITLE: Emacs
+#+TITLE: Emacs
 #+PROPERTY: header-args:emacs-lisp :tangle ./config.el
 
 * Base
@@ -50,10 +50,10 @@ j#+TITLE: Emacs
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-monokai-pro) ;;-> edit "(use-pacakge doom-themes)" instead.
-(setq doom-font (font-spec :family "JetBrains Mono" :size 16 :weight 'regular)
-      doom-variable-pitch-font (font-spec :family "JetBrains Mono" :weight 'thin) ; inherits `doom-font''s :size
+(setq doom-font (font-spec :family "Oxygen Mono" :size 20)
+      doom-variable-pitch-font (font-spec :family "Fantasque Sans Mono") ; inherits `doom-font''s :size
       doom-unicode-font (font-spec :family "JoyPixels" :size 25)
-      doom-big-font (font-spec :family "Fira Mono" :size 19))
+      doom-big-font (font-spec :family "Nimbus Mono PS" :size 15))
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -588,6 +588,13 @@ npm install -g elm-oracle
 #+RESULTS:
 : eaf-browser
 * Python
+
+Shell version to be used with =run-python=
+
+# #+begin_src emacs-lisp
+# (setq python-shell-interpreter "python3.11")
+# #+end_src
+
 ** Anaconda
 
 #+begin_src emacs-lisp :tangle packages.el
@@ -613,6 +620,12 @@ npm install -g elm-oracle
 #+begin_src emacs-lisp
 ;; (use-package! ein)
 ;; (require 'ein)
+#+end_src
+** Source environments
+#+begin_src emacs-lisp
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+        :desc "python environment" "e" #'pyvenv-activate))
 #+end_src
 
 * Haskell
@@ -656,11 +669,11 @@ npm install -g elm-oracle
   ;; (setq doom-modeline-height 20)
   ;; (setq doom-modeline-bar-width 3)
   ;; (setq doom-modeline-height 1) ; optional
-  (setq doom-modeline-buffer-file-name-style 'truncate-upto-root)
+  ;; (setq doom-modeline-buffer-file-name-style 'truncate-upto-root)
   (custom-set-faces
-    '(mode-line ((t (:family "Gayathri" :size 13)))) ;; Free Sans
-    '(mode-line-active ((t (:family "Gayathri" :size 13)))) ; For 29+
-    '(mode-line-inactive ((t (:family "Gayathri" :size 13))))))
+    '(mode-line ((t (:family "Gayathri" :size 10)))) ;; Free Sans
+    '(mode-line-active ((t (:family "Gayathri" :size 10)))) ; For 29+
+    '(mode-line-inactive ((t (:family "Gayathri" :size 10))))))
 #+end_src
 
 #+RESULTS:
@@ -1150,7 +1163,6 @@ To create new loadable modules,
 (package! nov
   :recipe (:host github
            :repo "emacs-pe/nov.el"))
-	   )
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1751,19 +1763,23 @@ To create new loadable modules,
 ** OpenAI
 #+begin_src emacs-lisp
 ;; if you are using the "pass" password manager
-;; (setq chatgpt-shell-openai-key
-;;         (nth 0 (process-lines "pass" "show" "AI/open")))
-;; (setq openai-key (nth 0 (process-lines "pass" "show" "AI/open")))
+(setq chatgpt-shell-openai-key
+        (nth 0 (process-lines "pass" "show" "AI/open")))
+(setq openai-key (nth 0 (process-lines "pass" "show" "AI/open")))
 #+end_src
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! tblui)
+;; (package! chatgpt
+;;   :recipe
+;;   (:host github
+;;    :repo "emacs-openai/chatgpt.el"))
 #+end_src
 
 #+begin_src emacs-lisp
-;; (add-to-list 'load-path "~/.emacs.d/lisp/")
-;; (require 'codegpt)
-;; (require 'chatgpt)
+(add-to-list 'load-path "~/.emacs.d/lisp/")
+(require 'codegpt)
+(require 'chatgpt)
 ;; (package! chatgtp
 ;;   :recipe (:host jcs-elpa
 ;;            :repo "https://jcs-emacs.github.io/jcs-elpa/packages/")) ;; Optional: specify a specific commit or version
@@ -1772,15 +1788,8 @@ To create new loadable modules,
   ;; :recipe (:host jcs-elpa))
            ;; :repo "https://github.com/emacs-openai/codegpt")) ;; Optional: specify a specific commit or version
 
-;; (package! chatgtp
-;;   :recipe
-;;   (:host github
-;;    :repo "emacs-openai/chatgtp"))
 ;; (package! codegtp)
 #+end_src
-
-#+RESULTS:
-: chatgpt
 
 #+begin_src emacs-lisp :tangle packages.el
 ;; (package! chatgpt-shell
@@ -1871,9 +1880,6 @@ To create new loadable modules,
     ;; (cfw:ical-create-source "gcal" (nth 0 (process-lines "pass" "show" "CALFW/gmail-ical-url-facti" "Red")))
     (cfw:ical-create-source "gcal" (nth 0 (process-lines "pass" "show" "CALFW/gmail-ical-url")) "Blue")))) ; google calendar ICS
 #+end_src
-
-#+RESULTS:
-: blw/calendar
 * EXWM
 ** Basic loading
 #+begin_src emacs-lisp :tangle packages.el

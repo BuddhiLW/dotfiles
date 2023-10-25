@@ -38,10 +38,11 @@
 ;; (package! datomic-snippets)
 
 (package! flymd)
+
 (package! nov
   :recipe (:host github
            :repo "emacs-pe/nov.el"))
-	  
+
 (package! emojify)
 
 (package! pyim-basedict)
@@ -91,6 +92,10 @@
 (package! khoj)
 
 (package! tblui)
+;; (package! chatgpt
+;;   :recipe
+;;   (:host github
+;;    :repo "emacs-openai/chatgpt.el"))
 
 ;; (package! chatgpt-shell
 ;;   :recipe

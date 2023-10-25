@@ -1,0 +1,55 @@
+{
+   "checksum": "4f3f910cf04d9026603ce822a5b89dc1",
+   "roots": {
+      "bookmark_bar": {
+         "children": [ {
+            "date_added": "13332192448733060",
+            "date_last_used": "0",
+            "guid": "8c92a62e-094b-4eb1-aa00-0fc9c12665d7",
+            "id": "5",
+            "meta_info": {
+               "power_bookmark_meta": ""
+            },
+            "name": "Spectral Modeling Synthesis Tools - MTG - Music Technology Group (UPF)",
+            "type": "url",
+            "url": "https://www.upf.edu/web/mtg/sms-tools"
+         }, {
+            "date_added": "13336883631405743",
+            "date_last_used": "0",
+            "guid": "3e4928a4-8802-42d3-853f-cd8af1e604c6",
+            "id": "7",
+            "name": "Pappus of Alexandria",
+            "type": "url",
+            "url": "https://en.wikipedia.org/wiki/Pappus_of_Alexandria"
+         } ],
+         "date_added": "13332191324734211",
+         "date_last_used": "0",
+         "date_modified": "13336883631405743",
+         "guid": "0bc5d13f-2cba-5d74-951f-3f233fe6c908",
+         "id": "1",
+         "name": "Bookmarks bar",
+         "type": "folder"
+      },
+      "other": {
+         "children": [  ],
+         "date_added": "13332191324734212",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "82b081ec-3dd3-529c-8475-ab6c344590dd",
+         "id": "2",
+         "name": "Other bookmarks",
+         "type": "folder"
+      },
+      "synced": {
+         "children": [  ],
+         "date_added": "13332191324734213",
+         "date_last_used": "0",
+         "date_modified": "0",
+         "guid": "4cf2e351-0e85-532b-bb37-df045d8f8d0f",
+         "id": "3",
+         "name": "Mobile bookmarks",
+         "type": "folder"
+      }
+   },
+   "version": 1
+}

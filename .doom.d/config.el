@@ -41,10 +41,10 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-monokai-pro) ;;-> edit "(use-pacakge doom-themes)" instead.
-(setq doom-font (font-spec :family "JetBrains Mono" :size 16 :weight 'regular)
-      doom-variable-pitch-font (font-spec :family "JetBrains Mono" :weight 'thin) ; inherits `doom-font''s :size
+(setq doom-font (font-spec :family "Oxygen Mono" :size 20)
+      doom-variable-pitch-font (font-spec :family "Fantasque Sans Mono") ; inherits `doom-font''s :size
       doom-unicode-font (font-spec :family "JoyPixels" :size 25)
-      doom-big-font (font-spec :family "Fira Mono" :size 19))
+      doom-big-font (font-spec :family "Nimbus Mono PS" :size 15))
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -307,6 +307,10 @@
 ;; (use-package! ein)
 ;; (require 'ein)
 
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+        :desc "python environment" "e" #'pyvenv-activate))
+
 ;; (use-package! go-complete
 ;;   :config
 ;;  (add-hook 'completion-at-point-functions 'go-complete-at-point))
@@ -319,11 +323,11 @@
   ;; (setq doom-modeline-height 20)
   ;; (setq doom-modeline-bar-width 3)
   ;; (setq doom-modeline-height 1) ; optional
-  (setq doom-modeline-buffer-file-name-style 'truncate-upto-root)
+  ;; (setq doom-modeline-buffer-file-name-style 'truncate-upto-root)
   (custom-set-faces
-    '(mode-line ((t (:family "Gayathri" :size 13)))) ;; Free Sans
-    '(mode-line-active ((t (:family "Gayathri" :size 13)))) ; For 29+
-    '(mode-line-inactive ((t (:family "Gayathri" :size 13))))))
+    '(mode-line ((t (:family "Gayathri" :size 10)))) ;; Free Sans
+    '(mode-line-active ((t (:family "Gayathri" :size 10)))) ; For 29+
+    '(mode-line-inactive ((t (:family "Gayathri" :size 10))))))
 
 (use-package doom-themes
   :ensure t
@@ -980,13 +984,13 @@
           :desc "Run test under point" "t" #'cider-test-run-test))))
 
 ;; if you are using the "pass" password manager
-;; (setq chatgpt-shell-openai-key
-;;         (nth 0 (process-lines "pass" "show" "AI/open")))
-;; (setq openai-key (nth 0 (process-lines "pass" "show" "AI/open")))
+(setq chatgpt-shell-openai-key
+        (nth 0 (process-lines "pass" "show" "AI/open")))
+(setq openai-key (nth 0 (process-lines "pass" "show" "AI/open")))
 
-;; (add-to-list 'load-path "~/.emacs.d/lisp/")
-;; (require 'codegpt)
-;; (require 'chatgpt)
+(add-to-list 'load-path "~/.emacs.d/lisp/")
+(require 'codegpt)
+(require 'chatgpt)
 ;; (package! chatgtp
 ;;   :recipe (:host jcs-elpa
 ;;            :repo "https://jcs-emacs.github.io/jcs-elpa/packages/")) ;; Optional: specify a specific commit or version
@@ -995,10 +999,6 @@
   ;; :recipe (:host jcs-elpa))
            ;; :repo "https://github.com/emacs-openai/codegpt")) ;; Optional: specify a specific commit or version
 
-;; (package! chatgtp
-;;   :recipe
-;;   (:host github
-;;    :repo "emacs-openai/chatgtp"))
 ;; (package! codegtp)
 
 (add-to-list 'package-archives '( "jcs-elpa" . "https://jcs-emacs.github.io/jcs-elpa/packages/") t)
@@ -1017,7 +1017,7 @@
 (setq org-latex-custom-lang-environments
       '((emacs-lisp "common-lispcode")))
 (setq org-latex-minted-options
-      '(("frame" "lines")
+      '(("frame" "none")
         ("fontsize" "\\scriptsize")
         ("linenos" "false")
         ("bgcolor" "LightGray")))

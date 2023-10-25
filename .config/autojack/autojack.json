@@ -1,0 +1,258 @@
+{
+    "version": "2.3.9",
+    "log-level": "7",
+    "cpu-governor": true,
+    "boost": false,
+    "jack": {
+        "on": false,
+        "driver": "dummy",
+        "chan-in": 1,
+        "chan-out": 1,
+        "rate": 48000,
+        "frame": 4096,
+        "period": 2,
+        "connect-mode": "n",
+        "dev": "HDMI,9,0",
+        "usbdev": "none",
+        "cap-latency": 0,
+        "play-latency": 0
+    },
+    "extra": {
+        "a2j": true,
+        "usbauto": true,
+        "usb-single": false,
+        "monitor": "none",
+        "phone-action": "switch",
+        "phone-device": "HDMI,0,0",
+        "a2j_u": true,
+        "phone-left": "1"
+    },
+    "pulse": {
+        "inputs": {
+            "pulse_in": {
+                "connection": "system:capture_1",
+                "count": 2
+            }
+        },
+        "outputs": {
+            "pulse_out": {
+                "connection": "monitor",
+                "count": 2
+            }
+        }
+    },
+    "znet": {
+        "net1-out": {
+            "direction": "out",
+            "ip": "192.168.0.",
+            "port": 8300,
+            "bits": "16bit",
+            "latency": 0,
+            "count": 2
+        }
+    },
+    "mnet": {
+        "type": "jack",
+        "count": 0
+    },
+    "devices": {
+        "HDMI": {
+            "number": 0,
+            "usb": false,
+            "internal": true,
+            "hdmi": true,
+            "firewire": false,
+            "rates": [
+                "32000",
+                "44100",
+                "48000",
+                "88200",
+                "96000",
+                "192000"
+            ],
+            "min_latency": 4096,
+            "id": "none",
+            "bus": "none",
+            "sub": {
+                "0": {
+                    "name": "HDMI,0,0",
+                    "playback": true,
+                    "capture": true,
+                    "rate": 48000,
+                    "frame": 1024,
+                    "nperiods": 2,
+                    "hide": true,
+                    "cap-latency": 0,
+                    "play-latency": 0,
+                    "play-chan": 100,
+                    "cap-chan": 100,
+                    "play-pid": 0,
+                    "cap-pid": 0,
+                    "description": "USB Audio"
+                },
+                "3": {
+                    "playback": true,
+                    "capture": false,
+                    "play-pid": 69913,
+                    "cap-pid": 0,
+                    "play-chan": 0,
+                    "cap-chan": 0,
+                    "rate": 48000,
+                    "frame": 4096,
+                    "nperiods": 2,
+                    "hide": false,
+                    "name": "HDMI,3,0",
+                    "cap-latency": 0,
+                    "play-latency": 0,
+                    "description": "HDMI 0"
+                },
+                "7": {
+                    "playback": true,
+                    "capture": false,
+                    "play-pid": 0,
+                    "cap-pid": 0,
+                    "play-chan": 0,
+                    "cap-chan": 0,
+                    "rate": 48000,
+                    "frame": 4096,
+                    "nperiods": 2,
+                    "hide": false,
+                    "name": "HDMI,7,0",
+                    "cap-latency": 0,
+                    "play-latency": 0,
+                    "description": "HDMI 1"
+                },
+                "8": {
+                    "playback": true,
+                    "capture": false,
+                    "play-pid": 0,
+                    "cap-pid": 0,
+                    "play-chan": 0,
+                    "cap-chan": 0,
+                    "rate": 48000,
+                    "frame": 4096,
+                    "nperiods": 2,
+                    "hide": false,
+                    "name": "HDMI,8,0",
+                    "cap-latency": 0,
+                    "play-latency": 0,
+                    "description": "HDMI 2"
+                },
+                "9": {
+                    "playback": true,
+                    "capture": false,
+                    "play-pid": 0,
+                    "cap-pid": 0,
+                    "play-chan": 0,
+                    "cap-chan": 0,
+                    "rate": 48000,
+                    "frame": 4096,
+                    "nperiods": 2,
+                    "hide": false,
+                    "name": "HDMI,9,0",
+                    "cap-latency": 0,
+                    "play-latency": 0,
+                    "description": "HDMI 3"
+                },
+                "10": {
+                    "playback": true,
+                    "capture": false,
+                    "play-pid": 0,
+                    "cap-pid": 0,
+                    "play-chan": 0,
+                    "cap-chan": 0,
+                    "rate": 48000,
+                    "frame": 4096,
+                    "nperiods": 2,
+                    "hide": false,
+                    "name": "HDMI,10,0",
+                    "cap-latency": 0,
+                    "play-latency": 0,
+                    "description": "HDMI 4"
+                },
+                "11": {
+                    "playback": true,
+                    "capture": false,
+                    "play-pid": 0,
+                    "cap-pid": 0,
+                    "play-chan": 0,
+                    "cap-chan": 0,
+                    "rate": 48000,
+                    "frame": 4096,
+                    "nperiods": 2,
+                    "hide": false,
+                    "name": "HDMI,11,0",
+                    "cap-latency": 0,
+                    "play-latency": 0,
+                    "description": "HDMI 5"
+                }
+            },
+            "raw": "HDMI"
+        },
+        "USB2": {
+            "number": 1,
+            "usb": true,
+            "internal": false,
+            "hdmi": false,
+            "firewire": false,
+            "min_latency": 32,
+            "rates": [
+                "48000",
+                "44100"
+            ],
+            "raw": "Device",
+            "id": "0d8c:0012",
+            "bus": "usb-0000:09:00.3-1",
+            "sub": {
+                "0": {
+                    "playback": true,
+                    "capture": true,
+                    "play-pid": 69913,
+                    "cap-pid": 0,
+                    "play-chan": 100,
+                    "cap-chan": 100,
+                    "rate": 48000,
+                    "frame": 1024,
+                    "nperiods": 2,
+                    "hide": false,
+                    "name": "USB1,0,0",
+                    "cap-latency": 0,
+                    "play-latency": 0,
+                    "description": "C-Media Electronics Inc. USB Audio Device"
+                }
+            }
+        },
+        "USB3": {
+            "number": 2,
+            "usb": true,
+            "internal": false,
+            "hdmi": false,
+            "firewire": false,
+            "min_latency": 32,
+            "rates": [
+                "44100"
+            ],
+            "raw": "DDJ400",
+            "id": "2b73:0026",
+            "bus": "usb-0000:01:00.0-8",
+            "sub": {
+                "0": {
+                    "playback": true,
+                    "capture": false,
+                    "play-pid": 0,
+                    "cap-pid": 0,
+                    "play-chan": 100,
+                    "cap-chan": 100,
+                    "rate": 44100,
+                    "frame": 1024,
+                    "nperiods": 2,
+                    "hide": false,
+                    "name": "USB3,0,0",
+                    "cap-latency": 0,
+                    "play-latency": 0,
+                    "description": "Pioneer DJ Corporation DDJ-400"
+                }
+            }
+        }
+    }
+}
