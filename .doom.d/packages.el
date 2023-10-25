@@ -1,3 +1,6 @@
+(package! elfeed)
+(package! webfeeder)
+
 (package! conda)
 
 (package! ein)
@@ -39,9 +42,9 @@
 
 (package! flymd)
 
-(package! nov
-  :recipe (:host github
-           :repo "emacs-pe/nov.el"))
+(package! nov)
+  ;; :recipe (:host github
+  ;;          :repo "emacs-pe/nov.el"))
 
 (package! emojify)
 
@@ -119,6 +122,8 @@
 (package! calfw)
 (package! calfw-org)
 (package! calfw-ical)
+
+(package! highlight-indentation)
 
 (package! exwm)
 

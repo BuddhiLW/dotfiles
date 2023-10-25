@@ -1,0 +1,10 @@
+#!/usr/bin/bash
+
+cd $LINFO/pdfPC/
+npm run release
+
+cd $LINFO
+git add .
+
+git commit -m "$@"
+git push

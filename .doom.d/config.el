@@ -41,10 +41,14 @@
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-monokai-pro) ;;-> edit "(use-pacakge doom-themes)" instead.
-(setq doom-font (font-spec :family "Oxygen Mono" :size 20)
-      doom-variable-pitch-font (font-spec :family "Fantasque Sans Mono") ; inherits `doom-font''s :size
-      doom-unicode-font (font-spec :family "JoyPixels" :size 25)
-      doom-big-font (font-spec :family "Nimbus Mono PS" :size 15))
+;; (setq doom-font (font-spec :family "Oxygen Mono" :size 20)
+;;       doom-variable-pitch-font (font-spec :family "Fantasque Sans Mono") ; inherits `doom-font''s :size
+;;       doom-unicode-font (font-spec :family "JoyPixels" :size 25)
+;;       doom-big-font (font-spec :family "Nimbus Mono PS" :size 15))
+(setq doom-font (font-spec :family "Noto Mono" :size 20 :weight 'regular)
+      doom-variable-pitch-font (font-spec :family "Fantasque Sans Mono" :weight 'regular) ; inherits `doom-font''s :size
+      doom-unicode-font (font-spec :family "JoyPixels" :size 20)
+      doom-big-font (font-spec :family "FreeMono" :size 20))
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -96,21 +100,22 @@
 
 (load! "./my-func/transparency.el")
 
-(use-package! org
-  :config
-  (setq org-ellipsis " ▾")
-  (setq org-agenda-start-with-log-mode t)
-  (setq org-log-done 'time)
-  (setq org-log-into-drawer t)
-  (setq org-agenda-files
-        '("~/PP/Notes/Agenda/Tasks.org"
-          "~/PP/Notes/Agenda/Habits.org"
-          "~/PP/Notes/Agenda/IMPA.org"
-          "~/PP/Notes/Agenda/ProcSel.org"
-          "~/PP/Notes/Agenda/University.org"
-          "~/PP/Notes/Agenda/Research.org"
-          "~/PP/Notes/Agenda/CafeDoBem.org"
-          "~/PP/Notes/Agenda/Facti.org")))
+;; (use-package! org
+;;   :config
+;;   (setq org-ellipsis " ▾")
+;;   (setq org-agenda-start-with-log-mode t)
+;;   (setq org-log-done 'time)
+;;   (setq org-log-into-drawer t)
+;;   (setq org-agenda-files   '()))
+        ;; '(
+        ;;   ;; "~/PP/Notes/Agenda/Tasks.org"
+        ;;   "~/PP/Notes/Agenda/Habits.org"
+        ;;   "~/PP/Notes/Agenda/IMPA.org"
+        ;;   "~/PP/Notes/Agenda/ProcSel.org"
+        ;;   "~/PP/Notes/Agenda/University.org"
+        ;;   "~/PP/Notes/Agenda/Research.org"
+        ;;   "~/PP/Notes/Agenda/CafeDoBem.org"
+        ;;   "~/PP/Notes/Agenda/Facti.org")))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
@@ -988,7 +993,7 @@
         (nth 0 (process-lines "pass" "show" "AI/open")))
 (setq openai-key (nth 0 (process-lines "pass" "show" "AI/open")))
 
-(add-to-list 'load-path "~/.emacs.d/lisp/")
+;; (add-to-list 'load-path "~/doom-emacs/lisp/")
 (require 'codegpt)
 (require 'chatgpt)
 ;; (package! chatgtp
@@ -1038,6 +1043,12 @@
     ;; (cfw:ical-create-source "Moon" "~/moon.ics" "Gray")  ; ICS source1
     ;; (cfw:ical-create-source "gcal" (nth 0 (process-lines "pass" "show" "CALFW/gmail-ical-url-facti" "Red")))
     (cfw:ical-create-source "gcal" (nth 0 (process-lines "pass" "show" "CALFW/gmail-ical-url")) "Blue")))) ; google calendar ICS
+
+(use-package! highlight-indentation
+  :hook (prog-mode . highlight-indentation-mode)
+  :config
+   (set-face-background 'highlight-indentation-face "#0eeeAA")  
+   (set-face-background 'highlight-indentation-current-column-face "#c3b3b3"))
 
 ;; EXWM init function
 (load! "./my-func/exwm-init.el")

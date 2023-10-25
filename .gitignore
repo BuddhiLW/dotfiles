@@ -112,4 +112,10 @@ gitthings/st
 .config/MongoDB Compass
 .config/Code
 .local/state/*
+
+.config/github-copilot/hosts.json
 .config/google-chrome
+
+.config/torcat
+.config/xmonad/.stack-work/*
+.config/xmonad/.stack-work/
