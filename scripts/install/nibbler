@@ -1,0 +1,3 @@
+#!/bin/bash
+
+curl -L https://raw.githubusercontent.com/rooklift/nibbler/master/files/scripts/install.sh | bash

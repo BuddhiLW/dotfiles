@@ -148,10 +148,12 @@ pathprepend \
     "$GHCUP" \
     "$GOROOT" \
     "$SEARX_SETTINGS_PATH" \
-    /usr/local/go/bin \
+    "/usr/local/go/bin" \
     "$HOME/programs/julia/bin/" \
     "$GUIX_PROFILE/bin" \
-    "$HOME/.emacs.d/bin/"
+    "$HOME/.emacs.d/bin/" \
+    "$HOME/.conda/bin/"
+
 
 pathappend \
     /usr/local/opt/coreutils/libexec/gnubin \

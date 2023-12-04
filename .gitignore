@@ -119,3 +119,7 @@ gitthings/st
 .config/torcat
 .config/xmonad/.stack-work/*
 .config/xmonad/.stack-work/
+**/Cache/*
+.config/**/Cache
+.config/Nibbler/Cache
+.config/Nibbler

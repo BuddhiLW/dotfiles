@@ -1,0 +1,6 @@
+#!/bin/bash
+
+cd ~/dotfiles/gitthings/
+git clone -b release/0.29 --recurse-submodules https://github.com/LeelaChessZero/lc0.git
+cd lc0
+./build.sh

@@ -1,15 +1,17 @@
 #!/usr/bin/sh
 
+## Link in `.config` folder
 LINKSC=("tmux/.tmux.conf" "vim/.vimrc")
 
 linkc() {
-  ln -sf $HOME/.config/$1 $HOME
+  ln -sf $DOTFILES/.config/$1 $HOME
 }
 
 for i in "${LINKSC[@]}"; do
   linkc $i
 done
 
+## Link directly the files; not in `.config` but are config files.
 LINKSD=(".bashrc" ".vim" ".doom.d")
 
 linkd() {
