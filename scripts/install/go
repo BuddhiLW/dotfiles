@@ -1,10 +1,25 @@
 #!/usr/bin/bash
 
-git clone https://github.com/udhos/update-golang $DOTFILES/gitthings/update-golang
-cd $DOTFILES/gitthings/update-golang
-wget -qO hash.txt https://raw.githubusercontent.com/udhos/update-golang/master/update-golang.sh.sha256sha256sum -c hash.txt
-mkdir ~/go
-DESTINATION=~/go PROFILED=~/.profile ./update-golang.sh
-rm -rf $DOTFILES/gitthings/update-golang
+# git clone https://github.com/udhos/update-golang $DOTFILES/gitthings/update-golang
+# cd $DOTFILES/gitthings/update-golang
+# wget -qO hash.txt https://raw.githubusercontent.com/udhos/update-golang/master/update-golang.sh.sha256sha256sum -c hash.txt
+# mkdir ~/go
+# DESTINATION=~/go PROFILED=~/.profile ./update-golang.sh
+# rm -rf $DOTFILES/gitthings/update-golang
+# 
+# sudo ln -sf $HOME/go /usr/local/go
 
-sudo ln -sf $HOME/go /usr/local/go
+# /go1.22.1.linux-amd64.tar.gz
+GO_FILE=$(wget -O - https://go.dev/dl/ 2>/dev/null | sed -ne 's@.*\(\/go1\.[0-9]*\.[0-9]*\.linux-amd64\.tar\.gz\).*@\1@p'  2>&1 | head -n 1| tr -d /)
+URL_DOWNLOAD="https://go.dev/dl/$GO_FILE"
+
+echo "URL_DOWNLOAD=$URL_DOWNLOAD"
+wget "$URL_DOWNLOAD"
+
+sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf $GO_FILE
+
+echo "Deleating $GO_FILE (Cleaning)"
+rm $GO_FILE
+
+echo 'export PATH=$PATH:/usr/local/go/bin'
+

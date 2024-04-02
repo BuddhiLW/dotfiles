@@ -79,8 +79,9 @@
 ;;         :recipe (:host github
 ;;                  :repo "swank-js/swank-js"))
 
-(package! copilot
-  :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
+;; (package! copilot
+;;   :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
+
   ;; :pin "0160a1108b3bc3fff7e9fe1ebb67e71c0c2a334d")
 
 (package! org-bullets)

@@ -1,10 +1,10 @@
 #!/usr/bin/bash
 #UBUNTU=${uname-a | grep "Ubuntu"}
 
-ln -sf $DOTFILES/.bashrc $HOME/.bashrc
+#ln -sf $DOTFILES/.bashrc $HOME/.bashrc
 # bash ./setup/link-config
-ln -sf $DOTFILES/.local $HOME/.local
-ln -sf $DOTFILES/.config $HOME/.config
+#ln -sf $DOTFILES/.local $HOME/.local
+#ln -sf $DOTFILES/.config $HOME/.config
 
 rm -rf $DOTFILES/gitthings
 
