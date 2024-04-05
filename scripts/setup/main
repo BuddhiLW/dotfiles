@@ -5,5 +5,5 @@ SETUP=$DOTFILES/scripts/setup
 bash $SETUP/bk-dots
 bash $SETUP/init
 bash $SETUP/link-config
-bash $SH/main
+bash $DOTFILES/main
 

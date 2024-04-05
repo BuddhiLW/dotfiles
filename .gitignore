@@ -123,3 +123,6 @@ gitthings/st
 .config/**/Cache
 .config/Nibbler/Cache
 .config/Nibbler
+.config/xmonad/.stack-work
+keg/
+build/

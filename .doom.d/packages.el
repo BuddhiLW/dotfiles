@@ -152,3 +152,8 @@
   ;; (package! celestial-mode-line)
   ;; (package! sunshine)
   ;; (package! evil-nerd-commenter)
+
+(package! codeium :recipe (:host github :repo "Exafunction/codeium.el"))
+(package! cape)
+
+(package! corfu)

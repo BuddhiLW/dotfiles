@@ -989,13 +989,13 @@
           :desc "Run test under point" "t" #'cider-test-run-test))))
 
 ;; if you are using the "pass" password manager
-(setq chatgpt-shell-openai-key
-        (nth 0 (process-lines "pass" "show" "AI/open")))
-(setq openai-key (nth 0 (process-lines "pass" "show" "AI/open")))
+;; (setq chatgpt-shell-openai-key
+;;         (nth 0 (process-lines "pass" "show" "AI/open")))
+;; (setq openai-key (nth 0 (process-lines "pass" "show" "AI/open")))
 
 ;; (add-to-list 'load-path "~/doom-emacs/lisp/")
-(require 'codegpt)
-(require 'chatgpt)
+;; (require 'codegpt)
+;; (require 'chatgpt)
 ;; (package! chatgtp
 ;;   :recipe (:host jcs-elpa
 ;;            :repo "https://jcs-emacs.github.io/jcs-elpa/packages/")) ;; Optional: specify a specific commit or version
@@ -1085,3 +1085,57 @@
   ;; "/run/user/1000/tmux-1000/default"
 
   ;; (use-package! evil-nerd-commenter)
+
+(use-package! codeium
+  :after cape
+  :config
+  (setq codeium/metadata/api_key (with-temp-buffer (insert-file-contents "~/.codeium")
+                                                   (buffer-string)))
+  (defalias 'my/codeium-complete
+    (cape-interacive-capf #'codeium-completion-at-point))
+  (map! :localleader
+        :map evil-normal-state-map
+        "c e" #'my/codeium-complete)
+  (setq codeium-api-enabled
+        (lambda (api)
+          (memq api '(GetCompletions Heartbeat CancelRequest
+                      GetAuthToken RegisterUser auth-redirect
+                      AcceptCompletion)))))
+
+;; (use-package! company
+;;     :defer 0.1
+;;     :config
+;;     (global-company-mode t)
+;;     (setq-default
+;;         company-idle-delay 0.1
+;;         company-require-match nil
+;;         company-minimum-prefix-length 0
+
+;;         ;; get only preview
+;;         company-frontends '(company-preview-frontend)
+;;         ;; also get a drop down
+;;         company-frontends '(company-pseudo-tooltip-frontend company-preview-frontend)))
+
+(use-package! corfu
+  ;; Optional customizations
+  ;; :custom
+  ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+  ;; (corfu-auto t)                 ;; Enable auto completion
+  ;; (corfu-separator ?\s)          ;; Orderless field separator
+  ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+  ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+  ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+  ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
+  ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+  ;; (corfu-scroll-margin 5)        ;; Use scroll margin
+
+  ;; Enable Corfu only for certain modes.
+  ;; :hook ((prog-mode . corfu-mode)
+  ;;        (shell-mode . corfu-mode)
+  ;;        (eshell-mode . corfu-mode))
+
+  ;; Recommended: Enable Corfu globally.  This is recommended since Dabbrev can
+  ;; be used globally (M-/).  See also the customization variable
+  ;; `global-corfu-modes' to exclude certain modes.
+  :init
+  (global-corfu-mode))

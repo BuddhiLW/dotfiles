@@ -106,6 +106,9 @@
        tmux              ; an API for interacting with tmux
        ;;upload            ; map local to remote projects via ssh/ftp
        tree-sitter
+       ;; (codeium)
+       ;; (gptel +aipihkal +anyscale +togetherai +gemini +extras +extension)
+
 
        :os
        tty               ; improve the terminal Emacs experience
