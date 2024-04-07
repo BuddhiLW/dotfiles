@@ -1,0 +1,20 @@
+#!/usr/bin/bash
+
+prompt= '{
+    \"model\": \"dall-e-1\",
+    \"prompt\": $@,
+    \"n\": 1,
+    \"size\": \"1024x1024\"
+  }'
+
+echo $prompt
+
+
+# result=$(curl https://api.openai.com/v1/images/generations  -H "Content-Type: application/json" -H "Authorization: Bearer $OPENAI_API_KEY"  -d "{ \"model\": \"dall-e-3\", \"prompt\": '$@', \"n\": 1, \"size\": \"1024x1024\" }")
+# 
+# curl https://api.openai.com/v1/images/generations \
+#   -H "Content-Type: application/json" \
+#   -H "Authorization: Bearer $OPENAI_API_KEY" \
+#   -d 
+# jq '.data[0].url'
+echo "$result"

@@ -157,3 +157,5 @@
 (package! cape)
 
 (package! corfu)
+
+(package! cape)

@@ -88,7 +88,7 @@
    '("7a424478cb77a96af2c0f50cfb4e2a88647b3ccca225f8c650ed45b7f50d9525" default))
  '(magit-todos-insert-after '(bottom) nil nil "Changed by setter of obsolete option `magit-todos-insert-at'")
  '(package-selected-packages
-   '(corfu highlight-indentation nov guix khoj org-present visual-fill-column))
+   '(http corfu highlight-indentation nov guix khoj org-present visual-fill-column))
  '(safe-local-variable-values
    '((cider-shadow-cljs-default-options . "app")
      (cider-default-cljs-repl . shadow))))
