@@ -2132,11 +2132,12 @@ To create new loadable modules,
 
   (setq codeium/metadata/api_key (with-temp-buffer (insert-file-contents "~/.codeium")
                                                    (buffer-string)))
-  (defalias 'm
-    (cape-interacive-capf #'codeium-completion-at-point))
-  (map! :localleader
-        :map evil-normal-state-map
-        "c e" #'my/codeium-complete)
+  ;; (defalias 'm
+  ;;   (cape-interacive-capf #'codeium-completion-at-point))
+
+  ;; (map! :localleader
+  ;;       :map evil-normal-state-map
+  ;;       "c e" #'my/codeium-complete)
 
   (setq codeium-api-enabled
         (lambda (api)
@@ -2278,7 +2279,7 @@ To create new loadable modules,
 )
 #+end_src
 * HTTP interface
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle packages.el
 (package! http)
 #+end_src
 
@@ -2296,3 +2297,33 @@ Content-Type: application/json
 #+end_src
 
 You can issue the http request by: =M-x http-process (C-c C-c)=
+* Language learning
+#+begin_src emacs-lisp :tangle packages.el
+(package! google-translate)
+(package! google)
+(package! posframe)
+(package! go-translate)
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package! go-translate
+  :config
+  (setq gts-translate-list '(("en" "zh")
+                             ("en" "ru")))
+
+
+  (setq gts-default-translator
+        (gts-translator
+         :picker (gts-prompt-picker)
+         :engines (list ;;(gts-bing-engine)
+                        ;;(gts-google-engine)
+                        (gts-google-rpc-engine))
+         :render
+         (gts-buffer-render)))
+
+ (setq gts-buffer-evil-leading-key "x"))
+      ;; (gts-posframe-pop-render))))
+#+end_src
+
+#+RESULTS:
+: t

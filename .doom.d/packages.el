@@ -159,3 +159,10 @@
 (package! corfu)
 
 (package! cape)
+
+(package! http)
+
+(package! google-translate)
+(package! google)
+(package! posframe)
+(package! go-translate)

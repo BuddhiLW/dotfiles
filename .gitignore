@@ -124,5 +124,9 @@ gitthings/st
 .config/Nibbler/Cache
 .config/Nibbler
 .config/xmonad/.stack-work
+.config/android/
+.config/autostart/
+Notes/
+cv/
 keg/
 build/

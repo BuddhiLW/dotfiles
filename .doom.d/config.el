@@ -1220,4 +1220,20 @@
   ;;(add-to-list 'completion-at-point-functions #'cape-line)
 )
 
-(package! http)
+(use-package! go-translate
+  :config
+  (setq gts-translate-list '(("en" "zh")
+                             ("en" "ru")))
+
+
+  (setq gts-default-translator
+        (gts-translator
+         :picker (gts-prompt-picker)
+         :engines (list ;;(gts-bing-engine)
+                        ;;(gts-google-engine)
+                        (gts-google-rpc-engine))
+         :render
+         (gts-buffer-render)))
+
+ (setq gts-buffer-evil-leading-key "x"))
+      ;; (gts-posframe-pop-render))))
