@@ -677,7 +677,7 @@
 ;;          ("C-<tab>" . 'copilot-accept-completion-by-word)
 ;;          :map copilot-completion-map
 ;;          ("<tab>" . 'copilot-accept-completion)
-;;          ("TAB" . 'copilot-accept-completion)))
+;;          ("TAB" . 'copilot- accept-completion)))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
@@ -1094,10 +1094,11 @@
 
   :config
 
-  (setq codeium/metadata/api_key (with-temp-buffer (insert-file-contents "~/.codeium")
-                                                   (buffer-string)))
-  (defalias 'm
+  ;; (setq codeium/metadata/api_key (with-temp-buffer (insert-file-contents "~/.codeium")
+  ;;                                                  (buffer-string)))
+  (defalias 'my/codeium-complete
     (cape-interacive-capf #'codeium-completion-at-point))
+
   (map! :localleader
         :map evil-normal-state-map
         "c e" #'my/codeium-complete)
@@ -1229,8 +1230,8 @@
   (setq gts-default-translator
         (gts-translator
          :picker (gts-prompt-picker)
-         :engines (list ;;(gts-bing-engine)
-                        ;;(gts-google-engine)
+         :engines (list (gts-bing-engine)
+                        (gts-google-engine)
                         (gts-google-rpc-engine))
          :render
          (gts-buffer-render)))
