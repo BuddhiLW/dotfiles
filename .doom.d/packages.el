@@ -153,12 +153,12 @@
   ;; (package! sunshine)
   ;; (package! evil-nerd-commenter)
 
-(package! codeium :recipe (:host github :repo "Exafunction/codeium.el"))
 (package! cape)
+
+(package! codeium :recipe (:host github :repo "Exafunction/codeium.el"))
+;; (package! cape)
 
 (package! corfu)
-
-(package! cape)
 
 (package! http)
 
@@ -166,3 +166,11 @@
 (package! google)
 (package! posframe)
 (package! go-translate)
+
+(package! germanium)
+
+(package! yaml-mode)
+
+(package! eglot-signature-eldoc-talkative)
+
+(package! protobuf-mode)

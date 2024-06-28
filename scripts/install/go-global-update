@@ -1,0 +1,3 @@
+#!/bin/bash
+
+go install github.com/Gelio/go-global-update@latest

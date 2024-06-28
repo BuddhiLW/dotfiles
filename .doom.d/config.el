@@ -211,6 +211,27 @@
 
 (use-package! pdf-tools)
 
+(setq eglot-jl-language-server-project "~/.julia/environments/v1.10/")
+
+(after! eglot-jl
+  (setq eglot-jl-language-server-project eglot-jl-base))
+
+(defun julia-completion-at-point ()
+  (let ((bnds (bounds-of-thing-at-point 'symbol)))
+    (when bnds
+      (cond
+       ;; complete latex symbol when current symbol is prefixed
+       ;; by '\'
+       ((eq (char-before (car bnds)) ?\\)
+        (list (1- (car bnds)) (cdr bnds) julia-latexsubs
+              :annotation-function
+              #'(lambda (arg)
+                  (gethash arg julia-latexsubs ""))))))))
+
+(use-package! go-mode
+  ;; :hook (prog-mode . company-mode)
+  :hook (go-mode . rainbow-delimiters-mode))
+
 ;; (use-package! erc-hl-nicks)
 ;; (use-package! erc-colorize)
 
@@ -1086,6 +1107,47 @@
 
   ;; (use-package! evil-nerd-commenter)
 
+;; Add extensions
+(use-package! cape
+  ;; Bind dedicated completion commands
+  ;; Alternative prefix keys: C-c p, M-p, M-+, ...
+  :bind (("C-c p p" . completion-at-point) ;; capf
+         ("C-c p t" . complete-tag)        ;; etags
+         ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
+         ("C-c p h" . cape-history)
+         ("C-c p f" . cape-file)
+         ("C-c p k" . cape-keyword)
+         ("C-c p s" . cape-elisp-symbol)
+         ("C-c p e" . cape-elisp-block)
+         ("C-c p a" . cape-abbrev)
+         ("C-c p l" . cape-line)
+         ("C-c p w" . cape-dict)
+         ("C-c p :" . cape-emoji)
+         ("C-c p \\" . cape-tex)
+         ("C-c p _" . cape-tex)
+         ("C-c p ^" . cape-tex)
+         ("C-c p &" . cape-sgml)
+         ("C-c p r" . cape-rfc1345))
+  :init
+  ;; Add to the global default value of `completion-at-point-functions' which is
+  ;; used by `completion-at-point'.  The order of the functions matters, the
+  ;; first function returning a result wins.  Note that the list of buffer-local
+  ;; completion functions takes precedence over the global list.
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-elisp-block)
+  ;;(add-to-list 'completion-at-point-functions #'cape-history)
+  ;;(add-to-list 'completion-at-point-functions #'cape-keyword)
+  ;;(add-to-list 'completion-at-point-functions #'cape-tex)
+  ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
+  ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
+  ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
+  ;;(add-to-list 'completion-at-point-functions #'cape-dict)
+  ;;(add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
+  ;;(add-to-list 'completion-at-point-functions #'cape-line)
+  :config
+  (global-set-key (kbd "M-<return>") (cape-capf-interactive #'codeium-completion-at-point)))
+
 (use-package! codeium
   :after cape
   :init
@@ -1094,8 +1156,7 @@
 
   :config
 
-  ;; (setq codeium/metadata/api_key (with-temp-buffer (insert-file-contents "~/.codeium")
-  ;;                                                  (buffer-string)))
+  (setq codeium/metadata/api_key (nth 1 (process-lines "pass" "show" "apikeys/codeium")))
   (defalias 'my/codeium-complete
     (cape-interacive-capf #'codeium-completion-at-point))
 
@@ -1148,14 +1209,14 @@
     :config
     (global-company-mode t)
     (setq-default
-        company-idle-delay 1
+        company-idle-delay 0.5
         company-require-match nil
         company-minimum-prefix-length 0
 
         ;; get only preview
-        company-frontends '(company-preview-frontend)))
+        ;; company-frontends '(company-preview-frontend)))
         ;; also get a drop down
-        ;; company-frontends '(company-pseudo-tooltip-frontend company-preview-frontend)))
+        company-frontends '(company-pseudo-tooltip-frontend company-preview-frontend)))
 
 (use-package! corfu
   ;; Optional customizations
@@ -1181,60 +1242,27 @@
   :init
   (global-corfu-mode))
 
-;; Add extensions
-(use-package! cape
-  ;; Bind dedicated completion commands
-  ;; Alternative prefix keys: C-c p, M-p, M-+, ...
-  :bind (("C-c p p" . completion-at-point) ;; capf
-         ("C-c p t" . complete-tag)        ;; etags
-         ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
-         ("C-c p h" . cape-history)
-         ("C-c p f" . cape-file)
-         ("C-c p k" . cape-keyword)
-         ("C-c p s" . cape-elisp-symbol)
-         ("C-c p e" . cape-elisp-block)
-         ("C-c p a" . cape-abbrev)
-         ("C-c p l" . cape-line)
-         ("C-c p w" . cape-dict)
-         ("C-c p :" . cape-emoji)
-         ("C-c p \\" . cape-tex)
-         ("C-c p _" . cape-tex)
-         ("C-c p ^" . cape-tex)
-         ("C-c p &" . cape-sgml)
-         ("C-c p r" . cape-rfc1345))
-  :init
-  ;; Add to the global default value of `completion-at-point-functions' which is
-  ;; used by `completion-at-point'.  The order of the functions matters, the
-  ;; first function returning a result wins.  Note that the list of buffer-local
-  ;; completion functions takes precedence over the global list.
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-elisp-block)
-  ;;(add-to-list 'completion-at-point-functions #'cape-history)
-  ;;(add-to-list 'completion-at-point-functions #'cape-keyword)
-  ;;(add-to-list 'completion-at-point-functions #'cape-tex)
-  ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
-  ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
-  ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
-  ;;(add-to-list 'completion-at-point-functions #'cape-dict)
-  ;;(add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
-  ;;(add-to-list 'completion-at-point-functions #'cape-line)
-)
-
 (use-package! go-translate
   :config
-  (setq gts-translate-list '(("en" "zh")
-                             ("en" "ru")))
+  (setq gt-translate-list '(("en" "zh")
+                            ("en" "ru")
+                            ("en" "pt-br")
+                            ("pt-br" "en")))
 
-
-  (setq gts-default-translator
-        (gts-translator
-         :picker (gts-prompt-picker)
-         :engines (list (gts-bing-engine)
-                        (gts-google-engine)
-                        (gts-google-rpc-engine))
+  (setq gt-default-translator
+        (gt-translator
+         :taker   (gt-taker :text 'buffer :pick 'paragraph)
+         :engines (list (gt-bing-engine)
+                        (gt-google-engine)
+                        (gt-google-rpc-engine))
          :render
-         (gts-buffer-render)))
+         (gt-buffer-render)))
 
- (setq gts-buffer-evil-leading-key "x"))
-      ;; (gts-posframe-pop-render))))
+ (setq gt-buffer-evil-leading-key "x"))
+      ;; (gt-posframe-pop-render))))
+
+(setq telega-server-libs-prefix "~/dotfiles/gitthigs/td/")
+
+;; (setq treesit-extra-load-path "/home/kolmogorov/.emacs.d/.local/straight/build-30.0.50/tree-sitter-langs/")
+
+(setq +tree-sitter-hl-enabled-modes t)

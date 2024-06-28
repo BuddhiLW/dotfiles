@@ -22,4 +22,3 @@ echo "Deleating $GO_FILE (Cleaning)"
 rm $GO_FILE
 
 echo 'export PATH=$PATH:/usr/local/go/bin'
-

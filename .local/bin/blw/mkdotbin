@@ -1,0 +1,14 @@
+#!/usr/bin/bash
+
+script_name="$@"
+path_file="$DOTFILES/scripts/install/$script_name"
+
+if ! [ -e $path_file  ];
+then
+  touch $path_file && $(echo "#!/usr/bin/bash" > $path_file)
+  chmod a+x $path_file
+  vim $path_file
+else
+  vim $path_file
+fi
+

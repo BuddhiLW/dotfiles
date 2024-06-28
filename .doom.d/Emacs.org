@@ -316,6 +316,39 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 #+RESULTS:
 | :foreground | default | :background | default | :scale | 3.0 | :html-foreground | Black | :html-background | Transparent | :html-scale | 1.0 | :matchers | (begin $1 $ $$ \( \[) |
 ** Julia
+*** Eglot
+#+begin_src emacs-lisp
+(setq eglot-jl-language-server-project "~/.julia/environments/v1.10/")
+
+(after! eglot-jl
+  (setq eglot-jl-language-server-project eglot-jl-base))
+#+end_src
+*** Unicode
+#+begin_src emacs-lisp
+(defun julia-completion-at-point ()
+  (let ((bnds (bounds-of-thing-at-point 'symbol)))
+    (when bnds
+      (cond
+       ;; complete latex symbol when current symbol is prefixed
+       ;; by '\'
+       ((eq (char-before (car bnds)) ?\\)
+        (list (1- (car bnds)) (cdr bnds) julia-latexsubs
+              :annotation-function
+              #'(lambda (arg)
+                  (gethash arg julia-latexsubs ""))))))))
+#+end_src
+
+#+RESULTS:
+: julia-completion-at-point
+
+** Go
+#+begin_src emacs-lisp 
+(use-package! go-mode
+  ;; :hook (prog-mode . company-mode)
+  :hook (go-mode . rainbow-delimiters-mode))
+#+end_src
+
+#+end_src
 
 * ERC/IRC Twitch
 
@@ -910,7 +943,7 @@ Shell version to be used with =run-python=
 
 ** Output evince setup
 #+begin_src emacs-lisp :tangle no
-(load "auctex.el" nil t t)
+;; (load "auctex.el" nil t t)
    ;; (load "preview-latex.el" nil t t)
 #+end_src
 
@@ -2113,11 +2146,62 @@ To create new loadable modules,
 #+begin_src emacs-lisp
   ;; (use-package! evil-nerd-commenter)
 #+end_src
+* Cape
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! cape)
+#+end_src
+
+#+begin_src emacs-lisp
+;; Add extensions
+(use-package! cape
+  ;; Bind dedicated completion commands
+  ;; Alternative prefix keys: C-c p, M-p, M-+, ...
+  :bind (("C-c p p" . completion-at-point) ;; capf
+         ("C-c p t" . complete-tag)        ;; etags
+         ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
+         ("C-c p h" . cape-history)
+         ("C-c p f" . cape-file)
+         ("C-c p k" . cape-keyword)
+         ("C-c p s" . cape-elisp-symbol)
+         ("C-c p e" . cape-elisp-block)
+         ("C-c p a" . cape-abbrev)
+         ("C-c p l" . cape-line)
+         ("C-c p w" . cape-dict)
+         ("C-c p :" . cape-emoji)
+         ("C-c p \\" . cape-tex)
+         ("C-c p _" . cape-tex)
+         ("C-c p ^" . cape-tex)
+         ("C-c p &" . cape-sgml)
+         ("C-c p r" . cape-rfc1345))
+  :init
+  ;; Add to the global default value of `completion-at-point-functions' which is
+  ;; used by `completion-at-point'.  The order of the functions matters, the
+  ;; first function returning a result wins.  Note that the list of buffer-local
+  ;; completion functions takes precedence over the global list.
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-elisp-block)
+  ;;(add-to-list 'completion-at-point-functions #'cape-history)
+  ;;(add-to-list 'completion-at-point-functions #'cape-keyword)
+  ;;(add-to-list 'completion-at-point-functions #'cape-tex)
+  ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
+  ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
+  ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
+  ;;(add-to-list 'completion-at-point-functions #'cape-dict)
+  ;;(add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
+  ;;(add-to-list 'completion-at-point-functions #'cape-line)
+  :config
+  (global-set-key (kbd "M-<return>") (cape-capf-interactive #'codeium-completion-at-point)))
+
+
+#+end_src
+
 * Codeium
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! codeium :recipe (:host github :repo "Exafunction/codeium.el"))
-(package! cape)
+;; (package! cape)
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2129,8 +2213,7 @@ To create new loadable modules,
 
   :config
 
-  ;; (setq codeium/metadata/api_key (with-temp-buffer (insert-file-contents "~/.codeium")
-  ;;                                                  (buffer-string)))
+  (setq codeium/metadata/api_key (nth 1 (process-lines "pass" "show" "apikeys/codeium")))
   (defalias 'my/codeium-complete
     (cape-interacive-capf #'codeium-completion-at-point))
 
@@ -2179,7 +2262,7 @@ To create new loadable modules,
   (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset))
 #+end_src
 
-#+RESULTS:
+* Company
 
 #+begin_src emacs-lisp
 (use-package! company
@@ -2187,19 +2270,20 @@ To create new loadable modules,
     :config
     (global-company-mode t)
     (setq-default
-        company-idle-delay 1
+        company-idle-delay 0.5
         company-require-match nil
         company-minimum-prefix-length 0
 
         ;; get only preview
-        company-frontends '(company-preview-frontend)))
+        ;; company-frontends '(company-preview-frontend)))
         ;; also get a drop down
-        ;; company-frontends '(company-pseudo-tooltip-frontend company-preview-frontend)))
+        company-frontends '(company-pseudo-tooltip-frontend company-preview-frontend)))
 
 #+end_src
 
 #+RESULTS:
 : t
+
 * Corfu
 #+begin_src emacs-lisp :tangle packages.el
 (package! corfu)
@@ -2230,53 +2314,7 @@ To create new loadable modules,
   :init
   (global-corfu-mode))
 #+end_src
-* Cape
 
-#+begin_src emacs-lisp :tangle packages.el
-(package! cape)
-#+end_src
-
-#+begin_src emacs-lisp
-;; Add extensions
-(use-package! cape
-  ;; Bind dedicated completion commands
-  ;; Alternative prefix keys: C-c p, M-p, M-+, ...
-  :bind (("C-c p p" . completion-at-point) ;; capf
-         ("C-c p t" . complete-tag)        ;; etags
-         ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
-         ("C-c p h" . cape-history)
-         ("C-c p f" . cape-file)
-         ("C-c p k" . cape-keyword)
-         ("C-c p s" . cape-elisp-symbol)
-         ("C-c p e" . cape-elisp-block)
-         ("C-c p a" . cape-abbrev)
-         ("C-c p l" . cape-line)
-         ("C-c p w" . cape-dict)
-         ("C-c p :" . cape-emoji)
-         ("C-c p \\" . cape-tex)
-         ("C-c p _" . cape-tex)
-         ("C-c p ^" . cape-tex)
-         ("C-c p &" . cape-sgml)
-         ("C-c p r" . cape-rfc1345))
-  :init
-  ;; Add to the global default value of `completion-at-point-functions' which is
-  ;; used by `completion-at-point'.  The order of the functions matters, the
-  ;; first function returning a result wins.  Note that the list of buffer-local
-  ;; completion functions takes precedence over the global list.
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-elisp-block)
-  ;;(add-to-list 'completion-at-point-functions #'cape-history)
-  ;;(add-to-list 'completion-at-point-functions #'cape-keyword)
-  ;;(add-to-list 'completion-at-point-functions #'cape-tex)
-  ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
-  ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
-  ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
-  ;;(add-to-list 'completion-at-point-functions #'cape-dict)
-  ;;(add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
-  ;;(add-to-list 'completion-at-point-functions #'cape-line)
-)
-#+end_src
 * HTTP interface
 #+begin_src emacs-lisp :tangle packages.el
 (package! http)
@@ -2307,22 +2345,62 @@ You can issue the http request by: =M-x http-process (C-c C-c)=
 #+begin_src emacs-lisp
 (use-package! go-translate
   :config
-  (setq gts-translate-list '(("en" "zh")
-                             ("en" "ru")))
+  (setq gt-translate-list '(("en" "zh")
+                            ("en" "ru")
+                            ("en" "pt-br")
+                            ("pt-br" "en")))
 
-
-  (setq gts-default-translator
-        (gts-translator
-         :picker (gts-prompt-picker)
-         :engines (list (gts-bing-engine)
-                        (gts-google-engine)
-                        (gts-google-rpc-engine))
+  (setq gt-default-translator
+        (gt-translator
+         :taker   (gt-taker :text 'buffer :pick 'paragraph)
+         :engines (list (gt-bing-engine)
+                        (gt-google-engine)
+                        (gt-google-rpc-engine))
          :render
-         (gts-buffer-render)))
+         (gt-buffer-render)))
 
- (setq gts-buffer-evil-leading-key "x"))
-      ;; (gts-posframe-pop-render))))
+ (setq gt-buffer-evil-leading-key "x"))
+      ;; (gt-posframe-pop-render))))
 #+end_src
 
 #+RESULTS:
 : t
+* Telegram
+
+#+begin_src emacs-lisp
+(setq telega-server-libs-prefix "~/dotfiles/gitthigs/td/")
+#+end_src
+
+#+RESULTS:
+: ~/dotfiles/gitthigs/td/
+* Germanium/Carbon
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! germanium)
+#+end_src
+* Tree-sitter
+
+#+begin_src emacs-lisp
+;; (setq treesit-extra-load-path "/home/kolmogorov/.emacs.d/.local/straight/build-30.0.50/tree-sitter-langs/")
+#+end_src
+
+#+begin_src emacs-lisp
+(setq +tree-sitter-hl-enabled-modes t)
+#+end_src
+
+#+RESULTS:
+: t
+
+* YAML
+#+begin_src emacs-lisp :tangle packages.el
+(package! yaml-mode)
+#+end_src
+
+* Misc
+#+begin_src emacs-lisp :tangle packages.el
+(package! eglot-signature-eldoc-talkative)
+#+end_src
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! protobuf-mode)
+#+end_src

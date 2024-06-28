@@ -6,7 +6,9 @@
  '(codeium/metadata/api_key "f1d7af58-b62d-4751-9d91-5669e4a8215e")
  '(magit-todos-insert-after '(bottom) nil nil "Changed by setter of obsolete option `magit-todos-insert-at'")
  '(package-selected-packages
-   '(google-maps go-translate cape @ visual-fill-column org-present http google-translate corfu)))
+   '(@ cape consult-eglot corfu eglot germanium go-translate google-maps
+     google-translate graphql graphql-doc graphql-mode graphql-ts-mode http
+     org-present ox-reveal telega visual-fill-column yaml yaml-mode yaml-pro)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -1,4 +1,4 @@
-#!/home/buddhilw/.conda/bin/python
+#!/home/kolmogorov/.conda/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

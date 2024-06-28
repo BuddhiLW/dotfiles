@@ -91,7 +91,7 @@ myModMask :: KeyMask
 myModMask = mod4Mask        -- Sets modkey to super/windows key
 
 myTerminal :: String
-myTerminal = "st"    -- Sets default terminal
+myTerminal = "kitty"    -- Sets default terminal
 
 myBrowser :: String
 myBrowser = "qutebrowser "  -- Sets qutebrowser as browser
@@ -467,6 +467,9 @@ myManageHook = composeAll
   , className =? "download"        --> doFloat
   , className =? "error"           --> doFloat
   , className =? "Gimp"            --> doFloat
+  , title =? "Android Emulator" --> doFloat
+  , title =? "Android Emulator - Medium_Phone_API_30:5554" --> doFloat
+  , title =? "Emulator" --> doFloat
   , className =? "notification"    --> doFloat
   , className =? "pinentry-gtk-2"  --> doFloat
   , className =? "splash"          --> doFloat

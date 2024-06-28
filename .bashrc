@@ -536,6 +536,9 @@ complete -C keg keg
 #export QT_IM_MODULE=uim
 #uim-xim &
 export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
+export ANDROID_HOME=$HOME/Android/Sdk
+export ANDROID_SDK_ROOT=$HOME/Android/Sdk
+export ANDROID_AVD_HOME=$HOME/Android/system-images/
 #export XMODIFIERS=@im=uim
 
 [[ ${BLE_VERSION-} ]] && ble-attach
@@ -545,3 +548,18 @@ if [ -f '/home/lw/google-cloud-sdk/path.bash.inc' ]; then . '/home/lw/google-clo
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/home/lw/google-cloud-sdk/completion.bash.inc' ]; then . '/home/lw/google-cloud-sdk/completion.bash.inc'; fi
+
+# >>> juliaup initialize >>>
+
+# !! Contents within this block are managed by juliaup !!
+
+case ":$PATH:" in
+    *:/home/kolmogorov/.juliaup/bin:*)
+        ;;
+
+    *)
+        export PATH=/home/kolmogorov/.juliaup/bin${PATH:+:${PATH}}
+        ;;
+esac
+
+# <<< juliaup initialize <<<
