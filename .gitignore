@@ -134,6 +134,8 @@ gitthings/st
 .config/tree-sitter/
 .config/cmus/
 .config/kitty.app/
+.local/kitty.app/
+**/kitty.app/**
 
 Notes/
 cv/
