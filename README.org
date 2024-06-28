@@ -6,52 +6,72 @@ The main script currently works out of the batch, in a fresh =Ubuntu= installati
 
 1. Clone the repository, =git clone https://github.com/BuddhiLW/dotfiles.git=;
 2. =cd dotfiles=;
-3. Execute main script: =bash main.sh=;
+3. =export DOTFILES=$(pwd)=
+4. Execute main script: =bash ./main.sh=;
 
 That's it.
 
-Feel free to issue any requests or issues, if you encounter trouble installing, from a =Vanilla Ubuntu=.
+Feel free to issue any requests or issues, if you encounter trouble installing, from a =Vanilla Ubuntu= (fresh install).
 
 * What the script does
 It's a cascade of =bash= scripts to install programs from source, or from Debian repositories (=PPAs=).
 
-In the future, the script will work both from =Ubuntu= and =Guix=, with no need of telling in which system you are in. You could override the default to =Guix=, even if you are in =Ubuntu=, or any other system, though, imagining you want to try out the *system-install*, by using =Guix=.
+The first =setup/script-names= that are run - before the =install/script-names= ones - they create symlinks and refresh, when needed, the script-process environmental variables (through =source= command etc).
+
+This is all done to ensure you only have to run this script, and nothing more.
+
+It would be recommended that you run =export DOTFILES=$(pwd)=, inside the =dotfiles= directory, before running the script. Just to make 100% sure this path-variable is correctly set.
+
+# In the future, the script will work both from =Ubuntu= and =Guix=, with no need of telling in which system you are in. You could override the default to =Guix=, even if you are in =Ubuntu=, or any other system, though, imagining you want to try out the *system-install*, by using =Guix=.
 
 #+begin_src shell :tangle ./main.sh
 #!/usr/bin/bash
-UBUNTU=${uname-a | grep "Ubuntu"}
+export DOTFILES=$(pwd)
+DOTFILES=$(pwd)
 
+ln -sf $DOTFILES/.bashrc $HOME/.bashrc
 rm -rf $DOTFILES/gitthings
 SC="$DOTFILES/scripts/"
 cd $SC
 bash ./setup/bk-dots
 bash ./setup/init
+bash ./scripts/setup/link-config
+
+source $HOME/.bashrc
+
 bash ./install/main
+# make newly installed fonts available
 fc-cache -vf
-bash ./setup/link-config
+
+# Install the window manager
 bash ./setup/xmonad
+bash ./install/xmonad
 
 echo "Congrats. If everything went well, you have the newest Buddhi WM installed."
+echo "New step, you can logout from your current Ubuntu session, and chose XMonad,"
+echo "instead of GNOME Window Manager. This choice is generally done at the login"
+echo "interface."
 #+end_src
 
-To understand the motive of using the variable =$UBUNTU=, read my =KEG= node[fn:1].
+To understand more about the efforts behind this ricing-system, read the =KEG= node devoteed to the subject[fn:1].
+# To understand the motive of using the variable =$UBUNTU=, read my =KEG= node[fn:1].
 
-* Programs and dependencies
-** KEG
-The =Knowledge Exchange Graph= is developed by =rwxrob=[fn:2]. I will resume it into a way to document yourself and exchange it with other people. It's pretty net, fast and easy-to-use.
+# * Programs and dependencies
+# ** KEG
+# The =Knowledge Exchange Graph= is developed by =rwxrob=[fn:2]. I will resume it into a way to document yourself and exchange it with other people. It's pretty net, fast and easy-to-use.
 
-It's where-with I document my thoughts and ideas.
+# It's where-with I document my thoughts and ideas.
 
-It's installed as such, after the =go= installation (in =dotfiles/scripts/install/keg=):
-#+begin_src shell :tangle ./scripts/install/keg
-#!/bin/bash
+# It's installed as such, after the =go= installation (in =dotfiles/scripts/install/keg=):
+# #+begin_src shell :tangle ./scripts/install/keg
+# #!/bin/bash
 
-go install github.com/rwxrob/keg/cmd/keg@latest
+# go install github.com/rwxrob/keg/cmd/keg@latest
 
-chmod a+rwx $HOME/.local/bin/keg
-#+end_src
+# chmod a+rwx $HOME/.local/bin/keg
+# #+end_src
 
-** TODO Pomodoro
+# ** TODO Pomodoro
 
 * Footnotes
 

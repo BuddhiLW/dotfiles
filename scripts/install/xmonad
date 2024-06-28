@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+
+cd $HOME/.config/xmonad
+
+stack init
+stack update
+stack upgrade
+stack build
