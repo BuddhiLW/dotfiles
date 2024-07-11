@@ -1,0 +1,20 @@
+#!/usr/bin/bash
+
+
+if [ -n $(command -v brew) ] 
+then
+  echo "Brew is installed"
+  echo "Continuing with brew-buf install"
+  brew install bufbuild/buf/buf
+else 
+  echo "Brew not installed"
+  echo "Installing it first..."
+  bash $DOTFILES/install/brew
+
+  ## New bash session after install, to activate brew
+  bash
+  brew install bufbuild/buf/buf
+fi
+
+echo "Buf is, hopefully, installed."
+

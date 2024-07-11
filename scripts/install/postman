@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Download and extract the file, and capture the output of tar
+output=$(wget -qO- https://dl.pstmn.io/download/latest/linux_64 | tar xzvf - 2>&1)
+status=$?
+
+# Check if the command was successful
+if [ $status -eq 0 ]; then
+  echo "Download and extraction successful."
+  echo "$output"  # Print the captured output if needed
+  # Take further action here
+  sudo mv Postman /opt/
+  sudo ln -sf /opt/Postman/Postman /bin/postman
+  echo "Postman has been moved to /opt/"
+  echo "use command 'postman', in order to lauch Postman."
+else
+  echo "Download or extraction failed."
+  echo "$output"  # Print the captured output to see what went wrong
+  # Handle the error here
+  exit 1
+fi
+

@@ -84,6 +84,10 @@ import XMonad.Util.SpawnOnce
       -- TomorrowNight
 import Colors.DoomOne
 
+import XMonad.Actions.UpdateFocus
+
+
+
 myFont :: String
 myFont = "xft:SauceCodePro Nerd Font Mono:regular:size=9:antialias=true:hinting=true"
 
@@ -111,6 +115,9 @@ myNormColor   = colorBack   -- This variable is imported from Colors.THEME
 
 myFocusColor :: String      -- Border color of focused windows
 myFocusColor  = color15     -- This variable is imported from Colors.THEME
+
+myMouseFocus :: Bool
+myMouseFocus = False
 
 mySoundPlayer :: String
 mySoundPlayer = "ffplay -nodisp -autoexit " -- The program that will play system sounds
@@ -716,6 +723,7 @@ main = do
     , borderWidth        = myBorderWidth
     , normalBorderColor  = myNormColor
     , focusedBorderColor = myFocusColor
+    , focusFollowsMouse  = myMouseFocus
     , logHook = dynamicLogWithPP $  filterOutWsPP [scratchpadWorkspaceTag] $ xmobarPP
         { ppOutput = \x -> hPutStrLn xmproc0 x   -- xmobar on monitor 1
                         >> hPutStrLn xmproc1 x   -- xmobar on monitor 2

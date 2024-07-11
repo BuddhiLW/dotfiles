@@ -12,10 +12,3 @@ git clone https://github.com/xmonad/xmonad
 git clone https://github.com/xmonad/xmonad-contrib
 
 curl -sSL https://get.haskellstack.org/ | sh -s - -f
-stack init
-stack update
-stack upgrade
-stack build
-
-
-

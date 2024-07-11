@@ -1,3 +1,15 @@
+add Downloads/The God Particle/
+reshuffle 
+add Downloads/1200 micrograms [Discography] [2002-2010]/
+add Downloads/[none] VA - Selections 2023 (2024) FLAC/
+reshuffle
+h
+help 
+add ~/Downloads/LTJ Bukem/
+add Downloads/(2013) Rudimental - Home [FLAC]/
+add Downloads/
+remove .
+add ~/Downloads/Drum & Bass/
 add Music/Vo/Carmen Silva - 20 Preferidas (1996)/
 add Music/Vo/
 help
@@ -10,7 +22,6 @@ add ~/Music/flac/
 q
 s
 add ./
-help 
 player-next
 live-filter 
 a .

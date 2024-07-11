@@ -10,10 +10,6 @@
 (package! doom-modeline-now-playing)
 (package! doom-modeline)
 
-(package! latex-preview-pane)
-(package! latex-pretty-symbols)
-(package! pretty-symbols)
-
 (package! ox-reveal)
 (package! impatient-mode)
 (package! celestial-mode-line)

@@ -24,7 +24,7 @@ _source_if() { [[ -r "$1" ]] && source "$1"; }
 # ----------------------- environment variables ----------------------
 #                           (also see envx)
 
-export USER="buddhilw"
+# export USER="buddhilw"
 export BOOKS="$DOCUMENTS/Books"
 export CS_B="$BOOKS/CS"
 export BNOTES="$PP/Notes/Books"
@@ -152,7 +152,8 @@ pathprepend \
     "$HOME/programs/julia/bin/" \
     "$GUIX_PROFILE/bin" \
     "$HOME/.emacs.d/bin/" \
-    "$HOME/.conda/bin/"
+    "$HOME/.conda/bin/" \
+    "$HOME/.local/share/cargo/bin/"
 
 
 pathappend \
@@ -220,7 +221,7 @@ __ps1() { # g='\[\e[30m\]'
     # double="$g╔ $u\u$g$PROMPT_AT$h\h$g:$w$dir\n$g║ $B\n$g╚ $p$P$x $w(λ) "
 
     short="$u\u$g$PROMPT_AT$h\h$g:$w$dir$B$w($pλ$w)$x "
-    long="$g꧁  $u\u$g$PROMPT_AT$h\h$g ⟐ $w$dir$B\n$g꧂ $w($pλ$w)$x "
+    long="$g꧁ $u\u$g$PROMPT_AT$h\h$g ⟐ $w$dir$B\n$g꧂ $w($pλ$w)$x "
     double="$g꧁ $u\u$g$PROMPT_AT$h\h$g ⟐ $w$dir\n$g║ $B\n$g꧂ $w($pλ$w)$x "
 
     if ((${#countme} > PROMPT_MAX)); then
@@ -563,3 +564,8 @@ case ":$PATH:" in
 esac
 
 # <<< juliaup initialize <<<
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+go() {
+  /usr/local/go/bin/go "$@"
+}
+complete -C go go 
