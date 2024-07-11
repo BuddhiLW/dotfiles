@@ -1,4 +1,4 @@
-#!/usr/bin/sh
+#!/bin/bash
 
 # pomod info | sed 's|;| |g' | awk '{print $1}'
 
@@ -10,24 +10,31 @@
 
 clock="⏰"
 
-if [ ! -z "$(pomodoro status --format %r)" ] && [ "$(pomodoro status --format %r)" != "0:00" ]; then # Not empty string and is running (not zero)
-    pomodoro status --format "%d -- %r 🍅"
+#if [ -n "$(pomodoro status --format %r)" ] && [ "$(pomodoro status --format %r)" != "0:00" ]; then # Not empty string and is running (not zero)
+  # echo "hello"
+  # s="$(pomodoro status --format '%d -- %r 🍅')"
+  # echo "$s"
+  # printf "hello" "$s"
+
+# pomodoro status --format '%d -- %r 🍅'
+
+if [ -z "$(pomodoro status)" ] && [ -n "$(pidof pomodoro)" ]; then
+  time=$(cat /tmp/pomodoro-break | awk -F ":" '{printf $(NF-2) ":" $(NF)}' | cut -c 3-)
+  printf "%s %s" "$time" "$clock"
+elif [ -n "$(pomodoro status --format %r)" ] && [ "$(pomodoro status --format %r)" = "0:00" ]; then
+  pomodoro status --format "%d -- %r 🍅"
+  sleep 2
+
+  notify-send "Pomodoro finished! 🏃"
+  pomodoro finish
+
+  # sleep 4
+  # TODO: will you have a break?
+  # pomodoro break > /tmp/pomodoro-break
+  notify-send "Start break!"
+elif [ -n "$(pomodoro status --format %r)" ] && [ "$(pomodoro status --format %r)" != "0:00" ]; then 
+  ~/go/bin/pomodoro status --format "%d -- %r 🍅"
+else
+  ~/go/bin/pomodoro status --format "%d -- %r 🍅"
+  echo "Start a pomo! $clock"
 fi
-
-if [ ! -z "$(pomodoro status --format %r)" ] && [ "$(pomodoro status --format %r)" = "0:00" ]; then
-    pomodoro status --format "%d -- %r 🍅"
-    sleep 2
-
-    notify-send "Pomodoro finished! 🏃"
-    pomodoro finish
-
-    # sleep 4
-    # TODO: will you have a break?
-    # pomodoro break > /tmp/pomodoro-break
-    notify-send "Start break!"
-fi
-
-if [ -z "$(pomodoro status)" ] && [ ! -z "$(pidof pomodoro)" ]; then
-    time=$(cat /tmp/pomodoro-break | awk -F ":" '{printf $(NF-2) ":" $(NF)}' | cut -c 3-)
-    printf "%s %s" "$time $clock"
-fi && printf "\\n"

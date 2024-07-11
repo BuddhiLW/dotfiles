@@ -23,7 +23,7 @@ Config { font            = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:h
        --   an integer for the percentage width, so 100 would be 100%.
        --   an integer for the minimum pixel height for xmobar, so 24 would force a height of at least 24 pixels.
        --   NOTE: The height should be the same as the trayer (system tray) height.
-       , position       = TopSize C 95 30
+       , position       = BottomSize C 95 37
        , lowerOnStart = True
        , hideOnStart  = False
        , allDesktops  = True
@@ -47,9 +47,7 @@ Config { font            = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:h
                     , Run Com ".local/bin/pacupdate" [] "pacupdate" 36000
                         -- Echos a "battery" icon in front of the pacman updates.
                     , Run Com "echo" ["<fn=2>\xf242</fn>"] "baticon" 3600
-                        -- Battery
-                    , Run Com ".local/bin/larbs/statusbar/sb-battery" [] "bat-alert" 10
-                        -- Pomodoro
+                    -- Pomodoro
                     , Run Com ".local/bin/blw/sb-pomo" [] "pomodoro" 1
                         -- Battery Alert
                     , Run BatteryP ["BAT0"] ["-t", "<acstatus><watts> (<left>%)"] 360
@@ -62,5 +60,8 @@ Config { font            = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:h
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "<box type=Bottom width=2 mb=1 ml=2><action=`dm-run`><icon=haskell_20.xpm/> </action> </box>  <fc=#666666>|</fc> %UnsafeStdinReader%}{<box type=Right width=2 mb=4 mr=10 color=AAAAAA>  <fc=#EAEEFA>%pomodoro%</fc>     </box> <box type=Bottom width=2 mb=4 color=#ecbe7b><fc=#ecbe7b><action=`alacritty -e htop`>%cpu%</action></fc></box>  <box type=Bottom width=2 mb=2 color=#ff6c6b><fc=#ff6c6b><action=`alacritty -e htop`>%memory%</action></fc></box>    <box type=Bottom width=2 mb=2 color=#a9a1e1><fc=#a9a1e1>%disku%</fc></box>  <box type=Bottom width=2 mb=2 color=#da8548><fc=#da8548>%bat-alert%</fc></box>  <box type=Bottom width=2 mb=2 color=#46d9ff><fc=#46d9ff><action=`emacsclient -c -a 'emacs' --eval '(doom/window-maximize-buffer(dt/year-calendar))'`>%date%</action></fc></box> %trayerpad%"
+       , template = "<box type=Bottom width=2 mb=1 ml=2><action=`dm-run`><icon=haskell_20.xpm/> </action> </box>  <fc=#666666>|</fc> %UnsafeStdinReader%}{<box type=Right width=2 mb=4 mr=10 color=AAAAAA>  <fc=#EAEEFA>%pomodoro%</fc>     </box> <box type=Bottom width=2 mb=4 color=#ecbe7b><fc=#ecbe7b><action=`alacritty -e htop`>%cpu%</action></fc></box>  <box type=Bottom width=2 mb=2 color=#ff6c6b><fc=#ff6c6b><action=`alacritty -e htop`>%memory%</action></fc></box>    <box type=Bottom width=2 mb=2 color=#a9a1e1><fc=#a9a1e1>%disku%</fc></box>  <box type=Bottom width=2 mb=2 color=#da8548><fc=#da8548>%pomodoro%</fc></box>  <box type=Bottom width=2 mb=2 color=#46d9ff><fc=#46d9ff><action=`emacsclient -c -a 'emacs' --eval '(doom/window-maximize-buffer(dt/year-calendar))'`>%date%</action></fc></box> %trayerpad%"
        }
+
+-- Battery
+-- , Run Com ".local/bin/larbs/statusbar/sb-battery" [] "bat-alert" 10
