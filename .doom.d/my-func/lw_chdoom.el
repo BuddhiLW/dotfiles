@@ -1,4 +1,4 @@
-(defun lw/chdoom (fontsize)
+(defun blw/chdoom (fontsize)
   (interactive
    (list (read-number "Font size: "
                       (or 30))))
@@ -7,7 +7,7 @@
 
 ;; (set-face-attribute 'default nil :height 200)
 
-(defun lw/defdoom (fontsize)
+(defun blw/defdoom (fontsize)
   (interactive
    (list (read-number "Font size: "
                       (or 200))))

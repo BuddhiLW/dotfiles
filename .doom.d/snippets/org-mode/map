@@ -6,4 +6,4 @@
 (map! :leader
       (:prefix-map ("p" . "prefix")
        (:prefix ("s" . "second-order prefix")
-        :desc "Describe biding" "d" #'lw/bind-it)))
+        :desc "Describe biding" "d" #'blw/bind-it)))

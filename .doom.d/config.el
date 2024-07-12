@@ -120,8 +120,8 @@
 (map! :leader
       (:prefix-map ("b" . "buddhi")
        (:prefix ("f" . "font")
-        :desc "New default size" "d" #'lw/defdoom
-        :desc "New ch-default size" "c" #'lw/chdoom)))
+        :desc "New default size" "d" #'blw/defdoom
+        :desc "New ch-default size" "c" #'blw/chdoom)))
 
 (map! :leader
       :desc "Yank history" "y" #'consult-yank-from-kill-ring)
@@ -187,13 +187,13 @@
 ;;   (defvar celestial-mode-line-sunrise-sunset-alist '((sunrise . "*^") (sunset . "*v")))
 ;;   (celestial-mode-line-start-timer))
 
-(defun lw/sunset ()
+(defun blw/sunset ()
   (interactive)
   (display-message-or-buffer (message "`%s'" (solar-sunrise-sunset-string (calendar-current-date)))))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       :desc "Sunrise sunset info" "µ" #'lw/sunset))
+       :desc "Sunrise sunset info" "µ" #'blw/sunset))
 
 (use-package! deft
   :bind ("<f2>" . deft)
@@ -254,12 +254,12 @@
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       :desc "Diary entry" "d" #'lw/create-or-access-diary))
+       :desc "Diary entry" "d" #'blw/create-or-access-diary))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
        (:prefix ("n" . "navigate to")
-        :desc "Evil Deeds" "n" #'lw/find-evildeeds)))
+        :desc "Evil Deeds" "n" #'blw/find-evildeeds)))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
@@ -269,19 +269,19 @@
 (map! :leader
       (:prefix-map ("b" . "buddhi")
        (:prefix ("n" . "navigate to")
-        :desc "Emacs.org" "e"  #'lw/goto-emacs-org
-        :desc "my-func.org" "F" #'lw/goto-my-func-org)))
+        :desc "Emacs.org" "e"  #'blw/goto-emacs-org
+        :desc "my-func.org" "F" #'blw/goto-my-func-org)))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
        (:prefix ("n" . "navigate to")
-        :desc "Active CS book" "a"  #'lw/goto-cs-active
-        :desc "CS books" "c" #'lw/goto-cs-books)))
+        :desc "Active CS book" "a"  #'blw/goto-cs-active
+        :desc "CS books" "c" #'blw/goto-cs-books)))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
        (:prefix ("n" . "navigate to")
-        :desc "Book notes" "n"  #'lw/goto-book-notes)))
+        :desc "Book notes" "n"  #'blw/goto-book-notes)))
 
 (map! :leader
       :desc "Magit" "m" #'magit)
@@ -476,8 +476,8 @@
 (map! :leader
       (:prefix-map ("b" . "buddhi")
        (:prefix ("l" . "load module")
-        :desc "Chinese" "c" #'lw/load-chinese
-        :desc "LaTeX" "l" #'lw/load-latex)))
+        :desc "Chinese" "c" #'blw/load-chinese
+        :desc "LaTeX" "l" #'blw/load-latex)))
 
 (load! "./my-func/isosec.el")
 
@@ -592,7 +592,7 @@
         :desc "Accept full completion" "TAB" #'copilot-accept-completion))
 
 ;; From  time.el -> display-time-mode
-(defun lw/display-time-event-handler ()
+(defun blw/display-time-event-handler ()
   (display-time-update)
   (let* ((current (current-time))
 	 (timer display-time-timer)
@@ -608,24 +608,24 @@
 	  (timer-set-time timer (timer-next-integral-multiple-of-time current display-time-interval) display-time-interval)
 	  (timer-activate timer)))))
 
-(defun lw/timer-pomo ()
+(defun blw/timer-pomo ()
   (let ((pomo-output (shell-command-to-string "sb-pomo | tr -d '\n'")))
     (if (equal "" pomo-output)
         (progn
-          (cancel-function-timers 'lw/timer-pomo)
+          (cancel-function-timers 'blw/timer-pomo)
           (setq-default mode-line-misc-info "No pomodoro running"))
         (setq-default mode-line-misc-info pomo-output))))
 
-(defun lw/pomodoro-echo ()
+(defun blw/pomodoro-echo ()
   (interactive
-   (run-with-timer 0 1 'lw/timer-pomo)
-   (run-at-time t 1 'lw/display-time-event-handler)))
+   (run-with-timer 0 1 'blw/timer-pomo)
+   (run-at-time t 1 'blw/display-time-event-handler)))
 
-(defun lw/kill-pomo-updates ()
+(defun blw/kill-pomo-updates ()
   (interactive
    (progn
-     (cancel-function-timers 'lw/timer-pomo)
-     (cancel-function-timers 'lw/display-time-event-handler)
+     (cancel-function-timers 'blw/timer-pomo)
+     (cancel-function-timers 'blw/display-time-event-handler)
      (setq-default mode-line-misc-info nil))))
 
 (use-package! org-bullets
@@ -859,7 +859,7 @@
 ;; (eval-after-load 'clojure-mode '(require 'clojure-mode-extra-font-locking))
 ;; (add-hook! clojure-mode #'clojure-mode-extra-font-locking)
 
-(defmacro lw/define-user-eval-reitit (fn-name command)
+(defmacro blw/define-user-eval-reitit (fn-name command)
   `(defun ,fn-name ()
     (interactive)
     (cider-eval-file (format (concat (getenv "CLJ_PLAYGROUND") "dev/src/user.clj"))) ;; "/path-to/dev/src/user.clj"
@@ -867,17 +867,17 @@
       (format (concat "(" ,command ")")
               (cider-last-sexp)))))
 
-(lw/define-user-eval-reitit lw/eval-go "go")
-(lw/define-user-eval-reitit lw/eval-halt "halt")
-(lw/define-user-eval-reitit lw/eval-reset "reset")
-;; (define-key cider-mode-map (kbd "C-c g") 'lw/eval-go)
+(blw/define-user-eval-reitit blw/eval-go "go")
+(blw/define-user-eval-reitit blw/eval-halt "halt")
+(blw/define-user-eval-reitit blw/eval-reset "reset")
+;; (define-key cider-mode-map (kbd "C-c g") 'blw/eval-go)
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
        (:prefix ("c" . "clojure")
-        :desc "go - start reitit" "g" #'lw/eval-go
-        :desc "halt reitit server" "h" #'lw/eval-halt
-        :desc "reset reitit server" "r" #'lw/eval-reset)))
+        :desc "go - start reitit" "g" #'blw/eval-go
+        :desc "halt reitit server" "h" #'blw/eval-halt
+        :desc "reset reitit server" "r" #'blw/eval-reset)))
 
 ;; (getenv "CLJ")
 ;; (format (concat (getenv "CLJ_PLAYGROUND") "dev/src/user.clj"))

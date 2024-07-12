@@ -19,7 +19,7 @@
 
 # Loadable modules
 
-    (defmacro lw/define-loadable (fn-name mod-name)
+    (defmacro blw/define-loadable (fn-name mod-name)
       `(defun ,fn-name ()
         (interactive)
         (load! (concat "../modules/" ,mod-name))))
@@ -29,14 +29,14 @@
 
 ## Chinese setup
 
-    (lw/define-loadable lw/load-chinese "chinese.el")
+    (blw/define-loadable blw/load-chinese "chinese.el")
 
 
 <a id="org1389f46"></a>
 
 ## LaTeX setup
 
-    (lw/define-loadable lw/load-latex "latex.el")
+    (blw/define-loadable blw/load-latex "latex.el")
 
 
 <a id="org913ce55"></a>
@@ -95,9 +95,9 @@ Discussion on: <https://emacs-china.org/t/org-mode/440/89>
       (map! :leader
             (:prefix-map ("b" . "buddhi")
              (:prefix ("b" . "bing")
-              :desc "Bing dictionary brief" "d" #'lw/bing-dict-brief
-              :desc "Personal vocabulary" "p" #'lw/find-vocabulary)))
-      ;; :desc "Activate synonym" "s" #'lw/bing-synonym))))
+              :desc "Bing dictionary brief" "d" #'blw/bing-dict-brief
+              :desc "Personal vocabulary" "p" #'blw/find-vocabulary)))
+      ;; :desc "Activate synonym" "s" #'blw/bing-synonym))))
     
       (setq bing-dict-add-to-kill-ring t)
       (setq bing-dict-show-thesaurus 'both)
@@ -132,5 +132,5 @@ This change the default exportation options to `LaTeX`.
     (map! :leader
           (:prefix-map ("b" . "buddhi")
            (:prefix ("l" . "latex")
-            :desc "Shell scape" "s" #'lw/TeX-command-toggle-shell-escape)))
+            :desc "Shell scape" "s" #'blw/TeX-command-toggle-shell-escape)))
 

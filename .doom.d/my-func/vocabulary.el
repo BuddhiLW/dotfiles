@@ -1,8 +1,8 @@
-(defun lw/find-vocabulary ()
+(defun blw/find-vocabulary ()
   (interactive)
   (find-file "~/PP/Notes/vocabulary.org"))
 
-(defun lw/bing-dict-brief (word &optional sync-p)
+(defun blw/bing-dict-brief (word &optional sync-p)
   "Show the explanation of WORD from Bing in the echo area."
   (interactive
    (let* ((default (if (use-region-p)
@@ -40,4 +40,4 @@
                         `(,(decode-coding-string word 'utf-8))
                         t
                         t))))))
-  ;; (lw/find-vocabulary))
+;; (blw/find-vocabulary))

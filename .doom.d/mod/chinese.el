@@ -16,17 +16,17 @@
   :config
   (map! :leader
         (:prefix-map ("b" . "buddhi")
-         (:prefix ("b" . "bing")
-          :desc "Bing dictionary brief" "d" #'lw/bing-dict-brief
-          :desc "Personal vocabulary" "p" #'lw/find-vocabulary)))
-  ;; :desc "Activate synonym" "s" #'lw/bing-synonym))))
+                     (:prefix ("b" . "bing")
+                      :desc "Bing dictionary brief" "d" #'blw/bing-dict-brief
+                      :desc "Personal vocabulary" "p" #'blw/find-vocabulary)))
+  ;; :desc "Activate synonym" "s" #'blw/bing-synonym))))
 
   (setq bing-dict-add-to-kill-ring t)
   (setq bing-dict-show-thesaurus 'both)
   (setq bing-dict-vocabulary-save t)
   (setq bing-dict-vocabulary-file "~/PP/Notes/vocabulary.org"))
 
-(defun lw/chdoom (fontsize)
+(defun blw/chdoom (fontsize)
   (interactive
    (list (read-number "Font size: "
                       (or 30))))
@@ -35,7 +35,7 @@
 
 ;; (set-face-attribute 'default nil :height 200)
 
-(defun lw/defdoom (fontsize)
+(defun blw/defdoom (fontsize)
   (interactive
    (list (read-number "Font size: "
                       (or 200))))

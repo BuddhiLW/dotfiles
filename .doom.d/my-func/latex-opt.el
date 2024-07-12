@@ -1,4 +1,4 @@
-(defun lw/TeX-command-toggle-shell-escape ()
+(defun blw/TeX-command-toggle-shell-escape ()
   "toggles the option --shell-escape from the tex command"
   (interactive)
   (setq TeX-command-extra-options

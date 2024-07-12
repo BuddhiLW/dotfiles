@@ -2,30 +2,30 @@
 
 * Loadable modules
 #+begin_src emacs-lisp :tangle define-modules.el
-(defmacro lw/define-loadable (fn-name mod-name)
+(defmacro blw/define-loadable (fn-name mod-name)
   `(defun ,fn-name ()
     (interactive)
     (load! (concat "../modules/" ,mod-name))))
 #+end_src
 
 #+RESULTS:
-: lw/define-loadable
+: blw/define-loadable
 
 ** Chinese setup
 #+begin_src emacs-lisp :tangle load-modules.el
-(lw/define-loadable lw/load-chinese "chinese.el")
+(blw/define-loadable blw/load-chinese "chinese.el")
 #+end_src
 
 #+RESULTS:
-: lw/load-chinese
+: blw/load-chinese
 
 ** LaTeX setup
 #+begin_src emacs-lisp :tangle load-modules.el
-(lw/define-loadable lw/load-latex "latex.el")
+(blw/define-loadable blw/load-latex "latex.el")
 #+end_src
 
 #+RESULTS:
-: lw/load-latex
+: blw/load-latex
 
 * Modules code
 ** Chinese font
@@ -75,9 +75,9 @@ Discussion on: https://emacs-china.org/t/org-mode/440/89
   (map! :leader
         (:prefix-map ("b" . "buddhi")
          (:prefix ("b" . "bing")
-          :desc "Bing dictionary brief" "d" #'lw/bing-dict-brief
-          :desc "Personal vocabulary" "p" #'lw/find-vocabulary)))
-  ;; :desc "Activate synonym" "s" #'lw/bing-synonym))))
+          :desc "Bing dictionary brief" "d" #'blw/bing-dict-brief
+          :desc "Personal vocabulary" "p" #'blw/find-vocabulary)))
+  ;; :desc "Activate synonym" "s" #'blw/bing-synonym))))
 
   (setq bing-dict-add-to-kill-ring t)
   (setq bing-dict-show-thesaurus 'both)
@@ -108,8 +108,8 @@ This change the default exportation options to =LaTeX=.
 (map! :leader
       (:prefix-map ("b" . "buddhi")
        (:prefix ("l" . "latex")
-        :desc "Shell scape" "s" #'lw/TeX-command-toggle-shell-escape)))
+        :desc "Shell scape" "s" #'blw/TeX-command-toggle-shell-escape)))
 #+end_src
 
 #+RESULTS:
-: lw/TeX-command-toggle-shell-escape
+: blw/TeX-command-toggle-shell-escape

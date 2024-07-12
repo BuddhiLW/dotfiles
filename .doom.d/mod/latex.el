@@ -11,5 +11,5 @@
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("l" . "latex")
-        :desc "Shell scape" "s" #'lw/TeX-command-toggle-shell-escape)))
+                   (:prefix ("l" . "latex")
+                    :desc "Shell scape" "s" #'blw/TeX-command-toggle-shell-escape)))

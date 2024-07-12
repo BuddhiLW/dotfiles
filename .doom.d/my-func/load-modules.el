@@ -1,5 +1,5 @@
-(lw/define-loadable lw/load-chinese "chinese.el")
-(lw/define-loadable lw/load-latex "latex.el")
+(blw/define-loadable blw/load-chinese "chinese.el")
+(blw/define-loadable blw/load-latex "latex.el")
 
 ;; Machine translation: 你好。我叫佩德洛。你叫什么名字？ -> Hello. My name is Pedro. What's your name?
 ;; ;; 佩德洛 : 网络 Pedro;

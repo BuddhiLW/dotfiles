@@ -3,30 +3,30 @@
 
 * Loadable modules
 #+begin_src emacs-lisp :tangle define-modules.el
-(defmacro lw/define-loadable (fn-name mod-name)
+(defmacro blw/define-loadable (fn-name mod-name)
   `(defun ,fn-name ()
     (interactive)
     (load! (concat "../modules/" ,mod-name))))
 #+end_src
 
 #+RESULTS:
-: lw/define-loadable
+: blw/define-loadable
 
 ** Chinese setup
 #+begin_src emacs-lisp :tangle load-modules.el
-(lw/define-loadable lw/load-chinese "chinese.el")
+(blw/define-loadable blw/load-chinese "chinese.el")
 #+end_src
 
 #+RESULTS:
-: lw/load-chinese
+: blw/load-chinese
 
 ** LaTeX setup
 #+begin_src emacs-lisp :tangle load-modules.el
-(lw/define-loadable lw/load-latex "latex.el")
+(blw/define-loadable blw/load-latex "latex.el")
 #+end_src
 
 #+RESULTS:
-: lw/load-latex
+: blw/load-latex
 
 * Modules code
 ** Chinese font
@@ -76,9 +76,9 @@ Discussion on: https://emacs-china.org/t/org-mode/440/89
   (map! :leader
         (:prefix-map ("b" . "buddhi")
          (:prefix ("b" . "bing")
-          :desc "Bing dictionary brief" "d" #'lw/bing-dict-brief
-          :desc "Personal vocabulary" "p" #'lw/find-vocabulary)))
-  ;; :desc "Activate synonym" "s" #'lw/bing-synonym))))
+          :desc "Bing dictionary brief" "d" #'blw/bing-dict-brief
+          :desc "Personal vocabulary" "p" #'blw/find-vocabulary)))
+  ;; :desc "Activate synonym" "s" #'blw/bing-synonym))))
 
   (setq bing-dict-add-to-kill-ring t)
   (setq bing-dict-show-thesaurus 'both)
@@ -109,11 +109,11 @@ This change the default exportation options to =LaTeX=.
 (map! :leader
       (:prefix-map ("b" . "buddhi")
        (:prefix ("l" . "latex")
-        :desc "Shell scape" "s" #'lw/TeX-command-toggle-shell-escape)))
+        :desc "Shell scape" "s" #'blw/TeX-command-toggle-shell-escape)))
 #+end_src
 
 #+RESULTS:
-: lw/TeX-command-toggle-shell-escape
+: blw/TeX-command-toggle-shell-escape
 
 * Org roam setup
 #+begin_src emacs-lisp :tangle org-roam.el
@@ -197,7 +197,7 @@ Therefore, I use a program to make this change in a key-stroke.
 The bindings for rapidly accessing these commands will live under =config.el=.
 
 #+begin_src emacs-lisp :tangle ../modules/chinese.el
-(defun lw/chdoom (fontsize)
+(defun blw/chdoom (fontsize)
   (interactive
    (list (read-number "Font size: "
                       (or 30))))
@@ -206,7 +206,7 @@ The bindings for rapidly accessing these commands will live under =config.el=.
 
 ;; (set-face-attribute 'default nil :height 200)
 
-(defun lw/defdoom (fontsize)
+(defun blw/defdoom (fontsize)
   (interactive
    (list (read-number "Font size: "
                       (or 200))))
@@ -214,7 +214,7 @@ The bindings for rapidly accessing these commands will live under =config.el=.
 #+end_src
 
 #+RESULTS:
-: lw/defdoom
+: blw/defdoom
 
 * Transparency toggle
 #+begin_src emacs-lisp :tangle transparency.el
@@ -232,23 +232,23 @@ The bindings for rapidly accessing these commands will live under =config.el=.
 
 (global-set-key (kbd "C-c t") 'toggle-transparency)
 
-(defun lw/transparency (value)
+(defun blw/transparency (value)
   "Sets the transparency of the frame window. 0=transparent/100=opaque"
   (interactive "nTransparency Value 0 - 100 opaque:")
   (set-frame-parameter (selected-frame) 'alpha value))
 #+end_src
 
 #+RESULTS:
-: lw/transparency
+: blw/transparency
 
 * Vocabulary search
 
 #+begin_src emacs-lisp :tangle vocabulary.el
-(defun lw/find-vocabulary ()
+(defun blw/find-vocabulary ()
   (interactive)
   (find-file "~/PP/Notes/vocabulary.org"))
 
-(defun lw/bing-dict-brief (word &optional sync-p)
+(defun blw/bing-dict-brief (word &optional sync-p)
   "Show the explanation of WORD from Bing in the echo area."
   (interactive
    (let* ((default (if (use-region-p)
@@ -286,17 +286,17 @@ The bindings for rapidly accessing these commands will live under =config.el=.
                         `(,(decode-coding-string word 'utf-8))
                         t
                         t)))))
-  (lw/find-vocabulary))
+  (blw/find-vocabulary))
 #+end_src
 
 #+RESULTS:
-: lw/bing-dict-brief
+: blw/bing-dict-brief
 
 * LaTeX compiler call
 ** For minted (shell scape)
 
 #+begin_src emacs-lisp :tangle latex-opt.el
-(defun lw/TeX-command-toggle-shell-escape ()
+(defun blw/TeX-command-toggle-shell-escape ()
   "toggles the option --shell-escape from the tex command"
   (interactive)
   (setq TeX-command-extra-options
@@ -308,7 +308,7 @@ The bindings for rapidly accessing these commands will live under =config.el=.
 #+end_src
 
 #+RESULTS:
-: lw/TeX-command-toggle-shell-escape
+: blw/TeX-command-toggle-shell-escape
 * Startup dashboard
 
 ** The layout of the dashboard
@@ -514,48 +514,48 @@ The bindings for rapidly accessing these commands will live under =config.el=.
 #+begin_src emacs-lisp :tangle diary.el
 (defconst diary-dir (expand-file-name "~/PP/Notes/Diary/"))
 
-(defun lw/diary-day-entry ()
+(defun blw/diary-day-entry ()
   (concat diary-dir (shell-command-to-string "echo -n $(date +%Y-%m-%d).org")))
 
-(defun lw/create-or-access-diary ()
+(defun blw/create-or-access-diary ()
   (interactive)
-  (if (not (file-exists-p (lw/diary-day-entry)))
+  (if (not (file-exists-p (blw/diary-day-entry)))
       (or (write-region
            (format "#+TITLE: %s" (shell-command-to-string "echo -n $(date +%Y-%m-%d) \n"))
            nil
-           (lw/diary-day-entry))
-        (find-file (lw/diary-day-entry)))
-    (find-file (lw/diary-day-entry))))
+           (blw/diary-day-entry))
+        (find-file (blw/diary-day-entry)))
+    (find-file (blw/diary-day-entry))))
 #+end_src
 
 #+RESULTS:
-: lw/create-or-access-diary
+: blw/create-or-access-diary
 
 * Navigation to core files
 #+begin_src emacs-lisp :tangle goto.el
-(defun lw/goto-emacs-org ()
+(defun blw/goto-emacs-org ()
   "Open =Emacs.org= file which maps to init.el."
   (interactive)
   (find-file (expand-file-name "Emacs.org" doom-private-dir)))
 
-(defun lw/goto-my-func-org ()
+(defun blw/goto-my-func-org ()
   "Open =my-func.org= file which maps to homecooked function."
   (interactive)
   (find-file (expand-file-name "my-func/my-func.org" doom-private-dir)))
 
-(defun lw/find-evildeeds ()
+(defun blw/find-evildeeds ()
   (interactive)
   (find-file (getenv "EVILDEEDS")))
 
-(defun lw/goto-cs-books ()
+(defun blw/goto-cs-books ()
   (interactive)
   (find-file (getenv "CS_B")))
 
-(defun lw/goto-cs-active ()
+(defun blw/goto-cs-active ()
   (interactive)
   (find-file (concat (getenv "CS_B") "/Active")))
 
-(defun lw/goto-book-notes ()
+(defun blw/goto-book-notes ()
   (interactive)
   (find-file (getenv "BNOTES")))
 #+end_src
