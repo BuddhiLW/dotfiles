@@ -84,3 +84,6 @@ shellcheck
 
 fonts-firacode fonts-fantasque-sans fonts-hermit fonts-inconsolata fonts-league-mono fonts-monofur fonts-monoid fonts-mononoki fonts-oxygen fonts-proggy fonts-spleen fonts-terminus
 
+protobuf-compiler
+
+kitty

@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+
+cd $DOTFILES/gitthings/
+
+git clone https://github.com/ryanoasis/nerd-fonts.git
+cd nerd-fonts
+./install.sh

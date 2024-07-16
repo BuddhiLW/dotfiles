@@ -2,6 +2,7 @@
 vim
 emacs
 lynx
+git
 gh
 
 ## Build tools et al
@@ -40,6 +41,7 @@ arandr
 imagemagick
 unclutter
 maim
+tmux
 
 ## xmonad dependencies
 xmonad
@@ -71,6 +73,7 @@ virtualbox-guest-x11 virtualbox-guest-utils
 npm
 
 ## clojure(script)
+clojure
 leiningen
 
 ## picom 
@@ -96,6 +99,11 @@ markdown
 pipenv 
 shfmt 
 shellcheck
+ripgrep
+editorconfig
+fd-find
+apt-transport-https ca-certificates curl gnupg-agent software-properties-common gcc-13 libgccjit0 libgccjit-13-dev libjansson4 libjansson-dev libcairo2-dev libharfbuzz-dev
+
 
 # monospaced fonts
 fonts-firacode fonts-fantasque-sans fonts-hermit fonts-inconsolata fonts-league-mono fonts-monofur fonts-monoid fonts-mononoki fonts-oxygen fonts-proggy fonts-spleen fonts-terminus
@@ -105,3 +113,10 @@ protobuf-compiler
 
 # alternative terminal
 kitty
+
+# lazywal dependencies
+ffmpeg
+mpv
+
+# Emacs source install
+apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common

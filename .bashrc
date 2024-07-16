@@ -501,14 +501,14 @@ newshell
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/kolmogorov/.conda/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$('/home/euler/.conda/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/home/kolmogorov/.conda/etc/profile.d/conda.sh" ]; then
-        . "/home/kolmogorov/.conda/etc/profile.d/conda.sh"
+    if [ -f "/home/euler/.conda/etc/profile.d/conda.sh" ]; then
+        . "/home/euler/.conda/etc/profile.d/conda.sh"
     else
-        export PATH="/home/kolmogorov/.conda/bin:$PATH"
+        export PATH="/home/euler/.conda/bin:$PATH"
     fi
 fi
 unset __conda_setup
@@ -569,3 +569,4 @@ go() {
   /usr/local/go/bin/go "$@"
 }
 complete -C go go 
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"

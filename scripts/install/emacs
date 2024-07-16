@@ -1,0 +1,27 @@
+#!/usr/bin/bash
+
+cd $DOTFILES/gitthings/
+
+git clone https://github.com/emacs-mirror/emacs.git
+sudo apt-get update
+
+
+# add-apt-repository ppa:ubuntu-toolchain-r/ppa
+sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+sudo apt-get install gcc-13 libgccjit0 libgccjit-13-dev
+sudo apt-get install libjansson4 libjansson-dev
+sudo apt-get install libcairo2-dev libharfbuzz-dev
+sudo apt-get build-dep emacs
+
+export CC="gcc-13"
+cd emacs
+./autogen.sh
+./configure --without-compress-install --with-native-compilation --with-mailutils --with-gnutls=ifavailable --with-cairo --with-harfbuzz --enable-checking=yes,glyphs --enable-check-lisp-object-type --with-wide-int
+
+make -j 13
+# Error avoidance and debugging 
+make clean
+make distclean
+export CFLAGS="-fsanitize=address -g"
+export LDFLAGS="-fsanitize=address"
+sudo make install

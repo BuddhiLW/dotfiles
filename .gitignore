@@ -141,3 +141,6 @@ Notes/
 cv/
 keg/
 build/
+scripts/.stack-work/*
+scripts/.stack-work/
+**.stack-work**

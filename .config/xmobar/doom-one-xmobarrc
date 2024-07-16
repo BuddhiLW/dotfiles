@@ -16,8 +16,8 @@ Config { font            = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:h
        , additionalFonts = [ "xft:Mononoki:pixelsize=16:antialias=true:hinting=true"
                            , "xft:FontAwesome:pixelsize=16:antialias=true:hinting=true"
                            ]
-       , bgColor      = "#282c34"
-       , fgColor      = "#ff6c6b"
+       , bgColor      = "#000000"
+       , fgColor      = "#FA0A0A"
        -- Position TopSize and BottomSize take 3 arguments:
        --   an alignment parameter (L/R/C) for Left, Right or Center.
        --   an integer for the percentage width, so 100 would be 100%.
@@ -60,7 +60,7 @@ Config { font            = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:h
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "<box type=Bottom width=2 mb=1 ml=2><action=`dm-run`><icon=haskell_20.xpm/> </action> </box>  <fc=#666666>|</fc> %UnsafeStdinReader%}{<box type=Right width=2 mb=4 mr=10 color=AAAAAA>  <fc=#EAEEFA>%pomodoro%</fc>     </box> <box type=Bottom width=2 mb=4 color=#ecbe7b><fc=#ecbe7b><action=`alacritty -e htop`>%cpu%</action></fc></box>  <box type=Bottom width=2 mb=2 color=#ff6c6b><fc=#ff6c6b><action=`alacritty -e htop`>%memory%</action></fc></box>    <box type=Bottom width=2 mb=2 color=#a9a1e1><fc=#a9a1e1>%disku%</fc></box>  <box type=Bottom width=2 mb=2 color=#da8548><fc=#da8548>%pomodoro%</fc></box>  <box type=Bottom width=2 mb=2 color=#46d9ff><fc=#46d9ff><action=`emacsclient -c -a 'emacs' --eval '(doom/window-maximize-buffer(dt/year-calendar))'`>%date%</action></fc></box> %trayerpad%"
+       , template = "<box type=Bottom width=2 mb=1 ml=2 color=#FFFFFF><action=`dm-run`><icon=haskell_20.xpm/> </action> </box>  <fc=#666666>|</fc> %UnsafeStdinReader%}{<box type=Right width=2 mb=4 mr=10 color=AAAAAA>  <fc=#EAEEFA>%pomodoro%</fc>     </box> <box type=Bottom width=2 mb=4 color=#ecbe7b><fc=#ecbe7b><action=`alacritty -e htop`>%cpu%</action></fc></box>  <box type=Bottom width=2 mb=2 color=#ff6c6b><fc=#ff6c6b><action=`alacritty -e htop`>%memory%</action></fc></box>    <box type=Bottom width=2 mb=2 color=#a9a1e1><fc=#a9a1e1>%disku%</fc></box>  <box type=Bottom width=2 mb=2 color=#da8548><fc=#da8548>%pomodoro%</fc></box>  <box type=Bottom width=2 mb=2 color=#46d9ff><fc=#46d9ff><action=`emacsclient -c -a 'emacs' --eval '(doom/window-maximize-buffer(dt/year-calendar))'`>%date%</action></fc></box> %trayerpad%"
        }
 
 -- Battery
