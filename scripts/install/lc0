@@ -1,6 +1,13 @@
 #!/bin/bash
 
-cd ~/dotfiles/gitthings/
-git clone -b release/0.29 --recurse-submodules https://github.com/LeelaChessZero/lc0.git
+### PRE-REQUISITE: CUDA
+# https://developer.nvidia.com/cuda-downloads
+
+### The directory you want to install LC0 at:
+cd $DOTFILES/gitthings/
+
+git clone -b release/0.30 --recurse-submodules https://github.com/LeelaChessZero/lc0.git
 cd lc0
 ./build.sh
+sudo cp build/release/lc0 /usr/games/lc0
+sudo curl https://storage.lczero.org/files/networks-contrib/t1-256x10-distilled-swa-2432500.pb.gz --output /usr/games/lc0-weight.pb.gz

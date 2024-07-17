@@ -1,7 +1,14 @@
 #!/usr/bin/bash
 
-TMP="$DOTFILES/tmp"
-mkdir $TMP
+if [ -z "$DOTFILES" ]; then
+  TMP=$(mktemp -d)
+  DELETE_TMP=true
+else
+  TMP="$DOTFILES/gitthings/"
+  DELETE_TMP=false
+fi
+
+mkdir -p $TMP
 cd $TMP
 
 sudo apt-get install xorg-dev build-essential libx11-dev x11proto-xext-dev libxrender-dev libxext-dev
@@ -11,4 +18,6 @@ make
 sudo make install
 make clean
 
-rm -rf $TMP
+if $DELETE_TMP; then
+  rm -rf $TMP
+fi

@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 
+## Change this to where you want to build fetch and build emacs at.
 cd $DOTFILES/gitthings/
 
 git clone https://github.com/emacs-mirror/emacs.git
@@ -18,7 +19,9 @@ cd emacs
 ./autogen.sh
 ./configure --without-compress-install --with-native-compilation --with-mailutils --with-gnutls=ifavailable --with-cairo --with-harfbuzz --enable-checking=yes,glyphs --enable-check-lisp-object-type --with-wide-int
 
-make -j 13
+## Use all your CPU cores to build
+make -j $(nproc)
+
 # Error avoidance and debugging 
 make clean
 make distclean

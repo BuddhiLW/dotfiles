@@ -1,3 +1,20 @@
 #!/bin/bash
 
-curl -L https://raw.githubusercontent.com/rooklift/nibbler/master/files/scripts/install.sh | bash
+cd $DOTFILES/gitthings/
+if ! [ -e $PWD/nibbler  ]; then
+	git clone https://github.com/rooklift/nibbler.git
+fi
+
+NIBBLER_PATH="$PWD/nibbler"
+path_file="/usr/local/bin/nibbler"
+
+exec_nibbler_instructions(){
+	echo "cd $NIBBLER_PATH/files/src/" >> $path_file
+	echo "electron ." >> $path_file
+}
+
+
+sudo rm -rf $path
+sudo touch $path_file && $(echo "#!/usr/bin/bash" > "$path_file")
+sudo chmod a+x $path_file
+exec_nibbler_instructions

@@ -170,3 +170,6 @@
 (package! eglot-signature-eldoc-talkative)
 
 (package! protobuf-mode)
+
+(package! emms)
+(package! emms-soundcloud)

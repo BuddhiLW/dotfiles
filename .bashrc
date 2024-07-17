@@ -34,18 +34,15 @@ export EVILDEEDS="$CONTENT/md/pages/US-tyranny.md"
 export ELM_B="$CS_LANG_B/Elm"
 export PP="$HOME/PP" #Programming Projects
 export CS_LANG_B="$CS_B/Languages"
-# export GITUSER="$USER"
-# export REPOS="$HOME/Repos"
-# export GHREPOS="$REPOS/github.com/$GITUSER"
 export GUIX_PROFILE="/home/$USER/.guix-profile" # Environmental variable for GUIX
 export DOTFILES="$HOME/dotfiles/"
+export INSTALL_SCRIPTS="$DOTFILES/scripts/install/"
 export DOOMDIR="$HOME/.doom.d/"
 export DOOM="$HOME/doom-emacs/"
 export DOOMBIN="$DOOM/bin/"
 export SCRIPTS="$DOTFILES/bin/"
-export SCRIPTS_INSTALL="$DOTFILES/bin-install/"
-export SCRIPTSROB="$DOTFILES/dotfiles-rob/scripts"
 export SNIPPETS="$DOTFILES/snippets"
+export KEG="$DOTFILES/keg"
 export SEARX_SETTINGS_PATH="$HOME/.config/searx/"
 export SNIPPETSROB="$DOTFILES/dotfiles-rob/snippets"
 export HELP_BROWSER=lynx
@@ -357,7 +354,8 @@ export VISUAL="vim"
 ## export EDITOR="emacsclient -t"                  # $EDITOR opens in terminal
 ## export VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI mode
 export TERMINAL="st"
-export BROWSER="qutebrowser"
+#export BROWSER="qutebrowser"
+export BROWSER="chromium"
 
 # PPI related
 export LINFO="$HOME/facti/linfo-ppi"
@@ -564,9 +562,6 @@ case ":$PATH:" in
 esac
 
 # <<< juliaup initialize <<<
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-go() {
-  /usr/local/go/bin/go "$@"
-}
 complete -C go go 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+. "/home/euler/.local/share/cargo/env"

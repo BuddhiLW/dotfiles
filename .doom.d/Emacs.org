@@ -109,7 +109,7 @@
 
 ** Initial screen
 #+begin_src emacs-lisp
-;; (load! "./my-func/dashboard.el")
+;; (load! "./blw-func/dashboard.el")
 #+end_src
 
 #+RESULTS:
@@ -127,7 +127,7 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 
 ** Transparency
 #+begin_src emacs-lisp
-(load! "./my-func/transparency.el")
+(load! "./blw-func/transparency.el")
 #+end_src
 
 #+RESULTS:
@@ -389,11 +389,11 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 : helm-pass
 * Navigation
 #+begin_src emacs-lisp
-(load! "./my-func/goto.el")
+(load! "./blw-func/goto.el")
 #+end_src
 
 #+begin_src emacs-lisp
-(load! "./my-func/diary.el")
+(load! "./blw-func/diary.el")
 #+end_src
 
 ** Diary
@@ -479,7 +479,7 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 
 * Anaconda
 #+begin_src emacs-lisp
-(load! "./my-func/ein-babel.el")
+(load! "./blw-func/ein-babel.el")
 #+end_src
 
 #+RESULTS:
@@ -1155,14 +1155,14 @@ Shell version to be used with =run-python=
 To create new loadable modules,
 
 #+begin_src emacs-lisp
-(load! "./my-func/define-modules.el")
+(load! "./blw-func/define-modules.el")
 #+end_src
 
 #+RESULTS:
 : t
 
 #+begin_src emacs-lisp
-(load! "./my-func/load-modules.el")
+(load! "./blw-func/load-modules.el")
 #+end_src
 
 #+RESULTS:
@@ -1183,7 +1183,7 @@ To create new loadable modules,
 * Current time function
 
 #+begin_src emacs-lisp
-(load! "./my-func/isosec.el")
+(load! "./blw-func/isosec.el")
 #+end_src
 
 #+RESULTS:
@@ -1237,7 +1237,7 @@ To create new loadable modules,
 #+end_src
 
 #+begin_src emacs-lisp
-(load! "./my-func/fast-input-method.el")
+(load! "./blw-func/fast-input-method.el")
 (evil-mode)
 #+end_src
 
@@ -1951,14 +1951,14 @@ To create new loadable modules,
 
 #+begin_src emacs-lisp
 ;; EXWM init function
-(load! "./my-func/exwm-init.el")
+(load! "./blw-func/exwm-init.el")
 #+end_src
 
 #+begin_src emacs-lisp
 (add-hook 'exwm-init 'blw/exwm-init)
 #+end_src
 
-#+begin_src emacs-lisp :tangle ./my-func/exwm-init.el
+#+begin_src emacs-lisp :tangle ./blw-func/exwm-init.el
   (defun blw/exwm-init ()
     (interactive)
     (load! "$HOME/.doom.d/my-func/exwm.el"))
@@ -1972,7 +1972,7 @@ To create new loadable modules,
 
 
 *** Workspace
-#+begin_src emacs-lisp :tangle ./my-func/exwm.el
+#+begin_src emacs-lisp :tangle ./blw-func/exwm.el
 ;;; ../dotfiles/.doom.d/my-func/exwm.el -*- lexical-binding: t; -*-
 (setq exwm-workspace-number 5)
 
@@ -2035,7 +2035,7 @@ To create new loadable modules,
 #+end_src
 
 *** Monitor setup
-#+begin_src emacs-lisp :tangle ./my-func/exwm.el
+#+begin_src emacs-lisp :tangle ./blw-func/exwm.el
 (require 'exwm-randr)
 (setq exwm-randr-workspace-output-plist '(0 "eDP1"))
 (add-hook 'exwm-randr-screen-change-hook
@@ -2079,7 +2079,7 @@ To create new loadable modules,
 #+RESULTS:
 | efs/send-polybar-exwm-workspace | exwm-systemtray--on-workspace-switch |
 *** Inits
-#+begin_src emacs-lisp :tangle ./my-func/exwm.el
+#+begin_src emacs-lisp :tangle ./blw-func/exwm.el
 (defun efs/exwm-init-hook ()
   ;;   ;; Make workspace 1 be the one where we land at startup
   (exwm-workspace-switch-create 1)
@@ -2401,4 +2401,21 @@ You can issue the http request by: =M-x http-process (C-c C-c)=
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! protobuf-mode)
+#+end_src
+* EMMS (Music)
+
+#+begin_src emacs-lisp :tangle ./packages.el
+(package! emms)
+(package! emms-soundcloud)
+#+end_src
+
+* Ewal (Emacs pywal)
+#+begin_src emacs-lisp
+(load! "./blw-func/ewal.el")
+#+end_src
+
+* Server
+#+begin_src emacs-lisp
+(server-force-delete)
+(server-start)
 #+end_src

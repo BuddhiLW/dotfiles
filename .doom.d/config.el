@@ -92,13 +92,13 @@
       "C-<up>"         #'+evil/window-move-up
       "C-<right>"      #'+evil/window-move-right)
 
-;; (load! "./my-func/dashboard.el")
+;; (load! "./blw-func/dashboard.el")
 
 (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
 (add-hook! '+doom-dashboard-mode-hook (hide-mode-line-mode 1) (hl-line-mode -1))
 (setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
 
-(load! "./my-func/transparency.el")
+(load! "./blw-func/transparency.el")
 
 ;; (use-package! org
 ;;   :config
@@ -248,9 +248,9 @@
       (:prefix-map ("b" . "buddhi")
        :desc "Password list" "p" #'helm-pass))
 
-(load! "./my-func/goto.el")
+(load! "./blw-func/goto.el")
 
-(load! "./my-func/diary.el")
+(load! "./blw-func/diary.el")
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
@@ -293,7 +293,7 @@
 ;;   (add-hook! 'coq-mode-hook #'company-coq-mode)
 ;;   (add-hook! 'coq-mode-hook #'coq-commenter-mode))
 
-(load! "./my-func/ein-babel.el")
+(load! "./blw-func/ein-babel.el")
 
 (use-package! elm-mode
   :hook (elm-mode . rainbow-delimiters-mode))
@@ -469,9 +469,9 @@
 ;;     (define-key mc/keymap (kbd "C-. [")     #'mc/vertical-align-with-space)
 ;;     (define-key mc/keymap (kbd "C-. {")     #'mc/vertical-align)))
 
-(load! "./my-func/define-modules.el")
+(load! "./blw-func/define-modules.el")
 
-(load! "./my-func/load-modules.el")
+(load! "./blw-func/load-modules.el")
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
@@ -479,7 +479,7 @@
         :desc "Chinese" "c" #'blw/load-chinese
         :desc "LaTeX" "l" #'blw/load-latex)))
 
-(load! "./my-func/isosec.el")
+(load! "./blw-func/isosec.el")
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
@@ -491,7 +491,7 @@
        (:prefix-map ("r" . "read")
         :desc "EPUB refresh size" "r" #'nov-render-document)))
 
-(load! "./my-func/fast-input-method.el")
+(load! "./blw-func/fast-input-method.el")
 (evil-mode)
 
 (require 'ox-reveal)
@@ -954,7 +954,7 @@
    (set-face-background 'highlight-indentation-current-column-face "#c3b3b3"))
 
 ;; EXWM init function
-(load! "./my-func/exwm-init.el")
+(load! "./blw-func/exwm-init.el")
 
 (add-hook 'exwm-init 'blw/exwm-init)
 
@@ -1148,3 +1148,8 @@
 ;; (setq treesit-extra-load-path "/home/kolmogorov/.emacs.d/.local/straight/build-30.0.50/tree-sitter-langs/")
 
 (setq +tree-sitter-hl-enabled-modes t)
+
+(load! "./blw-func/ewal.el")
+
+(server-force-delete)
+(server-start)

@@ -1,0 +1,6 @@
+#!/usr/bin/bash
+
+sudo npm install -g electron
+
+sudo chown root:root /usr/local/lib/node_modules/electron/dist/chrome-sandbox
+sudo chmod 4755 /usr/local/lib/node_modules/electron/dist/chrome-sandbox

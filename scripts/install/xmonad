@@ -1,8 +1,13 @@
 #!/usr/bin/bash
 
-cd $HOME/.config/xmonad
+mkdir -p $HOME/.config/xmonad && cd $HOME/.config/xmonad
+git clone https://github.com/xmonad/xmonad
+git clone https://github.com/xmonad/xmonad-contrib
 
-stack init
+## Install Haskell and Stack package manager for haskell
+curl -sSL https://get.haskellstack.org/ | sh
+
+stack init --force
 stack update
 stack upgrade
 stack build

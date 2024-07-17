@@ -1,7 +1,9 @@
 #!/bin/bash
 
+## Dependencies
 sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 libbz2-1.0:i386
 
+## Where you would like to install the Android Stufio
 cd $DOTFILES/gitthings/
 
 wget https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2023.2.1.24/android-studio-2023.2.1.24-linux.tar.gz

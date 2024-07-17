@@ -98,10 +98,11 @@ myTerminal :: String
 myTerminal = "kitty"    -- Sets default terminal
 
 myBrowser :: String
-myBrowser = "qutebrowser "  -- Sets qutebrowser as browser
+myBrowser = "chromium"  -- Sets qutebrowser as browser
 
 myEmacs :: String
-myEmacs = "emacsclient -c -a 'emacs' "  -- Makes emacs keybindings easier to type
+-- myEmacs = "emacs -nw "
+myEmacs = "emacsclient -c -a 'emacs' -nw -r "  -- Makes emacs keybindings easier to type
 
 myEditor :: String
 -- myEditor = "emacsclient -c -a 'emacs' "  -- Sets emacs as editor
@@ -529,6 +530,7 @@ myKeys c =
 
   ^++^ subKeys "BLW keys"
   [ ("M-b M-s", addName "Take a screenshot"      $ spawn "~/.local/bin/blw/maimpick")
+  , ("M-b r",   addName "Lauch Rofi"             $ spawn "rofi -show run")
   , ("M-b M-p", addName "Take a screenshot"      $ spawn "xfce4-screenshooter")]
   ^++^ subKeys "Switch to workspace"
   [ ("M-1", addName "Switch to workspace 1"    $ (windows $ W.greedyView $ myWorkspaces !! 0))
@@ -588,9 +590,12 @@ myKeys c =
   , ("M-p t", addName "Translate text"         $ spawn "dm-translate")]
 
   ^++^ subKeys "Favorite programs"
-  [ ("M-<Return>", addName "Launch terminal"   $ spawn (myTerminal))
-  , ("M-w", addName "Launch web browser"       $ spawn (myBrowser))
-  , ("M-M1-h", addName "Launch htop"           $ spawn (myTerminal ++ " -e htop"))]
+  [ ("M-<Return>", addName "Launch terminal"      $ spawn (myTerminal))
+  , ("M-w",        addName "Launch web browser"   $ spawn (myBrowser))
+  , ("M-M1-h",     addName "Launch htop"          $ spawn (myTerminal ++ " -e htop"))
+  , ("M-r",        addName "Rofi"                 $ spawn "rofi -show run")
+  , ("M-b s",      addName "Slack"                $ spawn "/snap/bin/slack")
+  , ("M-b M-f",    addName "Yazi"                 $ spawn (myTerminal ++ " yazi"))]
 
   ^++^ subKeys "Monitors"
   [ ("M-.", addName "Switch focus to next monitor" $ nextScreen)
@@ -603,7 +608,7 @@ myKeys c =
 
   -- Window resizing
   ^++^ subKeys "Window resizing"
-  [ ("M-h", addName "Shrink window"               $ sendMessage Shrink)
+  [ ("m-h", addName "Shrink window"               $ sendMessage Shrink)
   , ("M-l", addName "Expand window"               $ sendMessage Expand)
   , ("M-M1-j", addName "Shrink window vertically" $ sendMessage MirrorShrink)
   , ("M-M1-k", addName "Expand window vertically" $ sendMessage MirrorExpand)]
@@ -676,7 +681,7 @@ myKeys c =
   -- Emacs (SUPER-e followed by a key)
   ^++^ subKeys "Emacs"
   [("M-e e", addName "Emacsclient"               $ spawn (myEmacs))
-  -- ("M-e e", addName "Emacsclient Dashboard"    $ spawn (myEmacs ++ ("--eval '(dashboard-refresh-buffer)'")))
+--  , ("M-e e", addName "Emacsclient Dashboard"    $ spawn (myEmacs ++ ("--eval '(dashboard-refresh-buffer)'")))
   , ("M-e a", addName "Emacsclient EMMS (music)" $ spawn (myEmacs ++ ("--eval '(emms)' --eval '(emms-play-directory-tree \"~/Music/\")'")))
   , ("M-e b", addName "Emacsclient Ibuffer"      $ spawn (myEmacs ++ ("--eval '(ibuffer)'")))
   , ("M-e d", addName "Emacsclient Dired"        $ spawn (myEmacs ++ ("--eval '(dired nil)'")))

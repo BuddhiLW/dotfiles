@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd $DOTFILES
+cd $DOTFILES/gitthings/
 git clone https://github.com/yshui/picom.git
 
 cd picom
