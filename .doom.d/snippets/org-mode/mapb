@@ -1,9 +1,0 @@
-# -*- mode: snippet -*-
-# name: map! buddhi
-# key: mapb
-# --
-
-(map! :leader
-      (:prefix-map ("b" . "buddhi")
-       # (:prefix ($1 . $2)
-        :desc $3 $4 #'$5)))

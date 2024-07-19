@@ -5,5 +5,5 @@
 
 (map! :leader
     (:prefix-map ("b" . "buddhi")
-        (:prefix ("p" . "prefix")
-        :desc $1 $2 #'$3)))
+     (:prefix ("p" . "prefix")
+      :desc $1 $2 #'$3)))

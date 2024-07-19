@@ -85,7 +85,8 @@ import XMonad.Util.SpawnOnce
 import Colors.DoomOne
 
 import XMonad.Actions.UpdateFocus
-
+import System.Environment (lookupEnv, setEnv)
+import Data.Maybe (fromMaybe)
 
 
 myFont :: String
@@ -524,14 +525,15 @@ myKeys c =
   , ("M-q", addName "Kill focused window"    $ kill1)
   , ("M-S-a", addName "Kill all windows on WS" $ killAll)
   , ("M-S-<Return>", addName "Run prompt"      $ sequence_ [spawn (mySoundPlayer ++ dmenuSound), spawn "~/.local/bin/dm-run"])
-  -- sendMessage ToggleStruts
+
   , ("M-S-b", addName "Toggle bar show/hide"   $ spawn "dbus-send --session --dest=org.Xmobar.Control --type=method_call --print-reply '/org/Xmobar/Control' org.Xmobar.Control.SendSignal \"string:Toggle -1\"" >> (broadcastMessage $ ToggleStruts) >> refresh)
   , ("M-/", addName "DTOS Help"                $ spawn "~/.local/bin/dtos-help")]
 
   ^++^ subKeys "BLW keys"
-  [ ("M-b M-s", addName "Take a screenshot"      $ spawn "~/.local/bin/blw/maimpick")
-  , ("M-b r",   addName "Lauch Rofi"             $ spawn "rofi -show run")
-  , ("M-b M-p", addName "Take a screenshot"      $ spawn "xfce4-screenshooter")]
+  [ ("M-p t",   addName "Random Lazywallpaper"    $ spawn "random-lazywal")
+  , ("M-p r",   addName "Lauch Rofi 2"            $ spawn "rofi -show run")
+  , ("M-p M-p", addName "Take a screenshot"       $ spawn "notify-send 'hello!'")]
+ 
   ^++^ subKeys "Switch to workspace"
   [ ("M-1", addName "Switch to workspace 1"    $ (windows $ W.greedyView $ myWorkspaces !! 0))
   , ("M-2", addName "Switch to workspace 2"    $ (windows $ W.greedyView $ myWorkspaces !! 1))
@@ -565,29 +567,29 @@ myKeys c =
   , ("M-S-j", addName "Swap focused window with next window"   $ windows W.swapDown)
   , ("M-S-k", addName "Swap focused window with prev window"   $ windows W.swapUp)
   , ("M-S-m", addName "Swap focused window with master window" $ windows W.swapMaster)
-  , ("M-<Backspace>", addName "Move focused window to master"  $ promote)
+  , ("M-<Backspace", addName "Move focused window to master"  $ promote)
   , ("M-S-,", addName "Rotate all windows except master"       $ rotSlavesDown)
   , ("M-S-.", addName "Rotate all windows current stack"       $ rotAllDown)]
 
   -- Dmenu scripts (dmscripts)
   -- In Xmonad and many tiling window managers, M-p is the default keybinding to
   -- launch dmenu_run, so I've decided to use M-p plus KEY for these dmenu scripts.
-  ^++^ subKeys "Dmenu scripts"
-  [ ("M-p h", addName "List all dmscripts"     $ spawn "dm-hub")
-  , ("M-p a", addName "Choose ambient sound"   $ spawn "dm-sounds")
-  , ("M-p b", addName "Set background"         $ spawn "dm-setbg")
-  , ("M-p c", addName "Choose color scheme"    $ spawn "~/.local/bin/dtos-colorscheme")
-  , ("M-p C", addName "Pick color from scheme" $ spawn "dm-colpick")
-  , ("M-p e", addName "Edit config files"      $ spawn "dm-confedit")
-  , ("M-p k", addName "Kill processes"         $ spawn "dm-kill")
-  , ("M-p m", addName "View manpages"          $ spawn "dm-man")
-  , ("M-p n", addName "Store and copy notes"   $ spawn "dm-note")
-  , ("M-p o", addName "Browser bookmarks"      $ spawn "dm-bookman")
-  , ("M-p p", addName "Passmenu"               $ spawn "passmenu -p \"Pass: \"")
-  , ("M-p q", addName "Logout Menu"            $ spawn "dm-logout")
-  , ("M-p r", addName "Listen to online radio" $ spawn "dm-radio")
---  , ("M-p s", addName "Search various engines" $ spawn "dm-websearch")
-  , ("M-p t", addName "Translate text"         $ spawn "dm-translate")]
+--   ^++^ subKeys "Dmenu scripts"
+--   [ ("M-p h", addName "List all dmscripts"     $ spawn "dm-hub")
+--   , ("M-p a", addName "Choose ambient sound"   $ spawn "dm-sounds")
+--   , ("M-p b", addName "Set background"         $ spawn "dm-setbg")
+--   , ("M-p c", addName "Choose color scheme"    $ spawn "~/.local/bin/dtos-colorscheme")
+--   , ("M-p C", addName "Pick color from scheme" $ spawn "dm-colpick")
+--   , ("M-p e", addName "Edit config files"      $ spawn "dm-confedit")
+--   , ("M-p k", addName "Kill processes"         $ spawn "dm-kill")
+--   , ("M-p m", addName "View manpages"          $ spawn "dm-man")
+--   , ("M-p n", addName "Store and copy notes"   $ spawn "dm-note")
+--   , ("M-p o", addName "Browser bookmarks"      $ spawn "dm-bookman")
+--   , ("M-p p", addName "Passmenu"               $ spawn "passmenu -p \"Pass: \"")
+--   , ("M-p q", addName "Logout Menu"            $ spawn "dm-logout")
+--   , ("M-p r", addName "Listen to online radio" $ spawn "dm-radio")
+-- --  , ("M-p s", addName "Search various engines" $ spawn "dm-websearch")
+--   , ("M-p t", addName "Translate text"         $ spawn "dm-translate")]
 
   ^++^ subKeys "Favorite programs"
   [ ("M-<Return>", addName "Launch terminal"      $ spawn (myTerminal))
@@ -595,7 +597,8 @@ myKeys c =
   , ("M-M1-h",     addName "Launch htop"          $ spawn (myTerminal ++ " -e htop"))
   , ("M-r",        addName "Rofi"                 $ spawn "rofi -show run")
   , ("M-b s",      addName "Slack"                $ spawn "/snap/bin/slack")
-  , ("M-b M-f",    addName "Yazi"                 $ spawn (myTerminal ++ " yazi"))]
+  , ("M-b M-f",    addName "Yazi"                 $ spawn (myTerminal ++ " yazi"))
+  ]
 
   ^++^ subKeys "Monitors"
   [ ("M-.", addName "Switch focus to next monitor" $ nextScreen)
@@ -712,6 +715,12 @@ myKeys c =
 
 main :: IO ()
 main = do
+  -- home <- lookupEnv "HOME"
+  -- currentPath <- lookupEnv "PATH"
+  -- let homeDir = fromMaybe "" home
+  -- let homePath = homeDir ++ "/.local/bin/blw:" ++ homeDir ++ "/go/bin/:" ++ homeDir ++ ".conda/bin/"
+  -- let newPath = homePath ++ fromMaybe "" currentPath
+  -- setEnv "PATH" newPath
   -- Launching three instances of xmobar on their monitors.
   xmproc0 <- spawnPipe ("xmobar -x 0 $HOME/.config/xmobar/doom-one-xmobarrc")
   xmproc1 <- spawnPipe ("xmobar -x 1 $HOME/.config/xmobar/" ++ colorScheme ++ "-xmobarrc")

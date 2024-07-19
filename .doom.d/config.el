@@ -211,8 +211,7 @@
 
 (use-package! pdf-tools)
 
-(setq eglot-jl-language-server-project "~/.julia/environments/v1.10/")
-
+;; (setq eglot-jl-language-server-project "~/.julia/environments/v1.10/")
 (after! eglot-jl
   (setq eglot-jl-language-server-project eglot-jl-base))
 
@@ -1150,6 +1149,19 @@
 (setq +tree-sitter-hl-enabled-modes t)
 
 (load! "./blw-func/ewal.el")
+
+;; defines blw/run-yazi
+(load! "./blw-func/yazi.el")
+
+;; binding
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+        (:prefix ("i" . "(system's) Integrations")
+         :desc "Yazi lauch" "y" #'blw/run-yazi)))
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+        (:prefix ("x" . "command")
+         :desc "Yazi-find" "f" #'blw/run-yazi)))
 
 (server-force-delete)
 (server-start)

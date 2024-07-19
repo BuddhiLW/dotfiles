@@ -48,6 +48,7 @@ export SNIPPETSROB="$DOTFILES/dotfiles-rob/snippets"
 export HELP_BROWSER=lynx
 export DESKTOP="$HOME/Desktop"
 export DOCUMENTS="$HOME/Documents"
+export WALLPAPER_DIR="$HOME/Pictures/Wallpapers/Animated"
 export PROGRAMMING="$HOME/Documents/Books/Programmig/"
 export MATHEMATICS="$HOME/Documents/Books/Mathematics/"
 export GENERAL="$HOME/Documents/Books/General/"
@@ -131,10 +132,12 @@ pathprepend() {
 pathprepend \
     "$DOTFILES/.local/bin/" \
     "$DOTFILES/.local/bin/blw" \
+    "$HOME/.local/bin/blw" \
     "$DOTFILES/.local/bin/larbs" \
     "$DOTFILES/.local/bin/rob-scripts/" \
     "$DOTFILES/.local/bin/statusbar" \
     "$DOTFILES/.local/julia/bin/" \
+    "$HOME/.juliaup/bin/" \
     "$SCRIPTS" \
     "$SCRIPTS_INSTALL" \
     "$SCRIPTSROB" \
@@ -253,6 +256,7 @@ alias e="emacs --with-profile"
 alias zt="zathura"
 alias ecf="$DOOMDIR/config"
 alias lynx="lynx --display_charset=utf-8"
+alias apt-upgrade="sudo apt-get update && sudo apt-get upgrade"
 # alias emacs="emacs-30.0.50"
 #### Directory easyeness
 alias csb='. csb'
@@ -553,15 +557,19 @@ if [ -f '/home/lw/google-cloud-sdk/completion.bash.inc' ]; then . '/home/lw/goog
 # !! Contents within this block are managed by juliaup !!
 
 case ":$PATH:" in
-    *:/home/kolmogorov/.juliaup/bin:*)
+    *:/home/euler/.juliaup/bin:*)
         ;;
 
     *)
-        export PATH=/home/kolmogorov/.juliaup/bin${PATH:+:${PATH}}
+        export PATH=/home/euler/.juliaup/bin${PATH:+:${PATH}}
         ;;
 esac
 
 # <<< juliaup initialize <<<
 complete -C go go 
+complete -C lazywal lazywal
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 . "/home/euler/.local/share/cargo/env"
+
+## Nix
+source $HOME/.nix-profile/etc/profile.d/nix.sh
