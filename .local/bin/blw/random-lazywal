@@ -1,34 +1,34 @@
 #!/bin/bash
 
-LOGFILE="$HOME/random-lazywal.log"
+#LOGFILE="$HOME/random-lazywal.log"
 
-{
-  echo "Running random-lazywal script at $(date)"
-  cd $HOME
+#{
+echo "Running random-lazywal script at $(date)"
+cd $HOME
 
-  # Set the default directory if WALLPAPER_DIR is not set
-  WALLPAPER_DIR="${WALLPAPER_DIR:-$HOME/Pictures/Wallpapers/Animated}"
+# Set the default directory if WALLPAPER_DIR is not set
+WALLPAPER_DIR="${WALLPAPER_DIR:-$HOME/Pictures/Wallpapers/Animated}"
 
-  # Find all video files in the directory based on MIME type
-  files=()
-  while IFS= read -r -d '' file; do
-    if [[ "$(file --mime-type -b "$file")" == video/* ]]; then
-      files+=("$file")
-    fi
-  done < <(find "$WALLPAPER_DIR" -type f -print0)
+# Find all video files in the directory based on MIME type
+files=()
+while IFS= read -r -d '' file; do
+	if [[ "$(file --mime-type -b "$file")" == video/* ]]; then
+		files+=("$file")
+	fi
+done < <(find "$WALLPAPER_DIR" -type f -print0)
 
-  # Check if there are any files found
-  if [ ${#files[@]} -eq 0 ]; then
-    echo "No video files found in $WALLPAPER_DIR"
-    exit 1
-  fi
+# Check if there are any files found
+if [ ${#files[@]} -eq 0 ]; then
+	echo "No video files found in $WALLPAPER_DIR"
+	exit 1
+fi
 
-  # Choose a random file from the list
-  random_file="${files[RANDOM % ${#files[@]}]}"
+# Choose a random file from the list
+random_file="${files[RANDOM % ${#files[@]}]}"
 
-  # Run the lazywal command with the chosen file
-  $HOME/go/bin/lazywal set "$random_file" display 2560x1080 pywal
-} >> "$LOGFILE" 
+# Run the lazywal command with the chosen file
+$HOME/go/bin/lazywal set "$random_file" display 2560x1080 pywal
+#} >> "$LOGFILE" 
 # 2>&1
 
 

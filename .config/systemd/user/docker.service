@@ -1,0 +1,24 @@
+[Unit]
+Description=Docker Application Container Engine (Rootless)
+Documentation=https://docs.docker.com/go/rootless/
+
+[Service]
+Environment=PATH=/home/euler/bin:/sbin:/usr/sbin:/home/euler/bin:/home/euler/.nix-profile/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/euler/.conda/bin:/home/euler/.conda/condabin:/home/euler/.local/share/cargo/bin:/home/euler/.conda/bin:/home/euler/.emacs.d/bin:/home/euler/.conda/envs/simple-signer-env/bin:/usr/local/go/bin:/home/euler/.config/searx:/usr/local/go:/home/euler/go/bin:/home/euler/go:/home/euler/.juliaup/bin:/home/euler/dotfiles/.local/bin/rob-scripts:/home/euler/dotfiles/.local/bin/larbs:/home/euler/.local/bin/blw:/home/euler/dotfiles/.local/bin/blw:/home/euler/dotfiles/.local/bin:/home/euler/.conda/bin:/home/euler/.conda/bin:/home/euler/.conda/bin:/home/euler/.nix-profile/bin:/home/euler/.juliaup/bin:/home/euler/.local/share/cargo/bin:/home/euler/.local/bin:/snap/bin:/usr/local/bin:/usr/local/sbin:/usr/local/games:/usr/games:/usr/sbin:/usr/bin:/snap/bin:/sbin:/bin
+ExecStart=/home/euler/bin/dockerd-rootless.sh 
+ExecReload=/bin/kill -s HUP $MAINPID
+TimeoutSec=0
+RestartSec=2
+Restart=always
+StartLimitBurst=3
+StartLimitInterval=60s
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+TasksMax=infinity
+Delegate=yes
+Type=notify
+NotifyAccess=all
+KillMode=mixed
+
+[Install]
+WantedBy=default.target

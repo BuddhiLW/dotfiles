@@ -1,0 +1,41 @@
+#!/bin/bash
+
+cd $DOTFILES/gitthings
+
+git clone https://github.com/schorschii/Simple-Signer.git simple-signer
+cd simple-signer
+
+# Install system-wide dependencies from Debian/Ubuntu repos
+sudo apt install python3-pyqt5 python3-pil swig libssl-dev
+
+# If you are on Debian 12, install this too
+sudo apt install python3-oscrypto
+
+# Create a new conda environment
+conda create -n simple-signer-env python=3
+
+# Activate the conda environment
+conda activate simple-signer-env
+
+# Install OpenSSL in the conda environment
+conda install -c conda-forge openssl
+
+# Set environment variables
+export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH
+
+# Reinstall oscrypto after setting environment variables
+pip uninstall oscrypto
+pip install oscrypto
+
+# Verify libcrypto installation
+ls $CONDA_PREFIX/lib | grep libcrypto
+
+# Install the package with requirements which are not available in Debian/Ubuntu repos
+pip install .
+
+# Start manually
+simple-signer
+
+# Install launcher shortcut
+sudo cp assets/simple-signer.desktop /usr/local/share/applications
+sudo update-desktop-database

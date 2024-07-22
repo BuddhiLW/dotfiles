@@ -149,6 +149,7 @@ pathprepend \
     "$GOROOT" \
     "$SEARX_SETTINGS_PATH" \
     "/usr/local/go/bin" \
+		"/home/euler/.conda/envs/simple-signer-env/bin" \
     "$HOME/programs/julia/bin/" \
     "$GUIX_PROFILE/bin" \
     "$HOME/.emacs.d/bin/" \

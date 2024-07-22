@@ -1,0 +1,115 @@
+#!/bin/bash
+
+# Path to the image you want to display
+IMAGE_PATH="/home/euler/Pictures/Wallpapers/pawel-czerwinski-3kvvTckVHhs-unsplash.jpg"
+
+# Get terminal size and screen size
+builtin read -r rows cols < <(command stty size)
+IFS=x builtin read -r width height < <(command kitten icat --print-window-size)
+builtin unset IFS
+
+# Answered by `choroba`
+# https://stackoverflow.com/questions/70438735/i-would-like-to-concatenate-two-figlet-outputs-with-different-colors?noredirect=1#70439024
+ORANGE="\e[37m" # 37 => white; 35 => pink/purple
+BLUE="\e[0m"
+GREEN="\e[31m" # 34 => cyan
+STOP="\e[0m"
+
+# Generate the figlet text
+mapfile -t left < <(figlet -f standard "Buddhi")
+mapfile -t right < <(figlet -f standard "LW")
+
+# Calculate the maximum line length of the figlet output
+maxlength=0
+for line in "${left[@]}"; do
+    if (( ${#line} > maxlength )); then
+        maxlength=${#line}
+    fi
+done
+
+# Calculate the height of the figlet text
+figlet_height=${#left[@]}
+
+# Calculate the available width for the image (40% of the remaining width)
+text_width=$((maxlength + 2)) # Adding a small margin
+remaining_width=$((cols - text_width))
+image_width=$((remaining_width * 40 / 100))
+
+# Display the image using kitty's graphics protocol with the height of the figlet text
+kitty +kitten icat --align left --scale-up --stdin no --transfer-mode stream --stdin no --place "${image_width}x${figlet_height}@0x0" $IMAGE_PATH
+
+# Move the cursor to the right of the image
+tput cup 0 $((image_width + 1))
+
+# Print the figlet text next to the image
+printf "${GREEN}"
+printf "%*s\n" $((image_width + text_width)) "==================================="
+
+for ((i = 0; i < ${#left[@]}; ++i)); do
+    printf "${ORANGE}%*s ${GREEN}%s\n" $((image_width + maxlength)) "${left[i]}" "${right[i]}"
+done | sed "$ d" | sed "$ d"
+
+printf "${GREEN}"
+printf "%*s\n" $((image_width + text_width)) "======================================="
+printf "${STOP}"
+
+# Position the cursor to print the fortune below the text
+tput cup $((figlet_height + 3)) 0
+fortune | lolcat -t
+
+# #!/bin/bash
+# 
+# # Path to the image you want to display
+# IMAGE_PATH="/home/euler/Pictures/Wallpapers/pawel-czerwinski-3kvvTckVHhs-unsplash.jpg"
+# 
+# # Get terminal size and screen size
+# builtin read -r rows cols < <(command stty size)
+# IFS=x builtin read -r width height < <(command kitten icat --print-window-size)
+# builtin unset IFS
+# 
+# # Answered by `choroba`
+# # https://stackoverflow.com/questions/70438735/i-would-like-to-concatenate-two-figlet-outputs-with-different-colors?noredirect=1#70439024
+# ORANGE="\e[37m" # 37 => white; 35 => pink/purple
+# BLUE="\e[0m"
+# GREEN="\e[31m" # 34 => cyan
+# STOP="\e[0m"
+# 
+# # Generate the figlet text
+# mapfile -t left < <(figlet -f standard "Buddhi")
+# mapfile -t right < <(figlet -f standard "LW")
+# 
+# # Calculate the maximum line length of the figlet output
+# maxlength=0
+# for line in "${left[@]}"; do
+#     if (( ${#line} > maxlength )); then
+#         maxlength=${#line}
+#     fi
+# done
+# 
+# # Calculate the height of the figlet text
+# figlet_height=${#left[@]}
+# 
+# # Calculate 40% of the terminal width for the image
+# image_width=$((cols * 40 / 100))
+# 
+# # Display the image using kitty's graphics protocol with the height of the figlet text
+# kitty +kitten icat --align left --scale-up --stdin no --transfer-mode stream --stdin no --place "${image_width}x${figlet_height}@0x0" $IMAGE_PATH
+# 
+# # Move the cursor to the right of the image
+# tput cup 0 $((image_width + 1))
+# 
+# # Print the figlet text next to the image
+# printf "${GREEN}"
+# printf "%*s\n" $((image_width + 34)) "==================================="
+# 
+# for ((i = 0; i < ${#left[@]}; ++i)); do
+#     printf "${ORANGE}%*s ${GREEN}%s\n" $((2 * image_width / figlet_height + maxlength)) "${left[i]}" "${right[i]}"
+# done | sed "$ d" | sed "$ d"
+# 
+# printf "${GREEN}"
+# printf "%*s\n" $((image_width + 34)) "======================================="
+# printf "${STOP}"
+# 
+# # Position the cursor to print the fortune below the text
+# tput cup $((figlet_height + 2)) 0
+# fortune | lolcat -t

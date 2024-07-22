@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libtinfo.so.6 /usr/bin/vim "$@"

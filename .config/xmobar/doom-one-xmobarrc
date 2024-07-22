@@ -12,9 +12,11 @@
    -- trayer
    -- 'dtos-local-bin' (from dtos-core-repo)
 
-Config { font            = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:hinting=true, JoyPixels:pixelsize=20"
-       , additionalFonts = [ "xft:Mononoki:pixelsize=16:antialias=true:hinting=true"
-                           , "xft:FontAwesome:pixelsize=16:antialias=true:hinting=true"
+Config { font            = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:hinting=true"
+       , additionalFonts = [
+       "xft:FontAwesome:pixelsize=16:antialias=true:hinting=true"
+       , "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:hinting=true"
+       , "xft:Mononoki:pixelsize=16:antialias=true:hinting=true"
                            ]
        , bgColor      = "#000000"
        , fgColor      = "#FA0A0A"
@@ -32,13 +34,13 @@ Config { font            = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:h
        , commands = [
                     Run Com ".local/bin/kernel" [] "kernel" 36000
                         -- Cpu usage in percent
-                    , Run Cpu ["-t", "<fn=2>\xf108</fn>  cpu: (<total>%)","-H","50","--high","red"] 20
+                    , Run Cpu ["-t", "💻 cpu: (<total>%)","-H","50","--high","red"] 20
                         -- Ram used number and percent
-                    , Run Memory ["-t", "<fn=2>\xf233</fn>  mem: <used>M (<usedratio>%)"] 20
+                    , Run Memory ["-t", "💾 mem: <used>M (<usedratio>%)"] 20
                         -- Disk space free
-                    , Run DiskU [("/", "<fn=2>\xf0c7</fn>  hdd: <free> free")] [] 60
+                    , Run DiskU [("/", "📁 hdd: <free> free")] [] 60
                         -- Echos an "up arrow" icon in front of the uptime output.
-                    , Run Com "echo" ["<fn=2>\xf0aa</fn>"] "uparrow" 3600
+                    , Run Com "echo" ["🖥"] "uparrow" 3600
                         -- Uptime
                     , Run Uptime ["-t", "uptime: <days>d <hours>h"] 360
                         -- Echos a "bell" icon in front of the pacman updates.
@@ -60,7 +62,7 @@ Config { font            = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:h
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "<box type=Bottom width=2 mb=1 ml=2 color=#FFFFFF><action=`dm-run`><icon=haskell_20.xpm/> </action> </box>  <fc=#666666>|</fc> %UnsafeStdinReader%}{<box type=Right width=2 mb=4 mr=10 color=AAAAAA>  <fc=#EAEEFA>%pomodoro%</fc>     </box> <box type=Bottom width=2 mb=4 color=#ecbe7b><fc=#ecbe7b><action=`alacritty -e htop`>%cpu%</action></fc></box>  <box type=Bottom width=2 mb=2 color=#ff6c6b><fc=#ff6c6b><action=`alacritty -e htop`>%memory%</action></fc></box>    <box type=Bottom width=2 mb=2 color=#a9a1e1><fc=#a9a1e1>%disku%</fc></box>  <box type=Bottom width=2 mb=2 color=#da8548><fc=#da8548>%pomodoro%</fc></box>  <box type=Bottom width=2 mb=2 color=#46d9ff><fc=#46d9ff><action=`emacsclient -c -a 'emacs' --eval '(doom/window-maximize-buffer(dt/year-calendar))'`>%date%</action></fc></box> %trayerpad%"
+       , template = "<box type=Bottom width=2 mb=1 ml=2 color=#FFFFFF><action=`dm-run`><icon=haskell_20.xpm/> </action> </box>  <fc=#666666>|</fc> %UnsafeStdinReader%}{<box type=Right width=2 mb=4 mr=10 color=AAAAAA>  <fc=#EAEEFA>%pomodoro%</fc> </box>      <box type=Bottom width=2 mb=4 color=#ecbe7b><fc=#ecbe7b><action=`alacritty -e htop`>%cpu%</action></fc></box>  <box type=Bottom width=2 mb=2 color=#ff6c6b><fc=#ff6c6b><action=`alacritty -e htop`>%memory%</action></fc></box>    <box type=Bottom width=2 mb=2 color=#a9a1e1><fc=#a9a1e1>%disku%</fc></box>  <box type=Bottom width=2 mb=2 color=#da8548><fc=#da8548>%pomodoro%</fc></box>  <box type=Bottom width=2 mb=2 color=#46d9ff><fc=#46d9ff><action=`emacsclient -c -a 'emacs' --eval '(doom/window-maximize-buffer(dt/year-calendar))'`>%date%</action></fc></box> %trayerpad%"
        }
 
 -- Battery

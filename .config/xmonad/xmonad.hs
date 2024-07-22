@@ -598,6 +598,7 @@ myKeys c =
   , ("M-r",        addName "Rofi"                 $ spawn "rofi -show run")
   , ("M-b s",      addName "Slack"                $ spawn "/snap/bin/slack")
   , ("M-b M-f",    addName "Yazi"                 $ spawn (myTerminal ++ " yazi"))
+  , ("M-b c",      addName "Conky clock"          $ spawn "rofi -show run conky-clock")
   ]
 
   ^++^ subKeys "Monitors"

@@ -1158,6 +1158,7 @@
       (:prefix-map ("b" . "buddhi")
         (:prefix ("i" . "(system's) Integrations")
          :desc "Yazi lauch" "y" #'blw/run-yazi)))
+
 (map! :leader
       (:prefix-map ("b" . "buddhi")
         (:prefix ("x" . "command")
