@@ -1421,18 +1421,30 @@ To create new loadable modules,
 
 ** Keymaps
 #+begin_src emacs-lisp
-(map! :leader
-      (:prefix-map ("b" . "buddhi")
-       (:prefix ("c" . "Co-pilot")
-        :desc "Accept full completion" "TAB" #'copilot-accept-completion)))
+;; (map! :leader
+;;       (:prefix-map ("b" . "buddhi")
+;;        (:prefix ("c" . "Complete")
+;;         :desc "Accept full completion" "TAB" #'copilot-accept-completion)))
 
-(map! :leader
-      (:prefix-map ("b" . "buddhi")
-        :desc "Accept full completion" "TAB" #'copilot-accept-completion))
+;; (map! :leader
+;;       (:prefix-map ("b" . "buddhi")
+;;         :desc "Accept full completion" "TAB" #'copilot-accept-completion))
 #+end_src
 
 #+RESULTS:
 : copilot-accept-completion
+
+#+begin_src emacs-lisp
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       :desc "Yasnippet" "y" #'company-yasnippet))
+
+;; (map! :leader
+;;       (:prefix-map ("b" . "buddhi")
+;;        (:prefix ("c" . "Complete")
+;;         :desc "Accept full completion" "TAB" #'+company/complete)))
+#+end_src
+
 * Pomodoro
 #+begin_src emacs-lisp
 ;; From  time.el -> display-time-mode

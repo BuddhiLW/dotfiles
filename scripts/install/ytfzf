@@ -1,0 +1,15 @@
+#!/usr/bin/bash
+
+cd $DOTFILES/gitthings
+
+git clone https://github.com/pystardust/ytfzf
+cd ytfzf
+sudo make install doc
+
+# install
+# - vlc
+# - uberzugpp
+# - fzf
+sudo apt-get update && sudo apt-get install vlc fzf ueberzug yt-dlp
+
+

@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+cd $TORB # my case: TORB="$DOTFILES/gitthings", where `tor-browser` was installed
+./start-tor-browser.desktop 

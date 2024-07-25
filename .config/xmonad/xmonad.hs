@@ -110,13 +110,13 @@ myEditor :: String
 myEditor = myTerminal ++ " -e vim "    -- Sets vim as editor
 
 myBorderWidth :: Dimension
-myBorderWidth = 2           -- Sets border width for windows
+myBorderWidth = 1           -- Sets border width for windows
 
 myNormColor :: String       -- Border color of normal windows
 myNormColor   = colorBack   -- This variable is imported from Colors.THEME
 
 myFocusColor :: String      -- Border color of focused windows
-myFocusColor  = color15     -- This variable is imported from Colors.THEME
+myFocusColor  = color06     -- This variable is imported from Colors.THEME
 
 myMouseFocus :: Bool
 myMouseFocus = False

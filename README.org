@@ -11,6 +11,8 @@ The main script currently works out of the batch, in a fresh =Ubuntu= installati
 
 That's it.
 
+**Plans to migrate it to a Bonzai-based script, called** =arara=. [fn:3]
+
 Feel free to issue any requests or issues, if you encounter trouble installing, from a =Vanilla Ubuntu= (fresh install).
 
 * What the script does
@@ -76,4 +78,5 @@ To understand more about the efforts behind this ricing-system, read the =KEG= n
 * Footnotes
 
 [fn:1] [[https://github.com/BuddhiLW/blw-zet/tree/main/67][67 Creation of a bootstraping/ricing system]]
-[fn:2] [[	https://github.com/rwxrob][https://github.com/rwxrob]]
+[fn:2] [[https://github.com/rwxrob][https://github.com/rwxrob]]
+[fn:3] [[https://github.com/BuddhiLW/blw-zet/blob/main/139/README.md]]

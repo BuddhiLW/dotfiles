@@ -581,14 +581,23 @@
 ;;          ("<tab>" . 'copilot-accept-completion)
 ;;          ("TAB" . 'copilot- accept-completion)))
 
-(map! :leader
-      (:prefix-map ("b" . "buddhi")
-       (:prefix ("c" . "Co-pilot")
-        :desc "Accept full completion" "TAB" #'copilot-accept-completion)))
+;; (map! :leader
+;;       (:prefix-map ("b" . "buddhi")
+;;        (:prefix ("c" . "Complete")
+;;         :desc "Accept full completion" "TAB" #'copilot-accept-completion)))
+
+;; (map! :leader
+;;       (:prefix-map ("b" . "buddhi")
+;;         :desc "Accept full completion" "TAB" #'copilot-accept-completion))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-        :desc "Accept full completion" "TAB" #'copilot-accept-completion))
+       :desc "Yasnippet" "y" #'company-yasnippet))
+
+;; (map! :leader
+;;       (:prefix-map ("b" . "buddhi")
+;;        (:prefix ("c" . "Complete")
+;;         :desc "Accept full completion" "TAB" #'+company/complete)))
 
 ;; From  time.el -> display-time-mode
 (defun blw/display-time-event-handler ()

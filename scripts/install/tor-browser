@@ -1,0 +1,55 @@
+#!/usr/bin/bash
+
+# Change to the target directory
+cd "$DOTFILES/gitthings" || exit 1
+
+# Scrape the Tor Project page to find the latest stable version
+version=$(curl -s https://dist.torproject.org/torbrowser/ | grep -oP '(?<=href=")[0-9]+\.[0-9]+\.[0-9]+(?=/")' | sort -V | tail -n 1)
+
+# Check if the version was found
+if [ -z "$version" ]; then
+  echo "Failed to find the latest stable version."
+  exit 1
+fi
+
+echo "Latest stable version found: $version"
+
+# Construct the download URL
+url="https://www.torproject.org/dist/torbrowser/${version}/tor-browser-linux-x86_64-${version}.tar.xz"
+
+# Download the file
+wget "$url" -O "tor-browser-linux-x86_64-${version}.tar.xz"
+
+# Check if the download was successful
+if [ $? -ne 0 ]; then
+  echo "Failed to download the file."
+  exit 1
+fi
+
+# Extract the downloaded file using 7z
+7z x "tor-browser-linux-x86_64-${version}.tar.xz"
+
+# Check if extraction was successful
+if [ $? -ne 0 ]; then
+  echo "Failed to extract the file."
+  exit 1
+fi
+
+7z x "tor-browser-linux-x86_64-${version}.tar"
+
+# Check if extraction was successful
+if [ $? -ne 0 ]; then
+  echo "Failed to extract the file."
+  exit 1
+fi
+
+rm "tor-browser-linux-x86_64-${version}.tar.xz" 
+rm "tor-browser-linux-x86_64-${version}.tar"
+
+# Check if extraction was successful
+if [ $? -ne 0 ]; then
+  echo "Failed to extract the file."
+  exit 1
+fi
+
+echo "Downloaded and extracted Tor Browser version ${version} successfully."

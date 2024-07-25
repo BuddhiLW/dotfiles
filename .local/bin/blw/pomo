@@ -1,0 +1,14 @@
+#!/usr/bin/bash
+
+title="$1"
+
+if [ -n "$2" ]; then
+  if [ -n "$3" ]; then
+    pomodoro start "$title" --duration "$2" --ago "$3"
+  else
+    pomodoro start "$title" --duration "$2"
+  fi
+else
+  echo "Usage: $0 <duration> [time ago]"
+  exit 1
+fi

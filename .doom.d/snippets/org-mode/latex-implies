@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: latex-implies
+# key: \imp
+# --
+\Rightarrow $0

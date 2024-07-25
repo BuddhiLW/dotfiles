@@ -7,3 +7,12 @@
               ((string-empty-p TeX-command-extra-options) "--shell-escape")
               (t (format "--shell-escape %s" TeX-command-extra-options))))
   (message "TeX-command-extra-options : `%s'" TeX-command-extra-options))
+
+;; (defun update-org-latex-fragments ()
+;;   (org-latex-preview '(64))
+;;   (plist-put org-format-latex-options :scale (* 2 text-scale-mode-amount))
+
+;;   (org-latex-preview '(16)))
+;; (add-hook 'text-scale-mode-hook 'update-org-latex-fragments)
+
+;; (remove-hook 'text-scale-mode-hook 'update-org-latex-fragments)
