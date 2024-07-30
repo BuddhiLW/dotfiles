@@ -135,6 +135,8 @@ gitthings/st
 .config/kitty.app/
 .local/kitty.app/
 **/kitty.app/**
+.local/py/
+.config/nomic.ai
 
 Notes/
 cv/
@@ -143,3 +145,4 @@ build/
 scripts/.stack-work/*
 scripts/.stack-work/
 **.stack-work**
+

@@ -68,6 +68,7 @@ export GOPATH="$HOME/go"
 export GOBIN="$HOME/go/bin"
 export GOPRIVATE="github.com/orasis-holding/*"
 export NATIVEFIER="$HOME/.local/nativefier"
+# export OPENAI_API_KEY="$(pass openai)"
 #"/usr/local/go"
 export GOROOT="/usr/local/go"
 export PATH="$PATH:$GOROOT/bin"
@@ -361,7 +362,7 @@ export VISUAL="vim"
 ## export VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI mode
 export TERMINAL="st"
 #export BROWSER="qutebrowser"
-export BROWSER="chromium"
+export BROWSER="chromium-browser"
 
 # PPI related
 export LINFO="$HOME/facti/linfo-ppi"

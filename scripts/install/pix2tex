@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+conda create -n pix2tex
+conda activate pix2tex
+
+pip install 'pix2tex[gui]'
+
+echo "Installing gnome-screenshot as its pix2tex default screenshooter"
+sudo apt-get install gnome-screenshot

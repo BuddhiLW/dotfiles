@@ -2352,14 +2352,14 @@ You can issue the http request by: =M-x http-process (C-c C-c)=
 #+end_src
 
 #+begin_src emacs-lisp
-(use-package! go-translate
-  :config
-  (setq gt-translate-list '(("en" "zh")
-                            ("en" "ru")
-                            ("en" "pt-br")
-                            ("pt-br" "en")))
+;; (use-package! go-translate
+;;   :config
+(setq gt-translate-list '(("en" "zh")
+                          ("en" "ru")
+                          ("en" "pt-br")
+                          ("pt-br" "en")))
 
-  (setq gt-default-translator
+(setq gt-default-translator
         (gt-translator
          :taker   (gt-taker :text 'buffer :pick 'paragraph)
          :engines (list (gt-bing-engine)
@@ -2368,12 +2368,12 @@ You can issue the http request by: =M-x http-process (C-c C-c)=
          :render
          (gt-buffer-render)))
 
- (setq gt-buffer-evil-leading-key "x"))
-      ;; (gt-posframe-pop-render))))
+(setq gt-buffer-evil-leading-key "x")
+       ;; (gt-posframe-pop-render))
 #+end_src
 
 #+RESULTS:
-: t
+: x
 * Telegram
 
 #+begin_src emacs-lisp
