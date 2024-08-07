@@ -9,6 +9,6 @@ if [ -n "$2" ]; then
     pomodoro start "$title" --duration "$2"
   fi
 else
-  echo "Usage: $0 <duration> [time ago]"
+  echo "Usage: pomo <title> <duration> [time ago]"
   exit 1
 fi
