@@ -1,3 +1,4 @@
 #!/usr/bin/bash
 
-xargs -rxa "$DOTFILES/deps/dep-out.txt" -- sudo apt-get install --
+sudo apt-get install $(< $DOTFILES/deps/dep-out.txt)
+

@@ -134,6 +134,8 @@ gitthings/st
 .config/cmus/
 .config/kitty.app/
 .local/kitty.app/
+.config/systemd/
+.config/balenaEtcher/
 **/kitty.app/**
 .local/py/
 .config/nomic.ai

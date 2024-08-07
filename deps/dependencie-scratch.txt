@@ -6,6 +6,8 @@ git
 gh
 
 ## Build tools et al
+build-essential
+texinfo
 curl
 wget
 build-essential
@@ -16,6 +18,8 @@ libtool
 libtool-bin
 pass
 gnupg2
+make
+autoconf
 
 ## st dependencies
 build-essential
@@ -103,6 +107,12 @@ ripgrep
 editorconfig
 fd-find
 apt-transport-https ca-certificates curl gnupg-agent software-properties-common gcc-13 libgccjit0 libgccjit-13-dev libjansson4 libjansson-dev libcairo2-dev libharfbuzz-dev
+libssl-dev
+libxaw7-dev
+libjpeg-dev
+libgif-dev
+libtiff-dev
+gnutls-bin gnutls-doc
 ## ewal theme
 inotify-tools
 
@@ -121,7 +131,7 @@ ffmpeg
 mpv
 
 # Emacs source install
-apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+apt-transport-https ca-certificates curl gnupg-agent software-properties-common
 
 # Yazi
 ffmpegthumbnailer
