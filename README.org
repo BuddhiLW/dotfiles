@@ -16,8 +16,8 @@ That's it.
 Feel free to issue any requests or issues, if you encounter trouble installing, from a =Vanilla Ubuntu= (fresh install).
 
 * Documentation for Xmonad Bindings
-- Markdown: [[file:documentation/xmonad-bindings-tables.md]]
-- PDF: [[file:documentation/xmonad-bindings-tables.pdf]]
+- Markdown: [[file:.config/documentation/xmonad-bindings-tables.md]]
+- PDF: [[file:.config/documentation/xmonad-bindings-tables.pdf]]
 
 =M-/= also opens the PDF with GNOME's Document Viewer (**Evince**)
 

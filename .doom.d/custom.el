@@ -6,8 +6,8 @@
  '(codeium/metadata/api_key "f1d7af58-b62d-4751-9d91-5669e4a8215e")
  '(magit-todos-insert-after '(bottom) nil nil "Changed by setter of obsolete option `magit-todos-insert-at'")
  '(package-selected-packages
-   '(@ cape consult-eglot corfu eglot emms emms-soundcloud germanium go-translate
-     google-maps google-translate graphql graphql-doc graphql-mode
+   '(@ ace-link cape consult-eglot corfu eglot emms emms-soundcloud germanium
+     go-translate google-maps google-translate graphql graphql-doc graphql-mode
      graphql-ts-mode http org-present ox-reveal telega visual-fill-column yaml
      yaml-mode yaml-pro)))
 (custom-set-faces

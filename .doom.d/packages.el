@@ -173,3 +173,5 @@
 
 (package! emms)
 (package! emms-soundcloud)
+
+(package! ace-link)

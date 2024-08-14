@@ -392,7 +392,9 @@
         :desc "centered-cursor-mode" "C-l" #'centered-cursor-mode)
       (:prefix-map ("b" . "buddhi")
         (:prefix ("u" . "utilities")
-          :desc "cfw with google calendar sync" "a" #'blw/calendar)))
+          :desc "cfw with google calendar sync" "a" #'blw/calendar))
+      (:prefix-map ("b" . "buddhi")
+        :desc "ace follow link" "a" #'ace-link))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
@@ -1131,25 +1133,6 @@
   ;; `global-corfu-modes' to exclude certain modes.
   :init
   (global-corfu-mode))
-
-(use-package! go-translate
-  :config
-  (setq gt-translate-list '(("en" "zh")
-                            ("en" "ru")
-                            ("en" "pt-br")
-                            ("pt-br" "en")))
-
-  (setq gt-default-translator
-        (gt-translator
-         :taker   (gt-taker :text 'buffer :pick 'paragraph)
-         :engines (list (gt-bing-engine)
-                        (gt-google-engine)
-                        (gt-google-rpc-engine))
-         :render
-         (gt-buffer-render)))
-
- (setq gt-buffer-evil-leading-key "x"))
-      ;; (gt-posframe-pop-render))))
 
 (setq telega-server-libs-prefix "~/dotfiles/gitthigs/td/")
 

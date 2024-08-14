@@ -1060,11 +1060,10 @@ Shell version to be used with =run-python=
         :desc "centered-cursor-mode" "C-l" #'centered-cursor-mode)
       (:prefix-map ("b" . "buddhi")
         (:prefix ("u" . "utilities")
-          :desc "cfw with google calendar sync" "a" #'blw/calendar)))
+          :desc "cfw with google calendar sync" "a" #'blw/calendar))
+      (:prefix-map ("b" . "buddhi")
+        :desc "ace follow link" "a" #'ace-link))
 #+end_src
-
-#+RESULTS:
-: blw/calendar
 
 ** Multiple Cursors
 #+begin_src emacs-lisp
@@ -1272,12 +1271,13 @@ To create new loadable modules,
 (add-hook 'web-mode-hook 'eslint-rc-mode)
 #+end_src
 
+deprecated -- reason: f **facti**
 #+begin_src emacs-lisp :tangle ~/dotfiles/.config/facti/.dir-local.el
 ;; dir-local.el for facti's js setup
-((rjsx-mode . ((eval . (setq js-indent-level 2))
-               (eval . (setq indent-tabs-mode nil))
-               (eval . (setq tab-width 4))
-               (eval . (setq indent-line-function 'insert-tab))))) 
+;; ((rjsx-mode . ((eval . (setq js-indent-level 2))
+;;                (eval . (setq indent-tabs-mode nil))
+;;                (eval . (setq tab-width 4))
+;;                (eval . (setq indent-line-function 'insert-tab)))))
 #+end_src
 
 ** Hooks
@@ -2351,7 +2351,7 @@ You can issue the http request by: =M-x http-process (C-c C-c)=
 (package! go-translate)
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 ;; (use-package! go-translate
 ;;   :config
 (setq gt-translate-list '(("en" "zh")
@@ -2451,6 +2451,11 @@ sudo update-alternatives --config x-terminal-emulator
 
 #+RESULTS:
 : blw/run-yazi
+
+* Ace-link
+#+begin_src emacs-lisp :tangle ./packages.el
+(package! ace-link)
+#+end_src
 
 * Server
 #+begin_src emacs-lisp
