@@ -46,6 +46,7 @@ imagemagick
 unclutter
 maim
 tmux
+rofi
 
 ## xmonad dependencies
 xmonad

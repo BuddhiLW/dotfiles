@@ -130,7 +130,7 @@
        ;;elm               ; care for a cup of TEA?
        emacs-lisp        ; drown in parentheses
        ;;erlang            ; an elegant language for a more civilized age
-       ;;(ess +R +r)               ; emacs speaks statistics
+       (ess +R +r)               ; emacs speaks statistics
        ;;factor
        ;;faust             ; dsp, but you get to keep your soul
        ;;fortran           ; in FORTRAN, GOD is REAL (unless declared INTEGER)

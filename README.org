@@ -15,6 +15,12 @@ That's it.
 
 Feel free to issue any requests or issues, if you encounter trouble installing, from a =Vanilla Ubuntu= (fresh install).
 
+* Documentation for Xmonad Bindings
+- Markdown: [[file:documentation/xmonad-bindings-tables.md]]
+- PDF: [[file:documentation/xmonad-bindings-tables.pdf]]
+
+=M-/= also opens the PDF with GNOME's Document Viewer (**Evince**)
+
 * What the script does
 It's a cascade of =bash= scripts to install programs from source, or from Debian repositories (=PPAs=).
 
@@ -74,7 +80,6 @@ To understand more about the efforts behind this ricing-system, read the =KEG= n
 # #+end_src
 
 # ** TODO Pomodoro
-
 * Footnotes
 
 [fn:1] [[https://github.com/BuddhiLW/blw-zet/tree/main/67][67 Creation of a bootstraping/ricing system]]

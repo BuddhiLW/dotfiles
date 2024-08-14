@@ -98,6 +98,9 @@ myModMask = mod4Mask        -- Sets modkey to super/windows key
 myTerminal :: String
 myTerminal = "kitty"    -- Sets default terminal
 
+-- myDotPath :: String
+-- myDotPath = "~/dotfiles"
+
 myBrowser :: String
 myBrowser = "chromium"  -- Sets qutebrowser as browser
 
@@ -522,12 +525,12 @@ myKeys c =
   [ ("M-C-r", addName "Recompile XMonad"       $ spawn "xmonad --recompile")
   , ("M-S-r", addName "Restart XMonad"         $ spawn "xmonad --restart")
   , ("M-S-q", addName "Quit XMonad"            $ sequence_ [spawn (mySoundPlayer ++ shutdownSound), io exitSuccess])
-  , ("M-q", addName "Kill focused window"    $ kill1)
+  , ("M-q", addName "Kill focused window"      $ kill1)
   , ("M-S-a", addName "Kill all windows on WS" $ killAll)
   , ("M-S-<Return>", addName "Run prompt"      $ sequence_ [spawn (mySoundPlayer ++ dmenuSound), spawn "~/.local/bin/dm-run"])
 
   , ("M-S-b", addName "Toggle bar show/hide"   $ spawn "dbus-send --session --dest=org.Xmobar.Control --type=method_call --print-reply '/org/Xmobar/Control' org.Xmobar.Control.SendSignal \"string:Toggle -1\"" >> (broadcastMessage $ ToggleStruts) >> refresh)
-  , ("M-/", addName "DTOS Help"                $ spawn "~/.local/bin/dtos-help")]
+  , ("M-/", addName "BLW's Xmonad Documented"  $ spawn "blw-docs")]
 
   ^++^ subKeys "BLW keys"
   [ ("M-p t t",   addName "Random Lazywallpaper"    $ spawn "random-lazywal")
@@ -600,6 +603,7 @@ myKeys c =
   , ("M-b s",      addName "Slack"                $ spawn "/snap/bin/slack")
   , ("M-b M-f",    addName "Yazi"                 $ spawn (myTerminal ++ " yazi"))
   , ("M-b c",      addName "Conky clock"          $ spawn "rofi -show run conky-clock")
+  , ("M-b M-b",    addName "Bluetooth headset device switch card-profile"          $ spawn "switch-bluetooth-profile ")
   ]
 
   ^++^ subKeys "Monitors"

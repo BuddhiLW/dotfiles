@@ -284,3 +284,11 @@
 2024-08-07T09:24:48-03:00 description="Orasis -- Dag Manager -- OTEL+NEXUS" duration=60
 2024-08-07T11:42:33-03:00 description="Orasis -- Dag Manager -- OTEL+NEXUS" duration=60
 2024-08-07T16:00:07-03:00 description="Orasis -- DAG Manager -- OTEL+NEXUS" duration=40
+2024-08-08T11:02:26-03:00 description="Orasis -- Dag Manager -- OTEL+NEXUS" duration=300
+2024-08-08T12:22:35-03:00 description="Orasis -- Dag Manager -- OTEL+NEXUS" duration=60
+2024-08-08T13:33:59-03:00 description="Orasis -- Dag Manager -- OTEL+NEXUS" duration=150
+2024-08-08T15:34:47-03:00 description="Orasis -- Dag Manager -- OTEL+NEXUS" duration=30
+2024-08-08T16:00:08-03:00 description="Orasis -- Daily" duration=10
+2024-08-12T13:41:46-03:00 description="Orasis -- Dag Manager -- Fine tune" duration=40
+2024-08-12T16:04:47-03:00 description="Orasis -- Daily" duration=15
+2024-08-12T16:20:08-03:00 description="Orasis -- Dag Manager -- Finetune" duration=30
