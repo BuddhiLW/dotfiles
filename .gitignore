@@ -147,3 +147,5 @@ scripts/.stack-work/*
 scripts/.stack-work/
 **.stack-work**
 
+.azure
+.azure/*

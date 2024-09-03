@@ -530,7 +530,7 @@ myKeys c =
   , ("M-S-<Return>", addName "Run prompt"      $ sequence_ [spawn (mySoundPlayer ++ dmenuSound), spawn "~/.local/bin/dm-run"])
 
   , ("M-S-b", addName "Toggle bar show/hide"   $ spawn "dbus-send --session --dest=org.Xmobar.Control --type=method_call --print-reply '/org/Xmobar/Control' org.Xmobar.Control.SendSignal \"string:Toggle -1\"" >> (broadcastMessage $ ToggleStruts) >> refresh)
-  , ("M-/", addName "BLW's Xmonad Documented"  $ spawn "blw-docs")]
+  , ("M-d", addName "BLW's Xmonad Documented"  $ spawn "blw-docs")]
 
   ^++^ subKeys "BLW keys"
   [ ("M-p t t",   addName "Random Lazywallpaper"    $ spawn "random-lazywal")
