@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo apt-get install libxcb-util-dev libepoxy-dev
+
 cd $DOTFILES/gitthings/
 git clone https://github.com/yshui/picom.git
 
