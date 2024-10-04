@@ -1,0 +1,6 @@
+# YAML used in Unit Tests only, with dummy data
+
+namespaces:
+  - dev-manager:
+    - cadence
+    - redpanda-0

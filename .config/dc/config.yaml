@@ -1,0 +1,26 @@
+namespaces:
+        - dag-manager:
+                - cadence
+                - redpanda-0
+                - redpanda-console
+                - postgresql
+                - redis
+                - tempo
+        - tree-build:
+                - hazelcast
+                - postgresql
+                - redpanda-0
+                - redpanda-console
+                - mysql
+        - erp-collector:
+                - gateway
+                - collector
+                - postgresql
+                - mysql
+                - prism
+                - azurite
+                - redpanda-0
+                - redpanda-console
+                - tempo
+                - prometheus
+                - grafana

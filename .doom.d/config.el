@@ -40,11 +40,11 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-monokai-pro) ;;-> edit "(use-pacakge doom-themes)" instead.
 ;; (setq doom-font (font-spec :family "Oxygen Mono" :size 20)
 ;;       doom-variable-pitch-font (font-spec :family "Fantasque Sans Mono") ; inherits `doom-font''s :size
 ;;       doom-unicode-font (font-spec :family "JoyPixels" :size 25)
 ;;       doom-big-font (font-spec :family "Nimbus Mono PS" :size 15))
+(setq doom-theme 'doom-monokai-pro) ;;-> edit "(use-pacakge doom-themes)" instead.
 (setq doom-font (font-spec :family "Noto Mono" :size 20 :weight 'regular)
       doom-variable-pitch-font (font-spec :family "Fantasque Sans Mono" :weight 'regular) ; inherits `doom-font''s :size
       doom-unicode-font (font-spec :family "JoyPixels" :size 20)
@@ -957,11 +957,21 @@
     ;; (cfw:ical-create-source "gcal" (nth 0 (process-lines "pass" "show" "CALFW/gmail-ical-url-facti" "Red")))
     (cfw:ical-create-source "gcal" (nth 0 (process-lines "pass" "show" "CALFW/gmail-ical-url")) "Blue")))) ; google calendar ICS
 
-(use-package! highlight-indentation
-  :hook (prog-mode . highlight-indentation-mode)
-  :config
-   (set-face-background 'highlight-indentation-face "#0eeeAA")  
-   (set-face-background 'highlight-indentation-current-column-face "#c3b3b3"))
+(use-package! indent-bars
+  :hook ((prog-mode yaml-mode) . indent-bars-mode)
+  ;; or whichever modes you prefer
+  :config (setq
+           indent-bars-pattern ".*.*.*.*.*.*.*.*"
+           indent-bars-width-frac 0.25
+           indent-bars-pad-frac 0.2
+           indent-bars-zigzag 0.1
+           indent-bars-color-by-depth '(:regexp "outline-\\([0-9]+\\)" :blend 0.5)
+           indent-bars-highlight-current-depth '(:face default :blend 0.7)))
+;; (use-package! highlight-indentation
+;;   :hook (prog-mode . highlight-indentation-mode)
+;;   :config
+;;    (set-face-background 'highlight-indentation-face "#0eeeAA")
+;;    (set-face-background 'highlight-indentation-current-column-face "#c3b3b3"))
 
 ;; EXWM init function
 (load! "./blw-func/exwm-init.el")

@@ -520,6 +520,7 @@ unset __conda_setup
 # <<< conda initialize <<<
 
 complete -C keg keg
+complete -C dc dc
 # complete -C guix guix
 
 #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib

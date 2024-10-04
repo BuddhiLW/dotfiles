@@ -20,16 +20,12 @@ If not, start `ewal-watch`."
       (call-process "nohup" nil 0 nil "ewal-watch" "&")
       (message "Started ewal-watch process."))))
 
+;; Important, because it will be called in `ewal-watch' script.
 (defun blw/reload-ewal-doom-one-theme ()
   "Reload the ewal-doom-one and ewal-doom-vibrant themes."
   (interactive)
   (load-theme 'ewal-doom-one t)
   (load-theme 'ewal-doom-vibrant t))
-
-;; (defun blw/apply-ewal-themes ()
-;;   "Apply ewal themes and ensure supporting processes are running."
-;;   (blw/start-ewal-watch-if-needed)
-;;   (blw/reload-ewal-doom-one-theme))
 
 (add-hook 'doom-load-theme-hook 'blw/start-ewal-watch-if-needed)
 

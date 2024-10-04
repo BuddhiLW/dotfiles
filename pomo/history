@@ -292,13 +292,13 @@
 2024-08-12T13:41:46-03:00 description="Orasis -- Dag Manager -- Fine tune" duration=40
 2024-08-12T16:04:47-03:00 description="Orasis -- Daily" duration=15
 2024-08-12T16:20:08-03:00 description="Orasis -- Dag Manager -- Finetune" duration=30
-2024-08-15T07:00:20-03:00 description="Orasis -- Dag Manager -- Finetune" duration=490
-2024-08-15T07:50:10-03:00 description="Orasis -- Dag Manager -- Finetune" duration=440
-2024-08-15T08:39:55-03:00 description="Orasis -- Dag Manager -- Finetune" duration=390
-2024-08-15T09:39:41-03:00 description="Orasis -- Dag Manager -- Finetune" duration=330
-2024-08-15T10:39:30-03:00 description="Orasis -- Dag Manager -- Finetune" duration=270
-2024-08-15T11:29:10-03:00 description="Orasis -- Dag Manager -- Finetune" duration=220
-2024-08-15T12:39:02-03:00 description="Orasis -- Dag Manager -- Finetune" duration=150
+2024-08-15T07:00:20-03:00 description="Orasis -- Dag Manager -- Finetune" duration=60
+2024-08-15T07:50:10-03:00 description="Orasis -- Dag Manager -- Finetune" duration=60
+2024-08-15T08:39:55-03:00 description="Orasis -- Dag Manager -- Finetune" duration=60
+2024-08-15T09:39:41-03:00 description="Orasis -- Dag Manager -- Finetune" duration=60
+2024-08-15T10:39:30-03:00 description="Orasis -- Dag Manager -- Finetune" duration=60
+2024-08-15T11:29:10-03:00 description="Orasis -- Dag Manager -- Finetune" duration=60
+2024-08-15T12:39:02-03:00 description="Orasis -- Dag Manager -- Finetune" duration=60
 2024-08-15T14:08:49-03:00 description="Orasis -- Dag Manager -- Finetune" duration=60
 2024-08-15T14:28:10-03:00 description="Orasis -- Dag Manager -- Fine tune" duration=40
 2024-08-16T10:43:47-03:00 description="Orasis -- Dag Manager -- Finetune" duration=40
@@ -315,20 +315,82 @@
 2024-08-21T09:00:30-03:00 description="Orasis -- Dag Manager -- Finetune" duration=60
 2024-08-22T09:00:56-03:00 description="Orasis -- Dag Manager -- Finetune" duration=60
 2024-08-22T10:19:51-03:00 description="Orasis -- Dag Manager -- Finetune" duration=60
-2024-08-22T13:59:06-03:00 description="Orasis -- Dag Manager -- Finetune" duration=120
+2024-08-22T13:59:06-03:00 description="Orasis -- Dag Manager -- Finetune" duration=60
 2024-08-22T15:44:31-03:00 description="Orasis -- Dag Manager -- Finetune" duration=15
 2024-08-22T15:59:46-03:00 description="Orasis -- Dag Manager -- Daily" duration=10
 2024-08-23T07:50:32-03:00 description="Orasis -- Dag Manager -- Finetune" duration=60
 2024-08-23T09:10:49-03:00 description="Orasis -- Dag Manager -- Finetune" duration=60
 2024-08-23T10:31:51-03:00 description="Orasis -- Dag Manager -- Use Board-Card Template" duration=20
 2024-08-23T11:02:08-03:00 description="Orasis -- Dag Manager -- Finetune" duration=60
-2024-08-26T09:00:19-03:00 description="Orasis -- Dag Manager -- Finetune" duration=120
+2024-08-26T09:00:19-03:00 description="Orasis -- Dag Manager -- Finetune" duration=60
 2024-08-26T14:16:25-03:00 description="Orasis -- Dag Manager -- Finetune" duration=60
-2024-08-27T07:39:02-03:00 description="Orasis -- Dag Manager -- Finetune" duration=480
+2024-08-27T07:39:02-03:00 description="Orasis -- Dag Manager -- Finetune" duration=60
 2024-08-27T08:49:12-03:00 description="Orasis -- Dag Manager -- Finetune" duration=60
-2024-08-27T09:59:18-03:00 description="Orasis -- Dag Manager -- Finetune" duration=340
+2024-08-27T09:59:18-03:00 description="Orasis -- Dag Manager -- Finetune" duration=60
 2024-08-27T11:19:28-03:00 description="Orasis -- Dag Manager -- Finetune" duration=60
 2024-08-27T14:09:33-03:00 description="Orasis -- Dag Manager -- Finetune" duration=60
 2024-08-27T15:20:03-03:00 description="Orasis -- Dag Manager -- Finetune" duration=30
 2024-09-02T09:01:07-03:00 description="Orasis -- Dag Manager -- Deploy" duration=60
 2024-09-02T10:12:42-03:00 description="Orasis -- Dag Manager -- Deploy" duration=30
+2024-09-05T09:03:40-03:00 description="Orasis -- Simulation Tree -- Unit Tests" duration=60
+2024-09-05T10:23:48-03:00 description="Orasis -- Simulation Tree -- Unit Tests" duration=60
+2024-09-05T11:43:55-03:00 description="Orasis -- Simulation Tree -- Unit Tests" duration=60
+2024-09-05T13:04:08-03:00 description="Orasis -- Simulation Tree -- Unit Tests" duration=42
+2024-09-05T15:58:18-03:00 description="Orasis -- Daily" duration=15
+2024-09-06T17:17:19-03:00 description="Orasis -- Dev Container -- CLI" duration=60
+2024-09-06T17:29:19-03:00 description="Orasis -- Dev Container -- CLI" duration=45
+2024-09-06T18:37:27-03:00 description="Orasis -- Dev Container -- CLI" duration=60
+2024-09-06T19:57:30-03:00 description="Orasis -- Dev Container -- CLI" duration=60
+2024-09-06T20:57:34-03:00 description="Orasis -- Dev Container -- CLI" duration=60
+2024-09-06T22:02:57-03:00 description="Orasis -- Dev Container -- CLI" duration=60
+2024-09-09T15:32:33-03:00 description="Orasis -- Dev Container -- CLI" duration=45
+2024-09-13T06:17:28-03:00 description="Orasis -- DAG Manager -- API" duration=60
+2024-09-13T07:37:42-03:00 description="Orasis -- DAG Manager -- API" duration=60
+2024-09-13T08:57:45-03:00 description="Orasis -- DAG Manager -- API" duration=60
+2024-09-13T10:18:17-03:00 description="Orasis -- DAG Manager -- API" duration=60
+2024-09-13T11:38:28-03:00 description="Orasis -- DAG Manager -- API" duration=60
+2024-09-13T12:58:38-03:00 description="Orasis -- DAG Manager -- API" duration=60
+2024-09-13T14:18:52-03:00 description="Orasis -- DAG Manager -- API" duration=80
+2024-09-13T16:10:35-03:00 description="Orasis -- DAG Manager -- API" duration=45
+2024-09-16T10:52:29-03:00 description="Orasis -- DAG Manager -- API" duration=60
+2024-09-16T12:02:37-03:00 description="Orasis -- DAG Manager -- API" duration=60
+2024-09-16T13:30:24-03:00 description="Orasis -- DAG Manager -- API" duration=60
+2024-09-16T15:09:48-03:00 description="Orasis -- DAG Manager -- API" duration=50
+2024-09-17T07:49:37-03:00 description="Orasis -- DAG Manager -- API" duration=60
+2024-09-17T09:09:45-03:00 description="Orasis -- DAG Manager -- API" duration=60
+2024-09-17T10:29:51-03:00 description="Orasis -- DAG Manager -- API" duration=60
+2024-09-17T11:30:02-03:00 description="Orasis -- DAG Manager -- API" duration=60
+2024-09-17T12:50:10-03:00 description="Orasis -- DAG Manager -- API" duration=60
+2024-09-17T14:13:24-03:00 description="Orasis -- DAG Manager -- API" duration=60
+2024-09-18T08:25:33-03:00 description="Orasis -- DAG Manager -- API" duration=120
+2024-09-18T10:39:22-03:00 description="Orasis -- DAG Manager -- API" duration=69
+2024-09-18T10:39:22-03:00 description="Orasis -- DAG Manager -- API" duration=25
+2024-09-18T14:46:47-03:00 description="Orasis -- DAG Manager -- API" duration=60
+2024-09-19T08:10:49-03:00 description="Orasis -- DAG Manager -- API" duration=60
+2024-09-24T09:36:33-03:00 description="Orasis -- DAG Manager -- API" duration=60
+2024-09-24T10:07:30-03:00 description="Orasis -- DAG Manager -- API -- refactor for safety" duration=60
+2024-09-24T12:20:42-03:00 description="Orasis -- DAG Manager -- Change payload before RedPanda" duration=40
+2024-09-25T10:32:06-03:00 description="Orasis -- Tree Build -- Unit Tests" duration=40
+2024-09-25T11:58:49-03:00 description="Orasis -- DAG Manager -- API -- Workflow History" duration=40
+2024-09-26T07:31:03-03:00 description="Orasis -- DAG Manager -- API -- Workflow History" duration=60
+2024-09-26T09:11:15-03:00 description="Orasis -- DAG Manager -- API -- Workflow History" duration=60
+2024-09-26T11:11:29-03:00 description="Orasis -- DAG Manager -- API -- Workflow History" duration=60
+2024-09-26T13:21:37-03:00 description="Orasis -- DAG Manager -- API -- Workflow History" duration=45
+2024-09-27T14:07:07-03:00 description="Orasis -- DAG Manager -- API -- Proto definition change" duration=50
+2024-09-30T07:26:53-03:00 description="Orasis -- DAG Manager -- API -- History" duration=60
+2024-09-30T08:47:13-03:00 description="Orasis -- DAG Manager -- API -- History" duration=60
+2024-09-30T10:07:53-03:00 description="Orasis -- DAG Manager -- API -- History" duration=60
+2024-09-30T12:50:04-03:00 description="Orasis -- ERP Collector -- DC merge" duration=50
+2024-09-30T15:02:34-03:00 description="Orasis -- ERP Collector -- DC merge" duration=50
+2024-09-30T16:27:05-03:00 description="Orasis -- ERP Collector -- DC merge" duration=60
+2024-10-01T15:13:14-03:00 description="Orasis -- ERP Collector -- Mapping documentation" duration=50
+2024-10-01T16:10:07-03:00 description="Orasis -- Daily" duration=8
+2024-10-03T08:27:43-03:00 description="Orasis -- ERP Collector -- Mapping documentation" duration=50
+2024-10-03T09:37:57-03:00 description="Orasis -- ERP Collector -- Mapping documentation" duration=50
+2024-10-03T10:48:12-03:00 description="Orasis -- ERP Collector -- Mapping documentation" duration=50
+2024-10-03T11:58:18-03:00 description="Orasis -- ERP Collector -- Mapping documentation" duration=50
+2024-10-03T13:08:28-03:00 description="Orasis -- ERP Collector -- Mapping documentation" duration=50
+2024-10-03T14:18:39-03:00 description="Orasis -- ERP Collector -- Mapping documentation" duration=50
+2024-10-03T15:28:59-03:00 description="Orasis -- ERP Collector -- Mapping documentation" duration=25
+2024-10-04T09:01:03-03:00 description="Orasis -- ERP Collector -- Mapping documentation" duration=60
+2024-10-04T10:11:14-03:00 description="Orasis -- ERP Collector -- Mapping documentation" duration=60

@@ -120,7 +120,8 @@
 (package! calfw-org)
 (package! calfw-ical)
 
-(package! highlight-indentation)
+;; (package! highlight-indentation)
+(package! indent-bars)
 
 (package! exwm)
 
@@ -175,3 +176,5 @@
 (package! emms-soundcloud)
 
 (package! ace-link)
+
+(package! magit)

@@ -49,11 +49,11 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-monokai-pro) ;;-> edit "(use-pacakge doom-themes)" instead.
 ;; (setq doom-font (font-spec :family "Oxygen Mono" :size 20)
 ;;       doom-variable-pitch-font (font-spec :family "Fantasque Sans Mono") ; inherits `doom-font''s :size
 ;;       doom-unicode-font (font-spec :family "JoyPixels" :size 25)
 ;;       doom-big-font (font-spec :family "Nimbus Mono PS" :size 15))
+(setq doom-theme 'doom-monokai-pro) ;;-> edit "(use-pacakge doom-themes)" instead.
 (setq doom-font (font-spec :family "Noto Mono" :size 20 :weight 'regular)
       doom-variable-pitch-font (font-spec :family "Fantasque Sans Mono" :weight 'regular) ; inherits `doom-font''s :size
       doom-unicode-font (font-spec :family "JoyPixels" :size 20)
@@ -987,7 +987,7 @@ Shell version to be used with =run-python=
 
 # #+RESULTS:
 
-* Pressentation
+* Presentation
 ** Org Reveal
 
 #+begin_src emacs-lisp :tangle packages.el
@@ -1199,7 +1199,7 @@ To create new loadable modules,
 #+begin_src emacs-lisp :tangle packages.el
 (package! flymd)
 #+end_src
-* EPUB readeR
+* EPUB reader
 #+begin_src emacs-lisp :tangle packages.el
 (package! nov)
   ;; :recipe (:host github
@@ -1271,14 +1271,6 @@ To create new loadable modules,
 (add-hook 'web-mode-hook 'eslint-rc-mode)
 #+end_src
 
-deprecated -- reason: f **facti**
-#+begin_src emacs-lisp :tangle ~/dotfiles/.config/facti/.dir-local.el
-;; dir-local.el for facti's js setup
-;; ((rjsx-mode . ((eval . (setq js-indent-level 2))
-;;                (eval . (setq indent-tabs-mode nil))
-;;                (eval . (setq tab-width 4))
-;;                (eval . (setq indent-line-function 'insert-tab)))))
-#+end_src
 
 ** Hooks
 #+begin_src emacs-lisp
@@ -1940,19 +1932,30 @@ deprecated -- reason: f **facti**
 : blw/calendar
 * Beauty
 #+begin_src emacs-lisp :tangle packages.el
-(package! highlight-indentation)
+;; (package! highlight-indentation)
+(package! indent-bars)
 #+end_src
 
 #+begin_src emacs-lisp
-(use-package! highlight-indentation
-  :hook (prog-mode . highlight-indentation-mode)
-  :config
-   (set-face-background 'highlight-indentation-face "#0eeeAA")  
-   (set-face-background 'highlight-indentation-current-column-face "#c3b3b3"))
+(use-package! indent-bars
+  :hook ((prog-mode yaml-mode) . indent-bars-mode)
+  ;; or whichever modes you prefer
+  :config (setq
+           indent-bars-pattern ".*.*.*.*.*.*.*.*"
+           indent-bars-width-frac 0.25
+           indent-bars-pad-frac 0.2
+           indent-bars-zigzag 0.1
+           indent-bars-color-by-depth '(:regexp "outline-\\([0-9]+\\)" :blend 0.5)
+           indent-bars-highlight-current-depth '(:face default :blend 0.7)))
+;; (use-package! highlight-indentation
+;;   :hook (prog-mode . highlight-indentation-mode)
+;;   :config
+;;    (set-face-background 'highlight-indentation-face "#0eeeAA")
+;;    (set-face-background 'highlight-indentation-current-column-face "#c3b3b3"))
 #+end_src
 
 #+RESULTS:
-| highlight-indentation-mode | copilot-mode | highlight-indent-guides-mode | hl-todo-mode | display-line-numbers-mode | highlight-numbers-mode | vi-tilde-fringe-mode | editorconfig-major-mode-hook |
+| :face | default | :blend | 0.7 |
 
 * EXWM
 ** Basic loading
@@ -1980,8 +1983,6 @@ deprecated -- reason: f **facti**
 #+end_src
 
 ** Configs
-
-
 *** Workspace
 #+begin_src emacs-lisp :tangle ./blw-func/exwm.el
 ;;; ../dotfiles/.doom.d/my-func/exwm.el -*- lexical-binding: t; -*-
@@ -2455,6 +2456,10 @@ sudo update-alternatives --config x-terminal-emulator
 * Ace-link
 #+begin_src emacs-lisp :tangle ./packages.el
 (package! ace-link)
+#+end_src
+* Magit
+#+begin_src emacs-lisp :tangle packages.el
+(package! magit)
 #+end_src
 
 * Server

@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+doom sync -u --gc -j $(nproc) --aot -!
