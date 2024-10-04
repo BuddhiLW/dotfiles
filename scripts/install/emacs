@@ -17,7 +17,7 @@ sudo apt-get build-dep emacs
 export CC="gcc-13"
 cd emacs
 ./autogen.sh
-./configure --without-compress-install --with-native-compilation --with-mailutils --with-gnutls=ifavailable --with-cairo --with-harfbuzz --enable-checking=yes,glyphs --enable-check-lisp-object-type --with-wide-int
+./configure --with-gnutls=ifavailable --without-compress-install --with-native-compilation --with-mailutils --with-cairo --with-harfbuzz --enable-checking=yes,glyphs --enable-check-lisp-object-type --with-wide-int
 
 ## Use all your CPU cores to build
 make -j $(nproc)
