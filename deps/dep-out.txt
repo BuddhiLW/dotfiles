@@ -4,6 +4,8 @@ lynx
 git
 gh
 
+build-essential
+texinfo
 curl
 wget
 build-essential
@@ -14,6 +16,8 @@ libtool
 libtool-bin
 pass
 gnupg2
+make
+autoconf
 
 build-essential
 pkg-config
@@ -37,6 +41,7 @@ imagemagick
 unclutter
 maim
 tmux
+rofi
 
 xmonad
 xmobar
@@ -88,6 +93,12 @@ ripgrep
 editorconfig
 fd-find
 apt-transport-https ca-certificates curl gnupg-agent software-properties-common gcc-13 libgccjit0 libgccjit-13-dev libjansson4 libjansson-dev libcairo2-dev libharfbuzz-dev
+libssl-dev
+libxaw7-dev
+libjpeg-dev
+libgif-dev
+libtiff-dev
+gnutls-bin gnutls-doc
 inotify-tools
 
 

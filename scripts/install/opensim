@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+
+cd $DOTFILES/gitthings
+
+curl -FsSL https://raw.githubusercontent.com/opensim-org/opensim-core/refs/heads/main/scripts/build/opensim-core-linux-build-script.sh -o opensim.sh
+
+chmod +x opensim.sh
+./opensim.sh

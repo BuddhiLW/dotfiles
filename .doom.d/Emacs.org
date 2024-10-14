@@ -646,15 +646,15 @@ Shell version to be used with =run-python=
 #+end_src
 
 #+begin_src emacs-lisp
-;; (use-package! conda
-;;   :config
-;;   ;; (setq
-;;   ;;  conda-env-home-directory (expand-file-name "~/opt/miniconda3/")
-;;   ;;  conda-env-subdirectory "envs/")
-;;   (custom-set-variables '(conda-anaconda-home "/opt/miniconda3/"))
-;;   (conda-env-initialize-interactive-shells)
-;;   (conda-env-initialize-eshell)
-;;   (conda-env-autoactivate-mode t))
+(use-package! conda
+  :config
+  ;; (setq
+  ;;  conda-env-home-directory (expand-file-name "~/opt/miniconda3/")
+  ;;  conda-env-subdirectory "envs/")
+  (custom-set-variables '(conda-anaconda-home "~/.conda/"))
+  (conda-env-initialize-interactive-shells)
+  (conda-env-initialize-eshell)
+  (conda-env-autoactivate-mode t))
 #+end_src
 ** Ipython
 #+begin_src emacs-lisp :tangle packages.el

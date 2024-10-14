@@ -2,7 +2,7 @@
 ;; ====================
 ;; insert date and time
 
-(defvar current-isosec "%y%m%d%H%M%S%Z"
+(defvar current-isosec "%Y%m%d%H%M%S%Z"
   "Format of date to insert with `current-isosec' func,
 rxwrob isosec format with timezone reference at the end [%Z]")
 
@@ -27,7 +27,6 @@ Uses `current-date-time-format' for the formatting the date/time."
 Uses `current-date-time-format' for the formatting the date/time."
   (interactive)
   (insert "==========\n")
-                                        ;       (insert (let () (comment-start)))
   (insert (format-time-string current-date-time-format (current-time)))
   (insert "\n"))
 

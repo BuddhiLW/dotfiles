@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#LOGFILE="$HOME/random-lazywal.log"
+LOGFILE="$HOME/random-lazywal.log"
 
-#{
+{
 echo "Running random-lazywal script at $(date)"
 cd $HOME
 
@@ -28,7 +28,7 @@ random_file="${files[RANDOM % ${#files[@]}]}"
 
 # Run the lazywal command with the chosen file
 $HOME/go/bin/lazywal set "$random_file" display 2560x1080 pywal
-#} >> "$LOGFILE" 
+} >> "$LOGFILE" 
 # 2>&1
 
 

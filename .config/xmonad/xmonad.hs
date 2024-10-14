@@ -533,10 +533,10 @@ myKeys c =
   , ("M-d", addName "BLW's Xmonad Documented"  $ spawn "blw-docs")]
 
   ^++^ subKeys "BLW keys"
-  [ ("M-p t t",   addName "Random Lazywallpaper"  $ spawn "random-lazywal")
-  , ("M-p r",   addName "Lauch Rofi 2"            $ spawn "rofi -show run")
-  , ("M-p M-p", addName "Take a screenshot"       $ spawn "notify-send 'hello!'")
-  , ("M-p t e x", addName "Latex OCR"             $ spawn "pix2tex_gui")]
+  [ ("M-p t t",   addName "Random Lazywallpaper"    $ spawn "random-lazywal")
+  , ("M-p r",     addName "Lauch Rofi 2"            $ spawn "rofi -show run")
+  , ("M-p M-p",   addName "Take a screenshot"       $ spawn "notify-send 'hello!'")
+  , ("M-p t e x", addName "Latex OCR"               $ spawn "pix2tex_gui")]
  
   ^++^ subKeys "Switch to workspace"
   [ ("M-1", addName "Switch to workspace 1"    $ (windows $ W.greedyView $ myWorkspaces !! 0))

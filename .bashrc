@@ -152,12 +152,12 @@ pathprepend \
     "$GOROOT" \
     "$SEARX_SETTINGS_PATH" \
     "/usr/local/go/bin" \
-		"/home/euler/.conda/envs/simple-signer-env/bin" \
     "$HOME/programs/julia/bin/" \
     "$GUIX_PROFILE/bin" \
     "$HOME/.emacs.d/bin/" \
     "$HOME/.conda/bin/" \
     "$HOME/.local/share/cargo/bin/"
+#    "$HOME/.conda/envs/simple-signer-env/bin" \
 
 
 pathappend \
@@ -506,14 +506,14 @@ newshell
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/euler/.conda/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$('/home/russell/.conda/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/home/euler/.conda/etc/profile.d/conda.sh" ]; then
-        . "/home/euler/.conda/etc/profile.d/conda.sh"
+    if [ -f "/home/russell/.conda/etc/profile.d/conda.sh" ]; then
+        . "/home/russell/.conda/etc/profile.d/conda.sh"
     else
-        export PATH="/home/euler/.conda/bin:$PATH"
+        export PATH="/home/russell/.conda/bin:$PATH"
     fi
 fi
 unset __conda_setup
@@ -556,24 +556,12 @@ if [ -f '/home/lw/google-cloud-sdk/path.bash.inc' ]; then . '/home/lw/google-clo
 # The next line enables shell command completion for gcloud.
 if [ -f '/home/lw/google-cloud-sdk/completion.bash.inc' ]; then . '/home/lw/google-cloud-sdk/completion.bash.inc'; fi
 
-# >>> juliaup initialize >>>
-
-# !! Contents within this block are managed by juliaup !!
-
-case ":$PATH:" in
-    *:/home/euler/.juliaup/bin:*)
-        ;;
-
-    *)
-        export PATH=/home/euler/.juliaup/bin${PATH:+:${PATH}}
-        ;;
-esac
-
-# <<< juliaup initialize <<<
 complete -C go go 
 complete -C lazywal lazywal
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-. "/home/euler/.local/share/cargo/env"
+. "$HOME/.local/share/cargo/env"
 
-## Nix
-source $HOME/.nix-profile/etc/profile.d/nix.sh
+export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64/
+export PATH=$JAVA_HOME/bin:$PATH
+
+export PATH=~/opensim-core/bin:$PATH

@@ -20,6 +20,7 @@ pass
 gnupg2
 make
 autoconf
+7zip
 
 ## st dependencies
 build-essential

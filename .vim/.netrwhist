@@ -1,5 +1,7 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =3
+let g:netrw_dirhistcnt =5
+let g:netrw_dirhist_5='/home/russell/PP/rn-rf-shadow'
+let g:netrw_dirhist_4='/home/russell/dotfiles/scripts/install'
 let g:netrw_dirhist_3='/home/euler/PP/Orasis/pricing-dev-container-setup'
 let g:netrw_dirhist_2='/home/euler/dotfiles/gitthings/lazywal'
 let g:netrw_dirhist_1='/home/euler/dotfiles/scripts/install'
@@ -8,5 +10,3 @@ let g:netrw_dirhist_9='/home/euler/dotfiles/scripts/install'
 let g:netrw_dirhist_8='/home/euler/dotfiles/.local/bin/blw'
 let g:netrw_dirhist_7='/home/euler/dotfiles/gitthings/now-clocking'
 let g:netrw_dirhist_6='/home/euler/dotfiles/gitthings'
-let g:netrw_dirhist_5='/home/euler/dotfiles/gitthings/now-clocking'
-let g:netrw_dirhist_4='/home/euler'
