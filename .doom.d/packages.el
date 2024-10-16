@@ -1,6 +1,9 @@
 (package! elfeed)
 (package! webfeeder)
 
+(package! magit)
+(package! magit-section)
+
 (package! conda)
 
 (package! ein)
@@ -176,5 +179,3 @@
 (package! emms-soundcloud)
 
 (package! ace-link)
-
-(package! magit)

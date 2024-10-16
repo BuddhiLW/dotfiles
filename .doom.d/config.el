@@ -319,15 +319,15 @@
 
 (add-to-list 'load-path "~/.doom.d/site-lisp/emacs-application-framework/")
 
-;; (use-package! conda
-;;   :config
-;;   ;; (setq
-;;   ;;  conda-env-home-directory (expand-file-name "~/opt/miniconda3/")
-;;   ;;  conda-env-subdirectory "envs/")
-;;   (custom-set-variables '(conda-anaconda-home "/opt/miniconda3/"))
-;;   (conda-env-initialize-interactive-shells)
-;;   (conda-env-initialize-eshell)
-;;   (conda-env-autoactivate-mode t))
+(use-package! conda
+  :config
+  ;; (setq
+  ;;  conda-env-home-directory (expand-file-name "~/opt/miniconda3/")
+  ;;  conda-env-subdirectory "envs/")
+  (custom-set-variables '(conda-anaconda-home "~/.conda/"))
+  (conda-env-initialize-interactive-shells)
+  (conda-env-initialize-eshell)
+  (conda-env-autoactivate-mode t))
 
 ;; (use-package! ein)
 ;; (require 'ein)
@@ -339,6 +339,19 @@
 ;; (use-package! go-complete
 ;;   :config
 ;;  (add-hook 'completion-at-point-functions 'go-complete-at-point))
+
+(require 'project)
+
+(defun project-find-go-module (dir)
+  (when-let ((root (locate-dominating-file dir "go.mod")))
+    (cons 'go-module root)))
+
+(cl-defmethod project-root ((project (head go-module)))
+  (cdr project))
+
+(add-hook 'project-find-functions #'project-find-go-module)
+
+
 
 (setq gofmt-command "goimports")
 (add-hook 'before-save-hook 'gofmt-before-save)
@@ -958,15 +971,23 @@
     (cfw:ical-create-source "gcal" (nth 0 (process-lines "pass" "show" "CALFW/gmail-ical-url")) "Blue")))) ; google calendar ICS
 
 (use-package! indent-bars
-  :hook ((prog-mode yaml-mode) . indent-bars-mode)
+  :hook ((prog-mode yaml-mode go-mode clojure-mode clojurescript-mode python-mode) . indent-bars-mode)
   ;; or whichever modes you prefer
   :config (setq
-           indent-bars-pattern ".*.*.*.*.*.*.*.*"
+           indent-bars-pattern "."
+           ;; indent-bars-pattern ".*.*.*.*.*.*.*.*"
            indent-bars-width-frac 0.25
-           indent-bars-pad-frac 0.2
-           indent-bars-zigzag 0.1
-           indent-bars-color-by-depth '(:regexp "outline-\\([0-9]+\\)" :blend 0.5)
-           indent-bars-highlight-current-depth '(:face default :blend 0.7)))
+           indent-bars-pad-frac 0.3
+           ;; indent-bars-pad-frac 0.2
+           ;; indent-bars-zigzag 0.1
+           indent-bars-color-by-depth '(:palette ("black" "white" "green" "red") :blend 0.5)
+           indent-bars-highlight-current-depth '(:blend 1.0 :width 0.4 :pad 0.1 :pattern "!.!.!." :zigzag 0.1)
+           indent-bars-ts-highlight-current-depth '(no-inherit) ; equivalent to nil
+           indent-bars-ts-color-by-depth '(no-inherit)
+           indent-bars-ts-color '(inherit fringe :face-bg t :blend 0.2))
+           ;; indent-bars-highlight-current-depth '(:background "red10")
+           ;; indent-bars-color-by-depth '(:regexp "outline-\\([0-9]+\\)" :blend 0.5)
+           indent-bars-highlight-current-depth '(:face default :blend 0.9))
 ;; (use-package! highlight-indentation
 ;;   :hook (prog-mode . highlight-indentation-mode)
 ;;   :config
@@ -1165,6 +1186,26 @@
       (:prefix-map ("b" . "buddhi")
         (:prefix ("x" . "command")
          :desc "Yazi-find" "f" #'blw/run-yazi)))
+
+(defun eglot-format-buffer-before-save ()
+   (add-hook 'before-save-hook #'eglot-format-buffer -10 t))
+
+(use-package! eglot
+  ;; Optional: load other packages before eglot to enable eglot integrations.
+  ;; (require 'company)
+  ;; (require 'yasnippet)
+  ;; (require 'go-mode)
+  ;; (require 'eglot)
+  :config
+  (add-hook! go-mode-hook #'eglot-ensure)
+  ;; Optional: install eglot-format-buffer as a save hook.
+  ;; The depth of -10 places this before eglot's willSave notification,
+  ;; so that that notification reports the actual contents that will be saved.
+  (add-hook! go-mode-hook #'eglot-format-buffer-before-save)
+  (add-hook! before-save-hook
+    (lambda ()
+        (call-interactively 'eglot-code-action-organize-imports))
+    nil t))
 
 (server-force-delete)
 (server-start)

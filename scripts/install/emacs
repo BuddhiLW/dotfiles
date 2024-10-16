@@ -1,30 +1,60 @@
 #!/usr/bin/bash
 
-## Change this to where you want to build fetch and build emacs at.
+# Directory where you want to build Emacs
 cd $DOTFILES/gitthings/
 
-git clone https://github.com/emacs-mirror/emacs.git
+# Clone the Emacs repository if not already cloned
+if [ ! -d "emacs" ]; then
+    git clone --branch emacs-30.0.91 https://github.com/emacs-mirror/emacs.git
+fi
+
+# Update system repositories
 sudo apt-get update
 
-
-# add-apt-repository ppa:ubuntu-toolchain-r/ppa
+# Install dependencies for Emacs build
 sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
-sudo apt-get install gcc-13 libgccjit0 libgccjit-13-dev
-sudo apt-get install libjansson4 libjansson-dev
-sudo apt-get install libcairo2-dev libharfbuzz-dev libssl-dev libgnutls28-dev 
+
+# Add the toolchain repository to access GCC-14
+sudo add-apt-repository ppa:ubuntu-toolchain-r/ppa
+
+# Install GCC-14 and libgccjit for native compilation support
+sudo apt-get install gcc-14 libgcc-14-dev libgccjit-14-dev libgccjit0
+
+# Install other necessary dependencies for building Emacs
+sudo apt-get install libjansson4 libjansson-dev libcairo2-dev libharfbuzz-dev libssl-dev libgnutls28-dev build-essential libx11-dev libxpm-dev libjpeg-dev libpng-dev libgif-dev libtiff-dev libgtk-3-dev libncurses-dev
+
+# Install build dependencies for Emacs
 sudo apt-get build-dep emacs
 
-export CC="gcc-13"
+# Set GCC-14 as the compiler
+export CC="gcc-14"
+
+# Move into the Emacs directory
 cd emacs
-./autogen.sh
-./configure --with-gnutls=ifavailable --without-compress-install --with-native-compilation --with-mailutils --with-cairo --with-harfbuzz --enable-checking=yes,glyphs --enable-check-lisp-object-type --with-wide-int
 
-## Use all your CPU cores to build
-make -j $(nproc)
-
-# Error avoidance and debugging 
+# Clean previous builds (if any) to avoid conflicts
 make clean
 make distclean
-export CFLAGS="-fsanitize=address -g"
-export LDFLAGS="-fsanitize=address"
+
+# Run autogen to regenerate the configure script
+./autogen.sh
+
+# Configure the Emacs build with necessary options
+./configure --with-gnutls=ifavailable \
+            --with-native-compilation \
+            --with-mailutils \
+            --with-cairo \
+            --with-harfbuzz \
+            --enable-checking=yes,glyphs \
+            --enable-check-lisp-object-type \
+            --with-wide-int \
+            --with-x-toolkit=gtk3 \
+            --with-modules \
+            CFLAGS="-O2 -g3 -fno-omit-frame-pointer -fsanitize=address" \
+            LDFLAGS="-fsanitize=address"
+
+# Use all CPU cores to build Emacs
+make -j $(nproc)
+
+# Install Emacs after a successful build
 sudo make install

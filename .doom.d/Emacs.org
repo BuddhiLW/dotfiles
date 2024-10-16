@@ -458,6 +458,12 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 #+end_src
 
 * Magit
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! magit)
+(package! magit-section)
+#+end_src
+
 #+begin_src emacs-lisp
 (map! :leader
       :desc "Magit" "m" #'magit)
@@ -683,10 +689,35 @@ Shell version to be used with =run-python=
 : t
 
 * Go
+
+TODO: fix:
+#+begin_quote
+../../.emacs.d/.local/straight/build-30.0.91/company-go/company-go.el: Warning: ‘case’ is an obsolete alias (as of 27.1); use ‘cl-case’ instead.
+#+end_quote
+
 #+begin_src emacs-lisp
 ;; (use-package! go-complete
 ;;   :config
 ;;  (add-hook 'completion-at-point-functions 'go-complete-at-point))
+#+end_src
+
+#+begin_src emacs-lisp
+(require 'project)
+
+(defun project-find-go-module (dir)
+  (when-let ((root (locate-dominating-file dir "go.mod")))
+    (cons 'go-module root)))
+
+(cl-defmethod project-root ((project (head go-module)))
+  (cdr project))
+
+(add-hook 'project-find-functions #'project-find-go-module)
+#+end_src
+
+#+RESULTS:
+| project-find-go-module | project-projectile | project-try-vc |
+
+#+begin_src emacs-lisp
 #+end_src
 
 #+begin_src emacs-lisp :eval yes
@@ -1931,22 +1962,33 @@ To create new loadable modules,
 #+RESULTS:
 : blw/calendar
 * Beauty
+** Highlight indent
 #+begin_src emacs-lisp :tangle packages.el
 ;; (package! highlight-indentation)
 (package! indent-bars)
 #+end_src
 
 #+begin_src emacs-lisp
+
+
 (use-package! indent-bars
-  :hook ((prog-mode yaml-mode) . indent-bars-mode)
+  :hook ((prog-mode yaml-mode go-mode clojure-mode clojurescript-mode python-mode) . indent-bars-mode)
   ;; or whichever modes you prefer
   :config (setq
-           indent-bars-pattern ".*.*.*.*.*.*.*.*"
+           indent-bars-pattern "."
+           ;; indent-bars-pattern ".*.*.*.*.*.*.*.*"
            indent-bars-width-frac 0.25
-           indent-bars-pad-frac 0.2
-           indent-bars-zigzag 0.1
-           indent-bars-color-by-depth '(:regexp "outline-\\([0-9]+\\)" :blend 0.5)
-           indent-bars-highlight-current-depth '(:face default :blend 0.7)))
+           indent-bars-pad-frac 0.3
+           ;; indent-bars-pad-frac 0.2
+           ;; indent-bars-zigzag 0.1
+           indent-bars-color-by-depth '(:palette ("black" "white" "green" "red") :blend 0.5)
+           indent-bars-highlight-current-depth '(:blend 1.0 :width 0.4 :pad 0.1 :pattern "!.!.!." :zigzag 0.1)
+           indent-bars-ts-highlight-current-depth '(no-inherit) ; equivalent to nil
+           indent-bars-ts-color-by-depth '(no-inherit)
+           indent-bars-ts-color '(inherit fringe :face-bg t :blend 0.2))
+           ;; indent-bars-highlight-current-depth '(:background "red10")
+           ;; indent-bars-color-by-depth '(:regexp "outline-\\([0-9]+\\)" :blend 0.5)
+           indent-bars-highlight-current-depth '(:face default :blend 0.9))
 ;; (use-package! highlight-indentation
 ;;   :hook (prog-mode . highlight-indentation-mode)
 ;;   :config
@@ -1955,7 +1997,7 @@ To create new loadable modules,
 #+end_src
 
 #+RESULTS:
-| :face | default | :blend | 0.7 |
+| doom--setq-tab-width-for-python-mode-h | er/add-python-mode-expansions | indent-bars-mode | doom-modeline-env-setup-python | +python-use-correct-flycheck-executables-h | evil-collection-python-set-evil-shift-width | doom--enable-+web-django-mode-in-python-mode-h | pipenv-mode |
 
 * EXWM
 ** Basic loading
@@ -2457,9 +2499,30 @@ sudo update-alternatives --config x-terminal-emulator
 #+begin_src emacs-lisp :tangle ./packages.el
 (package! ace-link)
 #+end_src
-* Magit
-#+begin_src emacs-lisp :tangle packages.el
-(package! magit)
+* Eglot
+
+
+
+#+begin_src emacs-lisp
+(defun eglot-format-buffer-before-save ()
+   (add-hook 'before-save-hook #'eglot-format-buffer -10 t))
+
+(use-package! eglot
+  ;; Optional: load other packages before eglot to enable eglot integrations.
+  ;; (require 'company)
+  ;; (require 'yasnippet)
+  ;; (require 'go-mode)
+  ;; (require 'eglot)
+  :config
+  (add-hook! go-mode-hook #'eglot-ensure)
+  ;; Optional: install eglot-format-buffer as a save hook.
+  ;; The depth of -10 places this before eglot's willSave notification,
+  ;; so that that notification reports the actual contents that will be saved.
+  (add-hook! go-mode-hook #'eglot-format-buffer-before-save)
+  (add-hook! before-save-hook
+    (lambda ()
+        (call-interactively 'eglot-code-action-organize-imports))
+    nil t))
 #+end_src
 
 * Server
