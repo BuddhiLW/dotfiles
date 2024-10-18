@@ -1,8 +1,7 @@
-" designed for vim 8+
 
-if has("eval")                               " vim-tiny lacks 'eval'
-  let skip_defaults_vim = 1
-endif
+" if has("eval")                               " vim-tiny lacks 'eval'
+"   let skip_defaults_vim = 1Done!
+" endif
 
 set nocompatible
 
@@ -248,6 +247,7 @@ if filereadable(expand("~/.vim/autoload/plug.vim"))
   Plug 'dahu/vim-asciidoc'
   Plug 'rwxrob/vim-pandoc-syntax-simple'
   Plug 'dense-analysis/ale'
+  Plug 'vim-scripts/vimspell'
   call plug#end()
 
   let g:ale_sign_error = '☠'
@@ -408,6 +408,32 @@ set pastetoggle=<F3>
 map <F4> :set list!<CR>
 map <F5> :set cursorline!<CR>
 map <F7> :set spell!<CR>
+
+" Cycle between English, Portuguese, and Russian for spellcheck
+map <F8> :call CycleSpellLang()<CR>
+
+function! CycleSpellLang()
+    if !exists("g:current_lang")
+        let g:current_lang = 'en'
+    endif
+
+    " Define the spell languages you want to cycle through
+    if g:current_lang == 'en'
+        setlocal spell spelllang=pt
+        let g:current_lang = 'pt'
+        echo "Spell language set to Portuguese"
+    elseif g:current_lang == 'pt'
+        setlocal spell spelllang=ru
+        let g:current_lang = 'ru'
+        echo "Spell language set to Russian"
+    else
+        setlocal spell spelllang=en
+        let g:current_lang = 'en'
+        echo "Spell language set to English"
+    endif
+endfunction
+
+map <F9> :SpellProposeAlternatives<CR>
 map <F12> :set fdm=indent<CR>
 
 nmap <leader>2 :set paste<CR>i

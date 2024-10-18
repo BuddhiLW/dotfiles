@@ -138,3 +138,7 @@ apt-transport-https ca-certificates curl gnupg-agent software-properties-common
 # Yazi
 ffmpegthumbnailer
 unar
+
+# Spellcheck
+ibrazilian
+ispell
