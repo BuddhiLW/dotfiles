@@ -76,6 +76,13 @@ set norelativenumber
 " makes ~ effectively invisible
 "highlight NonText guifg=bg
 
+highlight Cmdline ctermbg=darkgray ctermfg=white guibg=#3C3836 guifg=#EBDBB2
+highlight Pmenu ctermbg=darkgray ctermfg=white guibg=#3C3836 guifg=#EBDBB2
+highlight PmenuSel ctermbg=blue ctermfg=white guibg=#458588 guifg=#FFFFFF
+
+" Set colors for the status line if needed
+highlight StatusLine ctermbg=darkgray ctermfg=white guibg=#3C3836 guifg=#EBDBB2
+
 " turn on default spell checking
 "set spell
 
@@ -431,3 +438,4 @@ set rtp^=~/.vimpersonal
 set rtp^=~/.vimprivate
 set rtp^=~/.vimwork
 
+colorscheme gruvbox

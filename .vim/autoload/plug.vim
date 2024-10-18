@@ -1,1 +1,1 @@
-/home/euler/dotfiles/vim/plug.vim
+/home/russell/dotfiles/vim/plug.vim
