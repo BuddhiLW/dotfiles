@@ -1,4 +1,4 @@
-#!/usr/bin/sh
+#!/usr/bin/bash
 
 ## Link in `.config` folder
 LINKSC=("tmux/.tmux.conf" "vim/.vimrc")
@@ -15,11 +15,11 @@ done
 LINKSD=(".bashrc" ".vim" ".doom.d")
 
 linkd() {
-  ln -sf $DOTFILES/$1 $HOME
+  ln -sf "$DOTFILES/$1" "$HOME"
 }
 
 for i in "${LINKSD[@]}"; do
-  linkd $i
+  linkd "$i"
 done
 
 ln -sf $HOME/.config/X11/xinitrc $HOME/.xinitrc
