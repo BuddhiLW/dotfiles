@@ -20,7 +20,7 @@
        ;;layout            ; auie,ctsrnm is the superior home row
 
        :completion
-       company           ; the ultimate code completion backend
+       (company +childframe)           ; the ultimate code completion backend
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        ;; ivy               ; a search engine for love and life
@@ -137,13 +137,13 @@
        ;;fsharp            ; ML stands for Microsoft's Language
        ;;fstar             ; (dependent) types and (monadic) effects and Z3
        ;;gdscript          ; the language you waited for
-       (go +eglot +tree-sitter)         ; the hipster dialect
+       (go +lsp +tree-sitter)         ; the hipster dialect
        (haskell +lsp)    ; a language that's lazier than I am
        ;;hy                ; readability of scheme w/ speed of python
        ;;idris             ; a language you can depend on
        json              ; At least it ain't XML
        ;; (java +lsp +tree-sitter +meghanada) ; the poster child for carpal tunnel syndrome
-       (javascript +lsp +tree-sitter)        ; all(hope(abandon(ye(who(enter(here))))))
+       (javascript +lsp +tree-sitter +tide +nodejs-repl js2-refactor +flycheck +xref)        ; all(hope(abandon(ye(who(enter(here))))))
        (julia +lsp +tree-sitter +snail)             ; a better, faster MATLAB
        ;;kotlin            ; a better, slicker Java(Script)
        ;; latex             ; writing papers in Emacs has never been so fun

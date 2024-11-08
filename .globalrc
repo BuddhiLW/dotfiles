@@ -1,0 +1,6 @@
+default: --accept-dotfiles --skip-unreadable --static
+gtagslabel: pygments
+
+suffix.c=.c
+langmap.c=C
+parser.c=/usr/share/global/gtags/script/pygments_parser.py

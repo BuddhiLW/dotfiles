@@ -95,6 +95,9 @@
 (package! khoj)
 
 (package! tblui)
+
+;; (package! codegtp)
+;; (package! chatgpt)
 ;; (package! chatgpt
 ;;   :recipe
 ;;   (:host github
@@ -104,6 +107,14 @@
 ;;   :recipe
 ;;   (:host github
 ;;    :repo "xenodium/chatgpt-shell"))
+
+;; (package!
+;; (require 'chatgpt)
+  ;; :recipe
+  ;; (:host github
+  ;;  :repo "emacs-openai/chatgpt"))
+ ;; (use-package
+ ;;  :straight (chatgpt :type git :host github :repo "emacs-openai/chatgpt"))
 
 ;; (package! dall-e
 ;;   :recipe
@@ -169,6 +180,8 @@
 
 (package! germanium)
 
+(package! treesit-auto)
+
 (package! yaml-mode)
 
 (package! eglot-signature-eldoc-talkative)
@@ -179,3 +192,5 @@
 (package! emms-soundcloud)
 
 (package! ace-link)
+
+(package! citre)

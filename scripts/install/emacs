@@ -5,7 +5,7 @@ cd $DOTFILES/gitthings/
 
 # Clone the Emacs repository if not already cloned
 if [ ! -d "emacs" ]; then
-    git clone --branch emacs-30.0.91 https://github.com/emacs-mirror/emacs.git
+    git clone --branch emacs-30 https://github.com/emacs-mirror/emacs.git
 fi
 
 # Update system repositories
@@ -50,6 +50,7 @@ make distclean
             --with-wide-int \
             --with-x-toolkit=gtk3 \
             --with-modules \
+						--with-tree-sitter \
             CFLAGS="-O2 -g3 -fno-omit-frame-pointer -fsanitize=address" \
             LDFLAGS="-fsanitize=address"
 
@@ -58,3 +59,9 @@ make -j $(nproc)
 
 # Install Emacs after a successful build
 sudo make install
+
+cd ~/.emacs.d/
+git clone https://github.com/emacs-openai/openai.git
+git clone https://github.com/emacs-openai/chatgpt.git
+cp ./openai/*.el ./lisp/
+cp ./chatgpt/*.el ./lisp/

@@ -68,11 +68,20 @@ export GOPATH="$HOME/go"
 export GOBIN="$HOME/go/bin"
 export GOPRIVATE="github.com/orasis-holding/*"
 export NATIVEFIER="$HOME/.local/nativefier"
+export GTAGSOBJDIRPREFIX="$HOME/.cache/gtags/"
+export GTAGSCONF="/etc/gtags/gtags.conf"
+export GTAGSLABEL="pygments"
+
+export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
+export ANDROID_HOME="$HOME/Android/Sdk/"
+export ANDROID_SDK_ROOT="$HOME/Android/Sdk"
+export ANDROID_AVD_HOME="$HOME/Android/system-images/"
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+
 # export OPENAI_API_KEY="$(pass openai)"
 #"/usr/local/go"
 export GOROOT="/usr/local/go"
-export PATH="$PATH:$GOROOT/bin"
-export PATH="$PATH:$HOME/go/bin"
 export LC_COLLATE=C
 export LESS_TERMCAP_mb="[35m" # magenta
 export LESS_TERMCAP_md="[33m" # yellow
@@ -156,9 +165,9 @@ pathprepend \
     "$GUIX_PROFILE/bin" \
     "$HOME/.emacs.d/bin/" \
     "$HOME/.conda/bin/" \
-    "$HOME/.local/share/cargo/bin/"
+    "$HOME/.local/share/cargo/bin/" \
+		"$HOME/.roswell/bin/" 
 #    "$HOME/.conda/envs/simple-signer-env/bin" \
-
 
 pathappend \
     /usr/local/opt/coreutils/libexec/gnubin \
@@ -542,10 +551,6 @@ complete -C dc dc
 #export GTK_IM_MODULE=uim
 #export QT_IM_MODULE=uim
 #uim-xim &
-export GUIX_LOCPATH="$HOME/.guix-profile/lib/locale"
-export ANDROID_HOME=$HOME/Android/Sdk
-export ANDROID_SDK_ROOT=$HOME/Android/Sdk
-export ANDROID_AVD_HOME=$HOME/Android/system-images/
 #export XMODIFIERS=@im=uim
 
 [[ ${BLE_VERSION-} ]] && ble-attach

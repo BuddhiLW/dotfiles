@@ -6,4 +6,3 @@ $HOME/.emacs.d/bin/doom install
 
 rm -rf $HOME/.doom.d
 ln -sf $HOME/dotfiles/.doom.d $HOME
-

@@ -549,7 +549,7 @@
 (when (memq window-system '(mac ns))
   (exec-path-from-shell-initialize))
 
-(add-hook 'web-mode-hook 'lsp-defered)
+;; (add-hook 'web-mode-hook 'lsp-defered)
 
 ;; (use-package! slime
 ;;   :config (setq inferior-lisp-program "sbcl"))
@@ -917,16 +917,17 @@
 ;; if you are using the "pass" password manager
 ;; (setq chatgpt-shell-openai-key
 ;;         (nth 0 (process-lines "pass" "show" "AI/open")))
-;; (setq openai-key (nth 0 (process-lines "pass" "show" "AI/open")))
+(setq openai-key (nth 0 (process-lines "pass" "show" "Open/AI")))
 
-;; (add-to-list 'load-path "~/doom-emacs/lisp/")
+;; (add-to-list 'load-path "~/.emacs.d/openai/")
+;; (add-to-list 'load-path "~/.emacs.d/chatgpt/")
+(add-to-list 'load-path "~/.emacs.d/lisp/")
 ;; (require 'codegpt)
-;; (require 'chatgpt)
+(require 'chatgpt)
 ;; (package! chatgtp
 ;;   :recipe (:host jcs-elpa
 ;;            :repo "https://jcs-emacs.github.io/jcs-elpa/packages/")) ;; Optional: specify a specific commit or version
 
-;; (package! codegtp)
   ;; :recipe (:host jcs-elpa))
            ;; :repo "https://github.com/emacs-openai/codegpt")) ;; Optional: specify a specific commit or version
 
@@ -1059,6 +1060,7 @@
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-elisp-block)
+  (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)
   ;;(add-to-list 'completion-at-point-functions #'cape-history)
   ;;(add-to-list 'completion-at-point-functions #'cape-keyword)
   ;;(add-to-list 'completion-at-point-functions #'cape-tex)
@@ -1080,12 +1082,13 @@
   :config
 
   (setq codeium/metadata/api_key (nth 1 (process-lines "pass" "show" "apikeys/codeium")))
-  (defalias 'my/codeium-complete
-    (cape-interacive-capf #'codeium-completion-at-point))
 
-  (map! :localleader
-        :map evil-normal-state-map
-        "c e" #'my/codeium-complete)
+  ;; (defalias 'my/codeium-complete
+  ;;   (cape-interacive-capf #'codeium-completion-at-point))
+
+  ;; (map! :localleader
+  ;;       :map evil-normal-state-map
+  ;;       "c e" #'my/codeium-complete)
 
   (setq codeium-api-enabled
         (lambda (api)
@@ -1171,6 +1174,14 @@
 
 (setq +tree-sitter-hl-enabled-modes t)
 
+(use-package! treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode)
+  :hook (prog-mode . treesit-auto-mode))
+
 (load! "./blw-func/ewal.el")
 
 ;; defines blw/run-yazi
@@ -1180,23 +1191,37 @@
 (map! :leader
       (:prefix-map ("b" . "buddhi")
         (:prefix ("i" . "(system's) Integrations")
-         :desc "Yazi lauch" "y" #'blw/run-yazi)))
+         :desc "Yazi launch" "y" #'blw/run-yazi)))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
         (:prefix ("x" . "command")
          :desc "Yazi-find" "f" #'blw/run-yazi)))
 
+;; defines blw/run-kitty
+(load! "./blw-func/terminal.el")
+
+;; binding
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+        (:prefix ("i" . "(system's) Integrations")
+         :desc "Kitty terminal launch" "t" #'blw/run-kitty)))
+
 (defun eglot-format-buffer-before-save ()
    (add-hook 'before-save-hook #'eglot-format-buffer -10 t))
 
 (use-package! eglot
-  ;; Optional: load other packages before eglot to enable eglot integrations.
-  ;; (require 'company)
-  ;; (require 'yasnippet)
-  ;; (require 'go-mode)
-  ;; (require 'eglot)
+  :ensure t
+  :hook ((typescript-mode typescript-tsx-mode web-mode) . eglot-ensure)
   :config
+  (add-to-list 'eglot-server-programs
+               '((typescript-mode typescript-tsx-mode) . ("typescript-language-server" "--stdio")))
+  (setq web-mode-markup-indent-offset 2
+        web-mode-code-indent-offset 2
+        web-mode-sql-indent-offset 2
+        web-mode-css-indent-offset 2
+        tab-width 2
+        evil-shift-width 2)
   (add-hook! go-mode-hook #'eglot-ensure)
   ;; Optional: install eglot-format-buffer as a save hook.
   ;; The depth of -10 places this before eglot's willSave notification,
@@ -1206,6 +1231,57 @@
     (lambda ()
         (call-interactively 'eglot-code-action-organize-imports))
     nil t))
+
+(use-package! rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+(use-package! citre
+  :defer t
+  :init
+  ;; This is needed in `:init' block for lazy load to work.
+  (require 'citre-config)
+  ;; Bind your frequently used commands.  Alternatively, you can define them
+  ;; in `citre-mode-map' so you can only use them when `citre-mode' is enabled.
+  (global-set-key (kbd "C-x c j") 'citre-jump)
+  (global-set-key (kbd "C-x c J") 'citre-jump-back)
+  (global-set-key (kbd "C-x c p") 'citre-ace-peek)
+  (global-set-key (kbd "C-x c u") 'citre-update-this-tags-file)
+  :config
+  (setq
+   ;; Set these if readtags/ctags is not in your PATH.
+   ;; citre-readtags-program "/path/to/readtags"
+   ;; citre-ctags-program "/path/to/ctags"
+   ;; Set these if gtags/global is not in your PATH (and you want to use the
+   ;; global backend)
+   ;; citre-gtags-program "/path/to/gtags"
+   ;; citre-global-program "/path/to/global"
+   ;; Set this if you use project management plugin like projectile.  It's
+   ;; used for things like displaying paths relatively, see its docstring.
+   citre-project-root-function #'projectile-project-root
+   ;; Set this if you want to always use one location to create a tags file.
+   citre-default-create-tags-file-location 'global-cache
+   ;; Set this if you'd like to use ctags options generated by Citre
+   ;; directly, rather than further editing them.
+   citre-edit-ctags-options-manually nil
+   ;; If you only want the auto enabling citre-mode behavior to work for
+   ;; certain modes (like `prog-mode'), set it like this.
+   citre-auto-enable-citre-mode-modes '(prog-mode)))
+
+
+
+  ;; (global-set-key (kbd "C-x c j") 'citre-jump)
+  ;; (global-set-key (kbd "C-x c J") 'citre-jump-back)
+  ;; (global-set-key (kbd "C-x c p") 'citre-ace-peek)
+  ;; (global-set-key (kbd "C-x c u") 'citre-update-this-tags-file)
+;;; Change to these kinds of bindings
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+        (:prefix ("c" . "Code|Citre|Clojure")
+         (:prefix ("c" . "Citre")
+          :desc "Jump" "j"               #'citre-jump
+          :desc "Jump back" "J"          #'citre-jump-back
+          :desc "Ace peek" "p"           #'citre-ace-peek
+          :desc "Update `tags` file" "u" #'citre-update-this-tags-file))))
 
 (server-force-delete)
 (server-start)

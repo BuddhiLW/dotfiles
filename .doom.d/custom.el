@@ -4,8 +4,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(codeium/metadata/api_key "f1d7af58-b62d-4751-9d91-5669e4a8215e")
+ '(conda-anaconda-home "~/.conda/")
  '(magit-todos-insert-after '(bottom) nil nil "Changed by setter of obsolete option `magit-todos-insert-at'")
- '(package-selected-packages nil))
+ '(package-selected-packages '(chatgpt codegpt jtsx org-present visual-fill-column)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

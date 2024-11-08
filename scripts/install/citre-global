@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+
+mkdir -p ~/.cache/gtags/
+sudo apt install global
+sudo apt update
+sudo apt install build-essential automake autoconf libtool exuberant-ctags python3 python3-pip
+pip install pygments
+ln -sf "$DOTFILES/.globalrc" "$HOME/.globalrc"
