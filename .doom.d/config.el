@@ -1073,6 +1073,7 @@
   :config
   (global-set-key (kbd "M-<return>") (cape-capf-interactive #'codeium-completion-at-point)))
 
+;; (setq codeium/metadata/api_key (nth 0 (process-lines "pass" "show" "apikeys/codeium")))
 (use-package! codeium
   :after cape
   :init
@@ -1081,8 +1082,7 @@
 
   :config
 
-  (setq codeium/metadata/api_key (nth 1 (process-lines "pass" "show" "apikeys/codeium")))
-
+  (setq codeium/metadata/api_key (nth 0 (process-lines "pass" "show" "apikeys/codeium")))
   ;; (defalias 'my/codeium-complete
   ;;   (cape-interacive-capf #'codeium-completion-at-point))
 

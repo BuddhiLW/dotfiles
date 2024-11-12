@@ -571,3 +571,6 @@ export PATH=$JAVA_HOME/bin:$PATH
 
 export PATH=~/opensim-core/bin:$PATH
 . "/home/russell/.local/share/cargo/env"
+
+export PATH=$HOME/.elixir-install/installs/otp/27.1.2/bin:$PATH
+export PATH=$HOME/.elixir-install/installs/elixir/1.17.3-otp-27/bin:$PATH

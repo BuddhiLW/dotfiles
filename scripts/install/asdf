@@ -1,0 +1,21 @@
+#!/usr/bin/bash
+
+if [ ! -d "$HOME/.asdf" ]; then
+	git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.1
+fi
+
+FILE="$HOME/.bashrc"
+LINE1='. "$HOME/.asdf/asdf.sh"'
+LINE2='. "$HOME/.asdf/completions/asdf.bash"'
+
+# Function to add a line if it doesn't exist
+add_line_if_not_exists() {
+    local LINE="$1"
+    local FILE="$2"
+    grep -Fqx "$LINE" "$FILE" || echo "$LINE" >> "$FILE"
+}
+
+add_line_if_not_exists "$LINE1" "$FILE"
+add_line_if_not_exists "$LINE2" "$FILE"
+
+echo "Lines added to $FILE if they were not already present."

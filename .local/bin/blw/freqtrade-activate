@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+cd $HOME/dotfiles/gitthings/freqtrade/
+source .venv/bin/activate

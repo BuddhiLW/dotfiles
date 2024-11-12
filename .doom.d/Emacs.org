@@ -309,12 +309,10 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 #+end_src
 * Programming Languages
 ** LaTeX
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle no :eval no
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 3.0))
 #+end_src
 
-#+RESULTS:
-| :foreground | default | :background | default | :scale | 3.0 | :html-foreground | Black | :html-background | Transparent | :html-scale | 1.0 | :matchers | (begin $1 $ $$ \( \[) |
 ** Julia
 *** Eglot
 #+begin_src emacs-lisp
@@ -2270,6 +2268,8 @@ To create new loadable modules,
 #+end_src
 
 #+begin_src emacs-lisp
+
+;; (setq codeium/metadata/api_key (nth 0 (process-lines "pass" "show" "apikeys/codeium")))
 (use-package! codeium
   :after cape
   :init
@@ -2278,8 +2278,7 @@ To create new loadable modules,
 
   :config
 
-  (setq codeium/metadata/api_key (nth 1 (process-lines "pass" "show" "apikeys/codeium")))
-
+  (setq codeium/metadata/api_key (nth 0 (process-lines "pass" "show" "apikeys/codeium")))
   ;; (defalias 'my/codeium-complete
   ;;   (cape-interacive-capf #'codeium-completion-at-point))
 

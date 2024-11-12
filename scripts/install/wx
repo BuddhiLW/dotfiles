@@ -1,0 +1,110 @@
+#!/bin/bash
+
+# Set working directory
+WORK_DIR="/tmp/wxwidgets_install"
+mkdir -p "$WORK_DIR"
+cd "$WORK_DIR" || exit
+
+# Download the wxWidgets downloads page
+echo "Fetching wxWidgets download page..."
+DOWNLOAD_PAGE="https://www.wxwidgets.org/downloads/"
+DOWNLOAD_HTML="downloads.html"
+
+curl -sSL "$DOWNLOAD_PAGE" -o "$DOWNLOAD_HTML"
+
+# Check if the download page was fetched successfully
+if [ $? -ne 0 ]; then
+    echo "Error: Failed to fetch the wxWidgets download page."
+    exit 1
+fi
+
+# Extract the download link with the text "Source for Linux, macOS, etc"
+echo "Extracting download link..."
+DOWNLOAD_URL=$(grep -oP '(?<=<a href=")[^"]*(?="[^>]*>Source for Linux, macOS, etc</a>)' "$DOWNLOAD_HTML" | head -n1)
+
+# Verify that the download link was found
+if [ -z "$DOWNLOAD_URL" ]; then
+    echo "Error: Failed to find the download link for wxWidgets source code."
+    exit 1
+fi
+
+# Ensure the download URL is complete
+if [[ ! "$DOWNLOAD_URL" =~ ^http ]]; then
+    DOWNLOAD_URL="https://www.wxwidgets.org$DOWNLOAD_URL"
+fi
+
+echo "Download URL: $DOWNLOAD_URL"
+
+# Extract the version number from the URL
+echo "Extracting version number..."
+WX_VERSION=$(echo "$DOWNLOAD_URL" | grep -oP '(?<=download/v)[^/]+')
+
+if [ -z "$WX_VERSION" ]; then
+    echo "Error: Failed to extract the wxWidgets version number."
+    exit 1
+fi
+
+echo "wxWidgets version: $WX_VERSION"
+
+# Set variables
+WX_ARCHIVE="wxWidgets-${WX_VERSION}.tar.bz2"
+WX_DIR="wxWidgets-${WX_VERSION}"
+
+# Download wxWidgets source code
+echo "Downloading wxWidgets version ${WX_VERSION}..."
+curl -L -o "${WX_ARCHIVE}" "$DOWNLOAD_URL"
+
+# Verify the download was successful
+if [ $? -ne 0 ] || [ ! -f "${WX_ARCHIVE}" ]; then
+    echo "Error: Failed to download wxWidgets source code."
+    exit 1
+fi
+
+# Extract the archive
+echo "Extracting wxWidgets..."
+tar xvjf "${WX_ARCHIVE}"
+
+# Verify extraction was successful
+if [ $? -ne 0 ] || [ ! -d "${WX_DIR}" ]; then
+    echo "Error: Failed to extract wxWidgets archive."
+    exit 1
+fi
+
+# Change to the source directory
+cd "${WX_DIR}" || exit
+
+# Set compiler flags
+export CFLAGS=-fPIC
+export CXXFLAGS=-fPIC
+
+# Configure the build with --enable-webview
+echo "Configuring wxWidgets..."
+./configure --prefix=/usr/local --disable-shared --enable-webview
+
+# Verify configuration was successful
+if [ $? -ne 0 ]; then
+    echo "Error: Configuration failed."
+    exit 1
+fi
+
+# Compile the source code
+echo "Compiling wxWidgets..."
+make -j"$(nproc)"
+
+# Verify compilation was successful
+if [ $? -ne 0 ]; then
+    echo "Error: Compilation failed."
+    exit 1
+fi
+
+# Install wxWidgets (requires sudo privileges)
+echo "Installing wxWidgets..."
+sudo make install
+
+# Verify installation was successful
+if [ $? -ne 0 ]; then
+    echo "Error: Installation failed."
+    exit 1
+fi
+
+echo "wxWidgets version ${WX_VERSION} has been successfully installed with webview support."

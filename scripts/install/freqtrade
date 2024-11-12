@@ -1,0 +1,16 @@
+#!/usr/bin/bash
+
+cd $DOTFILES/gitthings
+
+# Download `develop` branch of freqtrade repository
+git clone https://github.com/freqtrade/freqtrade.git
+
+# Enter downloaded directory
+cd freqtrade
+
+# your choice (1): novice user
+git checkout stable
+
+# --install, Install freqtrade from scratch
+./setup.sh -i
+

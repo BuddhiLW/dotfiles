@@ -8,7 +8,7 @@
                     ;; Also handle undocumented (<active> <inactive>) form.
                     ((numberp (cadr alpha)) (cadr alpha)))
               90)
-         '(100 . 80) '(80 . 90)))))
+         '(100 . 85) '(95 . 90)))))
 
 (global-set-key (kbd "C-c t") 'toggle-transparency)
 

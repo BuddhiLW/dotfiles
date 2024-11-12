@@ -1,0 +1,18 @@
+#!/usr/bin/bash
+
+cd $DOTFILES/gitthings/
+
+git clone https://github.com/erlang/otp otp_src_27.1.2
+
+cd otp_src_27.1.2
+
+export ERL_TOP=`pwd`    # Assuming bash/sh
+
+./configure 
+
+export LANG=C   
+
+make
+cd release/tests/test_server
+$ERL_TOP/bin/erl -s ts install -s ts smoke_test batch -s init stop
+sudo make install
