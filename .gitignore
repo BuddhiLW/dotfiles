@@ -149,3 +149,5 @@ scripts/.stack-work/
 
 .azure
 .azure/*
+
+.config/Docker Desktop
