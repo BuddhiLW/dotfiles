@@ -3,10 +3,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(codeium/metadata/api_key "f1d7af58-b62d-4751-9d91-5669e4a8215e")
  '(conda-anaconda-home "~/.conda/")
- '(magit-todos-insert-after '(bottom) nil nil "Changed by setter of obsolete option `magit-todos-insert-at'")
- '(package-selected-packages '(chatgpt codegpt jtsx org-present visual-fill-column)))
+ '(package-selected-packages nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -14,8 +12,7 @@
  ;; If there is more than one, they won't work right.
  '(mode-line ((t (:family "Gayathri" :size 10))))
  '(mode-line-active ((t (:family "Gayathri" :size 10))))
- '(mode-line-inactive ((t (:family "Gayathri" :size 10))))
- '(ts-fold-replacement-face ((t (:foreground unspecified :box nil :inherit font-lock-comment-face :weight light)))))
+ '(mode-line-inactive ((t (:family "Gayathri" :size 10)))))
 
 ;; custom-set-faces was added by Custom.
 ;; If you edit it by hand, you could mess it up, so be careful.

@@ -1,0 +1,13 @@
+#!/usr/bin/bash
+
+dropletIP='163.22.240.145'
+
+echo "$dropletIP"
+echo "$(ssh -f -N -L 8080:localhost:8080 root@"$dropletIP")"
+# Establish SSH tunnel
+if ! ssh -f -N -L 8080:localhost:8080 root@"$dropletIP"; then
+    echo "Failed to establish SSH tunnel to $dropletIP"
+    exit 1
+fi
+
+echo "SSH tunnel established: http://localhost:8080"

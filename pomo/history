@@ -427,3 +427,7 @@
 2024-11-07T16:02:09-03:00 description="Orasis -- Daily" duration=15
 2024-11-08T07:12:55-03:00 description="BLW - Emacs's Citre" duration=30
 2024-11-08T08:32:06-03:00 description="BLW -- Codeium" duration=33
+2024-11-14T15:27:00-03:00 description="Orasis - DAG Manager - New Clusters" duration=30
+2024-12-02T15:55:18-03:00 description="Orasis - Daily" duration=30
+2024-12-02T16:42:55-03:00 description="Orasis - DAG Manager - [BUG] three-build redpanda listener" duration=30
+2024-12-02T19:05:14-03:00 description="Orasis - DAG Manager - [BUG] three-build redpanda listener" duration=30

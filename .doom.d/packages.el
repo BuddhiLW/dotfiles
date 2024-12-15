@@ -19,16 +19,16 @@
 
 (package! sqlformat)
 
-(package! emacsql-mysql)
-(package! ob-sql-mode)
-(package! sqlformat)
-(package! esqlite)
-(package! sql-indent)
-(package! sqlup-mode)
-(package! emacsql-psql)
-(package! emacsql-mysql)
-(package! emacsql-sqlite-module)
-(package! emacsql-sqlite-builtin)
+;; (package! emacsql-mysql)
+;; (package! ob-sql-mode)
+;; (package! sqlformat)
+;; (package! esqlite)
+;; (package! sql-indent)
+;; (package! sqlup-mode)
+;; (package! emacsql-psql)
+;; (package! emacsql-mysql)
+;; (package! emacsql-sqlite-module)
+;; (package! emacsql-sqlite-builtin)
 
 (package! centered-cursor-mode)
 
@@ -184,7 +184,7 @@
 
 (package! yaml-mode)
 
-(package! eglot-signature-eldoc-talkative)
+;; (package! eglot-signature-eldoc-talkative)
 
 (package! protobuf-mode)
 

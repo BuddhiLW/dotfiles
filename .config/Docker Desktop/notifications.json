@@ -1,0 +1,36 @@
+{
+	"notifications": [
+		{
+			"guid": "15063188-27e8-43ba-88d1-36dfb2e925af",
+			"timestamp": 1733775987805,
+			"read": false,
+			"displayState": "background",
+			"notification": {
+				"message": "Multi-platform image support with containerd is here, try it now!",
+				"icon": "sparkles",
+				"type": "general-purpose",
+				"actionText": "Enable",
+				"action": {
+					"action": "enable-c8d",
+					"params": {}
+				}
+			}
+		},
+		{
+			"guid": "f2108472-7e53-47a9-a17a-b661fb36472c",
+			"timestamp": 1733775999149,
+			"read": true,
+			"displayState": "background",
+			"notification": {
+				"message": "Scout wants to send OS Notifications through Docker Desktop",
+				"icon": "sparkles",
+				"type": "general-purpose",
+				"actionText": "View",
+				"action": {
+					"action": "enable-scout-os-notifications",
+					"params": {}
+				}
+			}
+		}
+	]
+}

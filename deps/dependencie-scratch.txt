@@ -117,6 +117,8 @@ libtiff-dev
 gnutls-bin gnutls-doc
 ## ewal theme
 inotify-tools
+lldb 
+gdb
 
 
 # monospaced fonts

@@ -313,31 +313,6 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 3.0))
 #+end_src
 
-** Julia
-*** Eglot
-#+begin_src emacs-lisp
-;; (setq eglot-jl-language-server-project "~/.julia/environments/v1.10/")
-(after! eglot-jl
-  (setq eglot-jl-language-server-project eglot-jl-base))
-#+end_src
-*** Unicode
-#+begin_src emacs-lisp
-(defun julia-completion-at-point ()
-  (let ((bnds (bounds-of-thing-at-point 'symbol)))
-    (when bnds
-      (cond
-       ;; complete latex symbol when current symbol is prefixed
-       ;; by '\'
-       ((eq (char-before (car bnds)) ?\\)
-        (list (1- (car bnds)) (cdr bnds) julia-latexsubs
-              :annotation-function
-              #'(lambda (arg)
-                  (gethash arg julia-latexsubs ""))))))))
-#+end_src
-
-#+RESULTS:
-: julia-completion-at-point
-
 ** Go
 #+begin_src emacs-lisp 
 (use-package! go-mode
@@ -509,98 +484,6 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 npm install -g elm-oracle
 #+end_src
 
-* Comment Julia
-
-# #+begin_src emacs-lisp
-# (setq inferior-julia-program-name "julia")
-# #+end_src
-
-# #+RESULTS:
-# : julia
-
-# #+begin_src emacs-lisp
-# (package! julia-vterm
-   #   :recipe (:host github
-                #            :repo "shg/julia-vterm.el"))
-
-# (package-install-file "~/.doom.d/julia-vterm.el/julia-vterm.el")
-
-# (package! ob-julia-vterm
-   #   :recipe (:host github
-                #            :repo "shg/ob-julia-vterm.el"))
-
-# (package-install-file "~/.doom.d/ob-julia-vterm.el/ob-julia-vterm.el")
-
-# (package! ob-julia
-   #   :recipe (:host github
-                #            :repo "gjkernsx/ob-julia"))
-
-# ;; (package-install-file "~/.doom.d/ob-julia/ob-julia.el")
-
-# (add-hook 'julia-mode-hook #'julia-vterm-mode)
-# (setq julia-vterm-repl-program "/usr/bin/julia -t 4")
-
-# (require 'org)
-# (add-to-list 'org-babel-load-languages '(julia-vterm . t))
-# (org-babel-do-load-languages 'org-babel-load-languages org-babel-load-languages)
-# (defalias 'org-babel-execute:julia 'org-babel-execute:julia-vterm)
-# #+end_src
-
-# #+begin_src emacs-lisp
-# (add-to-list 'load-path "~/.doom.d/ob-julia/ob-julia.el")
-# #+end_src
-
-# To execute or export code in =org-mode= code blocks, you'll need to set up =org-babel-load-languages= for each language you'd like to use.  [[https://orgmode.org/worg/org-contrib/babel/languages.html][This page]] documents all of the languages that you can use with =org-babel=.
-
-# #+begin_src emacs-lisp
-# ;; (with-eval-after-load 'org
-# ;;   (org-babel-do-load-languages
-# ;;    'org-babel-load-languages
-# ;;    '((emacs-lisp . t)
-# ;;      (python . t)
-# ;;      (browser . t)
-# ;;      (ditaa . t)
-# ;;      (R . t)
-# ;;      (go . t)
-# ;;      ;; (ipython . t)
-# ;;      (julia-vterm . t)
-# ;;      ;; (julia . t)
-# ;;      (ein . t)
-# ;;      (ditaa . t)
-# ;;      (css . t)
-# ;;      (lisp . t)
-# ;;      (latex . t)
-# ;;      (clojure . t)
-# ;;      (clojurescript . t)))
-# ;;   (push '("conf-unix" . conf-unix) org-src-lang-modes))
-# #+end_src
-
-# #+begin_src emacs-lisp
-# (custom-set-variables
-   #  '(ob-ein-languages
-        #    '(("ein-python" . python)
-               #      ("ein-R" . R)
-               #      ("ein-r" . R)
-               #      ("ein-julia" . julia))))
-# #+end_src
-
-# #+RESULTS:
-
-# #+begin_src emacs-lisp
-# (use-package julia-mode)
-# #+end_src
-
-# #+RESULTS:
-
-# #+begin_src emacs-lisp
-# (use-package julia-snail)
-# #+end_src
-
-# #+RESULTS:
-
-# #+begin_src emacs-lisp
-#    (setq inferior-julia-program-name "julia")
-# #+end_src
 * Web browser
 #+begin_src emacs-lisp
 ;; (use-package! eaf
@@ -652,13 +535,13 @@ Shell version to be used with =run-python=
 #+begin_src emacs-lisp
 (use-package! conda
   :config
+  (custom-set-variables '(conda-anaconda-home "~/.conda/")))
   ;; (setq
   ;;  conda-env-home-directory (expand-file-name "~/opt/miniconda3/")
   ;;  conda-env-subdirectory "envs/")
-  (custom-set-variables '(conda-anaconda-home "~/.conda/"))
-  (conda-env-initialize-interactive-shells)
-  (conda-env-initialize-eshell)
-  (conda-env-autoactivate-mode t))
+  ;; (conda-env-initialize-interactive-shells)
+  ;; (conda-env-initialize-eshell)
+  ;; (conda-env-autoactivate-mode t))
 #+end_src
 ** Ipython
 #+begin_src emacs-lisp :tangle packages.el
@@ -1060,16 +943,16 @@ TODO: fix:
 : t
 
 #+begin_src emacs-lisp :tangle packages.el
-(package! emacsql-mysql)
-(package! ob-sql-mode)
-(package! sqlformat)
-(package! esqlite)
-(package! sql-indent)
-(package! sqlup-mode)
-(package! emacsql-psql)
-(package! emacsql-mysql)
-(package! emacsql-sqlite-module)
-(package! emacsql-sqlite-builtin)
+;; (package! emacsql-mysql)
+;; (package! ob-sql-mode)
+;; (package! sqlformat)
+;; (package! esqlite)
+;; (package! sql-indent)
+;; (package! sqlup-mode)
+;; (package! emacsql-psql)
+;; (package! emacsql-mysql)
+;; (package! emacsql-sqlite-module)
+;; (package! emacsql-sqlite-builtin)
 #+end_src
 
 * Cursor lock-screen (scrolling behavior)
@@ -1858,9 +1741,9 @@ To create new loadable modules,
 #+begin_src emacs-lisp
 ;; (add-to-list 'load-path "~/.emacs.d/openai/")
 ;; (add-to-list 'load-path "~/.emacs.d/chatgpt/")
-(add-to-list 'load-path "~/.emacs.d/lisp/")
+;; (add-to-list 'load-path "~/.emacs.d/lisp/")
 ;; (require 'codegpt)
-(require 'chatgpt)
+;; (require 'chatgpt)
 ;; (package! chatgtp
 ;;   :recipe (:host jcs-elpa
 ;;            :repo "https://jcs-emacs.github.io/jcs-elpa/packages/")) ;; Optional: specify a specific commit or version
@@ -1978,9 +1861,8 @@ To create new loadable modules,
 (package! indent-bars)
 #+end_src
 
+
 #+begin_src emacs-lisp
-
-
 (use-package! indent-bars
   :hook ((prog-mode yaml-mode go-mode clojure-mode clojurescript-mode python-mode) . indent-bars-mode)
   ;; or whichever modes you prefer
@@ -2007,7 +1889,7 @@ To create new loadable modules,
 #+end_src
 
 #+RESULTS:
-| doom--setq-tab-width-for-python-mode-h | er/add-python-mode-expansions | indent-bars-mode | doom-modeline-env-setup-python | +python-use-correct-flycheck-executables-h | evil-collection-python-set-evil-shift-width | doom--enable-+web-django-mode-in-python-mode-h | pipenv-mode |
+| doom--setq-tab-width-for-python-mode-h | er/add-python-mode-expansions | lsp-deferred | indent-bars-mode | doom-modeline-env-setup-python | +python-use-correct-flycheck-executables-h | evil-collection-python-set-evil-shift-width | doom--enable-+web-django-mode-in-python-mode-h | pipenv-mode |
 
 * EXWM
 ** Basic loading
@@ -2449,16 +2331,17 @@ You can issue the http request by: =M-x http-process (C-c C-c)=
 ;; (setq treesit-extra-load-path "/home/kolmogorov/.emacs.d/.local/straight/build-30.0.50/tree-sitter-langs/")
 #+end_src
 
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! treesit-auto)
+#+end_src
+
 #+begin_src emacs-lisp
 (setq +tree-sitter-hl-enabled-modes t)
 #+end_src
 
 #+RESULTS:
 : t
-
-#+begin_src emacs-lisp :tangle packages.el
-(package! treesit-auto)
-#+end_src
 
 #+begin_src emacs-lisp
 (use-package! treesit-auto
@@ -2470,6 +2353,18 @@ You can issue the http request by: =M-x http-process (C-c C-c)=
   :hook (prog-mode . treesit-auto-mode))
 #+end_src
 
+#+begin_src emacs-lisp
+(require 'tree-sitter)
+(require 'tree-sitter-langs)
+;; (treesit-auto-add-to-auto-mode-alist 'all)
+(global-tree-sitter-mode)
+(add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+(add-to-list 'tree-sitter-major-mode-language-alist '(go-ts-mode . go))
+(dolist (entry tree-sitter-major-mode-language-alist)
+  (let ((mode (car entry)))
+    (add-hook (intern (concat (symbol-name mode) "-hook")) #'lsp-deferred)))
+#+end_src
+
 * YAML
 #+begin_src emacs-lisp :tangle packages.el
 (package! yaml-mode)
@@ -2477,7 +2372,7 @@ You can issue the http request by: =M-x http-process (C-c C-c)=
 
 * Misc
 #+begin_src emacs-lisp :tangle packages.el
-(package! eglot-signature-eldoc-talkative)
+;; (package! eglot-signature-eldoc-talkative)
 #+end_src
 
 #+begin_src emacs-lisp :tangle packages.el
@@ -2521,6 +2416,7 @@ sudo update-alternatives --config x-terminal-emulator
 
 #+RESULTS:
 : blw/run-yazi
+
 * Terminal Intergration
 #+begin_src emacs-lisp
 ;; defines blw/run-kitty
@@ -2543,30 +2439,30 @@ sudo update-alternatives --config x-terminal-emulator
 * Eglot
 
 #+begin_src emacs-lisp
-(defun eglot-format-buffer-before-save ()
-   (add-hook 'before-save-hook #'eglot-format-buffer -10 t))
+;; (defun eglot-format-buffer-before-save ()
+;;    (add-hook 'before-save-hook #'eglot-format-buffer -10 t))
 
-(use-package! eglot
-  :ensure t
-  :hook ((typescript-mode typescript-tsx-mode web-mode) . eglot-ensure)
-  :config
-  (add-to-list 'eglot-server-programs
-               '((typescript-mode typescript-tsx-mode) . ("typescript-language-server" "--stdio")))
-  (setq web-mode-markup-indent-offset 2
-        web-mode-code-indent-offset 2
-        web-mode-sql-indent-offset 2
-        web-mode-css-indent-offset 2
-        tab-width 2
-        evil-shift-width 2)
-  (add-hook! go-mode-hook #'eglot-ensure)
-  ;; Optional: install eglot-format-buffer as a save hook.
-  ;; The depth of -10 places this before eglot's willSave notification,
-  ;; so that that notification reports the actual contents that will be saved.
-  (add-hook! go-mode-hook #'eglot-format-buffer-before-save)
-  (add-hook! before-save-hook
-    (lambda ()
-        (call-interactively 'eglot-code-action-organize-imports))
-    nil t))
+;; (use-package! eglot
+;;   :ensure t
+;;   :hook ((typescript-mode typescript-tsx-mode web-mode) . eglot-ensure)
+;;   :config
+;;   (add-to-list 'eglot-server-programs
+;;                '((typescript-mode typescript-tsx-mode) . ("typescript-language-server" "--stdio")))
+;;   (setq web-mode-markup-indent-offset 2
+;;         web-mode-code-indent-offset 2
+;;         web-mode-sql-indent-offset 2
+;;         web-mode-css-indent-offset 2
+;;         tab-width 2
+;;         evil-shift-width 2)
+;;   (add-hook! go-mode-hook #'eglot-ensure)
+;;   ;; Optional: install eglot-format-buffer as a save hook.
+;;   ;; The depth of -10 places this before eglot's willSave notification,
+;;   ;; so that that notification reports the actual contents that will be saved.
+;;   ;; (add-hook! go-mode-hook #'eglot-format-buffer-before-save)
+;;   (add-hook! before-save-hook
+;;     (lambda ()
+;;         (call-interactively 'eglot-code-action-organize-imports))
+;;     nil t))
 #+end_src
 * Rainbow delimiter mode
 #+begin_src emacs-lisp
@@ -2611,8 +2507,6 @@ sudo update-alternatives --config x-terminal-emulator
    ;; certain modes (like `prog-mode'), set it like this.
    citre-auto-enable-citre-mode-modes '(prog-mode)))
 
-
-
   ;; (global-set-key (kbd "C-x c j") 'citre-jump)
   ;; (global-set-key (kbd "C-x c J") 'citre-jump-back)
   ;; (global-set-key (kbd "C-x c p") 'citre-ace-peek)
@@ -2626,6 +2520,48 @@ sudo update-alternatives --config x-terminal-emulator
           :desc "Jump back" "J"          #'citre-jump-back
           :desc "Ace peek" "p"           #'citre-ace-peek
           :desc "Update `tags` file" "u" #'citre-update-this-tags-file))))
+#+end_src
+
+* LSP (Tree-sitter mode)
+* DAP (Debug Adapter Protocol)
+
+#+begin_src emacs-lisp
+(require 'dap-mode)
+(require 'dap-ui)
+(require 'dap-dlv-go)
+
+(setq dap-auto-configure-features '(sessions locals controls tooltip))
+(dap-mode 1)
+;; The modes below are optional
+(dap-ui-mode 1)
+;; enables mouse hover support
+(dap-tooltip-mode 1)
+;; use tooltips for mouse hover
+;; if it is not enabled `dap-mode' will use the minibuffer.
+(tooltip-mode 1)
+;; displays floating panel with debug buttons
+;; requies emacs 26+
+(dap-ui-controls-mode 1)
+
+;; Optionally, set up a keybinding for debugging
+(global-set-key (kbd "<f5>") #'dap-debug)
+#+end_src
+
+#+RESULTS:
+: dap-debug
+
+#+begin_src emacs-lisp
+(dap-register-debug-template "Go Debug"
+  (list :type "go"
+        :request "launch"
+        :name "Launch Go Program"
+        :mode "auto"
+        :program "${workspaceFolder}/main.go"
+        :buildFlags ""
+        :args []
+        ;; :env '(("GOPATH" . "${home}/go"))
+        :envFile nil
+        :dlvToolPath "dlv")) ;; Ensure `dlv` is in PATH
 #+end_src
 
 * Server

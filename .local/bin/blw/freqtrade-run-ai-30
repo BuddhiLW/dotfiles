@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# Initialize TIME_BEGIN and TIME_END
+TIME_BEGIN_INIT=20240101
+TIME_END_INIT=20240601
+TIME_BEGIN="$TIME_BEGIN_INIT"
+TIME_END="$TIME_END_INIT"
+
+# freqtrade hyperopt --hyperopt-loss BLWOptLoss --strategy BLW_train18_ai_2 --strategy-path user_data/strategies/ --freqaimodel XGBoostRFRegressor -e 20000 --spaces buy sell roi trailing stoploss --config user_data/config_ai_train18_2.json --timerange=20240201-20240701
+
+# Define the commands to be run
+#freqtrade hyperopt --hyperopt-loss BLWOptLoss --strategy BLW_train20_ai --strategy-path user_data/strategies/ --freqaimodel XGBoostRFRegressor -e 1200 --spaces buy roi trailing stoploss protection --config user_data/config_ai_train20.json --timerange=20240101-20240601
+
+COMMAND1="freqtrade hyperopt --hyperopt-loss BLWOptLoss --strategy BLW_train20_ai --strategy-path user_data/strategies/ --freqaimodel XGBoostRFRegressor -e 1200 --spaces buy roi trailing stoploss protection --config user_data/config_ai_train20.json  --timerange=$TIME_BEGIN-$TIME_END"
+#COMMAND1="freqtrade hyperopt --hyperopt-loss CalmarOptLoss --strategy BLW_train20_ai --strategy-path user_data/strategies/ --freqaimodel XGBoostRFRegressor -e 1200 --spaces roi trailing stoploss protection --config user_data/config_ai_train20.json  --timerange=$TIME_BEGIN-$TIME_END"
+#COMMAND3="freqtrade hyperopt --hyperopt-loss SortinoHyperOptLoss --strategy BLW_train_ai15 --strategy-path user_data/strategies/ --freqaimodel LightGBMRegressor -e 500 --spaces trailing protection --config user_data/config_ai.json --timerange=$TIME_BEGIN-$TIME_END"
+
+# Function to increment date by 1 month
+increment_month() {
+    local date=$1
+    echo $(date -d "${date}01 +1 month -1 day" +"%Y%m%d")
+}
+
+# Function to shift begin and end dates by 1 month
+shift_dates() {
+    TIME_BEGIN=$(date -d "$TIME_BEGIN +1 month" +"%Y%m%d")
+    TIME_END=$(date -d "$TIME_END +1 month" +"%Y%m%d")
+
+    # Reset TIME_BEGIN to 20240101 when TIME_END reaches 20241101
+    if [ "$TIME_END" == "20241201" ]; then
+      TIME_BEGIN=$TIME_BEGIN_INIT
+      TIME_END=$TIME_END_INIT
+    fi
+
+		COMMAND1="freqtrade hyperopt --hyperopt-loss BLWOptLoss --strategy BLW_train20_ai --strategy-path user_data/strategies/ --freqaimodel XGBoostRFRegressor -e 1200 --spaces buy roi trailing stoploss protection --config user_data/config_ai_train20.json  --timerange=$TIME_BEGIN-$TIME_END"
+		#COMMAND2="freqtrade hyperopt --hyperopt-loss CalmarHyperOptLoss --strategy BLW_train18_ai_2 --strategy-path user_data/strategies/ --freqaimodel XGBoostRFRegressor -e 1200 --spaces roi stoploss trailing protection --config user_data/config_ai_train18_2.json --timerange=$TIME_BEGIN-$TIME_END"
+}
+
+# Loop 500 times
+for i in {1..20}
+do
+    echo "Running iteration $i..."
+
+    # Run the commands with the current TIME_BEGIN and TIME_END
+    eval $COMMAND1
+    shift_dates
+    eval $COMMAND2
+#    eval $COMMAND3
+
+    # Shift the dates for the next iteration
+done
+
+echo "All 500 iterations completed."

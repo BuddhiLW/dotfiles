@@ -211,22 +211,6 @@
 
 (use-package! pdf-tools)
 
-;; (setq eglot-jl-language-server-project "~/.julia/environments/v1.10/")
-(after! eglot-jl
-  (setq eglot-jl-language-server-project eglot-jl-base))
-
-(defun julia-completion-at-point ()
-  (let ((bnds (bounds-of-thing-at-point 'symbol)))
-    (when bnds
-      (cond
-       ;; complete latex symbol when current symbol is prefixed
-       ;; by '\'
-       ((eq (char-before (car bnds)) ?\\)
-        (list (1- (car bnds)) (cdr bnds) julia-latexsubs
-              :annotation-function
-              #'(lambda (arg)
-                  (gethash arg julia-latexsubs ""))))))))
-
 (use-package! go-mode
   ;; :hook (prog-mode . company-mode)
   :hook (go-mode . rainbow-delimiters-mode))
@@ -321,13 +305,13 @@
 
 (use-package! conda
   :config
+  (custom-set-variables '(conda-anaconda-home "~/.conda/")))
   ;; (setq
   ;;  conda-env-home-directory (expand-file-name "~/opt/miniconda3/")
   ;;  conda-env-subdirectory "envs/")
-  (custom-set-variables '(conda-anaconda-home "~/.conda/"))
-  (conda-env-initialize-interactive-shells)
-  (conda-env-initialize-eshell)
-  (conda-env-autoactivate-mode t))
+  ;; (conda-env-initialize-interactive-shells)
+  ;; (conda-env-initialize-eshell)
+  ;; (conda-env-autoactivate-mode t))
 
 ;; (use-package! ein)
 ;; (require 'ein)
@@ -921,9 +905,9 @@
 
 ;; (add-to-list 'load-path "~/.emacs.d/openai/")
 ;; (add-to-list 'load-path "~/.emacs.d/chatgpt/")
-(add-to-list 'load-path "~/.emacs.d/lisp/")
+;; (add-to-list 'load-path "~/.emacs.d/lisp/")
 ;; (require 'codegpt)
-(require 'chatgpt)
+;; (require 'chatgpt)
 ;; (package! chatgtp
 ;;   :recipe (:host jcs-elpa
 ;;            :repo "https://jcs-emacs.github.io/jcs-elpa/packages/")) ;; Optional: specify a specific commit or version
@@ -1182,6 +1166,16 @@
   (global-treesit-auto-mode)
   :hook (prog-mode . treesit-auto-mode))
 
+(require 'tree-sitter)
+(require 'tree-sitter-langs)
+;; (treesit-auto-add-to-auto-mode-alist 'all)
+(global-tree-sitter-mode)
+(add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+(add-to-list 'tree-sitter-major-mode-language-alist '(go-ts-mode . go))
+(dolist (entry tree-sitter-major-mode-language-alist)
+  (let ((mode (car entry)))
+    (add-hook (intern (concat (symbol-name mode) "-hook")) #'lsp-deferred)))
+
 (load! "./blw-func/ewal.el")
 
 ;; defines blw/run-yazi
@@ -1207,30 +1201,30 @@
         (:prefix ("i" . "(system's) Integrations")
          :desc "Kitty terminal launch" "t" #'blw/run-kitty)))
 
-(defun eglot-format-buffer-before-save ()
-   (add-hook 'before-save-hook #'eglot-format-buffer -10 t))
+;; (defun eglot-format-buffer-before-save ()
+;;    (add-hook 'before-save-hook #'eglot-format-buffer -10 t))
 
-(use-package! eglot
-  :ensure t
-  :hook ((typescript-mode typescript-tsx-mode web-mode) . eglot-ensure)
-  :config
-  (add-to-list 'eglot-server-programs
-               '((typescript-mode typescript-tsx-mode) . ("typescript-language-server" "--stdio")))
-  (setq web-mode-markup-indent-offset 2
-        web-mode-code-indent-offset 2
-        web-mode-sql-indent-offset 2
-        web-mode-css-indent-offset 2
-        tab-width 2
-        evil-shift-width 2)
-  (add-hook! go-mode-hook #'eglot-ensure)
-  ;; Optional: install eglot-format-buffer as a save hook.
-  ;; The depth of -10 places this before eglot's willSave notification,
-  ;; so that that notification reports the actual contents that will be saved.
-  (add-hook! go-mode-hook #'eglot-format-buffer-before-save)
-  (add-hook! before-save-hook
-    (lambda ()
-        (call-interactively 'eglot-code-action-organize-imports))
-    nil t))
+;; (use-package! eglot
+;;   :ensure t
+;;   :hook ((typescript-mode typescript-tsx-mode web-mode) . eglot-ensure)
+;;   :config
+;;   (add-to-list 'eglot-server-programs
+;;                '((typescript-mode typescript-tsx-mode) . ("typescript-language-server" "--stdio")))
+;;   (setq web-mode-markup-indent-offset 2
+;;         web-mode-code-indent-offset 2
+;;         web-mode-sql-indent-offset 2
+;;         web-mode-css-indent-offset 2
+;;         tab-width 2
+;;         evil-shift-width 2)
+;;   (add-hook! go-mode-hook #'eglot-ensure)
+;;   ;; Optional: install eglot-format-buffer as a save hook.
+;;   ;; The depth of -10 places this before eglot's willSave notification,
+;;   ;; so that that notification reports the actual contents that will be saved.
+;;   ;; (add-hook! go-mode-hook #'eglot-format-buffer-before-save)
+;;   (add-hook! before-save-hook
+;;     (lambda ()
+;;         (call-interactively 'eglot-code-action-organize-imports))
+;;     nil t))
 
 (use-package! rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -1267,8 +1261,6 @@
    ;; certain modes (like `prog-mode'), set it like this.
    citre-auto-enable-citre-mode-modes '(prog-mode)))
 
-
-
   ;; (global-set-key (kbd "C-x c j") 'citre-jump)
   ;; (global-set-key (kbd "C-x c J") 'citre-jump-back)
   ;; (global-set-key (kbd "C-x c p") 'citre-ace-peek)
@@ -1282,6 +1274,38 @@
           :desc "Jump back" "J"          #'citre-jump-back
           :desc "Ace peek" "p"           #'citre-ace-peek
           :desc "Update `tags` file" "u" #'citre-update-this-tags-file))))
+
+(require 'dap-mode)
+(require 'dap-ui)
+(require 'dap-dlv-go)
+
+(setq dap-auto-configure-features '(sessions locals controls tooltip))
+(dap-mode 1)
+;; The modes below are optional
+(dap-ui-mode 1)
+;; enables mouse hover support
+(dap-tooltip-mode 1)
+;; use tooltips for mouse hover
+;; if it is not enabled `dap-mode' will use the minibuffer.
+(tooltip-mode 1)
+;; displays floating panel with debug buttons
+;; requies emacs 26+
+(dap-ui-controls-mode 1)
+
+;; Optionally, set up a keybinding for debugging
+(global-set-key (kbd "<f5>") #'dap-debug)
+
+(dap-register-debug-template "Go Debug"
+  (list :type "go"
+        :request "launch"
+        :name "Launch Go Program"
+        :mode "auto"
+        :program "${workspaceFolder}/main.go"
+        :buildFlags ""
+        :args []
+        ;; :env '(("GOPATH" . "${home}/go"))
+        :envFile nil
+        :dlvToolPath "dlv")) ;; Ensure `dlv` is in PATH
 
 (server-force-delete)
 (server-start)
