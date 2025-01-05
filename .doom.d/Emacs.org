@@ -1708,11 +1708,53 @@ To create new loadable modules,
 
 #+RESULTS:
 : cider-test-run-test
+** ClojureDart
+#+begin_src emacs-lisp :tangle packages.el
+;; packages.el`
+(package! dartclojure :recipe (:host github :repo "burinc/dartclojure.el"))
+#+end_src
+
+#+begin_src emacs-lisp
+;; config.el
+(use-package! dartclojure
+  :config
+  (setq dartclojure-opts "-m \"m\" -f \"f\""))
+#+end_src
+
+#+begin_src emacs-lisp
+;; config.el
+(map! :leader
+      (:prefix ("d" . "dartclojure")
+       :desc "dartclojure to buffer"
+       "b" #'dartclojure-paste-buffer
+       :desc "dartclojure to clipboard"
+       "c" #'dartclojure-to-clipboard
+       :desc "dartclojure converter"
+       "x" #'dartclojure-convert))
+#+end_src
+** Alignment
+#+begin_src emacs-lisp
+;; Enable Clojure mode
+(use-package! clojure-mode
+ :config
+ ;; Enable automatic alignment of forms
+ (setq clojure-align-forms-automatically t))
+ ;; Additional Clojure mode hooks
+;; :hook
+;; ((subword-mode . clojure-mode)
+;;              (paredit-mode . clojure-mode)
+;;              (clj-refactor-mode . clojure-mode)))
+;; (add-hook 'clojure-mode-hook (lambda ()
+;;                                (cljr-add-keybindings-with-prefix "C-c C-m"))))
+#+end_src
+
+#+RESULTS:
 
 * Neo-tree
 #+begin_src emacs-lisp :tangle packages.el
 (package! neotree)
 #+end_src
+
 * AI
 ** Khoj
 #+begin_src emacs-lisp :tangle packages.el

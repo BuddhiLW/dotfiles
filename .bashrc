@@ -166,7 +166,11 @@ pathprepend \
     "$HOME/.emacs.d/bin/" \
     "$HOME/.conda/bin/" \
     "$HOME/.local/share/cargo/bin/" \
-		"$HOME/.roswell/bin/" 
+		"$HOME/.roswell/bin/" \
+		"$DOTFILES/gitthings/flutter/flutter/bin" \
+		"$DOTFILES/gitthings/graalvm/bin" /
+
+# export PATH="$DOTFILES/gitthings/flutter/flutter/bin:$PATH"
 #    "$HOME/.conda/envs/simple-signer-env/bin" \
 
 pathappend \
@@ -371,7 +375,8 @@ export VISUAL="vim"
 ## export VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI mode
 export TERMINAL="st"
 #export BROWSER="qutebrowser"
-export BROWSER="chromium-browser"
+export BROWSER="chromium"
+export CHROME_EXECUTABLE="chromium"
 
 # PPI related
 export LINFO="$HOME/facti/linfo-ppi"
@@ -569,9 +574,11 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64/
 export PATH=$JAVA_HOME/bin:$PATH
 
+
 export PATH=~/opensim-core/bin:$PATH
 . "/home/russell/.local/share/cargo/env"
 
 export PATH=$HOME/.elixir-install/installs/otp/27.1.2/bin:$PATH
 export PATH=$HOME/.elixir-install/installs/elixir/1.17.3-otp-27/bin:$PATH
 source "$HOME/dotfiles/gitthings/freqtrade/.venv/bin/activate"
+

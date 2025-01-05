@@ -24,7 +24,7 @@
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        ;; ivy               ; a search engine for love and life
-       (vertico +childframe +icons)           ; the search engine of the future
+       (vertico +icons)           ; the search engine of the future
 
        :ui
        deft              ; notational velocity for Emacs
@@ -124,10 +124,10 @@
        ;;crystal           ; ruby at the speed of c
        ;;csharp            ; unity, .NET, and mono shenanigans
        data              ; config/data formats
-       ;;(dart +flutter)   ; paint ui and not much else
+       (dart +flutter)   ; paint ui and not much else
        ;;dhall
        (elixir +lsp +tree-siter)            ; erlang done right
-       ;;elm               ; care for a cup of TEA?
+       (elm +lsp +tree-siter)               ; care for a cup of TEA?
        emacs-lisp        ; drown in parentheses
        (erlang +lsp +tree-siter)            ; an elegant language for a more civilized age
        (ess +R +r)               ; emacs speaks statistics
@@ -146,7 +146,7 @@
        (javascript +lsp +tree-sitter +tide +nodejs-repl js2-refactor +flycheck +xref)        ; all(hope(abandon(ye(who(enter(here))))))
        ;; (julia +lsp +tree-sitter +snail)             ; a better, faster MATLAB
        ;;kotlin            ; a better, slicker Java(Script)
-       ;; latex             ; writing papers in Emacs has never been so fun
+       latex             ; writing papers in Emacs has never been so fun
        ;;lean              ; for folks with too much to prove
        ;;ledger            ; be audit you can be
        ;;lua               ; one-based indices? one-based indices

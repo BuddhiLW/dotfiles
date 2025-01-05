@@ -90,6 +90,9 @@
 
 (package! clojure-mode-extra-font-locking)
 
+;; packages.el`
+(package! dartclojure :recipe (:host github :repo "burinc/dartclojure.el"))
+
 (package! neotree)
 
 (package! khoj)

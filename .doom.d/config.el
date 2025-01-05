@@ -898,6 +898,30 @@
           :desc "Run tests in namespace" "n" #'cider-test-run-ns-tests
           :desc "Run test under point" "t" #'cider-test-run-test))))
 
+;; config.el
+(use-package! dartclojure
+  :config
+  (setq dartclojure-opts "-m \"m\" -f \"f\""))
+
+;; config.el
+(map! :leader
+      (:prefix ("d" . "dartclojure")
+       :desc "dartclojure to buffer"
+       "b" #'dartclojure-paste-buffer
+       :desc "dartclojure to clipboard"
+       "c" #'dartclojure-to-clipboard
+       :desc "dartclojure converter"
+       "x" #'dartclojure-convert))
+
+;; Enable Clojure mode
+(use-package! clojure-mode
+  :config
+  ;; Enable automatic alignment of forms
+  (setq clojure-align-forms-automatically t))
+              ;; Additional Clojure mode hooks
+;; (add-hook 'clojure-mode-hook (lambda ()
+;;                                (cljr-add-keybindings-with-prefix "C-c C-m"))))
+
 ;; if you are using the "pass" password manager
 ;; (setq chatgpt-shell-openai-key
 ;;         (nth 0 (process-lines "pass" "show" "AI/open")))
