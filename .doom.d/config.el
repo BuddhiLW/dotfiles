@@ -915,10 +915,14 @@
 
 ;; Enable Clojure mode
 (use-package! clojure-mode
-  :config
-  ;; Enable automatic alignment of forms
-  (setq clojure-align-forms-automatically t))
-              ;; Additional Clojure mode hooks
+ :config
+ ;; Enable automatic alignment of forms
+ (setq clojure-align-forms-automatically t))
+ ;; Additional Clojure mode hooks
+;; :hook
+;; ((subword-mode . clojure-mode)
+;;              (paredit-mode . clojure-mode)
+;;              (clj-refactor-mode . clojure-mode)))
 ;; (add-hook 'clojure-mode-hook (lambda ()
 ;;                                (cljr-add-keybindings-with-prefix "C-c C-m"))))
 
@@ -980,7 +984,7 @@
     (cfw:ical-create-source "gcal" (nth 0 (process-lines "pass" "show" "CALFW/gmail-ical-url")) "Blue")))) ; google calendar ICS
 
 (use-package! indent-bars
-  :hook ((prog-mode yaml-mode go-mode clojure-mode clojurescript-mode python-mode) . indent-bars-mode)
+  :hook ((prog-mode yaml-mode go-mode clojure-mode clojurescript-mode python-mode elm-mode) . indent-bars-mode)
   ;; or whichever modes you prefer
   :config (setq
            indent-bars-pattern "."

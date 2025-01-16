@@ -151,3 +151,4 @@ scripts/.stack-work/
 .azure/*
 
 .config/Docker Desktop
+.config/devcert/certificate-authority/private-key.key

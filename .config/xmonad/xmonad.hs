@@ -360,6 +360,7 @@ tall     = renamed [Replace "tall"]
            $ subLayout [] (smartBorders Simplest)
            $ mySpacing 8
            $ ResizableTall 1 (3/100) (1/2) []
+
 monocle  = renamed [Replace "monocle"]
            $ smartBorders
            $ windowNavigation
@@ -427,7 +428,7 @@ myShowWNameTheme :: SWNConfig
 myShowWNameTheme = def
   { swn_font              = "xft:Ubuntu:bold:size=60"
   , swn_fade              = 1.0
-  , swn_bgcolor           = "#1c1f24"
+  , swn_bgcolor           = "#1C1F24"
   , swn_color             = "#ffffff"
   }
 

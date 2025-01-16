@@ -432,3 +432,7 @@
 2024-12-02T16:42:55-03:00 description="Orasis - DAG Manager - [BUG] three-build redpanda listener" duration=30
 2024-12-02T19:05:14-03:00 description="Orasis - DAG Manager - [BUG] three-build redpanda listener" duration=30
 2025-01-04T23:05:06-03:00 description="Elm-land -- auth form" duration=30
+2025-01-05T15:50:44-03:00 description=freqtrade duration=50
+2025-01-08T10:42:55-03:00 description="Orasis -- API: /delete-dag-state" duration=36
+2025-01-08T17:00:18-03:00 description="Orasis -- API: /delete-dag-state" duration=60
+2025-01-13T14:01:44-03:00 description="Orasis -- Cubo: dev container" duration=60
