@@ -152,3 +152,10 @@ scripts/.stack-work/
 
 .config/Docker Desktop
 .config/devcert/certificate-authority/private-key.key
+
+.config/github-copilot/*
+.config/github-copilot/
+.config/github-copilot
+github-copilot/
+.config/xmonad/.stack-work/stack.sqlite3
+.config/xmonad/stack.yaml.lock

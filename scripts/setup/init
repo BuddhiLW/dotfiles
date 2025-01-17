@@ -6,3 +6,4 @@ link() {
 
 link ".config"
 link ".local"
+link ".xprofile"

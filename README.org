@@ -11,9 +11,14 @@ The main script currently works out of the batch, in a fresh =Ubuntu= installati
 
 That's it.
 
-**Plans to migrate it to a Bonzai-based script, called** =arara=. [fn:3]
+See the [[*IMPORTANT: Extra functionalities][IMPORTANT: Extra functionalities]] to understand more about extra functionalities and the main editors for this build!
+
+
+Note: *Plans to migrate it to a Bonzai-based script, called* =arara=. [fn:3]
 
 Feel free to issue any requests or issues, if you encounter trouble installing, from a =Vanilla Ubuntu= (fresh install).
+You (of course) can try it out in a non-vanilla install.
+That's ok, but state that clearly, in the issue, so we can hold the possibility of the issue having to do with conflicting configs.
 
 * Documentation for Xmonad Bindings
 - Markdown: [[file:.config/documentation/xmonad-bindings-tables.md]]
@@ -80,6 +85,39 @@ To understand more about the efforts behind this ricing-system, read the =KEG= n
 # #+end_src
 
 # ** TODO Pomodoro
+* IMPORTANT: Extra functionalities
+A lot of "non-essential" installs are available at =dotfiles/scripts/install=
+
+My two main editors are =Emacs= and =Vim=. So, I will comment their scripts.
+
+** Native compiled Emacs
+You already have =Emacs= installed, but you can compile it from source, with optimizations.
+
+#+begin_src shell
+bash ./scripts/install/emacs
+#+end_src
+
+Afterwards, =doom install= and =doom sync=; you are ready to go.
+
+** Vim build
+To setup a sweet and basic vim build:
+
+#+begin_src shell
+bash ./scripts/install/vim
+#+end_src
+
+*NOTE*: after running this script, run vim, and then give the command: =:PlugInstall=, inside it. This will download all the dependencies to make the build sweet.
+
+** About the full repository
+
+Take a look at all the scripts available at =dotfiles/scripts/install=, and run them as you see fit.
+Just the bare-minimum are run at BLWM's main setup, to give a functional and light build.
+Not even me, when in a fresh computer, will install all of them. This collection was built over time.
+
+#+begin_src shell
+ls ~/dotfiles/scripts/install/
+#+end_src
+
 * Footnotes
 
 [fn:1] [[https://github.com/BuddhiLW/blw-zet/tree/main/67][67 Creation of a bootstraping/ricing system]]

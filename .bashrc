@@ -520,14 +520,14 @@ newshell
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/russell/.conda/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$('/home/jacobi/.conda/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/home/russell/.conda/etc/profile.d/conda.sh" ]; then
-        . "/home/russell/.conda/etc/profile.d/conda.sh"
+    if [ -f "/home/jacobi/.conda/etc/profile.d/conda.sh" ]; then
+        . "/home/jacobi/.conda/etc/profile.d/conda.sh"
     else
-        export PATH="/home/russell/.conda/bin:$PATH"
+        export PATH="/home/jacobi/.conda/bin:$PATH"
     fi
 fi
 unset __conda_setup
@@ -569,16 +569,17 @@ if [ -f '/home/lw/google-cloud-sdk/completion.bash.inc' ]; then . '/home/lw/goog
 complete -C go go 
 complete -C lazywal lazywal
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-. "$HOME/.local/share/cargo/env"
+# . "$HOME/.local/share/cargo/env"
 
 export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64/
 export PATH=$JAVA_HOME/bin:$PATH
 
 
 export PATH=~/opensim-core/bin:$PATH
-. "/home/russell/.local/share/cargo/env"
+#. "/home/russell/.local/share/cargo/env"
 
 export PATH=$HOME/.elixir-install/installs/otp/27.1.2/bin:$PATH
 export PATH=$HOME/.elixir-install/installs/elixir/1.17.3-otp-27/bin:$PATH
-source "$HOME/dotfiles/gitthings/freqtrade/.venv/bin/activate"
+# source "$HOME/dotfiles/gitthings/freqtrade/.venv/bin/activate"  # commented out by conda initialize
 
+. "/home/jacobi/.local/share/cargo/env"

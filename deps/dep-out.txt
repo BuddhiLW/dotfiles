@@ -18,6 +18,7 @@ pass
 gnupg2
 make
 autoconf
+7zip
 
 build-essential
 pkg-config
@@ -100,6 +101,8 @@ libgif-dev
 libtiff-dev
 gnutls-bin gnutls-doc
 inotify-tools
+lldb
+gdb
 
 
 fonts-firacode fonts-fantasque-sans fonts-hermit fonts-inconsolata fonts-league-mono fonts-monofur fonts-monoid fonts-mononoki fonts-oxygen fonts-proggy fonts-spleen fonts-terminus
@@ -115,3 +118,6 @@ apt-transport-https ca-certificates curl gnupg-agent software-properties-common
 
 ffmpegthumbnailer
 unar
+
+ibrazilian
+ispell

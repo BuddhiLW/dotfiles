@@ -147,9 +147,6 @@ myStartupHook = do
 
   spawnOnce "setbg $HOME/Pictures/Wallpapers/"
   spawnOnce "picom"
-  -- spawnOnce "~/.fehbg &"  -- set last saved feh wallpaper
-  -- spawnOnce "feh --randomize --bg-fill /usr/share/backgrounds/dtos-backgrounds/*"  -- feh set random wallpaper
-  -- spawnOnce "nitrogen --restore &"   -- if you prefer nitrogen to feh
   setWMName "LG3D"
 
 myNavigation :: TwoD a (Maybe a)

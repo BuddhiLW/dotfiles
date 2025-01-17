@@ -1,7 +1,10 @@
 #!/usr/bin/bash
 
-cd $DOTFILES/gitthings
-git clone --recurse-submodules https://github.com/atlas-engineer/nyxt
-cd nyxt
-
-
+# cd $DOTFILES/gitthings
+# git clone --recurse-submodules https://github.com/atlas-engineer/nyxt
+# cd nyxt
+sudo add-apt-repository ppa:flatpak/stable
+sudo apt update
+sudo apt install flatpak
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+flatpak install flathub engineer.atlas.Nyxt

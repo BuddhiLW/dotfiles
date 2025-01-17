@@ -929,7 +929,7 @@
 ;; if you are using the "pass" password manager
 ;; (setq chatgpt-shell-openai-key
 ;;         (nth 0 (process-lines "pass" "show" "AI/open")))
-(setq openai-key (nth 0 (process-lines "pass" "show" "Open/AI")))
+;; (setq openai-key (nth 0 (process-lines "pass" "show" "Open/AI")))
 
 ;; (add-to-list 'load-path "~/.emacs.d/openai/")
 ;; (add-to-list 'load-path "~/.emacs.d/chatgpt/")
@@ -986,26 +986,21 @@
 (use-package! indent-bars
   :hook ((prog-mode yaml-mode go-mode clojure-mode clojurescript-mode python-mode elm-mode) . indent-bars-mode)
   ;; or whichever modes you prefer
-  :config (setq
-           indent-bars-pattern "."
-           ;; indent-bars-pattern ".*.*.*.*.*.*.*.*"
-           indent-bars-width-frac 0.25
-           indent-bars-pad-frac 0.3
-           ;; indent-bars-pad-frac 0.2
-           ;; indent-bars-zigzag 0.1
-           indent-bars-color-by-depth '(:palette ("black" "white" "green" "red") :blend 0.5)
-           indent-bars-highlight-current-depth '(:blend 1.0 :width 0.4 :pad 0.1 :pattern "!.!.!." :zigzag 0.1)
-           indent-bars-ts-highlight-current-depth '(no-inherit) ; equivalent to nil
-           indent-bars-ts-color-by-depth '(no-inherit)
-           indent-bars-ts-color '(inherit fringe :face-bg t :blend 0.2))
-           ;; indent-bars-highlight-current-depth '(:background "red10")
-           ;; indent-bars-color-by-depth '(:regexp "outline-\\([0-9]+\\)" :blend 0.5)
-           indent-bars-highlight-current-depth '(:face default :blend 0.9))
-;; (use-package! highlight-indentation
-;;   :hook (prog-mode . highlight-indentation-mode)
-;;   :config
-;;    (set-face-background 'highlight-indentation-face "#0eeeAA")
-;;    (set-face-background 'highlight-indentation-current-column-face "#c3b3b3"))
+  :config
+  (setq indent-bars-pattern "."
+        ;; indent-bars-pattern ".*.*.*.*.*.*.*.*"
+        indent-bars-width-frac 0.25
+        indent-bars-pad-frac 0.3
+        ;; indent-bars-pad-frac 0.2
+        ;; indent-bars-zigzag 0.1
+        indent-bars-color-by-depth '(:palette ("black" "white" "green" "red") :blend 0.5)
+        indent-bars-highlight-current-depth '(:blend 1.0 :width 0.4 :pad 0.1 :pattern "!.!.!." :zigzag 0.1)
+        indent-bars-ts-highlight-current-depth '(no-inherit) ; equivalent to nil
+        indent-bars-ts-color-by-depth '(no-inherit)
+        indent-bars-ts-color '(inherit fringe :face-bg t :blend 0.2)
+        ;; indent-bars-highlight-current-depth '(:background "red10")
+        ;; indent-bars-color-by-depth '(:regexp "outline-\\([0-9]+\\)" :blend 0.5)
+        indent-bars-highlight-current-depth '(:face default :blend 0.9)))
 
 ;; EXWM init function
 (load! "./blw-func/exwm-init.el")
