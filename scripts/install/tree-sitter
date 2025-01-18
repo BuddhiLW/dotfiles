@@ -1,0 +1,9 @@
+#!/usr/bin/bash
+
+sudo apt-get install libtree-sitter-dev
+
+cd "$DOTFILES/gitthings"
+git clone https://github.com/tree-sitter/tree-sitter.git
+cd tree-sitter
+
+make

@@ -159,3 +159,5 @@ scripts/.stack-work/
 github-copilot/
 .config/xmonad/.stack-work/stack.sqlite3
 .config/xmonad/stack.yaml.lock
+.local/lib/python3.12/
+.config/nyxt/

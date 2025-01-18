@@ -1,8 +1,12 @@
 #!/usr/bin/bash
 
+# sudo apt-get install libfixposix-dev
 # cd $DOTFILES/gitthings
 # git clone --recurse-submodules https://github.com/atlas-engineer/nyxt
 # cd nyxt
+# make
+
+
 sudo add-apt-repository ppa:flatpak/stable
 sudo apt update
 sudo apt install flatpak

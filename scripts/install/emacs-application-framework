@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+
+echo "This script assumes emacs is in ~/.emacs.d/"
+
+git clone --depth=1 -b master https://github.com/emacs-eaf/emacs-application-framework.git ~/.emacs.d/site-lisp/emacs-application-framework/
+cd ~/.emacs.d/site-lisp/emacs-application-framework/ 
+chmod +x ./install-eaf.py
+./install-eaf.py

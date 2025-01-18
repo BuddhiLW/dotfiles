@@ -1,3 +1,3 @@
 #!/usr/bin/bash
 
-flatpak run engineer.atlas.Nyxt
+flatpak run --env=WEBKIT_DISABLE_COMPOSITING_MODE=1 engineer.atlas.Nyxt
