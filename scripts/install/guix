@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+
+sudo apt-get install guix
+guix pull
+guix package -u

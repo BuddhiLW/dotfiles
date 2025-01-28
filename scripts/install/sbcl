@@ -1,9 +1,12 @@
 #!/usr/bin/bash
 
-sudo apt update
-sudo apt-get install sbcl
+#sudo apt update
+#sudo apt-get install sbcl
 
 cd $DOTFILE/gitthings
+git clone git://git.code.sf.net/p/sbcl/sbcl
+cd sbcl
+sh make.sh
 
 #curl -O https://beta.quicklisp.org/quicklisp.lisp
 #curl -O https://beta.quicklisp.org/quicklisp.lisp.asc

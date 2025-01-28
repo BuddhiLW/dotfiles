@@ -12,8 +12,8 @@
 # shellcheck disable=SC1090
 
 case $- in
-    *i*) ;; # interactive
-    *) return ;;
+*i*) ;; # interactive
+*) return ;;
 esac
 
 # ---------------------- local utility functions ---------------------
@@ -79,8 +79,7 @@ export ANDROID_AVD_HOME="$HOME/Android/system-images/"
 export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 
-# export OPENAI_API_KEY="$(pass Open/AI)"
-#"/usr/local/go"
+# export OPENAI_API_KEY="$(pass LLMs/OpenAI)"
 export GOROOT="/usr/local/go"
 export LC_COLLATE=C
 export LESS_TERMCAP_mb="[35m" # magenta
@@ -166,9 +165,9 @@ pathprepend \
     "$HOME/.emacs.d/bin/" \
     "$HOME/.conda/bin/" \
     "$HOME/.local/share/cargo/bin/" \
-		"$HOME/.roswell/bin/" \
-		"$DOTFILES/gitthings/flutter/flutter/bin" \
-		"$DOTFILES/gitthings/graalvm/bin" /
+    "$HOME/.roswell/bin/" \
+    "$DOTFILES/gitthings/flutter/flutter/bin" \
+    "$DOTFILES/gitthings/graalvm/bin" /
 
 # export PATH="$DOTFILES/gitthings/flutter/flutter/bin:$PATH"
 #    "$HOME/.conda/envs/simple-signer-env/bin" \
@@ -520,7 +519,7 @@ newshell
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/jacobi/.conda/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$('/home/jacobi/.conda/bin/conda' 'shell.bash' 'hook' 2>/dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
@@ -566,14 +565,13 @@ if [ -f '/home/lw/google-cloud-sdk/path.bash.inc' ]; then . '/home/lw/google-clo
 # The next line enables shell command completion for gcloud.
 if [ -f '/home/lw/google-cloud-sdk/completion.bash.inc' ]; then . '/home/lw/google-cloud-sdk/completion.bash.inc'; fi
 
-complete -C go go 
+complete -C go go
 complete -C lazywal lazywal
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 # . "$HOME/.local/share/cargo/env"
 
 export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64/
 export PATH=$JAVA_HOME/bin:$PATH
-
 
 export PATH=~/opensim-core/bin:$PATH
 #. "/home/russell/.local/share/cargo/env"

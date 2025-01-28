@@ -1,0 +1,11 @@
+#!/usr/bin/bash
+
+echo "creating conda virtual environment called \"ai\" \n"
+# conda create -n ai
+# conda activate ai
+
+conda create -n ai python=3.12
+conda activate ai
+conda install -c conda-forge numpy diffusers transformers
+pip install torch torchvision --extra-index-url https://download.pytorch.org/whl/cu118  # For GPU acceleration
+

@@ -156,6 +156,25 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 #+RESULTS:
 : #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (25745 52079 257899 81000) :preface (25745 51998 127893 437000) :init (25745 52079 257892 516000) :init-secs (0 0 50 846000) :preface-secs (0 0 1160 631000) :use-package-secs (0 0 59 857000) :config (25745 52079 257883 366000) :config-secs (0 0 7 194000)))
 
+*** Bidirectional tangling
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! org-tanglesync)
+#+end_src
+
+#+begin_src emacs-lisp
+;; (use-package! org-tanglesync
+;;   :hook ((org-mode . org-tanglesync-mode)
+;;          ;; enable watch-mode globally:
+;;          ((prog-mode text-mode) . org-tanglesync-watch-mode))
+;;   :custom
+;;   ;; (org-tanglesync-watch-files '("conf.org" "myotherconf.org"))
+;;   (org-tanglesync-watch-files '((substitute-in-file-name "$HOME/PP/Orasis/API-server-template/README.org")))
+;;   :bind
+;;   (( "C-c M-i" . org-tanglesync-process-buffer-interactive)
+;;    ( "C-c M-a" . org-tanglesync-process-buffer-automatic)))
+#+end_src
+
 * Maps
 ** Font resize
 #+begin_src emacs-lisp
@@ -598,16 +617,23 @@ TODO: fix:
 #+RESULTS:
 | project-find-go-module | project-projectile | project-try-vc |
 
-#+begin_src emacs-lisp
-#+end_src
 
-#+begin_src emacs-lisp :eval yes
+#+begin_src emacs-lisp
 (setq gofmt-command "goimports")
 (add-hook 'before-save-hook 'gofmt-before-save)
 #+end_src
 
 #+RESULTS:
-| gofmt-before-save | undo-fu-session-save-safe |
+| gofmt-before-save |
+* Janet
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! janet-mode)
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package! janet-mode)
+#+end_src
 
 * Xthemes
 #+begin_src emacs-lisp :tangle packages.el
@@ -1291,9 +1317,6 @@ To create new loadable modules,
        :desc "insert file name" "n" #'insert-file-name))
 #+end_src
 
-#+RESULTS:
-: insert-file-name
-
 * General Web Dev
 ** Keymaps
 #+begin_src emacs-lisp
@@ -1624,9 +1647,6 @@ To create new loadable modules,
 (add-hook 'org-present-after-navigate-functions 'my/org-present-prepare-slide)
 #+end_src
 
-#+RESULTS:
-| my/org-present-prepare-slide |
-
 #+begin_src emacs-lisp
 (setq org-hide-emphasis-markers t)
 #+end_src
@@ -1683,9 +1703,6 @@ To create new loadable modules,
         :desc "halt reitit server" "h" #'blw/eval-halt
         :desc "reset reitit server" "r" #'blw/eval-reset)))
 #+end_src
-
-#+RESULTS:
-: blw/eval-reset
 
 #+begin_src emacs-lisp
 ;; (getenv "CLJ")
@@ -2197,7 +2214,7 @@ To create new loadable modules,
 
   :config
 
-  (setq codeium/metadata/api_key (nth 0 (process-lines "pass" "show" "apikeys/codeium")))
+  ;; (setq codeium/metadata/api_key (nth 0 (process-lines "pass" "show" "apikeys/codeium")))
   ;; (defalias 'my/codeium-complete
   ;;   (cape-interacive-capf #'codeium-completion-at-point))
 
@@ -2245,6 +2262,8 @@ To create new loadable modules,
   (setq codeium/document/text 'my-codeium/document/text)
   (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset))
 #+end_src
+
+#+RESULTS:
 
 * Company
 
@@ -2346,9 +2365,6 @@ You can issue the http request by: =M-x http-process (C-c C-c)=
 (setq gt-buffer-evil-leading-key "x")
        ;; (gt-posframe-pop-render))
 #+end_src
-
-#+RESULTS:
-: x
 * Telegram
 
 #+begin_src emacs-lisp
@@ -2636,8 +2652,7 @@ sudo update-alternatives --config x-terminal-emulator
 
 #+RESULTS:
 : t
-
-
+* Lookup setup
 
 * Server
 #+begin_src emacs-lisp

@@ -439,3 +439,37 @@
 2025-01-16T22:42:22-03:00 description="Dev OSS: lazywal" duration=120
 2025-01-17T08:44:47-03:00 description="Orasis: API Template" duration=50
 2025-01-17T08:44:51-03:00 description="Dev OSS: Lazywal" duration=19
+2025-01-19T13:57:07-03:00 description="KEG -- Front matter" duration=25
+2025-01-19T14:50:35-03:00 description="KEG -- Front matter" duration=25
+2025-01-19T15:32:03-03:00 description="KEG -- Front matter" duration=38
+2025-01-19T15:32:03-03:00 description="KEG -- Front matter" duration=25
+2025-01-19T16:41:34-03:00 description="KEG: frontmatter" duration=52
+2025-01-19T16:41:34-03:00 description="KEG: frontmatter" duration=25
+2025-01-19T18:19:38-03:00 description="KEG -- Front matter" duration=42
+2025-01-19T18:19:38-03:00 description="KEG -- Front matter" duration=25
+2025-01-20T10:14:28-03:00 description="Orasis -- API Template" duration=45
+2025-01-20T15:08:56-03:00 description="Orasis -- API Template" duration=45
+2025-01-20T17:37:39-03:00 description="KEG -- Fix: Front matter" duration=20
+2025-01-21T12:08:40-03:00 description="Orasis -- API Template" duration=60
+2025-01-21T15:11:34-03:00 description="Orasis -- API Template" duration=60
+2025-01-21T16:56:35-03:00 description="(F)OSS: KEG" duration=50
+2025-01-22T09:50:39-03:00 description="Orasis -- Cubo de Vendas -- Reunião Fábio" duration=43
+2025-01-22T14:14:41-03:00 description="Orasis -- Cubo de Vendas [Template]" duration=45
+2025-01-22T14:14:41-03:00 description="Orasis -- Cubo de Vendas [Template]" duration=25
+2025-01-22T15:32:48-03:00 description="Learning: PEG and Parsing" duration=20
+2025-01-23T10:17:32-03:00 description="KEG -- Parse through YAML front-matter" duration=33
+2025-01-23T10:17:32-03:00 description="KEG -- Parse through YAML front-matter" duration=25
+2025-01-23T10:50:57-03:00 description="KEG -- Parse through YAML front-matter" duration=61
+2025-01-23T10:50:57-03:00 description="KEG -- Parse through YAML front-matter" duration=25
+2025-01-23T12:34:06-03:00 description="KEG -- Parse through YAML front-matter" duration=62
+2025-01-23T12:34:06-03:00 description="KEG -- Parse through YAML front-matter" duration=25
+2025-01-23T13:51:28-03:00 description="KEG -- restructure project files paths" duration=37
+2025-01-23T14:29:02-03:00 description="Orasis -- Templating" duration=50
+2025-01-24T11:26:38-03:00 description="Orasis -- Template" duration=40
+2025-01-24T12:19:10-03:00 description="Orasis -- Template" duration=78
+2025-01-24T12:19:10-03:00 description="Orasis -- Template" duration=25
+2025-01-24T14:09:19-03:00 description="Orasis -- Template" duration=71
+2025-01-24T14:09:19-03:00 description="Orasis -- Template" duration=25
+2025-01-27T18:01:43-03:00 description="Orasis -- Cubo de Vendas" duration=45
+2025-01-28T10:34:40-03:00 description="Orasis -- Cubo de Vendas" duration=42
+2025-01-28T12:04:42-03:00 description="Orasis -- Cubo de Vendas -- SQLC" duration=45

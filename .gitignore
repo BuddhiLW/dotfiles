@@ -161,3 +161,5 @@ github-copilot/
 .config/xmonad/stack.yaml.lock
 .local/lib/python3.12/
 .config/nyxt/
+.config/Element/
+.config/vlc/

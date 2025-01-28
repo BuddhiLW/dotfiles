@@ -1,3 +1,5 @@
+(package! org-tanglesync)
+
 (package! elfeed)
 (package! webfeeder)
 
@@ -7,6 +9,8 @@
 (package! conda)
 
 (package! ein)
+
+(package! janet-mode)
 
 (package! ewal-doom-themes)
 (package! doom-themes)

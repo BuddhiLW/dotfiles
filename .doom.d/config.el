@@ -117,6 +117,17 @@
         ;;   "~/PP/Notes/Agenda/CafeDoBem.org"
         ;;   "~/PP/Notes/Agenda/Facti.org")))
 
+;; (use-package! org-tanglesync
+;;   :hook ((org-mode . org-tanglesync-mode)
+;;          ;; enable watch-mode globally:
+;;          ((prog-mode text-mode) . org-tanglesync-watch-mode))
+;;   :custom
+;;   ;; (org-tanglesync-watch-files '("conf.org" "myotherconf.org"))
+;;   (org-tanglesync-watch-files '((substitute-in-file-name "$HOME/PP/Orasis/API-server-template/README.org")))
+;;   :bind
+;;   (( "C-c M-i" . org-tanglesync-process-buffer-interactive)
+;;    ( "C-c M-a" . org-tanglesync-process-buffer-automatic)))
+
 (map! :leader
       (:prefix-map ("b" . "buddhi")
        (:prefix ("f" . "font")
@@ -335,10 +346,10 @@
 
 (add-hook 'project-find-functions #'project-find-go-module)
 
-
-
 (setq gofmt-command "goimports")
 (add-hook 'before-save-hook 'gofmt-before-save)
+
+(use-package! janet-mode)
 
 (use-package! doom-modeline
   :config
@@ -1089,7 +1100,7 @@
 
   :config
 
-  (setq codeium/metadata/api_key (nth 0 (process-lines "pass" "show" "apikeys/codeium")))
+  ;; (setq codeium/metadata/api_key (nth 0 (process-lines "pass" "show" "apikeys/codeium")))
   ;; (defalias 'my/codeium-complete
   ;;   (cape-interacive-capf #'codeium-completion-at-point))
 
