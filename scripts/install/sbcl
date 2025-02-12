@@ -4,7 +4,7 @@
 #sudo apt-get install sbcl
 
 cd $DOTFILE/gitthings
-git clone git://git.code.sf.net/p/sbcl/sbcl
+git clone https://git.code.sf.net/p/sbcl/sbcl sbcl
 cd sbcl
 sh make.sh
 

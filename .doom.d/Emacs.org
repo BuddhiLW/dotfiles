@@ -59,6 +59,8 @@
       doom-unicode-font (font-spec :family "JoyPixels" :size 20)
       doom-big-font (font-spec :family "FreeMono" :size 20))
 
+(set-fontset-font t 'arabic (font-spec :family "Noto Sans Arabic"))
+
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
@@ -134,6 +136,25 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 : t
 
 ** Org
+
+#+begin_src emacs-lisp
+(setq org-directory "~/PP/self-managment/")
+;; (setq org-directory )
+(setq org-agenda-files '("~/PP/self-managment/Agenda/*"
+                         "~/PP/self-managment/README.org"))
+#+end_src
+
+#+RESULTS:
+| ~/PP/self-managment/Agenda/* | ~/PP/self-managment/README.org |
+
+#+begin_src emacs-lisp
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "DOING(g)" "|" "DONE(d)" "CANCELED(c)")))
+#+end_src
+
+#+RESULTS:
+| sequence | TODO | DOING | DONE | CANCELED |
+
 #+begin_src emacs-lisp
 ;; (use-package! org
 ;;   :config
@@ -152,9 +173,6 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
         ;;   "~/PP/Notes/Agenda/CafeDoBem.org"
         ;;   "~/PP/Notes/Agenda/Facti.org")))
 #+end_src
-
-#+RESULTS:
-: #s(hash-table size 65 test eql rehash-size 1.5 rehash-threshold 0.8125 data (:use-package (25745 52079 257899 81000) :preface (25745 51998 127893 437000) :init (25745 52079 257892 516000) :init-secs (0 0 50 846000) :preface-secs (0 0 1160 631000) :use-package-secs (0 0 59 857000) :config (25745 52079 257883 366000) :config-secs (0 0 7 194000)))
 
 *** Bidirectional tangling
 
@@ -589,17 +607,6 @@ Shell version to be used with =run-python=
 : t
 
 * Go
-
-TODO: fix:
-#+begin_quote
-../../.emacs.d/.local/straight/build-30.0.91/company-go/company-go.el: Warning: ‘case’ is an obsolete alias (as of 27.1); use ‘cl-case’ instead.
-#+end_quote
-
-#+begin_src emacs-lisp
-;; (use-package! go-complete
-;;   :config
-;;  (add-hook 'completion-at-point-functions 'go-complete-at-point))
-#+end_src
 
 #+begin_src emacs-lisp
 (require 'project)
@@ -1081,6 +1088,11 @@ TODO: fix:
 #+end_src
 
 * Chinese
+
+#+begin_src emacs-lisp
+(load! "./blw-func/vocabulary.el")
+#+end_src
+
 #+begin_src emacs-lisp :tangle packages.el
 (package! pyim)
 (package! pyim-basedict)
@@ -1412,27 +1424,47 @@ To create new loadable modules,
 #+end_src
 
 * Org
+
+#+begin_src emacs-lisp
+;; (set-face-attribute 'default nil :font "DejaVu Sans Mono-12")
+;; (set-fontset-font t 'arabic (font-spec :family "DejaVu Sans Mono"))
+;; (setq org-superstar-headline-bullets-list '("ن" "ل" "ا" "م" "هـ" "ي" "ص"))
+#+end_src
+
+#+RESULTS:
+
 #+begin_src emacs-lisp :tangle packages.el
 (package! org-bullets)
 (package! org-superstar)
+(package! org-kanban)
 #+end_src
 
 #+begin_src emacs-lisp
-(use-package! org-bullets
-  :after org
-  ;; :hook (org-mode . org-bullets)
-  :custom
-  ;; (org-superstar-remove-leading-stars t)
-  (org-bullets-bullet-list '("家" "ॐ" "同" "Ø" "א" "҉ " "҈ ")))
+;; (use-package! org-bullets
+;;   :after org
+;;   ;; :hook (org-mode . org-bullets)
+;;   :custom
+;;   ;; (org-superstar-remove-leading-stars t)
+;;   (org-bullets-bullet-list '("家" "ॐ" "同" "Ø" "א" "҉ " "҈ ")))
+;; ("ن" "ل" "ا" "م" "هـ" "ي" "ص")
 
+;; (set-fontset-font t 'arabic "Noto Sans Arabic")
+;; (font-family-list)
 (use-package! org-superstar
-  ;; :if (not dw/is-termux)
   :after org
   :hook (org-mode . org-superstar-mode)
   :custom
   (org-superstar-remove-leading-stars t)
-  (org-superstar-headline-bullets-list '("家" "ॐ" "同" "Ø" "א" "҉ " "҈ ")))
-                                       ;; Make sure org-indent face is available
+  (org-superstar-headline-bullets-list '("ن" "ل" "ا" "م" "هـ" "ي" "ص")))
+
+;; (with-eval-after-load 'org-superstar
+;;   (set-face-attribute 'org-superstar-item nil :font "Noto Sans Arabic"))
+
+(with-eval-after-load 'org-superstar
+  (set-face-attribute 'org-superstar-item nil :family "Noto Sans Arabic" :weight 'regular))
+
+  ;; (org-bullets-bullet-list '("ن" "ل" "ا" "م" "هـ" "ي" "ص")))
+  ;; Make sure org-indent face is available
 (require 'org-indent)
 ;; (require 'org-indent
 ;; Ensure that anything that should be fixed-pitch in Org files appears that way
@@ -1449,6 +1481,7 @@ To create new loadable modules,
 ;; Get rid of the background on column views
 (set-face-attribute 'org-column nil :background nil)
 (set-face-attribute 'org-column-title nil :background nil)
+;; (set-face-attribute 'org-superstar-item nil :font "Noto Sans Arabic")
 #+end_src
 
 #+begin_src emacs-lisp :tangle packages.el
@@ -1908,11 +1941,13 @@ To create new loadable modules,
     ;; (cfw:cal-create-source "Orange") ; diary source
     ;; (cfw:ical-create-source "Moon" "~/moon.ics" "Gray")  ; ICS source1
     ;; (cfw:ical-create-source "gcal" (nth 0 (process-lines "pass" "show" "CALFW/gmail-ical-url-facti" "Red")))
-    (cfw:ical-create-source "gcal" (nth 0 (process-lines "pass" "show" "CALFW/gmail-ical-url")) "Blue")))) ; google calendar ICS
+    (cfw:ical-create-source "gcal" (nth 0 (process-lines "pass" "show" "CALFW/gmail-ical-url")) "Blue") ;; google calendar ICS
+    (cfw:ical-create-source "gcal" (nth 0 (process-lines "pass" "show" "CALFW/orasis-ical-url")) "Red"))))  ;; Orasis
 #+end_src
 
 #+RESULTS:
 : blw/calendar
+
 * Beauty
 ** Highlight indent
 #+begin_src emacs-lisp :tangle packages.el
@@ -2263,8 +2298,6 @@ To create new loadable modules,
   (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset))
 #+end_src
 
-#+RESULTS:
-
 * Company
 
 #+begin_src emacs-lisp
@@ -2345,26 +2378,34 @@ You can issue the http request by: =M-x http-process (C-c C-c)=
 (package! go-translate)
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle yes
 ;; (use-package! go-translate
 ;;   :config
-(setq gt-translate-list '(("en" "zh")
-                          ("en" "ru")
-                          ("en" "pt-br")
-                          ("pt-br" "en")))
+(setq gt-langs '(en zh))
+                 ;; ("en" "ru")
+                 ;; ("en" "pt-br")
+                 ;; ("pt-br" "en")))
 
 (setq gt-default-translator
         (gt-translator
          :taker   (gt-taker :text 'buffer :pick 'paragraph)
-         :engines (list (gt-bing-engine)
-                        (gt-google-engine)
-                        (gt-google-rpc-engine))
+         :engines  (list
+                   (gt-bing-engine)
+                   (gt-google-engine)
+                   (gt-google-rpc-engine))
          :render
          (gt-buffer-render)))
+
+;; (setq gt-langs '(en fr))        ; Default translation languages, at least two ​​must be specified
+(setq gt-taker-text 'word)      ; By default, the initial text is the word under the cursor. If there is active region, the selected text will be used first
+(setq gt-taker-pick 'paragraph) ; By default, the initial text will be split by paragraphs. If you don't want to use multi-parts translation, set it to nil
+(setq gt-taker-prompt nil)
+;; (setq gt-default-translator (gt-translator :engines (gt-google-engine)))
 
 (setq gt-buffer-evil-leading-key "x")
        ;; (gt-posframe-pop-render))
 #+end_src
+
 * Telegram
 
 #+begin_src emacs-lisp
@@ -2628,6 +2669,8 @@ sudo update-alternatives --config x-terminal-emulator
 
 #+begin_src emacs-lisp
 (require 'eaf-browser)
+(setq eaf-dired-advisor-enable nil)
+;; (setq eaf-)
 ;; (require 'eaf-pdf-viewer)
 #+end_src
 
@@ -2639,6 +2682,7 @@ sudo update-alternatives --config x-terminal-emulator
   :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
   :custom
   ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
+  (setq eaf-browser-default-search-engine "duckduckgo")
   (eaf-browser-continue-where-left-off t)
   (eaf-browser-enable-adblocker t)
   (browse-url-browser-function 'eaf-open-browser)
@@ -2647,7 +2691,8 @@ sudo update-alternatives --config x-terminal-emulator
   ;; (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
   ;; (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
   ;; (eaf-bind-key take_photo "p" eaf-camera-keybinding)
-  (eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
+  (eaf-bind-key nil "M-q" eaf-browser-keybinding)
+  ) ;; unbind, see more in the Wiki
 #+end_src
 
 #+RESULTS:

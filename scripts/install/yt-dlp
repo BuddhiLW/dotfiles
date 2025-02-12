@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+pip install -U --pre "yt-dlp[default]"

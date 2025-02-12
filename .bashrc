@@ -581,3 +581,4 @@ export PATH=$HOME/.elixir-install/installs/elixir/1.17.3-otp-27/bin:$PATH
 # source "$HOME/dotfiles/gitthings/freqtrade/.venv/bin/activate"  # commented out by conda initialize
 
 . "/home/jacobi/.local/share/cargo/env"
+

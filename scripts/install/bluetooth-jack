@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+pactl move-sink-input $(pactl list short sink-inputs | awk '{print $1}') bluez_sink.20_5E_50_34_9E_66.a2dp_sink

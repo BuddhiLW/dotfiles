@@ -1,6 +1,8 @@
-(setq doom-font
-      (set-fontset-font "fontset-default" 'han
-                        (font-spec :family "Sarasa Mono Slab HC")))
+(load! "../my-func/vocabulary.el")
+
+;; (setq doom-font
+;;      (set-fontset-font "fontset-default" 'han
+;;                        (font-spec :family "Sarasa Mono Slab HC")))
 
 (package! zh-align
   :recipe (:host github
@@ -20,9 +22,9 @@
   :config
   (map! :leader
         (:prefix-map ("b" . "buddhi")
-         (:prefix ("b" . "bing")
-          :desc "Bing dictionary brief" "d" #'lw/bing-dict-brief
-          :desc "Personal vocabulary" "p" #'lw/find-vocabulary)))
+                     (:prefix ("b" . "bing")
+                      :desc "Bing dictionary brief" "d" #'lw/bing-dict-brief
+                      :desc "Personal vocabulary" "p" #'lw/find-vocabulary)))
   ;; :desc "Activate synonym" "s" #'lw/bing-synonym))))
 
   (setq bing-dict-add-to-kill-ring t)

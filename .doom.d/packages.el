@@ -89,6 +89,7 @@
 
 (package! org-bullets)
 (package! org-superstar)
+(package! org-kanban)
 
 (package! org-present)
 
