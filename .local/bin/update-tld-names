@@ -1,4 +1,4 @@
-#!/home/jacobi/.conda/bin/python
+#!/home/linuxbrew/.linuxbrew/opt/python@3.13/bin/python3.13
 # -*- coding: utf-8 -*-
 import re
 import sys

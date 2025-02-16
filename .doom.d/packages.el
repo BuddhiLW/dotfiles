@@ -82,6 +82,8 @@
 ;;         :recipe (:host github
 ;;                  :repo "swank-js/swank-js"))
 
+(package! copilot
+  :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el")))
 ;; (package! copilot
 ;;   :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
 
@@ -202,3 +204,17 @@
 (package! ace-link)
 
 (package! citre)
+
+(package! gptel)
+
+(package! ellama)
+(package! llm)
+
+(package! evedel)
+
+(package! elysium)
+
+(package! consult-omni
+  :recipe (:host github :repo "armindarvish/consult-omni" :files (:defaults "sources/*.el")))
+
+(package! corsair)

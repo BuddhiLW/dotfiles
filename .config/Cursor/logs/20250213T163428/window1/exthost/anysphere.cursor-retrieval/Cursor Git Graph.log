@@ -1,0 +1,9 @@
+2025-02-13 16:34:31.654 [info] Using repo backend url https://repo42.cursor.sh
+2025-02-13 16:34:33.633 [error] Failed to get git graph client
+2025-02-13 16:35:39.050 [info] Using repo backend url https://repo42.cursor.sh
+2025-02-13 16:39:34.393 [info] Git graph is disabled. shouldIndex: true isEnabled: false
+2025-02-13 16:59:34.012 [error] Failed to check if git graph is enabled [internal] Stream closed with error code NGHTTP2_REFUSED_STREAM
+2025-02-13 17:14:33.800 [error] Failed to check if git graph is enabled [internal] Stream closed with error code NGHTTP2_REFUSED_STREAM
+2025-02-13 17:17:42.628 [info] Using repo backend url https://repo42.cursor.sh
+2025-02-13 17:17:44.258 [info] Using repo backend url https://repo42.cursor.sh
+2025-02-13 17:17:45.069 [info] Git graph is disabled. shouldIndex: true isEnabled: false

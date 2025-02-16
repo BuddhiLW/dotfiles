@@ -582,3 +582,5 @@ export PATH=$HOME/.elixir-install/installs/elixir/1.17.3-otp-27/bin:$PATH
 
 . "/home/jacobi/.local/share/cargo/env"
 
+
+. "$HOME/.local/share/../bin/env"

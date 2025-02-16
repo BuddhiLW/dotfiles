@@ -1340,6 +1340,8 @@ To create new loadable modules,
 
 * Copilot
 #+begin_src emacs-lisp :tangle packages.el
+(package! copilot
+  :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el")))
 ;; (package! copilot
 ;;   :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
 
@@ -1348,13 +1350,13 @@ To create new loadable modules,
 
 #+begin_src emacs-lisp
 ;; accept completion from copilot and fallback to company
-;; (use-package! copilot
-;;   :hook (prog-mode . copilot-mode)
-;;   :bind (("C-TAB" . 'copilot-accept-completion-by-word)
-;;          ("C-<tab>" . 'copilot-accept-completion-by-word)
-;;          :map copilot-completion-map
-;;          ("<tab>" . 'copilot-accept-completion)
-;;          ("TAB" . 'copilot- accept-completion)))
+(use-package! copilot
+  :hook (prog-mode . copilot-mode)
+  :bind (("C-TAB" . 'copilot-accept-completion-by-word)
+         ("C-<tab>" . 'copilot-accept-completion-by-word)
+         :map copilot-completion-map
+         ("<tab>" . 'copilot-accept-completion)
+         ("TAB" . 'copilot-accept-completion)))
 #+end_src
 
 ** Keymaps
@@ -2699,6 +2701,249 @@ sudo update-alternatives --config x-terminal-emulator
 : t
 * Lookup setup
 
+* LLMS
+** GPTel
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! gptel)
+#+end_src
+
+#+begin_src emacs-lisp
+(gptel-make-ollama "Ollama"             ;Any name of your choosing
+  :host "localhost:11434"               ;Where it's running
+  :stream t                             ;Stream responses
+  :models '(deepseek-r1:latest))          ;List of models
+#+end_src
+
+#+RESULTS:
+: #s(gptel-ollama "Ollama" "localhost:11434" nil "http" t "/api/chat" nil (deepseek-r1:latest) "http://localhost:11434/api/chat" nil nil)
+
+#+begin_src emacs-lisp
+(gptel-make-ollama "Ollama-coder"             ;Any name of your choosing
+  :host "localhost:11434"               ;Where it's running
+  :stream t                             ;Stream responses
+  :models '(deep-jibril:1.0))          ;List of models
+#+end_src
+
+** ELLAMA
+Use =ollama= inside Emacs the way the like it!
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! ellama)
+(package! llm)
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package! llm)
+
+(use-package! ellama
+  :bind ("C-c e" . ellama-transient-main-menu)
+  :init
+  ;; setup key bindings (optional: uncomment to set a custom keymap prefix)
+  ;; (setopt ellama-keymap-prefix "C-c e")
+  ;; language you want ellama to translate to
+  (setopt ellama-language "Brazilian Portuguese")
+  ;; use the ollama provider from llm
+  (require 'llm-ollama)
+  (setopt ellama-provider
+          (make-llm-ollama
+           ;; Use the latest version of the model
+           :chat-model "llama3:latest"
+           :embedding-model "nomic-embed-text"
+           :default-chat-non-standard-params '(("num_ctx" . 8192))))
+  (setopt ellama-summarization-provider
+          (make-llm-ollama
+           :chat-model "qwen2.5:latest"
+           :embedding-model "nomic-embed-text"
+           :default-chat-non-standard-params '(("num_ctx" . 32768))))
+  (setopt ellama-coding-provider
+          (make-llm-ollama
+           :chat-model "qwen2.5-coder:latest"
+           :embedding-model "nomic-embed-text"
+           :default-chat-non-standard-params '(("num_ctx" . 32768))))
+  ;; Predefined llm providers for interactive switching.
+  (setopt ellama-providers
+          '(("zephyr" . (make-llm-ollama
+                         :chat-model "zephyr:latest"
+                         :embedding-model "zephyr:latest"))
+            ("mistral" . (make-llm-ollama
+                          :chat-model "mistral:latest"
+                          :embedding-model "mistral:latest"))
+            ("mixtral" . (make-llm-ollama
+                          :chat-model "mixtral:latest"
+                          :embedding-model "mixtral:latest"))))
+  ;; Naming new sessions with llm using the latest model version
+  (setopt ellama-naming-provider
+          (make-llm-ollama
+           :chat-model "llama3:latest"
+           :embedding-model "nomic-embed-text"
+           :default-chat-non-standard-params '(("stop" . ("\n")))))
+  (setopt ellama-naming-scheme 'ellama-generate-name-by-llm)
+  ;; Translation llm provider using latest tag
+  (setopt ellama-translation-provider
+          (make-llm-ollama
+           :chat-model "qwen2.5:latest"
+           :embedding-model "nomic-embed-text"
+           :default-chat-non-standard-params '(("num_ctx" . 32768))))
+  ;; Extraction llm provider with the latest version
+  (setopt ellama-extraction-provider
+          (make-llm-ollama
+           :chat-model "qwen2.5-coder:latest"
+           :embedding-model "nomic-embed-text"
+           :default-chat-non-standard-params '(("num_ctx" . 32768))))
+  ;; customize display buffer behaviour
+  (setopt ellama-chat-display-action-function #'display-buffer-full-frame)
+  (setopt ellama-instant-display-action-function #'display-buffer-at-bottom)
+  :config
+  ;; send last message in chat buffer with C-c C-c
+  (add-hook 'org-ctrl-c-ctrl-c-hook #'ellama-chat-send-last-message))
+#+end_src
+** evedel
+https://github.com/daedsidog/evedel
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! evedel)
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+(use-package! evedel
+  :defer t
+  :config
+  (customize-set-variable 'evedel-empty-tag-query-matches-all nil)
+  :bind (("C-c e r" . evedel-create-reference)
+         ("C-c e d" . evedel-create-directive)
+         ("C-c e s" . evedel-save-instructions)
+         ("C-c e l" . evedel-load-instructions)
+         ("C-c e p" . evedel-process-directives)
+         ("C-c e m" . evedel-modify-directive)
+         ("C-c e C" . evedel-modify-reference-commentary)
+         ("C-c e k" . evedel-delete-instructions)
+         ("C-c e c" . evedel-convert-instructions)
+         ("C->"     . evedel-next-instruction)
+         ("C-<"     . evedel-previous-instruction)
+         ("C-."     . evedel-cycle-instructions-at-point)
+         ("C-c e t" . evedel-add-tags)
+         ("C-c e T" . evedel-remove-tags)
+         ("C-c e D" . evedel-modify-directive-tag-query)
+         ("C-c e P" . evedel-preview-directive-prompt)
+         ("C-c e /" . evedel-directive-undo)
+         ("C-c e ?" . (lambda ()
+                        (interactive)
+                        (evedel-directive-undo t)))))   
+#+end_src
+** elysium
+https://github.com/lanceberge/elysium
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! elysium)
+#+end_src
+
+
+#+begin_src emacs-lisp
+(use-package! elysium)
+#+end_src
+
+** Magit GPT commit
+https://github.com/douo/magit-gptcommit
+
+#+begin_src emacs-lisp :tangle packages.el :tangle no
+(package! magit-gptcommit)
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+(use-package! magit-gptcommit
+  :straight t
+  :demand t
+  :after magit
+  :bind (:map git-commit-mode-map
+              ("C-c C-g" . magit-gptcommit-commit-accept))
+  :custom
+  (magit-gptcommit-llm-provider (make-llm-openai :key "OPENAI-KEY"))
+
+  :config
+  ;; Enable magit-gptcommit-mode to watch staged changes and generate commit message automatically in magit status buffer
+  ;; This mode is optional, you can also use `magit-gptcommit-generate' to generate commit message manually
+  ;; `magit-gptcommit-generate' should only execute on magit status buffer currently
+  ;; (magit-gptcommit-mode 1)
+
+  ;; Add gptcommit transient commands to `magit-commit'
+  ;; Eval (transient-remove-suffix 'magit-commit '(1 -1)) to remove gptcommit transient commands
+  (magit-gptcommit-status-buffer-setup))
+#+end_src
+** Consult Omni
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! consult-omni
+  :recipe (:host github :repo "armindarvish/consult-omni" :files (:defaults "sources/*.el")))
+#+end_src
+*** TODO reasonable seutp
+#+begin_src emacs-lisp :tangle no
+(use-package! consult-omni
+  :straight (consult-omni :type git :host github :repo "armindarvish/consult-omni" :branch "main" :files (:defaults "sources/*.el"))
+  :after consult
+  :custom
+   ;; General settings that apply to all sources
+  (consult-omni-show-preview t) ;;; show previews
+  (consult-omni-preview-key "C-o") ;;; set the preview key to C-o
+  :config
+  ;; Load Sources Core code
+  (require 'consult-omni-sources)
+  ;; Load Embark Actions
+  (require 'consult-omni-embark)
+
+  ;; Either load all source modules or a selected list
+
+  ;;; Select a list of modules you want to aload, otherwise all sources all laoded
+  ; (setq consult-omni-sources-modules-to-load (list 'consult-omni-wkipedia 'consult-omni-notes))
+  (consult-omni-sources-load-modules)
+  ;;; set multiple sources for consult-omni-multi command. Change these lists as needed for different interactive commands. Keep in mind that each source has to be a key in `consult-omni-sources-alist'.
+  (setq consult-omni-multi-sources '("calc"
+                                     ;; "File"
+                                     ;; "Buffer"
+                                     ;; "Bookmark"
+                                     "Apps"
+                                     ;; "gptel"
+                                     "Brave"
+                                     "Dictionary"
+                                     ;; "Google"
+                                     "Wikipedia"
+                                     "elfeed"
+                                     ;; "mu4e"
+                                     ;; "buffers text search"
+                                     "Notes Search"
+                                     "Org Agenda"
+                                     "GitHub"
+                                     ;; "YouTube"
+                                     "Invidious"))
+
+;; Per source customization
+
+  ;;; Set API KEYs. It is recommended to use a function that returns the string for better security.
+  (setq consult-omni-google-customsearch-key "YOUR-GOOGLE-API-KEY-OR-FUNCTION")
+  (setq consult-omni-google-customsearch-cx "YOUR-GOOGLE-CX-NUMBER-OR-FUNCTION")
+  (setq consult-omni-brave-api-key "YOUR-BRAVE-API-KEY-OR-FUNCTION")
+  (setq consult-omni-stackexchange-api-key "YOUR-STACKEXCHANGE-API-KEY-OR-FUNCTION")
+  (setq consult-omni-pubmed-api-key "YOUR-PUBMED-API-KEY-OR-FUNCTION")
+  (setq consult-omni-openai-api-key "YOUR-OPENAI-API-KEY-OR-FUNCTION")
+
+;;; Pick you favorite autosuggest command.
+  (setq consult-omni-default-autosuggest-command #'consult-omni-dynamic-brave-autosuggest) ;;or any other autosuggest source you define
+
+ ;;; Set your shorthand favorite interactive command
+  (setq consult-omni-default-interactive-command #'consult-omni-multi))
+#+end_src
+** Corsair
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! corsair)
+#+end_src
+
+#+begin_src emacs-lisp
+(use-package! corsair
+  :ensure t
+  :defer t ; Optional: Load lazily
+  :after gptel) ; Ensure gptel is loaded before corsair
+#+end_src
 * Server
 #+begin_src emacs-lisp
 (server-force-delete)

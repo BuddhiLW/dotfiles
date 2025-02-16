@@ -1,0 +1,71 @@
+{
+    "telemetry.sqmId": "",
+    "telemetry.machineId": "6cb6edd506b49893f2ae111eadce993ac795b0cd879ff75f1111da7beae156e6",
+    "telemetry.macMachineId": "93ad13a3f6f2fa7b39714775a031bda308d4659c875e246ecb0a790fcfd4144f",
+    "telemetry.devDeviceId": "920f5b5d-da35-456e-a478-8209fffff897",
+    "backupWorkspaces": {
+        "workspaces": [],
+        "folders": [
+            {
+                "folderUri": "file:///home/jacobi/PP/Orasis/pricing-sell-cube-API"
+            }
+        ],
+        "emptyWindows": [
+            {
+                "backupFolder": "1739475268943"
+            }
+        ]
+    },
+    "profileAssociations": {
+        "workspaces": {
+            "file:///home/jacobi/PP/Orasis/pricing-sell-cube-API": "__default__profile__"
+        },
+        "emptyWindows": {
+            "1739475268943": "__default__profile__"
+        }
+    },
+    "windowControlHeight": 35,
+    "theme": "vs-dark",
+    "themeBackground": "#181818",
+    "windowSplash": {
+        "zoomLevel": 0,
+        "baseTheme": "vs-dark",
+        "colorInfo": {
+            "foreground": "#d6d6dd",
+            "background": "#181818",
+            "editorBackground": "#181818",
+            "titleBarBackground": "#181818",
+            "titleBarBorder": "#383838",
+            "activityBarBackground": "#181818",
+            "activityBarBorder": "#383838",
+            "sideBarBackground": "#181818",
+            "sideBarBorder": "#383838",
+            "statusBarBackground": "#181818",
+            "statusBarBorder": "#383838",
+            "statusBarNoFolderBackground": "#181818"
+        },
+        "layoutInfo": {
+            "sideBarSide": "left",
+            "editorPartMinWidth": 220,
+            "titleBarHeight": 35,
+            "activityBarWidth": 0,
+            "sideBarWidth": 208,
+            "statusBarHeight": 22,
+            "windowBorder": false
+        }
+    },
+    "windowsState": {
+        "lastActiveWindow": {
+            "folder": "file:///home/jacobi/PP/Orasis/pricing-sell-cube-API",
+            "backupPath": "/home/jacobi/.config/Cursor/Backups/faabfde813aa3c5c0ef956899888e272",
+            "uiState": {
+                "mode": 1,
+                "x": 17,
+                "y": 17,
+                "width": 2526,
+                "height": 1009
+            }
+        },
+        "openedWindows": []
+    }
+}

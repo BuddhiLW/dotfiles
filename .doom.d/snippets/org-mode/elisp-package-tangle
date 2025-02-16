@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: elisp-package-tangle
+# key: <elt
+# --
+
+#+begin_src emacs-lisp :tangle packages.el
+
+#+end_src

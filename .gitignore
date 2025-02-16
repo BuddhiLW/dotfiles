@@ -163,3 +163,8 @@ github-copilot/
 .config/nyxt/
 .config/Element/
 .config/vlc/
+
+.config/Cursor/
+.config/uv/
+.local/lib/
+.config/Docker\ Desktop/

@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+
+cd "$DOTFILES/gitthings/"
+
+curl -sLO https://raw.githubusercontent.com/clj-kondo/clj-kondo/master/script/install-clj-kondo
+sudo chmod +x install-clj-kondo
+sudo ./install-clj-kondo

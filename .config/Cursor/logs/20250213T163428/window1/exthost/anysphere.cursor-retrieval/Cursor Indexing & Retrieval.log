@@ -1,0 +1,235 @@
+2025-02-13 16:34:31.653 [error] Git command failed: git config --get remote.origin.url Command failed: git config --get remote.origin.url
+
+2025-02-13 16:34:31.653 [error] Error getting repo info: Command failed: git config --get remote.origin.url
+
+2025-02-13 16:34:31.653 [error] Error: Command failed: git config --get remote.origin.url
+
+	at genericNodeError (node:internal/errors:984:15)
+	at wrappedFn (node:internal/errors:538:14)
+	at ChildProcess.exithandler (node:child_process:422:12)
+	at ChildProcess.emit (node:events:518:28)
+	at maybeClose (node:internal/child_process:1104:16)
+	at Socket.<anonymous> (node:internal/child_process:456:11)
+	at Socket.emit (node:events:518:28)
+	at Pipe.<anonymous> (node:net:343:12)
+2025-02-13 16:34:31.889 [error] accessToken is undefined. User is not logged in. We shouldn't do any indexing.
+2025-02-13 16:35:37.147 [info] Creating Indexing Repo client:  https://repo42.cursor.sh
+2025-02-13 16:35:37.147 [info] Creating repo client with backend url: https://repo42.cursor.sh
+2025-02-13 16:35:37.147 [error] NoWorkspaceUriError
+2025-02-13 16:35:37.307 [info] Creating Indexing Repo client:  https://repo42.cursor.sh
+2025-02-13 16:35:37.307 [info] Creating repo client with backend url: https://repo42.cursor.sh
+2025-02-13 16:35:37.307 [error] NoWorkspaceUriError
+2025-02-13 16:35:37.505 [info] Creating Indexing Repo client:  https://repo42.cursor.sh
+2025-02-13 16:35:37.505 [info] Creating repo client with backend url: https://repo42.cursor.sh
+2025-02-13 16:35:37.505 [error] NoWorkspaceUriError
+2025-02-13 16:35:37.706 [info] Creating Indexing Repo client:  https://repo42.cursor.sh
+2025-02-13 16:35:37.706 [info] Creating repo client with backend url: https://repo42.cursor.sh
+2025-02-13 16:35:37.706 [error] NoWorkspaceUriError
+2025-02-13 16:35:37.905 [info] Creating Indexing Repo client:  https://repo42.cursor.sh
+2025-02-13 16:35:37.905 [info] Creating repo client with backend url: https://repo42.cursor.sh
+2025-02-13 16:35:37.905 [error] NoWorkspaceUriError
+2025-02-13 16:35:38.110 [info] Creating Indexing Repo client:  https://repo42.cursor.sh
+2025-02-13 16:35:38.110 [info] Creating repo client with backend url: https://repo42.cursor.sh
+2025-02-13 16:35:38.110 [error] NoWorkspaceUriError
+2025-02-13 16:35:39.050 [info] Creating Indexing Repo client:  https://repo42.cursor.sh
+2025-02-13 16:35:39.050 [info] Creating repo client with backend url: https://repo42.cursor.sh
+2025-02-13 16:35:39.050 [error] NoWorkspaceUriError
+2025-02-13 17:17:42.628 [info] Creating Indexing Repo client:  https://repo42.cursor.sh
+2025-02-13 17:17:42.628 [info] Creating repo client with backend url: https://repo42.cursor.sh
+2025-02-13 17:17:42.828 [info] InternalRepoInfo constructor with preferredEmbeddingModel 0
+2025-02-13 17:17:42.842 [info] Doing a startup handshake.
+2025-02-13 17:17:42.842 [info] Creating merkle client.
+2025-02-13 17:17:42.842 [info] Done creating merkle client.
+2025-02-13 17:17:42.888 [info] Finished initializing merkle tree in 5.727500999999847 ms.
+2025-02-13 17:17:42.888 [info] Doing the initial handshake with hash: 9b75bb35760c6e1df9e620b8145d8963dce2f8776f74457b859a31f88a6bd005
+2025-02-13 17:17:42.890 [info] Handshake start
+2025-02-13 17:17:42.891 [warning] Error reading high level folder description. Ignoring. Error: ENOENT: no such file or directory, open '/home/jacobi/.config/Cursor/User/workspaceStorage/07167fc320bfe0d25871b83816758a1b/anysphere.cursor-retrieval/high_level_folder_description.txt'
+2025-02-13 17:17:43.747 [info] Handshake timing: 858.2957429999999, response: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"a04e3571-2ad9-44fe-a65b-7c93937d8492","status":"STATUS_EMPTY"}]}
+2025-02-13 17:17:43.747 [info] Handshake result: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"a04e3571-2ad9-44fe-a65b-7c93937d8492","status":"STATUS_EMPTY"}]}
+2025-02-13 17:17:43.747 [info] Starting fast remote sync.
+2025-02-13 17:17:43.750 [info] Total num embeddable files: 37
+2025-02-13 17:17:43.750 [info] Root hash: 9b75bb35760c6e1df9e620b8145d8963dce2f8776f74457b859a31f88a6bd005
+2025-02-13 17:17:43.750 [info] Starting repository upload from scratch.
+2025-02-13 17:17:43.751 [info] Uploading 37 files.
+2025-02-13 17:17:43.752 [info] Total number of files to embed: 37
+2025-02-13 17:17:43.752 [info] Not aborted
+2025-02-13 17:17:43.752 [info] Starting while loop.
+2025-02-13 17:17:43.752 [info] fileQueue.length: 37
+2025-02-13 17:17:43.752 [info] fileQueue.length: 36
+2025-02-13 17:17:43.752 [info] fileQueue.length: 35
+2025-02-13 17:17:43.752 [info] Waiting for jobs to finish. currentIndexingJobs.length: 2 concurrentUploads.current: 2 fileQueue.length: 35
+2025-02-13 17:17:43.930 [info] Completed job unsuccessfully, will retry: ./README.md error: Weird error: ConnectError: [internal] internal error
+2025-02-13 17:17:43.930 [info] Waiting for jobs to finish. currentIndexingJobs.length: 1 concurrentUploads.current: 1 fileQueue.length: 36
+2025-02-13 17:17:44.258 [info] Creating Indexing Repo client:  https://repo42.cursor.sh
+2025-02-13 17:17:44.258 [info] Creating repo client with backend url: https://repo42.cursor.sh
+2025-02-13 17:17:44.258 [info] multiCodebaseIndexingJob dispose
+2025-02-13 17:17:44.258 [info] Aborting indexing job.
+2025-02-13 17:17:44.259 [info] InternalRepoInfo constructor with preferredEmbeddingModel 0
+2025-02-13 17:17:44.259 [info] Completed job unsuccessfully, will retry: ./.gitmodules error: Bad unexpected error
+2025-02-13 17:17:44.259 [info] Indexing job successfully done or aborted.
+2025-02-13 17:17:44.260 [info] Doing a startup handshake.
+2025-02-13 17:17:44.260 [info] Creating merkle client.
+2025-02-13 17:17:44.260 [info] Done creating merkle client.
+2025-02-13 17:17:44.269 [info] Finished initializing merkle tree in 1.8649510000000191 ms.
+2025-02-13 17:17:44.270 [info] Doing the initial handshake with hash: 9b75bb35760c6e1df9e620b8145d8963dce2f8776f74457b859a31f88a6bd005
+2025-02-13 17:17:44.270 [info] Handshake start
+2025-02-13 17:17:44.461 [error] Error Checking Connection: [unimplemented] HTTP 404
+2025-02-13 17:17:44.461 [info] Creating Indexing Repo client:  https://repo42.cursor.sh
+2025-02-13 17:17:44.461 [info] Creating repo client with backend url: https://repo42.cursor.sh
+2025-02-13 17:17:44.868 [info] Handshake timing: 598.4167649999999, response: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"a04e3571-2ad9-44fe-a65b-7c93937d8492","status":"STATUS_EMPTY"}]}
+2025-02-13 17:17:44.868 [info] Handshake result: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"a04e3571-2ad9-44fe-a65b-7c93937d8492","status":"STATUS_EMPTY"}]}
+2025-02-13 17:17:44.868 [info] Starting fast remote sync.
+2025-02-13 17:17:44.868 [info] Total num embeddable files: 37
+2025-02-13 17:17:44.869 [info] Root hash: 9b75bb35760c6e1df9e620b8145d8963dce2f8776f74457b859a31f88a6bd005
+2025-02-13 17:17:44.869 [info] Starting repository upload from scratch.
+2025-02-13 17:17:44.869 [info] Uploading 37 files.
+2025-02-13 17:17:44.869 [info] Total number of files to embed: 37
+2025-02-13 17:17:44.869 [info] Not aborted
+2025-02-13 17:17:44.869 [info] Starting while loop.
+2025-02-13 17:17:44.869 [info] fileQueue.length: 37
+2025-02-13 17:17:44.869 [info] fileQueue.length: 36
+2025-02-13 17:17:44.869 [info] fileQueue.length: 35
+2025-02-13 17:17:44.869 [info] Waiting for jobs to finish. currentIndexingJobs.length: 2 concurrentUploads.current: 2 fileQueue.length: 35
+2025-02-13 17:17:45.040 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./.gitmodules
+2025-02-13 17:17:45.040 [info] fileQueue.length: 34
+2025-02-13 17:17:45.040 [info] fileQueue.length: 33
+2025-02-13 17:17:45.040 [info] Waiting for jobs to finish. currentIndexingJobs.length: 3 concurrentUploads.current: 3 fileQueue.length: 33
+2025-02-13 17:17:45.397 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./internal/controller/config.go
+2025-02-13 17:17:45.397 [info] fileQueue.length: 32
+2025-02-13 17:17:45.397 [info] fileQueue.length: 31
+2025-02-13 17:17:45.397 [info] Waiting for jobs to finish. currentIndexingJobs.length: 4 concurrentUploads.current: 4 fileQueue.length: 31
+2025-02-13 17:17:45.405 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./README.md
+2025-02-13 17:17:45.405 [info] fileQueue.length: 30
+2025-02-13 17:17:45.405 [info] fileQueue.length: 29
+2025-02-13 17:17:45.405 [info] Waiting for jobs to finish. currentIndexingJobs.length: 5 concurrentUploads.current: 5 fileQueue.length: 29
+2025-02-13 17:17:46.412 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./internal/dto/endpoint.go
+2025-02-13 17:17:46.412 [info] fileQueue.length: 28
+2025-02-13 17:17:46.412 [info] fileQueue.length: 27
+2025-02-13 17:17:46.412 [info] Waiting for jobs to finish. currentIndexingJobs.length: 6 concurrentUploads.current: 6 fileQueue.length: 27
+2025-02-13 17:17:46.439 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./internal/controller/handlers.go
+2025-02-13 17:17:46.439 [info] fileQueue.length: 26
+2025-02-13 17:17:46.439 [info] fileQueue.length: 25
+2025-02-13 17:17:46.439 [info] Waiting for jobs to finish. currentIndexingJobs.length: 7 concurrentUploads.current: 7 fileQueue.length: 25
+2025-02-13 17:17:46.467 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./internal/model/sql.go
+2025-02-13 17:17:46.468 [info] fileQueue.length: 24
+2025-02-13 17:17:46.468 [info] fileQueue.length: 23
+2025-02-13 17:17:46.468 [info] Waiting for jobs to finish. currentIndexingJobs.length: 8 concurrentUploads.current: 8 fileQueue.length: 23
+2025-02-13 17:17:46.485 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./internal/model/rest.go
+2025-02-13 17:17:46.485 [info] fileQueue.length: 22
+2025-02-13 17:17:46.485 [info] fileQueue.length: 21
+2025-02-13 17:17:46.485 [info] Waiting for jobs to finish. currentIndexingJobs.length: 9 concurrentUploads.current: 9 fileQueue.length: 21
+2025-02-13 17:17:46.638 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./internal/controller/awesome.go
+2025-02-13 17:17:46.638 [info] fileQueue.length: 20
+2025-02-13 17:17:46.638 [info] fileQueue.length: 19
+2025-02-13 17:17:46.638 [info] Waiting for jobs to finish. currentIndexingJobs.length: 10 concurrentUploads.current: 10 fileQueue.length: 19
+2025-02-13 17:17:47.408 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./internal/sql/schema/migrations/000004_create_transactional_tables.down.sql
+2025-02-13 17:17:47.408 [info] fileQueue.length: 18
+2025-02-13 17:17:47.408 [info] fileQueue.length: 17
+2025-02-13 17:17:47.408 [info] Waiting for jobs to finish. currentIndexingJobs.length: 11 concurrentUploads.current: 11 fileQueue.length: 17
+2025-02-13 17:17:47.410 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./internal/sql/schema/migrations/000001_create_core_tables.down.sql
+2025-02-13 17:17:47.410 [info] fileQueue.length: 16
+2025-02-13 17:17:47.410 [info] fileQueue.length: 15
+2025-02-13 17:17:47.410 [info] Waiting for jobs to finish. currentIndexingJobs.length: 12 concurrentUploads.current: 12 fileQueue.length: 15
+2025-02-13 17:17:47.411 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./internal/sql/schema/migrations/000005_survey.up.sql
+2025-02-13 17:17:47.411 [info] fileQueue.length: 14
+2025-02-13 17:17:47.411 [info] fileQueue.length: 13
+2025-02-13 17:17:47.411 [info] Waiting for jobs to finish. currentIndexingJobs.length: 13 concurrentUploads.current: 13 fileQueue.length: 13
+2025-02-13 17:17:47.413 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./internal/sql/schema/migrations/000002_create_business_entities.up.sql
+2025-02-13 17:17:47.413 [info] fileQueue.length: 12
+2025-02-13 17:17:47.413 [info] fileQueue.length: 11
+2025-02-13 17:17:47.413 [info] Waiting for jobs to finish. currentIndexingJobs.length: 14 concurrentUploads.current: 14 fileQueue.length: 11
+2025-02-13 17:17:47.420 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./internal/sql/schema/migrations/000003_create_relationships.up.sql
+2025-02-13 17:17:47.420 [info] fileQueue.length: 10
+2025-02-13 17:17:47.420 [info] fileQueue.length: 9
+2025-02-13 17:17:47.420 [info] Waiting for jobs to finish. currentIndexingJobs.length: 15 concurrentUploads.current: 15 fileQueue.length: 9
+2025-02-13 17:17:47.421 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./internal/sql/schema/migrations/000004_create_transactional_tables.up.sql
+2025-02-13 17:17:47.421 [info] fileQueue.length: 8
+2025-02-13 17:17:47.421 [info] fileQueue.length: 7
+2025-02-13 17:17:47.421 [info] Waiting for jobs to finish. currentIndexingJobs.length: 16 concurrentUploads.current: 16 fileQueue.length: 7
+2025-02-13 17:17:47.485 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./internal/sql/schema/README.md
+2025-02-13 17:17:47.485 [info] fileQueue.length: 6
+2025-02-13 17:17:47.485 [info] fileQueue.length: 5
+2025-02-13 17:17:47.485 [info] Waiting for jobs to finish. currentIndexingJobs.length: 17 concurrentUploads.current: 17 fileQueue.length: 5
+2025-02-13 17:17:47.637 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./internal/sql/queries/query.sql
+2025-02-13 17:17:47.637 [info] fileQueue.length: 4
+2025-02-13 17:17:47.637 [info] fileQueue.length: 3
+2025-02-13 17:17:47.637 [info] Waiting for jobs to finish. currentIndexingJobs.length: 18 concurrentUploads.current: 18 fileQueue.length: 3
+2025-02-13 17:17:47.861 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./internal/sql/schema/migrations/000003_create_relationships.down.sql
+2025-02-13 17:17:47.861 [info] fileQueue.length: 2
+2025-02-13 17:17:47.861 [info] fileQueue.length: 1
+2025-02-13 17:17:47.861 [info] Waiting for jobs to finish. currentIndexingJobs.length: 19 concurrentUploads.current: 19 fileQueue.length: 1
+2025-02-13 17:17:48.564 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./pkg/redis/pubsub.go
+2025-02-13 17:17:48.564 [info] fileQueue.length: 0
+2025-02-13 17:17:48.564 [info] Waiting for jobs to finish. currentIndexingJobs.length: 19 concurrentUploads.current: 20 fileQueue.length: 0
+2025-02-13 17:17:48.566 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./config/config.go
+2025-02-13 17:17:48.566 [info] Waiting for jobs to finish. currentIndexingJobs.length: 18 concurrentUploads.current: 21 fileQueue.length: 0
+2025-02-13 17:17:48.566 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./internal/service/awesomeness.go
+2025-02-13 17:17:48.566 [info] Waiting for jobs to finish. currentIndexingJobs.length: 17 concurrentUploads.current: 22 fileQueue.length: 0
+2025-02-13 17:17:48.569 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./internal/sql/schema/migrations/000001_create_core_tables.up.sql
+2025-02-13 17:17:48.569 [info] Waiting for jobs to finish. currentIndexingJobs.length: 16 concurrentUploads.current: 23 fileQueue.length: 0
+2025-02-13 17:17:48.570 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./internal/db/models.go
+2025-02-13 17:17:48.570 [info] Waiting for jobs to finish. currentIndexingJobs.length: 15 concurrentUploads.current: 24 fileQueue.length: 0
+2025-02-13 17:17:48.571 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./docs/swagger.json
+2025-02-13 17:17:48.571 [info] Waiting for jobs to finish. currentIndexingJobs.length: 14 concurrentUploads.current: 25 fileQueue.length: 0
+2025-02-13 17:17:48.571 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./README.org
+2025-02-13 17:17:48.571 [info] Waiting for jobs to finish. currentIndexingJobs.length: 13 concurrentUploads.current: 26 fileQueue.length: 0
+2025-02-13 17:17:48.572 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./cmd/main.go
+2025-02-13 17:17:48.572 [info] Waiting for jobs to finish. currentIndexingJobs.length: 12 concurrentUploads.current: 27 fileQueue.length: 0
+2025-02-13 17:17:48.573 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./third-party/sqlc-tmp.yaml
+2025-02-13 17:17:48.573 [info] Waiting for jobs to finish. currentIndexingJobs.length: 11 concurrentUploads.current: 28 fileQueue.length: 0
+2025-02-13 17:17:48.575 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./pkg/repository/interface.go
+2025-02-13 17:17:48.575 [info] Waiting for jobs to finish. currentIndexingJobs.length: 10 concurrentUploads.current: 29 fileQueue.length: 0
+2025-02-13 17:17:48.626 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./docs/docs.go
+2025-02-13 17:17:48.626 [info] Waiting for jobs to finish. currentIndexingJobs.length: 9 concurrentUploads.current: 30 fileQueue.length: 0
+2025-02-13 17:17:48.631 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./internal/sql/schema/migrations/000005_survey.down.sql
+2025-02-13 17:17:48.631 [info] Waiting for jobs to finish. currentIndexingJobs.length: 8 concurrentUploads.current: 31 fileQueue.length: 0
+2025-02-13 17:17:48.635 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./internal/db/query.sql.go
+2025-02-13 17:17:48.635 [info] Waiting for jobs to finish. currentIndexingJobs.length: 7 concurrentUploads.current: 32 fileQueue.length: 0
+2025-02-13 17:17:48.926 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./internal/db/db.go
+2025-02-13 17:17:48.926 [info] Waiting for jobs to finish. currentIndexingJobs.length: 6 concurrentUploads.current: 33 fileQueue.length: 0
+2025-02-13 17:17:48.934 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./third-party/sqlc.yaml
+2025-02-13 17:17:48.934 [info] Waiting for jobs to finish. currentIndexingJobs.length: 5 concurrentUploads.current: 34 fileQueue.length: 0
+2025-02-13 17:17:49.477 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./go.mod
+2025-02-13 17:17:49.477 [info] Waiting for jobs to finish. currentIndexingJobs.length: 4 concurrentUploads.current: 35 fileQueue.length: 0
+2025-02-13 17:17:49.478 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./go.sum
+2025-02-13 17:17:49.478 [info] Waiting for jobs to finish. currentIndexingJobs.length: 3 concurrentUploads.current: 36 fileQueue.length: 0
+2025-02-13 17:17:49.579 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./docs/swagger.yaml
+2025-02-13 17:17:49.579 [info] Waiting for jobs to finish. currentIndexingJobs.length: 2 concurrentUploads.current: 37 fileQueue.length: 0
+2025-02-13 17:17:49.580 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./internal/sql/schema/migrations/000002_create_business_entities.down.sql
+2025-02-13 17:17:49.580 [info] Waiting for jobs to finish. currentIndexingJobs.length: 1 concurrentUploads.current: 38 fileQueue.length: 0
+2025-02-13 17:17:50.808 [info] Completed job successfully: a04e3571-2ad9-44fe-a65b-7c93937d8492 ./docs/requests/example.http
+2025-02-13 17:17:50.808 [info] Waiting for jobs to finish. currentIndexingJobs.length: 0 concurrentUploads.current: 39 fileQueue.length: 0
+2025-02-13 17:17:51.218 [info] Finished indexing repository.
+2025-02-13 17:17:51.218 [info] Indexing job successfully done or aborted.
+2025-02-13 17:27:44.260 [info] multiCodebaseIndexingJob dispose
+2025-02-13 17:27:44.260 [info] Aborting indexing job.
+2025-02-13 17:27:44.260 [info] Doing a startup handshake.
+2025-02-13 17:27:44.260 [info] Creating merkle client.
+2025-02-13 17:27:44.260 [info] Done creating merkle client.
+2025-02-13 17:27:44.270 [info] Finished initializing merkle tree in 2.969266999978572 ms.
+2025-02-13 17:27:44.270 [info] Doing the initial handshake with hash: 9b75bb35760c6e1df9e620b8145d8963dce2f8776f74457b859a31f88a6bd005
+2025-02-13 17:27:44.271 [info] Handshake start
+2025-02-13 17:27:44.925 [info] Handshake timing: 654.7216829999816, response: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"a04e3571-2ad9-44fe-a65b-7c93937d8492","status":"STATUS_UP_TO_DATE"}]}
+2025-02-13 17:27:44.925 [info] Handshake result: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"a04e3571-2ad9-44fe-a65b-7c93937d8492","status":"STATUS_UP_TO_DATE"}]}
+2025-02-13 17:27:44.925 [info] Starting fast remote sync.
+2025-02-13 17:27:44.925 [info] Total num embeddable files: 37
+2025-02-13 17:27:44.925 [info] Root hash: 9b75bb35760c6e1df9e620b8145d8963dce2f8776f74457b859a31f88a6bd005
+2025-02-13 17:27:45.078 [info] Finished indexing repository.
+2025-02-13 17:27:45.078 [info] Indexing job successfully done or aborted.
+2025-02-13 17:37:44.260 [info] multiCodebaseIndexingJob dispose
+2025-02-13 17:37:44.260 [info] Aborting indexing job.
+2025-02-13 17:37:44.260 [info] Doing a startup handshake.
+2025-02-13 17:37:44.260 [info] Creating merkle client.
+2025-02-13 17:37:44.260 [info] Done creating merkle client.
+2025-02-13 17:37:44.269 [info] Finished initializing merkle tree in 1.8928999998606741 ms.
+2025-02-13 17:37:44.269 [info] Doing the initial handshake with hash: 9b75bb35760c6e1df9e620b8145d8963dce2f8776f74457b859a31f88a6bd005
+2025-02-13 17:37:44.270 [info] Handshake start
+2025-02-13 17:37:44.904 [info] Handshake timing: 634.6937749998178, response: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"a04e3571-2ad9-44fe-a65b-7c93937d8492","status":"STATUS_UP_TO_DATE"}]}
+2025-02-13 17:37:44.904 [info] Handshake result: {"status":"STATUS_SUCCESS","codebases":[{"codebaseId":"a04e3571-2ad9-44fe-a65b-7c93937d8492","status":"STATUS_UP_TO_DATE"}]}
+2025-02-13 17:37:44.904 [info] Starting fast remote sync.
+2025-02-13 17:37:44.904 [info] Total num embeddable files: 37
+2025-02-13 17:37:44.905 [info] Root hash: 9b75bb35760c6e1df9e620b8145d8963dce2f8776f74457b859a31f88a6bd005
+2025-02-13 17:37:45.055 [info] Finished indexing repository.
+2025-02-13 17:37:45.055 [info] Indexing job successfully done or aborted.
+2025-02-13 17:47:17.496 [info] multiCodebaseIndexingJob dispose
+2025-02-13 17:47:17.496 [info] Aborting indexing job.
