@@ -6,3 +6,5 @@ pip install 'pix2tex[gui]'
 
 echo "Installing gnome-screenshot as its pix2tex default screenshooter"
 sudo apt-get install gnome-screenshot
+sudo apt-get install pyqt5-dev
+pip install --no-cache-dir --force-reinstall -U pix2tex albumentations numpy scipy

@@ -79,7 +79,7 @@ export ANDROID_AVD_HOME="$HOME/Android/system-images/"
 export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 
-# export OPENAI_API_KEY="$(pass LLMs/OpenAI)"
+export OPENAI_API_KEY="$(pass LLMs/OpenAI-keys)"
 export GOROOT="/usr/local/go"
 export LC_COLLATE=C
 export LESS_TERMCAP_mb="[35m" # magenta

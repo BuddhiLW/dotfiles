@@ -58,7 +58,7 @@
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type nil)
+(setq display-line-numbers-type t)
 
 ;; Default face size
 (set-face-attribute 'default nil :height 90)
@@ -137,6 +137,8 @@
 ;;   :bind
 ;;   (( "C-c M-i" . org-tanglesync-process-buffer-interactive)
 ;;    ( "C-c M-a" . org-tanglesync-process-buffer-automatic)))
+
+(setq warning-minimum-level :emergency)
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
@@ -396,10 +398,10 @@
         :desc "w3m search" "s" #'w3m-search
         :desc "dictionary search" "d" #'dictionary-search)))
 
-;; (use-package! sqlformat
-;;   :config
-;;   (setq sqlformat-command 'pgformatter)
-;;   (add-hook 'sql-mode-hook 'sqlformat-on-save-mode))
+(use-package! sqlformat
+  :config
+  (setq sqlformat-command 'sleek)
+  (add-hook 'sql-mode-hook 'sqlformat-on-save-mode))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
@@ -1398,6 +1400,16 @@
   :host "localhost:11434"               ;Where it's running
   :stream t                             ;Stream responses
   :models '(deep-jibril:1.0))          ;List of models
+
+(gptel-make-ollama "Ollama-sql-coder"             ;Any name of your choosing
+  :host "localhost:11434"               ;Where it's running
+  :stream t                             ;Stream responses
+  :models '(codelama-jibril-SQLer:1.0))          ;List of models
+
+(gptel-make-ollama "qwen2.5-coder:32B"             ;Any name of your choosing
+  :host "localhost:11434"               ;Where it's running
+  :stream t                             ;Stream responses
+  :models '(qwen2.5-coder:32B))          ;List of models
 
 (use-package! llm)
 

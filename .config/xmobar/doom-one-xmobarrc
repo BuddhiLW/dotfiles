@@ -12,11 +12,11 @@
    -- trayer
    -- 'dtos-local-bin' (from dtos-core-repo)
 
-Config { font            = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:hinting=true"
+Config { font            = "Ubuntu 16"
        , additionalFonts = [
-       "xft:FontAwesome:pixelsize=16:antialias=true:hinting=true"
-       , "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:hinting=true"
-       , "xft:Mononoki:pixelsize=16:antialias=true:hinting=true"
+       "xft:FontAwesome:pixelsize=30:antialias=true:hinting=true"
+       , "xft:Ubuntu:weight=bold:pixelsize=30:antialias=true:hinting=true"
+       , "xft:Mononoki:pixelsize=30:antialias=true:hinting=true"
                            ]
        , bgColor      = "#000000"
        , fgColor      = "#FA0A0A"
@@ -25,7 +25,10 @@ Config { font            = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:h
        --   an integer for the percentage width, so 100 would be 100%.
        --   an integer for the minimum pixel height for xmobar, so 24 would force a height of at least 24 pixels.
        --   NOTE: The height should be the same as the trayer (system tray) height.
-       , position       = BottomSize C 95 37
+       , position = Static { xpos = 150 , ypos = 1020, width = 2260, height = 50 }
+       -- , position     = BottomSize C 95 50
+       , border       = FullB
+       , borderColor =  "--FFFFFF"
        , lowerOnStart = True
        , hideOnStart  = False
        , allDesktops  = True
@@ -56,7 +59,7 @@ Config { font            = "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:h
                         -- Time and date
                     , Run Date "⏰  %d %b %Y - (%H:%M) " "date" 50
                         -- Script that dynamically adjusts xmobar padding depending on number of trayer icons.
-                    , Run Com ".config/xmobar/trayer-padding-icon.sh" [] "trayerpad" 20
+                    , Run Com ".config/xmobar/trayer-padding-icon.sh" [] "trayerpad" 50
                         -- Prints out the left side items such as workspaces, layout, etc.
                     , Run UnsafeStdinReader
                     ]
