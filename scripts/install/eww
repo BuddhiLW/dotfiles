@@ -1,0 +1,11 @@
+#!/usr/bin/bash
+
+sudo apt-get install libdbus-glib-1-dev libdbusmenu-glib-dev libdbusmenu-gtk3-dev
+
+cd $DOTFILES/gitthings
+git clone https://github.com/elkowar/eww
+cd eww
+
+cargo build --release --no-default-features --features x11
+cp ./target/release "$HOME/.local/bin"
+

@@ -1,0 +1,6 @@
+#!/usr/bin/bash
+
+cd $DOTFILES/gitthings
+git clone https://github.com/eraserhd/parinfer-rust.git
+cd parinfer-rust
+cargo build --release 
