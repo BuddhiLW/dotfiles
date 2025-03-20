@@ -204,3 +204,9 @@ github-copilot/
 .config/xmonad/xmonad
 .config/xmonad/xmonad-contrib
 .xprofile
+.config/torbrowser
+.config/torcat
+.config/tremc
+
+.config/TexasSolver/
+.config/wandb/

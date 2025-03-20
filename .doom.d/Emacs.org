@@ -67,7 +67,7 @@
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type nil)
+(setq display-line-numbers-type t)
 
 ;; Default face size
 (set-face-attribute 'default nil :height 90)
@@ -90,6 +90,9 @@
 (display-battery-mode 0)                          ; it's nice to know how much power you have
 (global-subword-mode 1)                           ; Iterate through CamelCase words
 #+end_src
+
+#+RESULTS:
+: t
 
 ** Window management
 #+begin_src emacs-lisp
@@ -192,6 +195,14 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 ;;   (( "C-c M-i" . org-tanglesync-process-buffer-interactive)
 ;;    ( "C-c M-a" . org-tanglesync-process-buffer-automatic)))
 #+end_src
+** Warning level
+
+#+begin_src emacs-lisp
+(setq warning-minimum-level :emergency)
+#+end_src
+
+#+RESULTS:
+: :emergency
 
 * Maps
 ** Font resize
@@ -966,14 +977,11 @@ Shell version to be used with =run-python=
 #+end_src
 
 #+begin_src emacs-lisp
-;; (use-package! sqlformat
-;;   :config
-;;   (setq sqlformat-command 'pgformatter)
-;;   (add-hook 'sql-mode-hook 'sqlformat-on-save-mode))
+(use-package! sqlformat
+  :config
+  (setq sqlformat-command 'sleek)
+  (add-hook 'sql-mode-hook 'sqlformat-on-save-mode))
 #+end_src
-
-#+RESULTS:
-: t
 
 #+begin_src emacs-lisp :tangle packages.el
 ;; (package! emacsql-mysql)
@@ -2723,6 +2731,16 @@ sudo update-alternatives --config x-terminal-emulator
   :host "localhost:11434"               ;Where it's running
   :stream t                             ;Stream responses
   :models '(deep-jibril:1.0))          ;List of models
+
+(gptel-make-ollama "Ollama-sql-coder"             ;Any name of your choosing
+  :host "localhost:11434"               ;Where it's running
+  :stream t                             ;Stream responses
+  :models '(codelama-jibril-SQLer:1.0))          ;List of models
+
+(gptel-make-ollama "qwen2.5-coder:32B"             ;Any name of your choosing
+  :host "localhost:11434"               ;Where it's running
+  :stream t                             ;Stream responses
+  :models '(qwen2.5-coder:32B))          ;List of models
 #+end_src
 
 ** ELLAMA

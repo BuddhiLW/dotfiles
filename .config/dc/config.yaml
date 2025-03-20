@@ -25,7 +25,8 @@ namespaces:
           - prometheus
           - grafana
         - cubo:
-          - postgresql
-          - redpanda-0
-          - redpanda-console
-          - mysql
+          # - postgresql
+          # - mysql
+          - grafana
+          - prometheus
+          - tempo

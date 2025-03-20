@@ -25,7 +25,11 @@ Config { font            = "FiraCode Nerd Font 19"
        --   an integer for the percentage width, so 100 would be 100%.
        --   an integer for the minimum pixel height for xmobar, so 24 would force a height of at least 24 pixels.
        --   NOTE: The height should be the same as the trayer (system tray) height.
-       , position       = BottomSize C 95 70
+       -- , position       = BottomSize C 95 70
+       , position = Static { xpos = 150 , ypos = 1020, width = 2260, height = 50 }
+       -- , position     = BottomSize C 95 50
+       , border       = FullB
+       , borderColor =  "--FFFFFF"
        , lowerOnStart = True
        , hideOnStart  = False
        , allDesktops  = True
@@ -61,7 +65,7 @@ Config { font            = "FiraCode Nerd Font 19"
                         -- Time and date
                     , Run Date "%d/%m/%Y %Hh%Mm" "date" 50
                         -- Script that dynamically adjusts xmobar padding depending on number of trayer icons.
-                    , Run Com ".config/xmobar/trayer-padding-icon.sh" [] "trayerpad" 20
+                    , Run Com ".config/xmobar/trayer-padding-icon.sh" [] "trayerpad" 50
                         -- Prints out the left side items such as workspaces, layout, etc.
                     , Run UnsafeStdinReader
                     ]
