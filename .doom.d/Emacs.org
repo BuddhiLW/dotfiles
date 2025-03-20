@@ -2661,7 +2661,7 @@ sudo update-alternatives --config x-terminal-emulator
 #+end_src
 * EAF - Emacs Application Framework
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
 (require 'eaf)
 #+end_src
@@ -2669,7 +2669,7 @@ sudo update-alternatives --config x-terminal-emulator
 #+RESULTS:
 : eaf
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (require 'eaf-browser)
 (setq eaf-dired-advisor-enable nil)
 ;; (setq eaf-)
@@ -2679,7 +2679,7 @@ sudo update-alternatives --config x-terminal-emulator
 #+RESULTS:
 : eaf-browser
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package! eaf
   :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
   :custom

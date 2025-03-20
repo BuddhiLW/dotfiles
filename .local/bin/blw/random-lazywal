@@ -27,7 +27,7 @@ fi
 random_file="${files[RANDOM % ${#files[@]}]}"
 
 # Run the lazywal command with the chosen file
-$HOME/go/bin/lazywal set "$random_file" display 2560x1080 pywal
+$HOME/go/bin/lazywal set "$random_file" display 2560x1080 colors
 } >> "$LOGFILE" 
 # 2>&1
 
