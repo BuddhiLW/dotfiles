@@ -5,6 +5,6 @@ if [[ -z "$(which vim)" || -z "$(which vimtutor)" ]]; then
 fi
 
 ln -sf "$PWD/vimrc" "$HOME/.vimrc"
+ln -sf "$PWD/.vim" "$HOME/.vim"
 mkdir -p "$HOME/.vim/autoload"
 ln -sf "$PWD/plug.vim" "$HOME/.vim/autoload/plug.vim"
-
