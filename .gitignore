@@ -210,3 +210,6 @@ github-copilot/
 
 .config/TexasSolver/
 .config/wandb/
+
+.vscode
+dotfiles-tree

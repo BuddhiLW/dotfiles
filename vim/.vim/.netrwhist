@@ -1,5 +1,12 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =3
-let g:netrw_dirhist_3='/home/khawarizmi/dotfiles'
-let g:netrw_dirhist_2='/home/khawarizmi/.cache/fontconfig'
-let g:netrw_dirhist_1='/home/khawarizmi/dotfiles/scripts/install'
+let g:netrw_dirhistcnt =4
+let g:netrw_dirhist_4='/home/khawarizmi/PP/portifolio/frontend/src/app/[locale]/(pages)'
+let g:netrw_dirhist_3='/home/khawarizmi/PP/portifolio/frontend/src/app/[locale]'
+let g:netrw_dirhist_2='/home/khawarizmi/dotfiles/keg'
+let g:netrw_dirhist_1='/home/khawarizmi/PP/portifolio/frontend/src/components/shared'
+let g:netrw_dirhist_0='/home/khawarizmi/PP/portifolio/frontend/src/components'
+let g:netrw_dirhist_9='/home/khawarizmi/PP/portifolio/frontend/src'
+let g:netrw_dirhist_8='/home/khawarizmi/PP/portifolio/frontend/src/app'
+let g:netrw_dirhist_7='/home/khawarizmi/PP/portifolio/frontend/src/app/[locale]'
+let g:netrw_dirhist_6='/home/khawarizmi/PP/portifolio/frontend/src/app/[locale]/(pages)'
+let g:netrw_dirhist_5='/home/khawarizmi/PP/portifolio/frontend/src/app/[locale]'

@@ -589,3 +589,5 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 export PATH="/home/khawarizmi/dotfiles/gitthings/flutter/bin:$PATH"
+
+[ -f "/home/khawarizmi/.ghcup/env" ] && . "/home/khawarizmi/.ghcup/env" # ghcup-env

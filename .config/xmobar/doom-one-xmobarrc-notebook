@@ -12,7 +12,7 @@
    -- trayer
    -- 'dtos-local-bin' (from dtos-core-repo)
 
-Config { font = "FiraCode Nerd Font 16"
+Config { font = "FiraCode Nerd Font 15"
         , additionalFonts = [
         "xft:FontAwesome:pixelsize=16:antialias=true:hinting=true"
         , "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:hinting=true"
@@ -26,7 +26,7 @@ Config { font = "FiraCode Nerd Font 16"
        --   an integer for the minimum pixel height for xmobar, so 24 would force a height of at least 24 pixels.
        --   NOTE: The height should be the same as the trayer (system tray) height.
        -- , position       = BottomSize C 95 70
-       , position = Static { xpos = 2040 , ypos = 1020, width = 2280, height = 50 }
+       , position = Static { xpos = 140 , ypos = 1150, width = 1640, height = 40 }
        -- , position     = BottomSize C 95 50
        -- , border       = FullB
        , borderColor =  "#FFFFFF"
