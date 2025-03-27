@@ -522,6 +522,7 @@ newshell
 complete -C keg keg
 complete -C dc dc
 # complete -C guix guix
+complete -C arara arara
 
 #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 #export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/fontconfig.pc
@@ -591,3 +592,7 @@ unset __conda_setup
 export PATH="/home/khawarizmi/dotfiles/gitthings/flutter/bin:$PATH"
 
 [ -f "/home/khawarizmi/.ghcup/env" ] && . "/home/khawarizmi/.ghcup/env" # ghcup-env
+
+# <<<< arara local-bin setup
+export PATH="$PATH:/home/khawarizmi/.local/bin/blw"
+# >>>>

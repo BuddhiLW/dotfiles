@@ -1,9 +1,10 @@
 name: dotfiles
 description: BLW's dotfiles configuration
+namespace: blw
 env:
   DOTFILES: $HOME/dotfiles
-  SCRIPTS: $DOTFILES/scripts
   GITTHINGS: $DOTFILES/gitthings
+  SCRIPTS: $DOTFILES/scripts
 setup:
   backup_dirs:
     - $HOME/.config
@@ -28,26 +29,341 @@ build:
     - name: link
       description: Create symlinks
       command: arara setup link
-    - name: example-multi-command
-      description: Example of multiple commands
+    - name: source-bashrc
+      description: Source updated bashrc
+      command: source $HOME/.bashrc
+    - name: main-install
+      description: Install core packages and tools
       commands:
-        - mkdir -p $HOME/.config/example
-        - touch $HOME/.config/example/config
-        - echo 'Setup complete' > $HOME/.config/example/status
-      compat:
-        os: linux
+        - bash $DOTFILES/scripts/install/make-deps
+        - bash $DOTFILES/scripts/install/install-deps
+        - bash $DOTFILES/scripts/install/go
+        - bash $DOTFILES/scripts/install/st
+        - bash $DOTFILES/scripts/install/doom
+        - bash $DOTFILES/scripts/install/ble
+        - bash $DOTFILES/scripts/install/anaconda
+        - bash $DOTFILES/scripts/install/pywal
+        - bash $DOTFILES/scripts/install/pomodoro
+        - bash $DOTFILES/scripts/install/keg
+        - bash $DOTFILES/scripts/install/libxft-bgra
+        - bash $DOTFILES/scripts/install/joypixels
+        - bash $DOTFILES/scripts/install/mongo
+        - bash $DOTFILES/scripts/install/npm-global
+    - name: update-font-cache
+      description: Make newly installed fonts available
+      command: fc-cache -vf
+    - name: xmonad-setup
+      description: Setup XMonad window manager
+      command: bash $DOTFILES/scripts/setup/xmonad
+    - name: xmonad-install
+      description: Install XMonad
+      command: bash $DOTFILES/scripts/install/xmonad
+    - name: completion-message
+      description: Display completion message
+      commands:
+        - echo "Congrats. If everything went well, you have the newest Buddhi WM installed."
+        - echo "New step, you can logout from your current Ubuntu session, and chose XMonad,"
+        - echo "instead of GNOME Window Manager. This choice is generally done at the login"
+        - echo "interface."
 scripts:
   install:
-    - name: example
-      description: Example installation script
-      path: scripts/install/example
+    - name: R
+      description: Script from scripts/install/R
+      path: scripts/install/R
+    - name: anaconda
+      description: Script from scripts/install/anaconda
+      path: scripts/install/anaconda
+    - name: android
+      description: Script from scripts/install/android
+      path: scripts/install/android
+    - name: arara-test
+      description: Script from scripts/install/arara-test
+      path: scripts/install/arara-test
+    - name: asdf
+      description: Script from scripts/install/asdf
+      path: scripts/install/asdf
+    - name: asdf-elixir
+      description: Script from scripts/install/asdf-elixir
+      path: scripts/install/asdf-elixir
+    - name: azure-cli
+      description: Script from scripts/install/azure-cli
+      path: scripts/install/azure-cli
+    - name: babashka
+      description: Script from scripts/install/babashka
+      path: scripts/install/babashka
+    - name: ble
+      description: Script from scripts/install/ble
+      path: scripts/install/ble
+    - name: bluetooth-jack
+      description: Script from scripts/install/bluetooth-jack
+      path: scripts/install/bluetooth-jack
+    - name: brew
+      description: Script from scripts/install/brew
+      path: scripts/install/brew
+    - name: buf
+      description: Script from scripts/install/buf
+      path: scripts/install/buf
+    - name: citre-global
+      description: Script from scripts/install/citre-global
+      path: scripts/install/citre-global
+    - name: clj-kondo
+      description: Script from scripts/install/clj-kondo
+      path: scripts/install/clj-kondo
+    - name: clojure
+      description: Script from scripts/install/clojure
+      path: scripts/install/clojure
+    - name: clojure-tools
+      description: Script from scripts/install/clojure-tools
+      path: scripts/install/clojure-tools
+    - name: commonlisp
+      description: Script from scripts/install/commonlisp
+      path: scripts/install/commonlisp
+    - name: conda
+      description: Script from scripts/install/conda
+      path: scripts/install/conda
+    - name: conky-now-clocking
+      description: Script from scripts/install/conky-now-clocking
+      path: scripts/install/conky-now-clocking
+    - name: cuda
+      description: Script from scripts/install/cuda
+      path: scripts/install/cuda
+    - name: cursor
+      description: Script from scripts/install/cursor
+      path: scripts/install/cursor
+    - name: dart
+      description: Script from scripts/install/dart
+      path: scripts/install/dart
+    - name: dmenu
+      description: Script from scripts/install/dmenu
+      path: scripts/install/dmenu
     - name: docker
-      description: Install Docker and Docker Desktop
+      description: Script from scripts/install/docker
       path: scripts/install/docker
-      compat:
-        os: linux
-        shell: bash
-        pkgmgr: apt
-        custom:
-          - name: min-memory
-            value: 4096
+    - name: docker-ce-rootless
+      description: Script from scripts/install/docker-ce-rootless
+      path: scripts/install/docker-ce-rootless
+    - name: doom
+      description: Script from scripts/install/doom
+      path: scripts/install/doom
+    - name: electron
+      description: Script from scripts/install/electron
+      path: scripts/install/electron
+    - name: elixir
+      description: Script from scripts/install/elixir
+      path: scripts/install/elixir
+    - name: elm
+      description: Script from scripts/install/elm
+      path: scripts/install/elm
+    - name: elm-land
+      description: Script from scripts/install/elm-land
+      path: scripts/install/elm-land
+    - name: emacs
+      description: Script from scripts/install/emacs
+      path: scripts/install/emacs
+    - name: emacs-application-framework
+      description: Script from scripts/install/emacs-application-framework
+      path: scripts/install/emacs-application-framework
+    - name: erlang
+      description: Script from scripts/install/erlang
+      path: scripts/install/erlang
+    - name: eslint
+      description: Script from scripts/install/eslint
+      path: scripts/install/eslint
+    - name: eww
+      description: Script from scripts/install/eww
+      path: scripts/install/eww
+    - name: flutter
+      description: Script from scripts/install/flutter
+      path: scripts/install/flutter
+    - name: fontfor
+      description: Script from scripts/install/fontfor
+      path: scripts/install/fontfor
+    - name: freqtrade
+      description: Script from scripts/install/freqtrade
+      path: scripts/install/freqtrade
+    - name: global
+      description: Script from scripts/install/global
+      path: scripts/install/global
+    - name: go
+      description: Script from scripts/install/go
+      path: scripts/install/go
+    - name: go-development-tools
+      description: Script from scripts/install/go-development-tools
+      path: scripts/install/go-development-tools
+    - name: go-editor-tools
+      description: Script from scripts/install/go-editor-tools
+      path: scripts/install/go-editor-tools
+    - name: go-global-update
+      description: Script from scripts/install/go-global-update
+      path: scripts/install/go-global-update
+    - name: go-migrate
+      description: Script from scripts/install/go-migrate
+      path: scripts/install/go-migrate
+    - name: guix
+      description: Script from scripts/install/guix
+      path: scripts/install/guix
+    - name: help
+      description: Script from scripts/install/help
+      path: scripts/install/help
+    - name: huggingface
+      description: Script from scripts/install/huggingface
+      path: scripts/install/huggingface
+    - name: install-deps
+      description: Script from scripts/install/install-deps
+      path: scripts/install/install-deps
+    - name: install-nerd-fonts
+      description: Script from scripts/install/install-nerd-fonts
+      path: scripts/install/install-nerd-fonts
+    - name: joypixels
+      description: Script from scripts/install/joypixels
+      path: scripts/install/joypixels
+    - name: js-ts
+      description: Script from scripts/install/js-ts
+      path: scripts/install/js-ts
+    - name: keg
+      description: Script from scripts/install/keg
+      path: scripts/install/keg
+    - name: keg-ai
+      description: Script from scripts/install/keg-ai
+      path: scripts/install/keg-ai
+    - name: keg-clone
+      description: Script from scripts/install/keg-clone
+      path: scripts/install/keg-clone
+    - name: kitty
+      description: Script from scripts/install/kitty
+      path: scripts/install/kitty
+    - name: kubectl
+      description: Script from scripts/install/kubectl
+      path: scripts/install/kubectl
+    - name: lamdera
+      description: Script from scripts/install/lamdera
+      path: scripts/install/lamdera
+    - name: lazywal
+      description: Script from scripts/install/lazywal
+      path: scripts/install/lazywal
+    - name: libxft-bgra
+      description: Script from scripts/install/libxft-bgra
+      path: scripts/install/libxft-bgra
+    - name: lives
+      description: Script from scripts/install/lives
+      path: scripts/install/lives
+    - name: lock
+      description: Script from scripts/install/lock
+      path: scripts/install/lock
+    - name: lsp-javascript
+      description: Script from scripts/install/lsp-javascript
+      path: scripts/install/lsp-javascript
+    - name: main
+      description: Script from scripts/install/main
+      path: scripts/install/main
+    - name: make-deps
+      description: Script from scripts/install/make-deps
+      path: scripts/install/make-deps
+    - name: matrix
+      description: Script from scripts/install/matrix
+      path: scripts/install/matrix
+    - name: mongo
+      description: Script from scripts/install/mongo
+      path: scripts/install/mongo
+    - name: neomutt
+      description: Script from scripts/install/neomutt
+      path: scripts/install/neomutt
+    - name: nibbler
+      description: Script from scripts/install/nibbler
+      path: scripts/install/nibbler
+    - name: nix
+      description: Script from scripts/install/nix
+      path: scripts/install/nix
+    - name: npm-global
+      description: Script from scripts/install/npm-global
+      path: scripts/install/npm-global
+    - name: nyxt
+      description: Script from scripts/install/nyxt
+      path: scripts/install/nyxt
+    - name: ollama
+      description: Script from scripts/install/ollama
+      path: scripts/install/ollama
+    - name: opensim
+      description: Script from scripts/install/opensim
+      path: scripts/install/opensim
+    - name: overarch
+      description: Script from scripts/install/overarch
+      path: scripts/install/overarch
+    - name: pairinfer
+      description: Script from scripts/install/pairinfer
+      path: scripts/install/pairinfer
+    - name: picom
+      description: Script from scripts/install/picom
+      path: scripts/install/picom
+    - name: pix2tex
+      description: Script from scripts/install/pix2tex
+      path: scripts/install/pix2tex
+    - name: pomodoro
+      description: Script from scripts/install/pomodoro
+      path: scripts/install/pomodoro
+    - name: postman
+      description: Script from scripts/install/postman
+      path: scripts/install/postman
+    - name: pywal
+      description: Script from scripts/install/pywal
+      path: scripts/install/pywal
+    - name: read-deps
+      description: Script from scripts/install/read-deps
+      path: scripts/install/read-deps
+    - name: redpanda
+      description: Script from scripts/install/redpanda
+      path: scripts/install/redpanda
+    - name: roswell
+      description: Script from scripts/install/roswell
+      path: scripts/install/roswell
+    - name: sbcl
+      description: Script from scripts/install/sbcl
+      path: scripts/install/sbcl
+    - name: simple-signer
+      description: Script from scripts/install/simple-signer
+      path: scripts/install/simple-signer
+    - name: sqlc
+      description: Script from scripts/install/sqlc
+      path: scripts/install/sqlc
+    - name: st
+      description: Script from scripts/install/st
+      path: scripts/install/st
+    - name: tor-browser
+      description: Script from scripts/install/tor-browser
+      path: scripts/install/tor-browser
+    - name: tree-sitter
+      description: Script from scripts/install/tree-sitter
+      path: scripts/install/tree-sitter
+    - name: uim
+      description: Script from scripts/install/uim
+      path: scripts/install/uim
+    - name: uv
+      description: Script from scripts/install/uv
+      path: scripts/install/uv
+    - name: vim
+      description: Script from scripts/install/vim
+      path: scripts/install/vim
+    - name: vscode
+      description: Script from scripts/install/vscode
+      path: scripts/install/vscode
+    - name: webcam-effects
+      description: Script from scripts/install/webcam-effects
+      path: scripts/install/webcam-effects
+    - name: wx
+      description: Script from scripts/install/wx
+      path: scripts/install/wx
+    - name: xmonad
+      description: Script from scripts/install/xmonad
+      path: scripts/install/xmonad
+    - name: xwinwrap
+      description: Script from scripts/install/xwinwrap
+      path: scripts/install/xwinwrap
+    - name: yazi
+      description: Script from scripts/install/yazi
+      path: scripts/install/yazi
+    - name: yt-dlp
+      description: Script from scripts/install/yt-dlp
+      path: scripts/install/yt-dlp
+    - name: ytfzf
+      description: Script from scripts/install/ytfzf
+      path: scripts/install/ytfzf
