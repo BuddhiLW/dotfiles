@@ -1,0 +1,51 @@
+#!/usr/bin/bash
+
+set -e
+
+cd "$DOTFILES/gitthings"
+
+# Install required build dependencies
+sudo apt update
+sudo apt install -y libxkbcommon-x11-dev libxcb-xkb-dev
+
+# Clone kitty if it doesn't exist
+if [ ! -d "kitty" ]; then
+  git clone https://github.com/kovidgoyal/kitty.git
+fi
+
+cd kitty
+
+# Build kitty
+./dev.sh build
+
+# Check if the kitty binary was built
+if [ -f "$PWD/launcher/kitty" ]; then
+  echo "✅ Kitty built successfully."
+
+  # Create symlinks in ~/.local/bin
+  mkdir -p "$HOME/.local/bin"
+  ln -sf "$PWD/launcher/kitty" "$HOME/.local/bin/kitty"
+  ln -sf "$PWD/launcher/kitten" "$HOME/.local/bin/kitten"
+  echo "🔗 Symlinks created in ~/.local/bin"
+
+  # Generate and install man pages
+  echo "📚 Generating documentation..."
+  ./dev.sh deps -for-docs
+  ./dev.sh docs
+
+  MAN_SRC="docs/_build/man"
+  MAN_DST="/usr/local/share/man/man1"
+
+  if [ -d "$MAN_SRC" ]; then
+    echo "📦 Installing man pages to $MAN_DST..."
+    sudo mkdir -p "$MAN_DST"
+    sudo cp "$MAN_SRC"/*.1 "$MAN_DST"
+    sudo mandb
+    echo "✅ Man pages installed. Try: man kitty"
+  else
+    echo "❌ Man page directory not found: $MAN_SRC"
+  fi
+
+else
+  echo "❌ Kitty build failed."
+fi

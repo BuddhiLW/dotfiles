@@ -213,3 +213,5 @@ github-copilot/
 
 .vscode
 dotfiles-tree
+
+__debug*

@@ -1,0 +1,53 @@
+name: dotfiles
+description: BLW's dotfiles configuration
+env:
+  DOTFILES: $HOME/dotfiles
+  SCRIPTS: $DOTFILES/scripts
+  GITTHINGS: $DOTFILES/gitthings
+setup:
+  backup_dirs:
+    - $HOME/.config
+    - $HOME/.local
+  core_links:
+    - source: $DOTFILES/.config
+      target: $HOME/.config
+    - source: $DOTFILES/.local
+      target: $HOME/.local
+  config_links:
+    - source: $DOTFILES/.bashrc
+      target: $HOME/.bashrc
+    - source: $DOTFILES/.vim
+      target: $HOME/.vim
+    - source: $DOTFILES/.config/vim/.vimrc
+      target: $HOME/.vimrc
+build:
+  steps:
+    - name: backup
+      description: Backup existing dotfiles
+      command: arara setup backup
+    - name: link
+      description: Create symlinks
+      command: arara setup link
+    - name: example-multi-command
+      description: Example of multiple commands
+      commands:
+        - mkdir -p $HOME/.config/example
+        - touch $HOME/.config/example/config
+        - echo 'Setup complete' > $HOME/.config/example/status
+      compat:
+        os: linux
+scripts:
+  install:
+    - name: example
+      description: Example installation script
+      path: scripts/install/example
+    - name: docker
+      description: Install Docker and Docker Desktop
+      path: scripts/install/docker
+      compat:
+        os: linux
+        shell: bash
+        pkgmgr: apt
+        custom:
+          - name: min-memory
+            value: 4096
