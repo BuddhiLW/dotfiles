@@ -1,0 +1,14 @@
+#!/usr/bin/bash
+
+# Installation script for gimp-ai
+
+cd $DOTFILES/gitthings
+
+git clone https://github.com/kritiksoman/GIMP-ML.git
+cd GIMP-ML
+
+cd gimp-plugins
+
+python3.12 -m venv gimpml-env
+source gimpml-env/bin/activate
+pip install torchvision "opencv-python<=4.3" numpy future torch scipy pretrainedmodels requests

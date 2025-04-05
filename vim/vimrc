@@ -346,8 +346,9 @@ if filereadable(expand("~/.vim/autoload/plug.vim"))
 
   " javascript prettier
   " on save
-  let g:prettier#autoformat = 1
+  let g:prettier#autoformat = 0
   let g:prettier#autoformat_require_pragma = 0
+
   " parinfer
   let g:parinfer_mode = 'smart'
   let g:parinfer_filetypes = ['clojure', 'scheme', 'lisp', 'racket', 'eww', 'yuck']
@@ -395,7 +396,7 @@ if filereadable(expand("~/.vim/autoload/plug.vim"))
         \}
 
   " Automatically fix files on save
-  let g:ale_fix_on_save = 1
+  let g:ale_fix_on_save = 0
 
   " Enable linting on text change and save
   let g:ale_lint_on_text_changed = 'always'

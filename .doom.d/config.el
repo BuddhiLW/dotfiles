@@ -954,13 +954,14 @@
  :config
  ;; Enable automatic alignment of forms
  (setq clojure-align-forms-automatically t))
- ;; Additional Clojure mode hooks
-;; :hook
-;; ((subword-mode . clojure-mode)
-;;              (paredit-mode . clojure-mode)
-;;              (clj-refactor-mode . clojure-mode)))
-;; (add-hook 'clojure-mode-hook (lambda ()
-;;                                (cljr-add-keybindings-with-prefix "C-c C-m"))))
+
+(use-package! cider
+  :ensure t
+  :config
+  (setq cider-repl-display-help-banner nil))
+
+(add-hook 'clojure-mode-hook 'cider-mode)
+(add-hook 'cider-mode-hook 'eldoc-mode) ;; Optional: for showing function arg info
 
 ;; if you are using the "pass" password manager
 ;; (setq chatgpt-shell-openai-key
@@ -992,19 +993,6 @@
   '(setcdr (assoc "LaTeX" TeX-command-list)
     '("%`%l%(mode) -shell-escape%' %t"
       TeX-run-TeX nil (latex-mode doctex-mode) :help "Run LaTeX")))
-
-(setq org-latex-listings 'minted)
-(setq org-latex-custom-lang-environments
-      '((emacs-lisp "common-lispcode")))
-(setq org-latex-minted-options
-      '(("frame" "none")
-        ("fontsize" "\\scriptsize")
-        ("linenos" "false")
-        ("bgcolor" "LightGray")))
-(setq org-latex-to-pdf-process
-      '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-        "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
 
 ;; (use-package! calfw-ical)
 (defun blw/calendar ()
@@ -1075,47 +1063,23 @@
 
   ;; (use-package! evil-nerd-commenter)
 
-;; Add extensions
-(use-package! cape
-  ;; Bind dedicated completion commands
-  ;; Alternative prefix keys: C-c p, M-p, M-+, ...
-  :bind (("C-c p p" . completion-at-point) ;; capf
-         ("C-c p t" . complete-tag)        ;; etags
-         ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
-         ("C-c p h" . cape-history)
-         ("C-c p f" . cape-file)
-         ("C-c p k" . cape-keyword)
-         ("C-c p s" . cape-elisp-symbol)
-         ("C-c p e" . cape-elisp-block)
-         ("C-c p a" . cape-abbrev)
-         ("C-c p l" . cape-line)
-         ("C-c p w" . cape-dict)
-         ("C-c p :" . cape-emoji)
-         ("C-c p \\" . cape-tex)
-         ("C-c p _" . cape-tex)
-         ("C-c p ^" . cape-tex)
-         ("C-c p &" . cape-sgml)
-         ("C-c p r" . cape-rfc1345))
+(use-package! corfu
   :init
-  ;; Add to the global default value of `completion-at-point-functions' which is
-  ;; used by `completion-at-point'.  The order of the functions matters, the
-  ;; first function returning a result wins.  Note that the list of buffer-local
-  ;; completion functions takes precedence over the global list.
+  (global-corfu-mode)
+  :custom
+  (corfu-auto t)
+  (corfu-cycle t)
+  (corfu-quit-no-match 'separator)
+  (corfu-preselect 'directory))
+
+(use-package! cape
+  :after corfu
+  :init
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-elisp-block)
-  (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)
-  ;;(add-to-list 'completion-at-point-functions #'cape-history)
-  ;;(add-to-list 'completion-at-point-functions #'cape-keyword)
-  ;;(add-to-list 'completion-at-point-functions #'cape-tex)
-  ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
-  ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
-  ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
-  ;;(add-to-list 'completion-at-point-functions #'cape-dict)
-  ;;(add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
-  ;;(add-to-list 'completion-at-point-functions #'cape-line)
-  :config
-  (global-set-key (kbd "M-<return>") (cape-capf-interactive #'codeium-completion-at-point)))
+  (add-to-list 'completion-at-point-functions #'codeium-completion-at-point))
+  (global-set-key (kbd "M-<return>") (cape-capf-interactive #'codeium-completion-at-point))
 
 ;; (setq codeium/metadata/api_key (nth 0 (process-lines "pass" "show" "apikeys/codeium")))
 (use-package! codeium
@@ -1173,44 +1137,6 @@
       (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (point))))
   (setq codeium/document/text 'my-codeium/document/text)
   (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset))
-
-(use-package! company
-    :defer 0.1
-    :config
-    (global-company-mode t)
-    (setq-default
-        company-idle-delay 0.5
-        company-require-match nil
-        company-minimum-prefix-length 0
-
-        ;; get only preview
-        ;; company-frontends '(company-preview-frontend)))
-        ;; also get a drop down
-        company-frontends '(company-pseudo-tooltip-frontend company-preview-frontend)))
-
-(use-package! corfu
-  ;; Optional customizations
-  :custom
-  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-  (corfu-auto t)                 ;; Enable auto completion
-  (corfu-separator ?\s)          ;; Orderless field separator
-  (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
-  (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
-  (corfu-preview-current nil)    ;; Disable current candidate preview
-  (corfu-preselect 'prompt)      ;; Preselect the prompt
-  (corfu-on-exact-match nil)     ;; Configure handling of exact matches
-  (corfu-scroll-margin 5)        ;; Use scroll margin
-
-  ;; Enable Corfu only for certain modes.
-  :hook ((prog-mode . corfu-mode)
-         (shell-mode . corfu-mode)
-         (eshell-mode . corfu-mode))
-
-  ;; Recommended: Enable Corfu globally.  This is recommended since Dabbrev can
-  ;; be used globally (M-/).  See also the customization variable
-  ;; `global-corfu-modes' to exclude certain modes.
-  :init
-  (global-corfu-mode))
 
 (setq telega-server-libs-prefix "~/dotfiles/gitthigs/td/")
 
@@ -1335,6 +1261,24 @@
           :desc "Ace peek" "p"           #'citre-ace-peek
           :desc "Update `tags` file" "u" #'citre-update-this-tags-file))))
 
+;; (use-package! company
+;;     :defer 0.1
+;;     :config
+;;     (global-company-mode t)
+;;     (setq-default
+;;         company-idle-delay 0.5
+;;         company-require-match nil
+;;         company-minimum-prefix-length 0
+
+;;         ;; get only preview
+;;         ;; company-frontends '(company-preview-frontend)))
+;;         ;; also get a drop down
+;;         company-frontends '(company-pseudo-tooltip-frontend company-preview-frontend)))
+
+(use-package! lsp-mode
+  :hook (prog-mode . lsp)
+  :commands lsp)
+
 (require 'dap-mode)
 (require 'dap-ui)
 (require 'dap-dlv-go)
@@ -1367,96 +1311,27 @@
         :envFile nil
         :dlvToolPath "dlv")) ;; Ensure `dlv` is in PATH
 
-(gptel-make-ollama "Ollama"             ;Any name of your choosing
-  :host "localhost:11434"               ;Where it's running
-  :stream t                             ;Stream responses
-  :models '(deepseek-r1:latest))          ;List of models
+;; (gptel-make-ollama "Ollama"             ;Any name of your choosing
+;;   :host "localhost:11434"               ;Where it's running
+;;   :stream t                             ;Stream responses
+;;   :models '(deepseek-r1:latest))          ;List of models
 
-(gptel-make-ollama "Ollama-coder"             ;Any name of your choosing
-  :host "localhost:11434"               ;Where it's running
-  :stream t                             ;Stream responses
-  :models '(deep-jibril:1.0))          ;List of models
+;; (gptel-make-ollama "Ollama-coder"             ;Any name of your choosing
+;;   :host "localhost:11434"               ;Where it's running
+;;   :stream t                             ;Stream responses
+;;   :models '(deep-jibril:1.0))          ;List of models
 
-(gptel-make-ollama "Ollama-sql-coder"             ;Any name of your choosing
-  :host "localhost:11434"               ;Where it's running
-  :stream t                             ;Stream responses
-  :models '(codelama-jibril-SQLer:1.0))          ;List of models
+;; (gptel-make-ollama "Ollama-sql-coder"             ;Any name of your choosing
+;;   :host "localhost:11434"               ;Where it's running
+;;   :stream t                             ;Stream responses
+;;   :models '(codelama-jibril-SQLer:1.0))          ;List of models
 
-(gptel-make-ollama "qwen2.5-coder:32B"             ;Any name of your choosing
-  :host "localhost:11434"               ;Where it's running
-  :stream t                             ;Stream responses
-  :models '(qwen2.5-coder:32B))          ;List of models
-
-(use-package! llm)
-
-(use-package! ellama
-  :bind ("C-c e" . ellama-transient-main-menu)
-  :init
-  ;; setup key bindings (optional: uncomment to set a custom keymap prefix)
-  ;; (setopt ellama-keymap-prefix "C-c e")
-  ;; language you want ellama to translate to
-  (setopt ellama-language "Brazilian Portuguese")
-  ;; use the ollama provider from llm
-  (require 'llm-ollama)
-  (setopt ellama-provider
-          (make-llm-ollama
-           ;; Use the latest version of the model
-           :chat-model "llama3:latest"
-           :embedding-model "nomic-embed-text"
-           :default-chat-non-standard-params '(("num_ctx" . 8192))))
-  (setopt ellama-summarization-provider
-          (make-llm-ollama
-           :chat-model "qwen2.5:latest"
-           :embedding-model "nomic-embed-text"
-           :default-chat-non-standard-params '(("num_ctx" . 32768))))
-  (setopt ellama-coding-provider
-          (make-llm-ollama
-           :chat-model "qwen2.5-coder:latest"
-           :embedding-model "nomic-embed-text"
-           :default-chat-non-standard-params '(("num_ctx" . 32768))))
-  ;; Predefined llm providers for interactive switching.
-  (setopt ellama-providers
-          '(("zephyr" . (make-llm-ollama
-                         :chat-model "zephyr:latest"
-                         :embedding-model "zephyr:latest"))
-            ("mistral" . (make-llm-ollama
-                          :chat-model "mistral:latest"
-                          :embedding-model "mistral:latest"))
-            ("mixtral" . (make-llm-ollama
-                          :chat-model "mixtral:latest"
-                          :embedding-model "mixtral:latest"))))
-  ;; Naming new sessions with llm using the latest model version
-  (setopt ellama-naming-provider
-          (make-llm-ollama
-           :chat-model "llama3:latest"
-           :embedding-model "nomic-embed-text"
-           :default-chat-non-standard-params '(("stop" . ("\n")))))
-  (setopt ellama-naming-scheme 'ellama-generate-name-by-llm)
-  ;; Translation llm provider using latest tag
-  (setopt ellama-translation-provider
-          (make-llm-ollama
-           :chat-model "qwen2.5:latest"
-           :embedding-model "nomic-embed-text"
-           :default-chat-non-standard-params '(("num_ctx" . 32768))))
-  ;; Extraction llm provider with the latest version
-  (setopt ellama-extraction-provider
-          (make-llm-ollama
-           :chat-model "qwen2.5-coder:latest"
-           :embedding-model "nomic-embed-text"
-           :default-chat-non-standard-params '(("num_ctx" . 32768))))
-  ;; customize display buffer behaviour
-  (setopt ellama-chat-display-action-function #'display-buffer-full-frame)
-  (setopt ellama-instant-display-action-function #'display-buffer-at-bottom)
-  :config
-  ;; send last message in chat buffer with C-c C-c
-  (add-hook 'org-ctrl-c-ctrl-c-hook #'ellama-chat-send-last-message))
+;; (gptel-make-ollama "qwen2.5-coder:32B"             ;Any name of your choosing
+;;   :host "localhost:11434"               ;Where it's running
+;;   :stream t                             ;Stream responses
+;;   :models '(qwen2.5-coder:32B))          ;List of models
 
 (use-package! elysium)
-
-(use-package! corsair
-  :ensure t
-  :defer t ; Optional: Load lazily
-  :after gptel) ; Ensure gptel is loaded before corsair
 
 (server-force-delete)
 (server-start)

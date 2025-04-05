@@ -1,0 +1,98 @@
+# [[keyboard.bindings]]
+# action = "IncreaseOpacity"
+
+[[keyboard.bindings]]
+action = "ResetFontSize"
+key = "Key0"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "IncreaseFontSize"
+key = "Up"
+mods = "Shift|Alt"
+
+[[keyboard.bindings]]
+action = "DecreaseFontSize"
+key = "Down"
+mods = "Shift|Alt"
+
+[general]
+live_config_reload = true
+
+[[colors.indexed_colors]]
+color = "0xf78c6c"
+index = 16
+
+[[colors.indexed_colors]]
+color = "0xff5370"
+index = 17
+
+[[colors.indexed_colors]]
+color = "0x303030"
+index = 18
+
+[[colors.indexed_colors]]
+color = "0x353535"
+index = 19
+
+[[colors.indexed_colors]]
+color = "0xb2ccd6"
+index = 20
+
+[[colors.indexed_colors]]
+color = "0xeeffff"
+index = 21
+
+[colors.bright]
+black = "0x4a4a4a"
+blue = "0x82aaff"
+cyan = "0x89ddff"
+green = "0xc3e88d"
+magenta = "0xc792ea"
+red = "0xf07178"
+white = "0xffffff"
+yellow = "0xffcb6b"
+
+[colors.cursor]
+cursor = "0xeeffff"
+text = "0x212121"
+
+[colors.normal]
+black = "0x212121"
+blue = "0x82aaff"
+cyan = "0x89ddff"
+green = "0xc3e88d"
+magenta = "0xc792ea"
+red = "0xf07178"
+white = "0xeeffff"
+yellow = "0xffcb6b"
+
+[colors.primary]
+background = "0x181a20"
+foreground = "0xeeffff"
+
+[font]
+size = 25
+
+[font.bold]
+family = "Source Code Pro"
+
+[font.bold_italic]
+family = "Source Code Pro"
+
+[font.italic]
+family = "Source Code Pro"
+
+[font.normal]
+family = "FiraMono Nerd Font"
+
+[window]
+opacity = 0.9
+
+[window.padding]
+# decoration = "none"
+# dynamic_padding = true
+x = 25
+y = 25
+
+[keyboard]

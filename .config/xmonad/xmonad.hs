@@ -4,6 +4,7 @@ import System.Directory
 import System.IO (hClose, hPutStr, hPutStrLn)
 import System.Exit (exitSuccess)
 import qualified XMonad.StackSet as W
+import Data.Bits ((.|.))
 
     -- Actions
 import XMonad.Actions.CopyWindow (kill1)
@@ -96,7 +97,8 @@ myFont :: String
 myFont = "xft:SauceCodePro Nerd Font Mono:size=60:regular:antialias=true:hinting=true"
 
 myModMask :: KeyMask
-myModMask = mod4Mask        -- Sets modkey to super/windows key
+myModMask = mod4Mask 
+
 
 myTerminal :: String
 myTerminal = "kitty"    -- Sets default terminal
@@ -600,6 +602,7 @@ myKeys c =
 
   ^++^ subKeys "Favorite programs"
   [ ("M-<Return>", addName "Launch terminal"      $ spawn (myTerminal))
+  , ("M5-<Return>", addName "Launch Alacritty"    $ spawn "alacritty")
   , ("M-w",        addName "Launch web browser"   $ spawn (myBrowser))
   , ("M-M1-h",     addName "Launch htop"          $ spawn (myTerminal ++ " -e htop"))
   , ("M-r",        addName "Rofi"                 $ spawn "rofi -show run")
