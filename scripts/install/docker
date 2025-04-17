@@ -65,5 +65,5 @@ rm -rf $TMP
 # Notify the user
 echo "Docker Desktop installation is complete."
 
-systemctl --user enable docker-desktop
-systemctl --user start docker-desktop
+sudo systemctl --user enable docker-desktop
+sudo systemctl --user start docker-desktop

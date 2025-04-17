@@ -572,6 +572,7 @@ export PATH=$HOME/.elixir-install/installs/elixir/1.17.3-otp-27/bin:$PATH
 
 
 . "$HOME/.local/share/../bin/env"
+export PATH=~/.npm-global/bin:$PATH
 . "/home/khawarizmi/.local/share/cargo/env"
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
