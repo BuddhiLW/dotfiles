@@ -9,10 +9,12 @@ cd eww
 
 ## Dependencies
 sudo apt-get update
-sudo apt-get install libgtk-layer-shell-dev libdbusmenu-gtk3-dev libdbusmenu-glib-dev gir1.2-dbusmenu-glib-0.4 
+sudo apt-get install libgtk-layer-shell-dev libdbusmenu-gtk3-dev libdbusmenu-glib-dev gir1.2-dbusmenu-glib-0.4
+sudo apt-get install libdbus-glib-1-dev libdbusmenu-glib-dev libdbusmenu-gtk3-dev
 
 ## Make it available for build
 export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig:$PKG_CONFIG_PATH
 
 ## Build it
 cargo build --release --no-default-features --features x11
+cp ./target/release "$HOME/.local/bin"

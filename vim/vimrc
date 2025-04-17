@@ -248,11 +248,169 @@ if filereadable(expand("~/.vim/autoload/plug.vim"))
   Plug 'rwxrob/vim-pandoc-syntax-simple'
   Plug 'dense-analysis/ale'
   Plug 'vim-scripts/vimspell'
+  Plug 'elkowar/yuck.vim'
+  Plug 'eraserhd/parinfer-rust', {'do':
+        \  'cargo build --release'}
+  Plug 'luochen1990/rainbow'
+  Plug 'prettier/vim-prettier', {
+        \ 'do': 'npm install --frozen-lockfile --production',
+        \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'svelte', 'yaml', 'html'] }
+  Plug 'github/copilot.vim'
+  Plug 'Exafunction/codeium.vim'
+  Plug 'prabirshrestha/async.vim'
+  Plug 'prabirshrestha/vim-lsp'
+  Plug 'prisma/vim-prisma'
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  Plug 'hlissner/vim-multiedit'
   call plug#end()
 
+  " Multiedit mappings extra
+  "
+  " Store last visual selection (used with <leader>m)
+  function! s:SaveLastVisualText()
+    let g:multiedit_last_pattern = escape(@", '\/.^$*[]')
+  endfunction
+
+  " Use this to mark current visual selection AND remember it
+  xnoremap <silent> <leader>m y:call <SID>SaveLastVisualText()<CR>:MultieditAddRegion<CR>
+
+  " Normal mode fallback for word under cursor (still useful)
+  nnoremap <silent> <leader>mm :let g:multiedit_last_pattern = expand('<cword>') \| viw:MultieditAddRegion<CR>
+
+  " Repeat select: Find next and mark it
+  nnoremap <silent> . :call search(g:multiedit_last_pattern, 'W') \| :MultieditAddRegion<CR>
+
+  " Remove last marked region (assumes you're sitting on it)
+  nnoremap <silent> ; :MultieditHop -1<CR>:MultieditClear<CR>
+
+  " Multiedit mappings
+  "
+  "" Insert a disposable marker after the cursor
+  nmap <leader>ma :MultieditAddMark a<CR>
+
+  " Insert a disposable marker before the cursor
+  nmap <leader>mi :MultieditAddMark i<CR>
+
+  " Make a new line and insert a marker
+  nmap <leader>mo o<Esc>:MultieditAddMark i<CR>
+  nmap <leader>mO O<Esc>:MultieditAddMark i<CR>
+
+  " Insert a marker at the end/start of a line
+  nmap <leader>mA $:MultieditAddMark a<CR>
+  nmap <leader>mI ^:MultieditAddMark i<CR>
+
+  " Make the current selection/word an edit region
+  vmap <leader>m :MultieditAddRegion<CR>
+  nmap <leader>mm viw:MultieditAddRegion<CR>
+
+  " Restore the regions from a previous edit session
+  nmap <leader>mu :MultieditRestore<CR>
+
+  " Move cursor between regions n times
+  map ]m :MultieditHop 1<CR>
+  map [m :MultieditHop -1<CR>
+
+  " Start editing!
+  nmap <leader>M :Multiedit<CR>
+
+  " Clear the word and start editing
+  nmap <leader>C :Multiedit!<CR>
+
+  " Unset the region under the cursor
+  nmap <silent> <leader>md :MultieditClear<CR>
+
+  " Unset all regions
+  nmap <silent> <leader>mr :MultieditReset<CR>
+
+  " Trigger completion with <Tab>
+  inoremap <silent><expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+  inoremap <silent><expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+  " Use <CR> to confirm completion
+  inoremap <silent><expr> <CR> pumvisible() ? coc#_select_confirm() : "\<CR>"
+
+  "
+  " GoTo definitions
+  nmap <silent> gd <Plug>(coc-definition)
+  nmap <silent> gi <Plug>(coc-implementation)
+  nmap <silent> gr <Plug>(coc-references)
+
+  " Show documentation
+  nnoremap <silent> K :call CocActionAsync('doHover')<CR
+
+  autocmd BufWritePre *.go :silent! call CocAction('format')
+
+  " copilot
+  " load on startup
+  let g:copilot_enabled = v:true
+
+  " javascript prettier
+  " on save
+  let g:prettier#autoformat = 0
+  let g:prettier#autoformat_require_pragma = 0
+
+  " parinfer
+  let g:parinfer_mode = 'smart'
+  let g:parinfer_filetypes = ['clojure', 'scheme', 'lisp', 'racket', 'eww', 'yuck']
+
+  nnoremap <leader>pi :ParinferOn<CR>
+  nnoremap <leader>pio :ParinferOff<CR>
+
+  " smart motion
+  " jump between matching parentheses/brackets with Tab and Shift-Tab
+  nnoremap <Tab> %
+  nnoremap <S-Tab> %
+  vnoremap <Tab> %
+  vnoremap <S-Tab> %
+
+  " rainbow parentheses
+  let g:rainbow_active = 1 "set to 0 if you want to enable it later via :RainbowToggle
+
+  " ALE signs for errors and warnings
   let g:ale_sign_error = '☠'
   let g:ale_sign_warning = '🙄'
-  let g:ale_linters = {'go': ['gometalinter', 'gofmt','gobuild']}
+
+  " Enable ALE
+  let g:ale_enabled = 1
+
+  " Set linters for Go
+  let g:ale_linters = {
+        \   'go': ['gopls', 'gofmt', 'govet', 'golangci-lint', 'gobuild'],
+        \   'typescript': ['eslint', 'tsserver'],
+        \   'javascript': ['eslint'],
+        \}
+
+  " Set fixers
+  let js_fixers = ['prettier', 'eslint']
+  let go_fixers = ['gofmt', 'goimports']
+
+  let g:ale_fixers = {
+        \   '*': ['remove_trailing_lines', 'trim_whitespace'],
+        \   'go': go_fixers,
+        \   'javascript': js_fixers,
+        \   'javascript.jsx': js_fixers,
+        \   'typescript': js_fixers,
+        \   'typescriptreact': js_fixers,
+        \   'css': ['prettier'],
+        \   'json': ['prettier'],
+        \}
+
+  " Automatically fix files on save
+  let g:ale_fix_on_save = 0
+
+  " Enable linting on text change and save
+  let g:ale_lint_on_text_changed = 'always'
+  let g:ale_lint_on_save = 1
+
+  " Enable floating preview for errors/warnings
+  let g:ale_hover_cursor = 1
+
+  " Use gutter signs for errors and warnings
+  let g:ale_set_signs = 1
+  let g:ale_set_highlights = 1
+
+  " Show ALE diagnostics in a floating window (Neovim)
+  autocmd CursorHold * ALEHover
 
   " pandoc
   let g:pandoc#formatting#mode = 'h' " A'

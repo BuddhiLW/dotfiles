@@ -1,0 +1,11 @@
+config: |
+    namespaces:
+        - blw
+        - test-ns
+    configs:
+        blw:
+            path: /home/khawarizmi/PP/arara/dotfiles
+            local-bin: blw
+        test-ns:
+            path: /tmp/TestLoadConfig2522337703/001
+            local-bin: ""

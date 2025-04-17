@@ -110,8 +110,6 @@
       "C-<right>"      #'+evil/window-move-right)
 #+end_src
 
-#+RESULTS:
-
 ** Initial screen
 #+begin_src emacs-lisp
 ;; (load! "./blw-func/dashboard.el")
@@ -140,6 +138,7 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 
 ** Org
 
+*** init
 #+begin_src emacs-lisp
 (setq org-directory "~/PP/self-managment/")
 ;; (setq org-directory )
@@ -195,6 +194,7 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 ;;   (( "C-c M-i" . org-tanglesync-process-buffer-interactive)
 ;;    ( "C-c M-a" . org-tanglesync-process-buffer-automatic)))
 #+end_src
+
 ** Warning level
 
 #+begin_src emacs-lisp
@@ -230,7 +230,7 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 #+RESULTS:
 | doom--customize-themes-h-54 |
 
-# LSP: Error: (error "Invalid image type ‘svg’")
+# LSP: Error: (error "Invalid image type 'svg'")
 # FIX: https://github.com/caldwell/build-emacs/issues/126
 #+begin_src emacs-lisp
 (add-to-list 'image-types 'svg)
@@ -1379,9 +1379,6 @@ To create new loadable modules,
 ;;         :desc "Accept full completion" "TAB" #'copilot-accept-completion))
 #+end_src
 
-#+RESULTS:
-: copilot-accept-completion
-
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix-map ("b" . "buddhi")
@@ -1442,6 +1439,7 @@ To create new loadable modules,
 #+end_src
 
 #+RESULTS:
+| ن | ل | ا | م | هـ | ي | ص |
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! org-bullets)
@@ -1799,16 +1797,19 @@ To create new loadable modules,
  :config
  ;; Enable automatic alignment of forms
  (setq clojure-align-forms-automatically t))
- ;; Additional Clojure mode hooks
-;; :hook
-;; ((subword-mode . clojure-mode)
-;;              (paredit-mode . clojure-mode)
-;;              (clj-refactor-mode . clojure-mode)))
-;; (add-hook 'clojure-mode-hook (lambda ()
-;;                                (cljr-add-keybindings-with-prefix "C-c C-m"))))
 #+end_src
 
 #+RESULTS:
+** CIDER Setup
+#+begin_src emacs-lisp
+(use-package! cider
+  :ensure t
+  :config
+  (setq cider-repl-display-help-banner nil))
+
+(add-hook 'clojure-mode-hook 'cider-mode)
+(add-hook 'cider-mode-hook 'eldoc-mode) ;; Optional: for showing function arg info
+#+end_src
 
 * Neo-tree
 #+begin_src emacs-lisp :tangle packages.el
@@ -1912,12 +1913,12 @@ To create new loadable modules,
 
 
 #+name: setup-minted
-#+begin_src emacs-lisp :exports both :results silent
+#+begin_src emacs-lisp :exports both :results silent :tangle no
 (setq org-latex-listings 'minted)
 (setq org-latex-custom-lang-environments
       '((emacs-lisp "common-lispcode")))
 (setq org-latex-minted-options
-      '(("frame" "none")
+      '(("frame" "lines")
         ("fontsize" "\\scriptsize")
         ("linenos" "false")
         ("bgcolor" "LightGray")))
@@ -2189,56 +2190,31 @@ To create new loadable modules,
 #+begin_src emacs-lisp
   ;; (use-package! evil-nerd-commenter)
 #+end_src
-* Cape
+* Complete (corfu and cape)
 
-#+begin_src emacs-lisp :tangle packages.el
-(package! cape)
+
+** Corfu
+#+begin_src emacs-lisp
+(use-package! corfu
+  :init
+  (global-corfu-mode)
+  :custom
+  (corfu-auto t)
+  (corfu-cycle t)
+  (corfu-quit-no-match 'separator)
+  (corfu-preselect 'directory))
 #+end_src
 
+** Cape
 #+begin_src emacs-lisp
-;; Add extensions
 (use-package! cape
-  ;; Bind dedicated completion commands
-  ;; Alternative prefix keys: C-c p, M-p, M-+, ...
-  :bind (("C-c p p" . completion-at-point) ;; capf
-         ("C-c p t" . complete-tag)        ;; etags
-         ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
-         ("C-c p h" . cape-history)
-         ("C-c p f" . cape-file)
-         ("C-c p k" . cape-keyword)
-         ("C-c p s" . cape-elisp-symbol)
-         ("C-c p e" . cape-elisp-block)
-         ("C-c p a" . cape-abbrev)
-         ("C-c p l" . cape-line)
-         ("C-c p w" . cape-dict)
-         ("C-c p :" . cape-emoji)
-         ("C-c p \\" . cape-tex)
-         ("C-c p _" . cape-tex)
-         ("C-c p ^" . cape-tex)
-         ("C-c p &" . cape-sgml)
-         ("C-c p r" . cape-rfc1345))
+  :after corfu
   :init
-  ;; Add to the global default value of `completion-at-point-functions' which is
-  ;; used by `completion-at-point'.  The order of the functions matters, the
-  ;; first function returning a result wins.  Note that the list of buffer-local
-  ;; completion functions takes precedence over the global list.
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-elisp-block)
-  (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)
-  ;;(add-to-list 'completion-at-point-functions #'cape-history)
-  ;;(add-to-list 'completion-at-point-functions #'cape-keyword)
-  ;;(add-to-list 'completion-at-point-functions #'cape-tex)
-  ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
-  ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
-  ;;(add-to-list 'completion-at-point-functions #'cape-abbrev)
-  ;;(add-to-list 'completion-at-point-functions #'cape-dict)
-  ;;(add-to-list 'completion-at-point-functions #'cape-elisp-symbol)
-  ;;(add-to-list 'completion-at-point-functions #'cape-line)
-  :config
-  (global-set-key (kbd "M-<return>") (cape-capf-interactive #'codeium-completion-at-point)))
-
-
+  (add-to-list 'completion-at-point-functions #'codeium-completion-at-point))
+  (global-set-key (kbd "M-<return>") (cape-capf-interactive #'codeium-completion-at-point))
 #+end_src
 
 * Codeium
@@ -2306,59 +2282,6 @@ To create new loadable modules,
       (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (point))))
   (setq codeium/document/text 'my-codeium/document/text)
   (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset))
-#+end_src
-
-* Company
-
-#+begin_src emacs-lisp
-(use-package! company
-    :defer 0.1
-    :config
-    (global-company-mode t)
-    (setq-default
-        company-idle-delay 0.5
-        company-require-match nil
-        company-minimum-prefix-length 0
-
-        ;; get only preview
-        ;; company-frontends '(company-preview-frontend)))
-        ;; also get a drop down
-        company-frontends '(company-pseudo-tooltip-frontend company-preview-frontend)))
-
-#+end_src
-
-#+RESULTS:
-: t
-
-* Corfu
-#+begin_src emacs-lisp :tangle packages.el
-(package! corfu)
-#+end_src
-
-#+begin_src emacs-lisp
-(use-package! corfu
-  ;; Optional customizations
-  :custom
-  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-  (corfu-auto t)                 ;; Enable auto completion
-  (corfu-separator ?\s)          ;; Orderless field separator
-  (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
-  (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
-  (corfu-preview-current nil)    ;; Disable current candidate preview
-  (corfu-preselect 'prompt)      ;; Preselect the prompt
-  (corfu-on-exact-match nil)     ;; Configure handling of exact matches
-  (corfu-scroll-margin 5)        ;; Use scroll margin
-
-  ;; Enable Corfu only for certain modes.
-  :hook ((prog-mode . corfu-mode)
-         (shell-mode . corfu-mode)
-         (eshell-mode . corfu-mode))
-
-  ;; Recommended: Enable Corfu globally.  This is recommended since Dabbrev can
-  ;; be used globally (M-/).  See also the customization variable
-  ;; `global-corfu-modes' to exclude certain modes.
-  :init
-  (global-corfu-mode))
 #+end_src
 
 * HTTP interface
@@ -2626,7 +2549,66 @@ sudo update-alternatives --config x-terminal-emulator
           :desc "Update `tags` file" "u" #'citre-update-this-tags-file))))
 #+end_src
 
+* KILL Company
+
+#+begin_src emacs-lisp
+;; (use-package! company
+;;     :defer 0.1
+;;     :config
+;;     (global-company-mode t)
+;;     (setq-default
+;;         company-idle-delay 0.5
+;;         company-require-match nil
+;;         company-minimum-prefix-length 0
+
+;;         ;; get only preview
+;;         ;; company-frontends '(company-preview-frontend)))
+;;         ;; also get a drop down
+;;         company-frontends '(company-pseudo-tooltip-frontend company-preview-frontend)))
+
+#+end_src
+
+#+RESULTS:
+: t
+
+# * Corfu
+# #+begin_src emacs-lisp :tangle packages.el
+# (package! corfu)
+# #+end_src
+
+# #+begin_src emacs-lisp
+# (use-package! corfu
+#   ;; Optional customizations
+#   :custom
+#   (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+#   (corfu-auto t)                 ;; Enable auto completion
+#   (corfu-separator ?\s)          ;; Orderless field separator
+#   (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+#   (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+#   (corfu-preview-current nil)    ;; Disable current candidate preview
+#   (corfu-preselect 'prompt)      ;; Preselect the prompt
+#   (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+#   (corfu-scroll-margin 5)        ;; Use scroll margin
+
+#   ;; Enable Corfu only for certain modes.
+#   :hook ((prog-mode . corfu-mode)
+#          (shell-mode . corfu-mode)
+#          (eshell-mode . corfu-mode))
+
+#   ;; Recommended: Enable Corfu globally.  This is recommended since Dabbrev can
+#   ;; be used globally (M-/).  See also the customization variable
+#   ;; `global-corfu-modes' to exclude certain modes.
+#   :init
+#   (global-corfu-mode))
+# #+end_src
+
 * LSP (Tree-sitter mode)
+** LSP Setup
+#+begin_src emacs-lisp
+(use-package! lsp-mode
+  :hook (prog-mode . lsp)
+  :commands lsp)
+#+end_src
 * DAP (Debug Adapter Protocol)
 
 #+begin_src emacs-lisp
@@ -2669,7 +2651,7 @@ sudo update-alternatives --config x-terminal-emulator
 #+end_src
 * EAF - Emacs Application Framework
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (add-to-list 'load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
 (require 'eaf)
 #+end_src
@@ -2677,7 +2659,7 @@ sudo update-alternatives --config x-terminal-emulator
 #+RESULTS:
 : eaf
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (require 'eaf-browser)
 (setq eaf-dired-advisor-enable nil)
 ;; (setq eaf-)
@@ -2687,7 +2669,7 @@ sudo update-alternatives --config x-terminal-emulator
 #+RESULTS:
 : eaf-browser
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package! eaf
   :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
   :custom
@@ -2710,6 +2692,13 @@ sudo update-alternatives --config x-terminal-emulator
 * Lookup setup
 
 * LLMS
+#+begin_src emacs-lisp :tangle packages.el
+(package! llama)
+(package! ellama)
+(package! ollama-buddy)
+(package! llama-cpp)
+#+end_src
+
 ** GPTel
 
 #+begin_src emacs-lisp :tangle packages.el
@@ -2717,41 +2706,41 @@ sudo update-alternatives --config x-terminal-emulator
 #+end_src
 
 #+begin_src emacs-lisp
-(gptel-make-ollama "Ollama"             ;Any name of your choosing
-  :host "localhost:11434"               ;Where it's running
-  :stream t                             ;Stream responses
-  :models '(deepseek-r1:latest))          ;List of models
+;; (gptel-make-ollama "Ollama"             ;Any name of your choosing
+;;   :host "localhost:11434"               ;Where it's running
+;;   :stream t                             ;Stream responses
+;;   :models '(deepseek-r1:latest))          ;List of models
 #+end_src
 
 #+RESULTS:
 : #s(gptel-ollama "Ollama" "localhost:11434" nil "http" t "/api/chat" nil (deepseek-r1:latest) "http://localhost:11434/api/chat" nil nil)
 
 #+begin_src emacs-lisp
-(gptel-make-ollama "Ollama-coder"             ;Any name of your choosing
-  :host "localhost:11434"               ;Where it's running
-  :stream t                             ;Stream responses
-  :models '(deep-jibril:1.0))          ;List of models
+;; (gptel-make-ollama "Ollama-coder"             ;Any name of your choosing
+;;   :host "localhost:11434"               ;Where it's running
+;;   :stream t                             ;Stream responses
+;;   :models '(deep-jibril:1.0))          ;List of models
 
-(gptel-make-ollama "Ollama-sql-coder"             ;Any name of your choosing
-  :host "localhost:11434"               ;Where it's running
-  :stream t                             ;Stream responses
-  :models '(codelama-jibril-SQLer:1.0))          ;List of models
+;; (gptel-make-ollama "Ollama-sql-coder"             ;Any name of your choosing
+;;   :host "localhost:11434"               ;Where it's running
+;;   :stream t                             ;Stream responses
+;;   :models '(codelama-jibril-SQLer:1.0))          ;List of models
 
-(gptel-make-ollama "qwen2.5-coder:32B"             ;Any name of your choosing
-  :host "localhost:11434"               ;Where it's running
-  :stream t                             ;Stream responses
-  :models '(qwen2.5-coder:32B))          ;List of models
+;; (gptel-make-ollama "qwen2.5-coder:32B"             ;Any name of your choosing
+;;   :host "localhost:11434"               ;Where it's running
+;;   :stream t                             ;Stream responses
+;;   :models '(qwen2.5-coder:32B))          ;List of models
 #+end_src
 
 ** ELLAMA
 Use =ollama= inside Emacs the way the like it!
 
-#+begin_src emacs-lisp :tangle packages.el
+#+begin_src emacs-lisp :tangle packages.el :tangle no
 (package! ellama)
 (package! llm)
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package! llm)
 
 (use-package! ellama
@@ -2816,10 +2805,11 @@ Use =ollama= inside Emacs the way the like it!
   ;; send last message in chat buffer with C-c C-c
   (add-hook 'org-ctrl-c-ctrl-c-hook #'ellama-chat-send-last-message))
 #+end_src
+
 ** evedel
 https://github.com/daedsidog/evedel
 
-#+begin_src emacs-lisp :tangle packages.el
+#+begin_src emacs-lisp :tangle packages.el :tangle no
 (package! evedel)
 #+end_src
 
@@ -2865,32 +2855,32 @@ https://github.com/lanceberge/elysium
 https://github.com/douo/magit-gptcommit
 
 #+begin_src emacs-lisp :tangle packages.el :tangle no
-(package! magit-gptcommit)
+;; (package! magit-gptcommit)
 #+end_src
 
 #+begin_src emacs-lisp :tangle no
-(use-package! magit-gptcommit
-  :straight t
-  :demand t
-  :after magit
-  :bind (:map git-commit-mode-map
-              ("C-c C-g" . magit-gptcommit-commit-accept))
-  :custom
-  (magit-gptcommit-llm-provider (make-llm-openai :key "OPENAI-KEY"))
+;; (use-package! magit-gptcommit
+;;   :straight t
+;;   :demand t
+;;   :after magit
+;;   :bind (:map git-commit-mode-map
+;;               ("C-c C-g" . magit-gptcommit-commit-accept))
+;;   :custom
+;;   (magit-gptcommit-llm-provider (make-llm-openai :key "OPENAI-KEY"))
 
-  :config
-  ;; Enable magit-gptcommit-mode to watch staged changes and generate commit message automatically in magit status buffer
-  ;; This mode is optional, you can also use `magit-gptcommit-generate' to generate commit message manually
-  ;; `magit-gptcommit-generate' should only execute on magit status buffer currently
-  ;; (magit-gptcommit-mode 1)
+;;   :config
+;;   ;; Enable magit-gptcommit-mode to watch staged changes and generate commit message automatically in magit status buffer
+;;   ;; This mode is optional, you can also use `magit-gptcommit-generate' to generate commit message manually
+;;   ;; `magit-gptcommit-generate' should only execute on magit status buffer currently
+;;   ;; (magit-gptcommit-mode 1)
 
-  ;; Add gptcommit transient commands to `magit-commit'
-  ;; Eval (transient-remove-suffix 'magit-commit '(1 -1)) to remove gptcommit transient commands
-  (magit-gptcommit-status-buffer-setup))
+;;   ;; Add gptcommit transient commands to `magit-commit'
+;;   ;; Eval (transient-remove-suffix 'magit-commit '(1 -1)) to remove gptcommit transient commands
+;;   (magit-gptcommit-status-buffer-setup))
 #+end_src
 ** Consult Omni
 
-#+begin_src emacs-lisp :tangle packages.el
+#+begin_src emacs-lisp :tangle packages.el :tangle no
 (package! consult-omni
   :recipe (:host github :repo "armindarvish/consult-omni" :files (:defaults "sources/*.el")))
 #+end_src
@@ -2952,11 +2942,11 @@ https://github.com/douo/magit-gptcommit
 #+end_src
 ** Corsair
 
-#+begin_src emacs-lisp :tangle packages.el
+#+begin_src emacs-lisp :tangle packages.el :tangle no
 (package! corsair)
 #+end_src
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package! corsair
   :ensure t
   :defer t ; Optional: Load lazily
@@ -2967,3 +2957,4 @@ https://github.com/douo/magit-gptcommit
 (server-force-delete)
 (server-start)
 #+end_src
+

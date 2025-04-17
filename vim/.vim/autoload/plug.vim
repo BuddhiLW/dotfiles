@@ -1,0 +1,1 @@
+/home/khawarizmi/dotfiles/vim/plug.vim

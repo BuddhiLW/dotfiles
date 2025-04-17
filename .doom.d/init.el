@@ -20,11 +20,12 @@
        ;;layout            ; auie,ctsrnm is the superior home row
 
        :completion
-       (company +childframe)           ; the ultimate code completion backend
+       ;; (company +childframe)           ; the ultimate code completion backend
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        ;; ivy               ; a search engine for love and life
        (vertico +icons)           ; the search engine of the future
+       (corfu +icons +orderless +dabbrev)
 
        :ui
        deft              ; notational velocity for Emacs
@@ -95,7 +96,7 @@
        ;;gist              ; interacting with github gists
        lookup              ; navigate your code and its documentation
        (lsp +peek)                ; M-x vscode
-       magit             ; a git porcelain for Emacs
+       ;; (magit +forge)             ; a git porcelain for Emacs
        make              ; run make tasks from Emacs
        pass              ; password manager for nerds
        pdf               ; pdf enhancements
@@ -106,7 +107,7 @@
        tmux              ; an API for interacting with tmux
        ;;upload            ; map local to remote projects via ssh/ftp
        tree-sitter
-       (codeium)
+       ;; (codeium)
        ;; (gptel +aipihkal +anyscale +togetherai +gemini +extras +extension)
 
 
@@ -126,10 +127,10 @@
        data              ; config/data formats
        (dart +flutter)   ; paint ui and not much else
        ;;dhall
-       (elixir +lsp +tree-siter)            ; erlang done right
-       (elm +lsp +tree-siter)               ; care for a cup of TEA?
+       (elixir +lsp +tree-sitter)            ; erlang done right
+       (elm +lsp +tree-sitter)               ; care for a cup of TEA?
        emacs-lisp        ; drown in parentheses
-       (erlang +lsp +tree-siter)            ; an elegant language for a more civilized age
+       (erlang +lsp +tree-sitter)            ; an elegant language for a more civilized age
        (ess +R +r)               ; emacs speaks statistics
        ;;factor
        ;;faust             ; dsp, but you get to keep your soul
@@ -154,7 +155,7 @@
        ;;nim               ; python + lisp at the speed of c
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;; ocaml             ; an objective camel
-       (org +present +pretty)             ; organize your plain life in plain text +roam2
+       (org +present)             ; organize your plain life in plain text +roam2
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
        ;; purescript        ; javascript, but functional
@@ -173,9 +174,9 @@
        ;;solidity          ; do you need a blockchain? No.
        ;;swift             ; who asked for emoji variables?
        ;;terra             ; Earth and Moon in alignment for performance.
-       (web +lsp +tree-sliter)               ; the tubes
+       (web +lsp +tree-sitter)               ; the tubes
        yaml              ; JSON, but readable
-       (zig +lsp +tree-sliter)               ; C, but simpler
+       (zig +lsp +tree-sitter)               ; C, but simpler
 
        :email
        ;;(mu4e +org +gmail)

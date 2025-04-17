@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+curl -sL install-node.vercel.app/lts | bash
+sudo npm i -g typescript typescript-language-server vscode-langservers-extracted @tailwindcss/language-server eslint

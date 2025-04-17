@@ -12,12 +12,12 @@
    -- trayer
    -- 'dtos-local-bin' (from dtos-core-repo)
 
-Config { font            = "Ubuntu 16"
-       , additionalFonts = [
-       "xft:FontAwesome:pixelsize=30:antialias=true:hinting=true"
-       , "xft:Ubuntu:weight=bold:pixelsize=30:antialias=true:hinting=true"
-       , "xft:Mononoki:pixelsize=30:antialias=true:hinting=true"
-                           ]
+Config { font = "FiraCode Nerd Font 16"
+        , additionalFonts = [
+        "xft:FontAwesome:pixelsize=16:antialias=true:hinting=true"
+        , "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:hinting=true"
+        , "xft:Mononoki:pixelsize=16:antialias=true:hinting=true"
+        ]
        , bgColor      = "#000000"
        , fgColor      = "#FA0A0A"
        -- Position TopSize and BottomSize take 3 arguments:
@@ -25,10 +25,11 @@ Config { font            = "Ubuntu 16"
        --   an integer for the percentage width, so 100 would be 100%.
        --   an integer for the minimum pixel height for xmobar, so 24 would force a height of at least 24 pixels.
        --   NOTE: The height should be the same as the trayer (system tray) height.
-       , position = Static { xpos = 150 , ypos = 1020, width = 2260, height = 50 }
+       -- , position       = BottomSize C 95 70
+       , position = Static { xpos = 2040 , ypos = 1020, width = 2280, height = 50 }
        -- , position     = BottomSize C 95 50
-       , border       = FullB
-       , borderColor =  "--FFFFFF"
+       -- , border       = FullB
+       , borderColor =  "#FFFFFF"
        , lowerOnStart = True
        , hideOnStart  = False
        , allDesktops  = True
@@ -37,11 +38,11 @@ Config { font            = "Ubuntu 16"
        , commands = [
                     Run Com ".local/bin/kernel" [] "kernel" 36000
                         -- Cpu usage in percent
-                    , Run Cpu ["-t", "💻 cpu: (<total>%)","-H","50","--high","red"] 20
+                    , Run Cpu ["-t", "💻<total>%","-H","50","--high","red"] 20
                         -- Ram used number and percent
-                    , Run Memory ["-t", "💾 mem: <used>M (<usedratio>%)"] 20
+                    , Run Memory ["-t", "💾<usedratio>%"] 20
                         -- Disk space free
-                    , Run DiskU [("/", "📁 hdd: <free> free")] [] 60
+                    , Run DiskU [("/", "📁<free>")] [] 60
                         -- Echos an "up arrow" icon in front of the uptime output.
                     , Run Com "echo" ["🖥"] "uparrow" 3600
                         -- Uptime
@@ -50,14 +51,19 @@ Config { font            = "Ubuntu 16"
                     , Run Com "echo" ["<fn=2>\xf0f3</fn>"] "bell" 3600
                         -- Check for pacman updates (script found in .local/bin)
                     , Run Com ".local/bin/pacupdate" [] "pacupdate" 36000
-                        -- Echos a "battery" icon in front of the pacman updates.
-                    , Run Com "echo" ["<fn=2>\xf242</fn>"] "baticon" 3600
+                    -- Echos a "battery" icon in front of the pacman updates.
+                    , Run Com "echo" ["<fn=2>\xf242</fn>"] "baticon" 60
                     -- Pomodoro
                     , Run Com ".local/bin/blw/sb-pomo" [] "pomodoro" 1
                         -- Battery Alert
-                    , Run BatteryP ["BAT0"] ["-t", "<acstatus><watts> (<left>%)"] 360
+                    , Run BatteryP ["BAT0"]
+                    ["-t", "<acstatus>"
+                    , "-L", "10", "-H", "80"
+                    , "-l", "red", "-h", "green"
+                    , "--", "-O", "Charging", "-o", "<left>%"
+                    ] 10
                         -- Time and date
-                    , Run Date "⏰  %d %b %Y - (%H:%M) " "date" 50
+                    , Run Date "%d/%m/%Y %Hh%Mm" "date" 50
                         -- Script that dynamically adjusts xmobar padding depending on number of trayer icons.
                     , Run Com ".config/xmobar/trayer-padding-icon.sh" [] "trayerpad" 50
                         -- Prints out the left side items such as workspaces, layout, etc.
@@ -65,7 +71,7 @@ Config { font            = "Ubuntu 16"
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "<box type=Bottom width=2 mb=1 ml=2 color=#FFFFFF><action=`dm-run`><icon=haskell_20.xpm/> </action> </box>  <fc=#666666>|</fc> %UnsafeStdinReader%}{<box type=Right width=2 mb=4 mr=10 color=AAAAAA>  <fc=#EAEEFA>%pomodoro%</fc> </box>      <box type=Bottom width=2 mb=4 color=#ecbe7b><fc=#ecbe7b><action=`alacritty -e htop`>%cpu%</action></fc></box>  <box type=Bottom width=2 mb=2 color=#ff6c6b><fc=#ff6c6b><action=`alacritty -e htop`>%memory%</action></fc></box>    <box type=Bottom width=2 mb=2 color=#a9a1e1><fc=#a9a1e1>%disku%</fc></box>  <box type=Bottom width=2 mb=2 color=#da8548><fc=#da8548>%pomodoro%</fc></box>  <box type=Bottom width=2 mb=2 color=#46d9ff><fc=#46d9ff><action=`emacsclient -c -a 'emacs' --eval '(doom/window-maximize-buffer(dt/year-calendar))'`>%date%</action></fc></box> %trayerpad%"
+       , template = " λ <fc=#666666>|</fc> %UnsafeStdinReader%}{<box type=Bottom width=1 mb=1 mr=10 color=AAAAAA><fc=#EAEEFA> %baticon% %battery%</fc></box> <box type=Right width=2 mb=1 mr=1 color=AAAAAA>  <fc=#EAEEFA>%pomodoro%</fc> </box>  <box type=Bottom width=1 mb=1 color=#ecbe7b><fc=#ecbe7b><action=`alacritty -e htop`>%cpu%</action></fc></box>  <box type=Bottom width=2 mb=1 color=#ff6c6b><fc=#ff6c6b><action=`alacritty -e htop`>%memory%</action></fc></box> <box type=Bottom width=2 mb=2 color=#a9a1e1><fc=#a9a1e1>%disku%</fc></box> <box type=Bottom width=2 mb=2 color=#46d9ff><fc=#46d9ff><action=`emacsclient -c -a 'emacs' --eval '(doom/window-maximize-buffer(dt/year-calendar))'`>%date%</action></fc></box> %trayerpad%"
        }
 
 -- Battery

@@ -167,7 +167,8 @@ pathprepend \
     "$HOME/.local/share/cargo/bin/" \
     "$HOME/.roswell/bin/" \
     "$DOTFILES/gitthings/flutter/flutter/bin" \
-    "$DOTFILES/gitthings/graalvm/bin" /
+    "$DOTFILES/gitthings/graalvm/bin" \
+    "$DOTFILES/.npm-global/bin" \
 
 # export PATH="$DOTFILES/gitthings/flutter/flutter/bin:$PATH"
 #    "$HOME/.conda/envs/simple-signer-env/bin" \
@@ -517,24 +518,11 @@ sudo -n loadkeys ${XDG_DATA_HOME/share/}/larbs/ttymaps.kmap 2>/dev/null
 
 newshell
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/jacobi/.conda/bin/conda' 'shell.bash' 'hook' 2>/dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/jacobi/.conda/etc/profile.d/conda.sh" ]; then
-        . "/home/jacobi/.conda/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/jacobi/.conda/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
 
 complete -C keg keg
 complete -C dc dc
 # complete -C guix guix
+complete -C arara arara
 
 #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 #export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/fontconfig.pc
@@ -585,3 +573,35 @@ export PATH=$HOME/.elixir-install/installs/elixir/1.17.3-otp-27/bin:$PATH
 
 . "$HOME/.local/share/../bin/env"
 export PATH=~/.npm-global/bin:$PATH
+. "/home/khawarizmi/.local/share/cargo/env"
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/khawarizmi/.conda/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/khawarizmi/.conda/etc/profile.d/conda.sh" ]; then
+        . "/home/khawarizmi/.conda/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/khawarizmi/.conda/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+export PATH="/home/khawarizmi/dotfiles/gitthings/flutter/bin:$PATH"
+
+[ -f "/home/khawarizmi/.ghcup/env" ] && . "/home/khawarizmi/.ghcup/env" # ghcup-env
+
+# <<<< arara local-bin setup
+export PATH="$PATH:/home/khawarizmi/.local/bin/blw"
+# >>>>
+. "/home/khawarizmi/.deno/env"
+# pnpm
+export PNPM_HOME="/home/khawarizmi/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end

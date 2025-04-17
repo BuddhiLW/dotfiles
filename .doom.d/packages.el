@@ -174,12 +174,8 @@
   ;; (package! sunshine)
   ;; (package! evil-nerd-commenter)
 
-(package! cape)
-
 (package! codeium :recipe (:host github :repo "Exafunction/codeium.el"))
 ;; (package! cape)
-
-(package! corfu)
 
 (package! http)
 
@@ -205,16 +201,11 @@
 
 (package! citre)
 
+(package! llama)
+(package! ellama)
+(package! ollama-buddy)
+(package! llama-cpp)
+
 (package! gptel)
 
-(package! ellama)
-(package! llm)
-
-(package! evedel)
-
 (package! elysium)
-
-(package! consult-omni
-  :recipe (:host github :repo "armindarvish/consult-omni" :files (:defaults "sources/*.el")))
-
-(package! corsair)

@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+# Installation script for arara-test
+echo "arara test script!"

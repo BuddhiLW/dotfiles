@@ -17,7 +17,6 @@
           <height>480</height>
           <rate>59.940</rate>
         </mode>
-        <underscanning>yes</underscanning>
       </monitor>
     </logicalmonitor>
   </configuration>

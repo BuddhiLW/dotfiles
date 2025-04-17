@@ -1,0 +1,54 @@
+#!/usr/bin/bash
+
+sudo apt-get update -y && sudo apt-get upgrade -y;
+sudo apt-get install -y curl git unzip xz-utils zip libglu1-mesa     
+
+## Android apps
+sudo apt-get install libc6:amd64 libstdc++6:amd64 lib32z1 libbz2-1.0:amd64
+
+bash $DOTFILES/scripts/install/android
+
+cd $DOTFILES/gitthings
+# Official Flutter installation page
+INSTALL_PAGE="https://docs.flutter.dev/get-started/install/linux/android"
+
+# Scrape the latest stable Flutter version URL
+FLUTTER_URL=$(curl -s "$INSTALL_PAGE" | grep -oP 'https:\/\/storage.googleapis.com\/flutter_infra_release\/releases\/stable\/linux\/flutter_linux_[0-9.]+-stable.tar.xz' | head -n 1)
+
+# Custom download and install directories
+DOWNLOAD_DIR="$DOTFILES/gitthings"
+INSTALL_DIR="$DOTFILES/gitthings/flutter"
+
+# Create directories if they don't exist
+mkdir -p "$DOWNLOAD_DIR"
+mkdir -p "$INSTALL_DIR"
+
+# Navigate to download directory
+cd "$DOWNLOAD_DIR"
+
+# Download the latest Flutter stable release
+echo "Downloading Flutter from $FLUTTER_URL..."
+wget "$FLUTTER_URL" -O flutter_linux_latest.tar.xz
+
+# Extract Flutter
+echo "Extracting Flutter..."
+tar xf flutter_linux_latest.tar.xz -C "$INSTALL_DIR" --strip-components=1
+
+# Add Flutter to PATH
+FLUTTER_PATH="export PATH=\"$INSTALL_DIR/bin:\$PATH\""
+if ! grep -Fxq "$FLUTTER_PATH" ~/.bashrc
+then
+    echo "$FLUTTER_PATH" >> ~/.bashrc
+    echo "Flutter added to PATH in ~/.bashrc"
+else
+    echo "Flutter already in PATH"
+fi
+
+# Apply PATH changes immediately
+source ~/.bashrc
+
+# Check Flutter installation
+flutter doctor
+
+echo "Flutter installation completed!"
+
