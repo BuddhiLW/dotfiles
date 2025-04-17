@@ -238,6 +238,18 @@
   ;; :hook (prog-mode . company-mode)
   :hook (go-mode . rainbow-delimiters-mode))
 
+(defun my/cider-font-lock-reset ()
+  "Reset font lock to fix CIDER overriding clojure-mode colors."
+  (when (derived-mode-p 'clojure-mode)
+    (setq-local cider-font-lock-dynamically nil)
+    (font-lock-refresh-defaults)))
+
+(add-hook 'cider-mode-hook #'my/cider-font-lock-reset)
+
+(after! cider
+  (setq cider-font-lock-dynamically nil)
+  (remove-hook 'cider-mode-hook #'cider--refresh-font-lock))
+
 ;; (use-package! erc-hl-nicks)
 ;; (use-package! erc-colorize)
 
@@ -342,20 +354,6 @@
 (map! :leader
       (:prefix-map ("b" . "buddhi")
         :desc "python environment" "e" #'pyvenv-activate))
-
-(require 'project)
-
-(defun project-find-go-module (dir)
-  (when-let ((root (locate-dominating-file dir "go.mod")))
-    (cons 'go-module root)))
-
-(cl-defmethod project-root ((project (head go-module)))
-  (cdr project))
-
-(add-hook 'project-find-functions #'project-find-go-module)
-
-(setq gofmt-command "goimports")
-(add-hook 'before-save-hook 'gofmt-before-save)
 
 (use-package! janet-mode)
 
@@ -898,71 +896,6 @@
                   (buffer-file-name)
                   (what-line))))
 
-;; '(require 'clojure-mode-extra-font-locking)
-;; (eval-after-load 'clojure-mode '(require 'clojure-mode-extra-font-locking))
-;; (add-hook! clojure-mode #'clojure-mode-extra-font-locking)
-
-(defmacro blw/define-user-eval-reitit (fn-name command)
-  `(defun ,fn-name ()
-    (interactive)
-    (cider-eval-file (format (concat (getenv "CLJ_PLAYGROUND") "dev/src/user.clj"))) ;; "/path-to/dev/src/user.clj"
-    (cider-interactive-eval
-      (format (concat "(" ,command ")")
-              (cider-last-sexp)))))
-
-(blw/define-user-eval-reitit blw/eval-go "go")
-(blw/define-user-eval-reitit blw/eval-halt "halt")
-(blw/define-user-eval-reitit blw/eval-reset "reset")
-;; (define-key cider-mode-map (kbd "C-c g") 'blw/eval-go)
-
-(map! :leader
-      (:prefix-map ("b" . "buddhi")
-       (:prefix ("c" . "clojure")
-        :desc "go - start reitit" "g" #'blw/eval-go
-        :desc "halt reitit server" "h" #'blw/eval-halt
-        :desc "reset reitit server" "r" #'blw/eval-reset)))
-
-;; (getenv "CLJ")
-;; (format (concat (getenv "CLJ_PLAYGROUND") "dev/src/user.clj"))
-;; (getenv "CLJ_PLAYGROUND")
-
-(map! :leader
-      (:prefix-map ("b" . "buddhi")
-       (:prefix ("c" . "clojure")
-        (:prefix ("t" . "tests")
-          :desc "Run all tests" "p" #'cider-test-run-project-tests
-          :desc "Run tests in namespace" "n" #'cider-test-run-ns-tests
-          :desc "Run test under point" "t" #'cider-test-run-test))))
-
-;; config.el
-(use-package! dartclojure
-  :config
-  (setq dartclojure-opts "-m \"m\" -f \"f\""))
-
-;; config.el
-(map! :leader
-      (:prefix ("d" . "dartclojure")
-       :desc "dartclojure to buffer"
-       "b" #'dartclojure-paste-buffer
-       :desc "dartclojure to clipboard"
-       "c" #'dartclojure-to-clipboard
-       :desc "dartclojure converter"
-       "x" #'dartclojure-convert))
-
-;; Enable Clojure mode
-(use-package! clojure-mode
- :config
- ;; Enable automatic alignment of forms
- (setq clojure-align-forms-automatically t))
-
-(use-package! cider
-  :ensure t
-  :config
-  (setq cider-repl-display-help-banner nil))
-
-(add-hook 'clojure-mode-hook 'cider-mode)
-(add-hook 'cider-mode-hook 'eldoc-mode) ;; Optional: for showing function arg info
-
 ;; if you are using the "pass" password manager
 ;; (setq chatgpt-shell-openai-key
 ;;         (nth 0 (process-lines "pass" "show" "AI/open")))
@@ -1008,24 +941,24 @@
     (cfw:ical-create-source "gcal" (nth 0 (process-lines "pass" "show" "CALFW/gmail-ical-url")) "Blue") ;; google calendar ICS
     (cfw:ical-create-source "gcal" (nth 0 (process-lines "pass" "show" "CALFW/orasis-ical-url")) "Red"))))  ;; Orasis
 
-(use-package! indent-bars
-  :hook ((prog-mode yaml-mode go-mode clojure-mode clojurescript-mode python-mode elm-mode) . indent-bars-mode)
-  ;; or whichever modes you prefer
-  :config
-  (setq indent-bars-pattern "."
-        ;; indent-bars-pattern ".*.*.*.*.*.*.*.*"
-        indent-bars-width-frac 0.25
-        indent-bars-pad-frac 0.3
-        ;; indent-bars-pad-frac 0.2
-        ;; indent-bars-zigzag 0.1
-        indent-bars-color-by-depth '(:palette ("black" "white" "green" "red") :blend 0.5)
-        indent-bars-highlight-current-depth '(:blend 1.0 :width 0.4 :pad 0.1 :pattern "!.!.!." :zigzag 0.1)
-        indent-bars-ts-highlight-current-depth '(no-inherit) ; equivalent to nil
-        indent-bars-ts-color-by-depth '(no-inherit)
-        indent-bars-ts-color '(inherit fringe :face-bg t :blend 0.2)
-        ;; indent-bars-highlight-current-depth '(:background "red10")
-        ;; indent-bars-color-by-depth '(:regexp "outline-\\([0-9]+\\)" :blend 0.5)
-        indent-bars-highlight-current-depth '(:face default :blend 0.9)))
+;; (use-package! indent-bars
+;;   :hook ((prog-mode yaml-mode go-mode clojure-mode clojurescript-mode python-mode elm-mode) . indent-bars-mode)
+;;   ;; or whichever modes you prefer
+;;   :config
+;;   (setq indent-bars-pattern "."
+;;         ;; indent-bars-pattern ".*.*.*.*.*.*.*.*"
+;;         indent-bars-width-frac 0.25
+;;         indent-bars-pad-frac 0.3
+;;         ;; indent-bars-pad-frac 0.2
+;;         ;; indent-bars-zigzag 0.1
+;;         indent-bars-color-by-depth '(:palette ("black" "white" "green" "red") :blend 0.5)
+;;         indent-bars-highlight-current-depth '(:blend 1.0 :width 0.4 :pad 0.1 :pattern "!.!.!." :zigzag 0.1)
+;;         indent-bars-ts-highlight-current-depth '(no-inherit) ; equivalent to nil
+;;         indent-bars-ts-color-by-depth '(no-inherit)
+;;         indent-bars-ts-color '(inherit fringe :face-bg t :blend 0.2)
+;;         ;; indent-bars-highlight-current-depth '(:background "red10")
+;;         ;; indent-bars-color-by-depth '(:regexp "outline-\\([0-9]+\\)" :blend 0.5)
+;;         indent-bars-highlight-current-depth '(:face default :blend 0.9)))
 
 ;; EXWM init function
 (load! "./blw-func/exwm-init.el")
@@ -1066,77 +999,78 @@
 (use-package! corfu
   :init
   (global-corfu-mode)
-  :custom
-  (corfu-auto t)
-  (corfu-cycle t)
-  (corfu-quit-no-match 'separator)
-  (corfu-preselect 'directory))
+  :config
+  (setq corfu-auto t
+        corfu-auto-prefix 2
+        corfu-cycle t))
+  ;; :custom
+  ;; (corfu-auto t)
+  ;; (corfu-cycle t)
+  ;; (corfu-quit-no-match 'separator)
+  ;; (corfu-preselect 'directory))
 
 (use-package! cape
   :after corfu
   :init
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  ;; (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  ;; (add-to-list 'completion-at-point-functions #'cider-complete-at-point)
+  (add-to-list 'completion-at-point-functions #'lsp-completion-at-point)
+  ;; (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)
   (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-elisp-block)
-  (add-to-list 'completion-at-point-functions #'codeium-completion-at-point))
-  (global-set-key (kbd "M-<return>") (cape-capf-interactive #'codeium-completion-at-point))
+  (add-to-list 'completion-at-point-functions #'cape-elisp-block))
+  ;; (global-set-key (kbd "M-<return>") (cape-capf-interactive #'codeium-completion-at-point)))
 
 ;; (setq codeium/metadata/api_key (nth 0 (process-lines "pass" "show" "apikeys/codeium")))
-(use-package! codeium
-  :after cape
-  :init
-  ;; use globally
-  (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)
+;; (use-package! codeium
+;;   :config
 
-  :config
+;;   ;; (setq codeium/metadata/api_key (nth 0 (process-lines "pass" "show" "apikeys/codeium")))
+;;   ;; (defalias 'my/codeium-complete
+;;   ;;   (cape-interacive-capf #'codeium-completion-at-point))
 
-  ;; (setq codeium/metadata/api_key (nth 0 (process-lines "pass" "show" "apikeys/codeium")))
-  ;; (defalias 'my/codeium-complete
-  ;;   (cape-interacive-capf #'codeium-completion-at-point))
+;;   ;; (map! :localleader
+;;   ;;       :map evil-normal-state-map
+;;   ;;       "c e" #'my/codeium-complete)
 
-  ;; (map! :localleader
-  ;;       :map evil-normal-state-map
-  ;;       "c e" #'my/codeium-complete)
+;;   (setq codeium-api-enabled
+;;         (lambda (api)
+;;           (memq api '(GetCompletions Heartbeat CancelRequest
+;;                       GetAuthToken RegisterUser auth-redirect
+;;                       AcceptCompletion))))
 
-  (setq codeium-api-enabled
-        (lambda (api)
-          (memq api '(GetCompletions Heartbeat CancelRequest
-                      GetAuthToken RegisterUser auth-redirect
-                      AcceptCompletion))))
+;;   ;; ----------
+;;   (setq use-dialog-box nil) ;; do not use popup boxes
 
-  ;; ----------
-  (setq use-dialog-box nil) ;; do not use popup boxes
+;;   ;; if you don't want to use customize to save the api-key
+;;   ;; (setq codeium/metadata/api_key "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx")
 
-  ;; if you don't want to use customize to save the api-key
-  ;; (setq codeium/metadata/api_key "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx")
+;;   ;; get codeium status in the modeline
+;;   (setq codeium-mode-line-enable
+;;          (lambda (api) (not (memq api '(CancelRequest Heartbeat AcceptCompletion)))))
+;;   (add-to-list 'mode-line-format '(:eval (car-safe codeium-mode-line)) t)
+;;   ;; alternatively for a more extensive mode-line
+;;   ;; (add-to-list 'mode-line-format '(-50 "" codeium-mode-line) t)
 
-  ;; get codeium status in the modeline
-  (setq codeium-mode-line-enable
-         (lambda (api) (not (memq api '(CancelRequest Heartbeat AcceptCompletion)))))
-  (add-to-list 'mode-line-format '(:eval (car-safe codeium-mode-line)) t)
-  ;; alternatively for a more extensive mode-line
-  ;; (add-to-list 'mode-line-format '(-50 "" codeium-mode-line) t)
+;;   ;; use M-x codeium-diagnose to see apis/fields that would be sent to the local language server
+;;   (setq codeium-api-enabled
+;;          (lambda (api)
+;;               (memq api '(GetCompletions Heartbeat CancelRequest GetAuthToken RegisterUser auth-redirect AcceptCompletion))))
+;;   ;; you can also set a config for a single buffer like this:
+;;   ;; (add-hook 'python-mode-hook
+;;   ;;     (lambda ()
+;;   ;;         (setq-local codeium/editor_options/tab_size 4)))
 
-  ;; use M-x codeium-diagnose to see apis/fields that would be sent to the local language server
-  (setq codeium-api-enabled
-         (lambda (api)
-              (memq api '(GetCompletions Heartbeat CancelRequest GetAuthToken RegisterUser auth-redirect AcceptCompletion))))
-  ;; you can also set a config for a single buffer like this:
-  ;; (add-hook 'python-mode-hook
-  ;;     (lambda ()
-  ;;         (setq-local codeium/editor_options/tab_size 4)))
-
-  ;; You can overwrite all the codeium configs!
-  ;; for example, we recommend limiting the string sent to codeium for better performance
-  (defun my-codeium/document/text ()
-     (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (min (+ (point) 1000) (point-max))))
-  ;; if you change the text, you should also change the cursor_offset
-  ;; warning: this is measured by UTF-8 encoded bytes
-  (defun my-codeium/document/cursor_offset ()
-     (codeium-utf8-byte-length
-      (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (point))))
-  (setq codeium/document/text 'my-codeium/document/text)
-  (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset))
+;;   ;; You can overwrite all the codeium configs!
+;;   ;; for example, we recommend limiting the string sent to codeium for better performance
+;;   (defun my-codeium/document/text ()
+;;      (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (min (+ (point) 1000) (point-max))))
+;;   ;; if you change the text, you should also change the cursor_offset
+;;   ;; warning: this is measured by UTF-8 encoded bytes
+;;   (defun my-codeium/document/cursor_offset ()
+;;      (codeium-utf8-byte-length
+;;       (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (point))))
+;;   (setq codeium/document/text 'my-codeium/document/text)
+;;   (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset))
 
 (setq telega-server-libs-prefix "~/dotfiles/gitthigs/td/")
 
@@ -1186,31 +1120,6 @@
       (:prefix-map ("b" . "buddhi")
         (:prefix ("i" . "(system's) Integrations")
          :desc "Kitty terminal launch" "t" #'blw/run-kitty)))
-
-;; (defun eglot-format-buffer-before-save ()
-;;    (add-hook 'before-save-hook #'eglot-format-buffer -10 t))
-
-;; (use-package! eglot
-;;   :ensure t
-;;   :hook ((typescript-mode typescript-tsx-mode web-mode) . eglot-ensure)
-;;   :config
-;;   (add-to-list 'eglot-server-programs
-;;                '((typescript-mode typescript-tsx-mode) . ("typescript-language-server" "--stdio")))
-;;   (setq web-mode-markup-indent-offset 2
-;;         web-mode-code-indent-offset 2
-;;         web-mode-sql-indent-offset 2
-;;         web-mode-css-indent-offset 2
-;;         tab-width 2
-;;         evil-shift-width 2)
-;;   (add-hook! go-mode-hook #'eglot-ensure)
-;;   ;; Optional: install eglot-format-buffer as a save hook.
-;;   ;; The depth of -10 places this before eglot's willSave notification,
-;;   ;; so that that notification reports the actual contents that will be saved.
-;;   ;; (add-hook! go-mode-hook #'eglot-format-buffer-before-save)
-;;   (add-hook! before-save-hook
-;;     (lambda ()
-;;         (call-interactively 'eglot-code-action-organize-imports))
-;;     nil t))
 
 (use-package! rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -1275,10 +1184,6 @@
 ;;         ;; also get a drop down
 ;;         company-frontends '(company-pseudo-tooltip-frontend company-preview-frontend)))
 
-(use-package! lsp-mode
-  :hook (prog-mode . lsp)
-  :commands lsp)
-
 (require 'dap-mode)
 (require 'dap-ui)
 (require 'dap-dlv-go)
@@ -1335,3 +1240,8 @@
 
 (server-force-delete)
 (server-start)
+
+(add-hook 'clojure-mode-hook
+          (lambda ()
+            (unless cider-mode
+              (cider-mode 1))))

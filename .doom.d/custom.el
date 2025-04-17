@@ -5,7 +5,9 @@
  ;; If there is more than one, they won't work right.
  '(codeium/metadata/api_key "f1d7af58-b62d-4751-9d91-5669e4a8215e")
  '(conda-anaconda-home "~/.conda/")
- '(package-selected-packages '(markdown-preview-mode org-present visual-fill-column)))
+ '(package-selected-packages
+   '(clojure-mode-extra-font-locking markdown-preview-mode org-present
+     visual-fill-column)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
