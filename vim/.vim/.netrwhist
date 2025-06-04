@@ -1,5 +1,7 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =5
+let g:netrw_dirhistcnt =7
+let g:netrw_dirhist_7='/home/khawarizmi/dotfiles/shiny-enigma'
+let g:netrw_dirhist_6='/home/khawarizmi/dotfiles/scripts/install'
 let g:netrw_dirhist_5='/home/khawarizmi/dotfiles/.local/bin/blw'
 let g:netrw_dirhist_4='/home/khawarizmi/PP/portifolio/frontend/src/app/[locale]/(pages)'
 let g:netrw_dirhist_3='/home/khawarizmi/PP/portifolio/frontend/src/app/[locale]'
@@ -8,5 +10,3 @@ let g:netrw_dirhist_1='/home/khawarizmi/PP/portifolio/frontend/src/components/sh
 let g:netrw_dirhist_0='/home/khawarizmi/PP/portifolio/frontend/src/components'
 let g:netrw_dirhist_9='/home/khawarizmi/PP/portifolio/frontend/src'
 let g:netrw_dirhist_8='/home/khawarizmi/PP/portifolio/frontend/src/app'
-let g:netrw_dirhist_7='/home/khawarizmi/PP/portifolio/frontend/src/app/[locale]'
-let g:netrw_dirhist_6='/home/khawarizmi/PP/portifolio/frontend/src/app/[locale]/(pages)'
