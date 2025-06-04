@@ -215,3 +215,5 @@ github-copilot/
 dotfiles-tree
 
 __debug*
+
+.local/bin/tailwindcss
