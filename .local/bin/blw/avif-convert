@@ -1,0 +1,22 @@
+#!/usr/bin/bash
+
+input="$1"
+out="$2"
+name=$(basename "$input")
+quality="$3"
+if [ -z "$quality" ]; then
+	quality=30
+fi
+
+echo "Converting $input to $out dir, with quality $quality, to sizes 480, 720, 1280 width; autoscaled height"
+
+mkdir -p out
+
+for w in 480 720 1280; do
+  ffmpeg -y \
+    -i "$input" \
+    -vf "scale=${w}:-1" \
+    -c:v libaom-av1 \
+    -crf 30 -b:v 0 \
+		"$out/$name-$w.avif"
+done

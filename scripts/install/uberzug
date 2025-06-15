@@ -1,0 +1,13 @@
+#!/usr/bin/bash
+
+sudo apt-get install libssl-dev libvips-dev libsixel-dev libchafa-dev libtbb-dev libxcb-res0-dev libopencv-dev python3-opencv
+
+cd "$DOTFILES/gitthings/"
+
+git clone https://github.com/jstkdng/ueberzugpp.git
+cd ueberzugpp
+mkdir build && cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake --build .
+
+cmake --install build

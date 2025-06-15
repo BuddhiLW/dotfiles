@@ -66,7 +66,7 @@ export HRULEWIDTH=73
 export GHCUP="$GHCUP_INSTALL_BASE_PREFIX/.ghcup/bin"
 export GOPATH="$HOME/go"
 export GOBIN="$HOME/go/bin"
-export GOPRIVATE="github.com/orasis-holding/*"
+export GOPRIVATE="github.com/Assistencia-Familiar-Francana/*"
 export NATIVEFIER="$HOME/.local/nativefier"
 export GTAGSOBJDIRPREFIX="$HOME/.cache/gtags/"
 export GTAGSCONF="/etc/gtags/gtags.conf"
@@ -605,3 +605,13 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+#
+
+# enable bash completion in interactive shells
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
