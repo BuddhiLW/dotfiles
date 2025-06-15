@@ -1,3 +1,4 @@
+0001-01-01T00:00:00Z duration=25
 2021-12-13T16:52:39-03:00 description="Comp Prog" duration=25
 2021-12-13T17:39:54-03:00 duration=1
 2021-12-13T17:41:19-03:00 description=Programação duration=4
@@ -534,7 +535,6 @@
 2025-02-16T20:33:42-03:00 description="FOSS - Programming Physics" duration=82
 2025-02-16T20:33:42-03:00 description="FOSS - Programming Physics" duration=25
 2025-03-10T11:46:36-03:00 description="Coursera -- IBM -- Intro TDD, BDD" duration=60
-=======
 2025-03-20T13:57:54-03:00 description="formação dev" duration=64
 2025-03-20T13:57:54-03:00 description="formação dev" duration=25
 2025-03-20T15:41:19-03:00 description="formação dev" duration=45
@@ -579,3 +579,8 @@
 2025-04-09T23:22:53-03:00 description="Nota de Falecimento" duration=60
 2025-04-13T19:12:19-03:00 description=website duration=60
 2025-04-13T21:43:20-03:00 description=website duration=60
+2025-04-18T22:24:06-03:00 description="funeraria - website" duration=78
+2025-04-19T23:05:24-03:00 description="FC Pós" duration=60
+2025-04-20T12:54:27-03:00 description="FC Pós" duration=60
+2025-04-20T15:44:25-03:00 description="FC Pós" duration=58
+2025-05-24T14:52:18-03:00 description="FF - website: certificado" duration=60
