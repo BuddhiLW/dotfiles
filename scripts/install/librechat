@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+
+cd $DOTFILES/gitthings
+git clone https://github.com/danny-avila/LibreChat.git
+cd LibreChat
+cp .env.example .env
+docker compose up -d

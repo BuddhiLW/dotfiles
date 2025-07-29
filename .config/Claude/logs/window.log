@@ -1,0 +1,184 @@
+2025-07-03 11:15:42 [warn] %cElectron Security Warning (Insecure Content-Security-Policy) font-weight: bold; This renderer process has either no Content Security
+  Policy set or a policy with "unsafe-eval" enabled. This exposes users of
+  this app to unnecessary security risks.
+
+For more information and help, consult
+https://electronjs.org/docs/tutorial/security.
+This warning will not show up
+once the app is packaged.
+2025-07-03 11:15:42 [warn] %cElectron Security Warning (Insecure Content-Security-Policy) font-weight: bold; This renderer process has either no Content Security
+  Policy set or a policy with "unsafe-eval" enabled. This exposes users of
+  this app to unnecessary security risks.
+
+For more information and help, consult
+https://electronjs.org/docs/tutorial/security.
+This warning will not show up
+once the app is packaged.
+2025-07-03 11:15:42 [warn] Error with Permissions-Policy header: Unrecognized feature: 'ambient-light-sensor'.
+2025-07-03 11:15:42 [warn] Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.
+2025-07-03 11:15:42 [warn] Error with Permissions-Policy header: Unrecognized feature: 'document-domain'.
+2025-07-03 11:15:42 [warn] Error with Permissions-Policy header: Unrecognized feature: 'speaker-selection'.
+2025-07-03 11:15:42 [warn] Error with Permissions-Policy header: Unrecognized feature: 'web-share'.
+2025-07-03 11:15:43 [warn] Error with Permissions-Policy header: Unrecognized feature: 'ambient-light-sensor'.
+2025-07-03 11:15:43 [warn] Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.
+2025-07-03 11:15:43 [warn] Error with Permissions-Policy header: Unrecognized feature: 'document-domain'.
+2025-07-03 11:15:43 [warn] Error with Permissions-Policy header: Unrecognized feature: 'speaker-selection'.
+2025-07-03 11:15:43 [warn] Error with Permissions-Policy header: Unrecognized feature: 'web-share'.
+2025-07-03 11:15:43 [warn] An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.
+2025-07-03 11:15:44 [warn] [Intercom] The App ID in your code snippet has not been set. Set it to your App ID found in settings to complete installation: https://app.intercom.com/a/apps/_/settings/web
+2025-07-03 11:16:42 [error] Potential permissions policy violation: payment is not allowed in this document.
+2025-07-03 11:16:47 [error] Potential permissions policy violation: payment is not allowed in this document.
+2025-07-03 11:16:58 [warn] %cElectron Security Warning (Insecure Content-Security-Policy) font-weight: bold; This renderer process has either no Content Security
+  Policy set or a policy with "unsafe-eval" enabled. This exposes users of
+  this app to unnecessary security risks.
+
+For more information and help, consult
+https://electronjs.org/docs/tutorial/security.
+This warning will not show up
+once the app is packaged.
+2025-07-03 11:17:01 [error] `DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+2025-07-03 11:17:01 [warn] Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+2025-07-03 13:26:32 [warn] %cElectron Security Warning (Insecure Content-Security-Policy) font-weight: bold; This renderer process has either no Content Security
+  Policy set or a policy with "unsafe-eval" enabled. This exposes users of
+  this app to unnecessary security risks.
+
+For more information and help, consult
+https://electronjs.org/docs/tutorial/security.
+This warning will not show up
+once the app is packaged.
+2025-07-03 13:29:03 [warn] Error with Permissions-Policy header: Unrecognized feature: 'ambient-light-sensor'.
+2025-07-03 13:29:03 [warn] Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.
+2025-07-03 13:29:03 [warn] Error with Permissions-Policy header: Unrecognized feature: 'document-domain'.
+2025-07-03 13:29:03 [warn] Error with Permissions-Policy header: Unrecognized feature: 'speaker-selection'.
+2025-07-03 13:29:03 [warn] Error with Permissions-Policy header: Unrecognized feature: 'web-share'.
+2025-07-03 13:29:07 [warn] %cElectron Security Warning (Insecure Content-Security-Policy) font-weight: bold; This renderer process has either no Content Security
+  Policy set or a policy with "unsafe-eval" enabled. This exposes users of
+  this app to unnecessary security risks.
+
+For more information and help, consult
+https://electronjs.org/docs/tutorial/security.
+This warning will not show up
+once the app is packaged.
+2025-07-03 13:29:22 [warn] Error with Permissions-Policy header: Unrecognized feature: 'ambient-light-sensor'.
+2025-07-03 13:29:22 [warn] Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.
+2025-07-03 13:29:22 [warn] Error with Permissions-Policy header: Unrecognized feature: 'document-domain'.
+2025-07-03 13:29:22 [warn] Error with Permissions-Policy header: Unrecognized feature: 'speaker-selection'.
+2025-07-03 13:29:22 [warn] Error with Permissions-Policy header: Unrecognized feature: 'web-share'.
+2025-07-03 13:29:22 [warn] Error with Permissions-Policy header: Unrecognized feature: 'ambient-light-sensor'.
+2025-07-03 13:29:22 [warn] Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.
+2025-07-03 13:29:22 [warn] Error with Permissions-Policy header: Unrecognized feature: 'document-domain'.
+2025-07-03 13:29:22 [warn] Error with Permissions-Policy header: Unrecognized feature: 'speaker-selection'.
+2025-07-03 13:29:22 [warn] Error with Permissions-Policy header: Unrecognized feature: 'web-share'.
+2025-07-03 13:29:22 [warn] An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.
+2025-07-03 13:29:23 [warn] Found 1 service worker(s), which are no longer used. Unregistering.
+2025-07-03 13:30:43 [warn] Error with Permissions-Policy header: Unrecognized feature: 'ambient-light-sensor'.
+2025-07-03 13:30:43 [warn] Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.
+2025-07-03 13:30:43 [warn] Error with Permissions-Policy header: Unrecognized feature: 'document-domain'.
+2025-07-03 13:30:43 [warn] Error with Permissions-Policy header: Unrecognized feature: 'speaker-selection'.
+2025-07-03 13:30:43 [warn] Error with Permissions-Policy header: Unrecognized feature: 'web-share'.
+2025-07-03 13:30:43 [warn] Found 1 service worker(s), which are no longer used. Unregistering.
+2025-07-03 13:30:44 [warn] Error with Permissions-Policy header: Unrecognized feature: 'ambient-light-sensor'.
+2025-07-03 13:30:44 [warn] Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.
+2025-07-03 13:30:44 [warn] Error with Permissions-Policy header: Unrecognized feature: 'document-domain'.
+2025-07-03 13:30:44 [warn] Error with Permissions-Policy header: Unrecognized feature: 'speaker-selection'.
+2025-07-03 13:30:44 [warn] Error with Permissions-Policy header: Unrecognized feature: 'web-share'.
+2025-07-03 13:30:44 [warn] An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.
+2025-07-03 13:33:10 [warn] Error with Permissions-Policy header: Unrecognized feature: 'ambient-light-sensor'.
+2025-07-03 13:33:10 [warn] Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.
+2025-07-03 13:33:10 [warn] Error with Permissions-Policy header: Unrecognized feature: 'document-domain'.
+2025-07-03 13:33:10 [warn] Error with Permissions-Policy header: Unrecognized feature: 'speaker-selection'.
+2025-07-03 13:33:10 [warn] Error with Permissions-Policy header: Unrecognized feature: 'web-share'.
+2025-07-03 13:33:10 [warn] Found 1 service worker(s), which are no longer used. Unregistering.
+2025-07-03 13:33:10 [warn] Error with Permissions-Policy header: Unrecognized feature: 'ambient-light-sensor'.
+2025-07-03 13:33:10 [warn] Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.
+2025-07-03 13:33:10 [warn] Error with Permissions-Policy header: Unrecognized feature: 'document-domain'.
+2025-07-03 13:33:10 [warn] Error with Permissions-Policy header: Unrecognized feature: 'speaker-selection'.
+2025-07-03 13:33:10 [warn] Error with Permissions-Policy header: Unrecognized feature: 'web-share'.
+2025-07-03 13:33:10 [warn] An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing.
+2025-07-03 13:34:55 [error] `DialogContent` requires a `DialogTitle` for the component to be accessible for screen reader users.
+
+If you want to hide the `DialogTitle`, you can wrap it with our VisuallyHidden component.
+
+For more information, see https://radix-ui.com/primitives/docs/components/dialog
+2025-07-03 13:34:55 [warn] Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+2025-07-03 13:35:07 [warn] %cElectron Security Warning (Insecure Content-Security-Policy) font-weight: bold; This renderer process has either no Content Security
+  Policy set or a policy with "unsafe-eval" enabled. This exposes users of
+  this app to unnecessary security risks.
+
+For more information and help, consult
+https://electronjs.org/docs/tutorial/security.
+This warning will not show up
+once the app is packaged.
+2025-07-03 13:35:07 [error] Uncaught Error: Cannot set properties of null (setting 'innerText')
+2025-07-03 13:36:23 [warn] %cElectron Security Warning (Insecure Content-Security-Policy) font-weight: bold; This renderer process has either no Content Security
+  Policy set or a policy with "unsafe-eval" enabled. This exposes users of
+  this app to unnecessary security risks.
+
+For more information and help, consult
+https://electronjs.org/docs/tutorial/security.
+This warning will not show up
+once the app is packaged.
+2025-07-03 13:41:03 [warn] Error with Permissions-Policy header: Unrecognized feature: 'ambient-light-sensor'.
+2025-07-03 13:41:03 [warn] Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.
+2025-07-03 13:41:03 [warn] Error with Permissions-Policy header: Unrecognized feature: 'document-domain'.
+2025-07-03 13:41:03 [warn] Error with Permissions-Policy header: Unrecognized feature: 'speaker-selection'.
+2025-07-03 13:41:03 [warn] Error with Permissions-Policy header: Unrecognized feature: 'web-share'.
+2025-07-03 13:41:21 [warn] Error with Permissions-Policy header: Unrecognized feature: 'ambient-light-sensor'.
+2025-07-03 13:41:21 [warn] Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.
+2025-07-03 13:41:21 [warn] Error with Permissions-Policy header: Unrecognized feature: 'document-domain'.
+2025-07-03 13:41:21 [warn] Error with Permissions-Policy header: Unrecognized feature: 'speaker-selection'.
+2025-07-03 13:41:21 [warn] Error with Permissions-Policy header: Unrecognized feature: 'web-share'.
+2025-07-03 13:41:40 [warn] Error with Permissions-Policy header: Unrecognized feature: 'ambient-light-sensor'.
+2025-07-03 13:41:40 [warn] Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.
+2025-07-03 13:41:40 [warn] Error with Permissions-Policy header: Unrecognized feature: 'document-domain'.
+2025-07-03 13:41:40 [warn] Error with Permissions-Policy header: Unrecognized feature: 'speaker-selection'.
+2025-07-03 13:41:40 [warn] Error with Permissions-Policy header: Unrecognized feature: 'web-share'.
+2025-07-03 13:44:59 [warn] Error with Permissions-Policy header: Unrecognized feature: 'ambient-light-sensor'.
+2025-07-03 13:44:59 [warn] Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.
+2025-07-03 13:44:59 [warn] Error with Permissions-Policy header: Unrecognized feature: 'document-domain'.
+2025-07-03 13:44:59 [warn] Error with Permissions-Policy header: Unrecognized feature: 'speaker-selection'.
+2025-07-03 13:44:59 [warn] Error with Permissions-Policy header: Unrecognized feature: 'web-share'.
+2025-07-03 13:45:14 [warn] Error with Permissions-Policy header: Unrecognized feature: 'ambient-light-sensor'.
+2025-07-03 13:45:14 [warn] Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.
+2025-07-03 13:45:14 [warn] Error with Permissions-Policy header: Unrecognized feature: 'document-domain'.
+2025-07-03 13:45:14 [warn] Error with Permissions-Policy header: Unrecognized feature: 'speaker-selection'.
+2025-07-03 13:45:14 [warn] Error with Permissions-Policy header: Unrecognized feature: 'web-share'.
+2025-07-03 13:45:30 [warn] Error with Permissions-Policy header: Unrecognized feature: 'ambient-light-sensor'.
+2025-07-03 13:45:30 [warn] Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.
+2025-07-03 13:45:30 [warn] Error with Permissions-Policy header: Unrecognized feature: 'document-domain'.
+2025-07-03 13:45:30 [warn] Error with Permissions-Policy header: Unrecognized feature: 'speaker-selection'.
+2025-07-03 13:45:30 [warn] Error with Permissions-Policy header: Unrecognized feature: 'web-share'.
+2025-07-03 13:45:46 [warn] Error with Permissions-Policy header: Unrecognized feature: 'ambient-light-sensor'.
+2025-07-03 13:45:46 [warn] Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.
+2025-07-03 13:45:46 [warn] Error with Permissions-Policy header: Unrecognized feature: 'document-domain'.
+2025-07-03 13:45:46 [warn] Error with Permissions-Policy header: Unrecognized feature: 'speaker-selection'.
+2025-07-03 13:45:46 [warn] Error with Permissions-Policy header: Unrecognized feature: 'web-share'.
+2025-07-03 13:46:01 [warn] Error with Permissions-Policy header: Unrecognized feature: 'ambient-light-sensor'.
+2025-07-03 13:46:01 [warn] Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.
+2025-07-03 13:46:01 [warn] Error with Permissions-Policy header: Unrecognized feature: 'document-domain'.
+2025-07-03 13:46:01 [warn] Error with Permissions-Policy header: Unrecognized feature: 'speaker-selection'.
+2025-07-03 13:46:01 [warn] Error with Permissions-Policy header: Unrecognized feature: 'web-share'.
+2025-07-03 13:46:18 [warn] Error with Permissions-Policy header: Unrecognized feature: 'ambient-light-sensor'.
+2025-07-03 13:46:18 [warn] Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.
+2025-07-03 13:46:18 [warn] Error with Permissions-Policy header: Unrecognized feature: 'document-domain'.
+2025-07-03 13:46:18 [warn] Error with Permissions-Policy header: Unrecognized feature: 'speaker-selection'.
+2025-07-03 13:46:18 [warn] Error with Permissions-Policy header: Unrecognized feature: 'web-share'.
+2025-07-03 13:46:34 [warn] Error with Permissions-Policy header: Unrecognized feature: 'ambient-light-sensor'.
+2025-07-03 13:46:34 [warn] Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.
+2025-07-03 13:46:34 [warn] Error with Permissions-Policy header: Unrecognized feature: 'document-domain'.
+2025-07-03 13:46:34 [warn] Error with Permissions-Policy header: Unrecognized feature: 'speaker-selection'.
+2025-07-03 13:46:34 [warn] Error with Permissions-Policy header: Unrecognized feature: 'web-share'.
+2025-07-03 13:46:49 [warn] Error with Permissions-Policy header: Unrecognized feature: 'ambient-light-sensor'.
+2025-07-03 13:46:49 [warn] Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.
+2025-07-03 13:46:49 [warn] Error with Permissions-Policy header: Unrecognized feature: 'document-domain'.
+2025-07-03 13:46:49 [warn] Error with Permissions-Policy header: Unrecognized feature: 'speaker-selection'.
+2025-07-03 13:46:49 [warn] Error with Permissions-Policy header: Unrecognized feature: 'web-share'.
+2025-07-03 13:49:52 [warn] Error with Permissions-Policy header: Unrecognized feature: 'ambient-light-sensor'.
+2025-07-03 13:49:52 [warn] Error with Permissions-Policy header: Unrecognized feature: 'bluetooth'.
+2025-07-03 13:49:52 [warn] Error with Permissions-Policy header: Unrecognized feature: 'document-domain'.
+2025-07-03 13:49:52 [warn] Error with Permissions-Policy header: Unrecognized feature: 'speaker-selection'.
+2025-07-03 13:49:52 [warn] Error with Permissions-Policy header: Unrecognized feature: 'web-share'.

@@ -516,7 +516,6 @@ export LF_ICONS="di=📁:\
 # Switch escape and caps if tty and no passwd required:
 sudo -n loadkeys ${XDG_DATA_HOME/share/}/larbs/ttymaps.kmap 2>/dev/null
 
-newshell
 
 
 complete -C keg keg
@@ -545,31 +544,15 @@ complete -C arara arara
 #uim-xim &
 #export XMODIFIERS=@im=uim
 
-[[ ${BLE_VERSION-} ]] && ble-attach
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/home/lw/google-cloud-sdk/path.bash.inc' ]; then . '/home/lw/google-cloud-sdk/path.bash.inc'; fi
+# if [ -f '/home/lw/google-cloud-sdk/path.bash.inc' ]; then . '/home/lw/google-cloud-sdk/path.bash.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/home/lw/google-cloud-sdk/completion.bash.inc' ]; then . '/home/lw/google-cloud-sdk/completion.bash.inc'; fi
+# if [ -f '/home/lw/google-cloud-sdk/completion.bash.inc' ]; then . '/home/lw/google-cloud-sdk/completion.bash.inc'; fi
 
 complete -C go go
 complete -C lazywal lazywal
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-# . "$HOME/.local/share/cargo/env"
-
-export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64/
-export PATH=$JAVA_HOME/bin:$PATH
-
-export PATH=~/opensim-core/bin:$PATH
-#. "/home/russell/.local/share/cargo/env"
-
-export PATH=$HOME/.elixir-install/installs/otp/27.1.2/bin:$PATH
-export PATH=$HOME/.elixir-install/installs/elixir/1.17.3-otp-27/bin:$PATH
-# source "$HOME/dotfiles/gitthings/freqtrade/.venv/bin/activate"  # commented out by conda initialize
-
-. "/home/jacobi/.local/share/cargo/env"
-
 
 . "$HOME/.local/share/../bin/env"
 export PATH=~/.npm-global/bin:$PATH
@@ -597,6 +580,7 @@ export PATH="/home/khawarizmi/dotfiles/gitthings/flutter/bin:$PATH"
 # <<<< arara local-bin setup
 export PATH="$PATH:/home/khawarizmi/.local/bin/blw"
 # >>>>
+
 . "/home/khawarizmi/.deno/env"
 # pnpm
 export PNPM_HOME="/home/khawarizmi/.local/share/pnpm"
@@ -615,3 +599,11 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+
+export NVM_DIR="$HOME/.config/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export DOCKER_HOST=unix:///run/user/$(id -u)/docker.sock
+
+newshell
+[[ ${BLE_VERSION-} ]] && ble-attach

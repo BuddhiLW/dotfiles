@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+brew tap ktr0731/evans
+brew install evans

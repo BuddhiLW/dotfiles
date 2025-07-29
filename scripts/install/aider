@@ -1,0 +1,2 @@
+#!/usr/bin/bash
+curl -LsSf https://aider.chat/install.sh | sh

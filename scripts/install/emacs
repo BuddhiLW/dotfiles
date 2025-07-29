@@ -4,10 +4,10 @@
 cd $DOTFILES/gitthings/
 
 # Clone the Emacs repository if not already cloned
-if [ ! -d "emacs" ]; then
-    git clone --branch emacs-30 https://github.com/emacs-mirror/emacs.git
-		git pull
-fi
+#if [ ! -d "emacs" ]; then
+#    git clone --branch emacs-30 https://github.com/emacs-mirror/emacs.git
+#		git pull
+#fi
 
 # Update system repositories
 sudo apt-get update

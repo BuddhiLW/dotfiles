@@ -95,6 +95,11 @@
 
 (package! org-present)
 
+(package! clojure-mode-extra-font-locking)
+
+;; packages.el`
+(package! dartclojure :recipe (:host github :repo "burinc/dartclojure.el"))
+
 (package! neotree)
 
 (package! khoj)
@@ -140,7 +145,7 @@
 (package! calfw-ical)
 
 ;; (package! highlight-indentation)
-;; (package! indent-bars)
+(package! indent-bars)
 
 (package! exwm)
 
@@ -168,8 +173,10 @@
   ;; (package! celestial-mode-line)
   ;; (package! sunshine)
   ;; (package! evil-nerd-commenter)
+  (package! queue)
+  (package! sesman)
 
-;; (package! codeium :recipe (:host github :repo "Exafunction/codeium.el"))
+(package! codeium :recipe (:host github :repo "Exafunction/codeium.el"))
 ;; (package! cape)
 
 (package! http)
@@ -204,3 +211,5 @@
 (package! gptel)
 
 (package! elysium)
+
+(package! aider)

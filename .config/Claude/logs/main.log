@@ -1,0 +1,752 @@
+2025-07-03 11:15:41 [info] Starting app {
+  appVersion: '0.11.6',
+  isPackaged: false,
+  platform: 'linux',
+  arch: 'x64',
+  nodeVersion: '22.17.0'
+}
+2025-07-03 11:15:41 [debug] Preferred languages: { langs: [ 'en-US', 'en-US', 'en', 'en', [length]: 4 ] }
+2025-07-03 11:15:41 [debug] Found exact match "en-US" in available locales
+2025-07-03 11:15:41 [debug] Switching to locale "en-US"
+2025-07-03 11:15:42 [error] [ClaudeSDK] Failed to load SDK: Cannot find package '@anthropic-ai/claude-cli' imported from /usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js
+2025-07-03 11:15:42 [error] Claude Studio: Failed to initialize package Cannot find package '@anthropic-ai/claude-cli' imported from /usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js
+2025-07-03 11:15:42 [debug] Creating send port for WebContents 1 (reverse-rpc-async-api)
+2025-07-03 11:15:42 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 11:15:42 [debug] Creating reply port for WebContents 2 (rpc-async-api)
+2025-07-03 11:15:42 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 11:15:42 [debug] Creating send port for WebContents 1 (reverse-rpc-async-api)
+2025-07-03 11:15:42 [debug] Creating reply port for WebContents 3 (rpc-async-api)
+2025-07-03 11:15:42 [info] App is not installed, not enabling auto-updates
+2025-07-03 11:15:42 [debug] No User Agent Found {
+  requestHeaders: {
+    Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+  }
+}
+2025-07-03 11:15:42 [debug] No User Agent Found {
+  requestHeaders: {
+    Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+  }
+}
+2025-07-03 11:15:43 [debug] Switching to locale "en-US"
+2025-07-03 11:15:43 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 11:15:43 [debug] Creating send port for WebContents 1 (reverse-rpc-async-api)
+2025-07-03 11:15:43 [debug] Enterprise config loaded: {}
+2025-07-03 11:15:43 [info] Starting periodic extension update checks (interval: 21600000ms)
+2025-07-03 11:15:43 [debug] Extensions: No extensions directory found
+2025-07-03 11:15:43 [debug] Listing servers: [ [length]: 0 ]
+2025-07-03 11:15:43 [debug] No installed extensions, skipping update check
+2025-07-03 11:15:43 [warn] No blocklist data found from any source
+2025-07-03 11:15:43 [warn] No blocklist data received
+2025-07-03 11:15:43 [debug] Checking 0 installed extensions for blocklist violations
+2025-07-03 11:16:13 [debug] Opening in system browser 'https://claude.ai/login/app-google-auth?open_in_browser=1&fromDesktopApp=true'
+2025-07-03 11:16:31 [info] Starting app {
+  appVersion: '0.11.6',
+  isPackaged: false,
+  platform: 'linux',
+  arch: 'x64',
+  nodeVersion: '22.17.0'
+}
+2025-07-03 11:16:31 [debug] Preferred languages: { langs: [ 'en-US', 'en-US', 'en', 'en', [length]: 4 ] }
+2025-07-03 11:16:31 [debug] Found exact match "en-US" in available locales
+2025-07-03 11:16:31 [debug] Switching to locale "en-US"
+2025-07-03 11:16:31 [error] [ClaudeSDK] Failed to load SDK: Cannot find package '@anthropic-ai/claude-cli' imported from /usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js
+2025-07-03 11:16:31 [error] Claude Studio: Failed to initialize package Cannot find package '@anthropic-ai/claude-cli' imported from /usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js
+2025-07-03 11:16:31 [debug] Creating send port for WebContents 1 (reverse-rpc-async-api)
+2025-07-03 11:16:31 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 11:16:31 [debug] Creating reply port for WebContents 2 (rpc-async-api)
+2025-07-03 11:16:31 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 11:16:31 [debug] Creating send port for WebContents 1 (reverse-rpc-async-api)
+2025-07-03 11:16:31 [debug] Creating reply port for WebContents 3 (rpc-async-api)
+2025-07-03 11:16:31 [info] App is not installed, not enabling auto-updates
+2025-07-03 11:16:31 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 11:16:31 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 11:16:33 [debug] Switching to locale "en-US"
+2025-07-03 11:16:33 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 11:16:33 [debug] Creating send port for WebContents 1 (reverse-rpc-async-api)
+2025-07-03 11:16:34 [debug] Switching to locale "en-US"
+2025-07-03 11:16:34 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 11:16:34 [debug] Creating send port for WebContents 1 (reverse-rpc-async-api)
+2025-07-03 11:16:42 [debug] Switching to locale "en-US"
+2025-07-03 11:16:42 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 11:16:42 [debug] Creating send port for WebContents 1 (reverse-rpc-async-api)
+2025-07-03 11:16:58 [debug] Creating reply port for WebContents 4 (rpc-async-api)
+2025-07-03 11:16:58 [debug] No User Agent Found {
+  requestHeaders: {
+    Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+  }
+}
+2025-07-03 11:16:58 [debug] Failed to get currently focused app: {
+  error: TypeError: BF.getActiveWindowHandle is not a function
+      at rY (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:261:1805)
+      at nY (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:261:4106)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+    [stack]: [Getter/Setter],
+    [message]: 'BF.getActiveWindowHandle is not a function'
+  }
+}
+2025-07-03 11:16:58 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 11:17:01 [debug] Switching to locale "en-US"
+2025-07-03 11:17:01 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 11:17:01 [debug] Creating send port for WebContents 4 (reverse-rpc-async-api)
+2025-07-03 11:17:01 [debug] Creating send port for WebContents 1 (reverse-rpc-async-api)
+2025-07-03 11:17:56 [debug] Failed to get currently focused app: {
+  error: TypeError: BF.getActiveWindowHandle is not a function
+      at rY (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:261:1805)
+      at nY (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:261:4106)
+      at oY (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:261:15699)
+      at Function.<anonymous> (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:261:11929) {
+    [stack]: [Getter/Setter],
+    [message]: 'BF.getActiveWindowHandle is not a function'
+  }
+}
+2025-07-03 11:17:56 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 11:17:59 [debug] Skooch requested: 56
+2025-07-03 11:17:59 [debug] No skooch needed
+2025-07-03 11:18:00 [debug] Skooch requested: 56
+2025-07-03 11:18:00 [debug] No skooch needed
+2025-07-03 13:15:43 [debug] Checking 0 installed extensions for blocklist violations
+2025-07-03 13:15:43 [debug] Fetching blocklist from https://claude.ai/api/organizations/5e2f3c7d-47c1-42c1-8105-876497c498c3/dxt/blocklist
+2025-07-03 13:15:43 [debug] Successfully fetched blocklist from https://claude.ai/api/organizations/5e2f3c7d-47c1-42c1-8105-876497c498c3/dxt/blocklist with 0 entries
+2025-07-03 13:15:43 [info] Fetched 1 blocklists with 0 total entries
+2025-07-03 13:15:43 [info] Saved 1 blocklists with 0 entries
+2025-07-03 13:15:43 [info] Successfully updated 1 blocklists
+2025-07-03 13:26:32 [debug] createSettingsWindow
+2025-07-03 13:26:32 [debug] Creating reply port for WebContents 5 (rpc-async-api)
+2025-07-03 13:26:32 [debug] No User Agent Found {
+  requestHeaders: {
+    Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+  }
+}
+2025-07-03 13:26:32 [debug] Checking login setting
+2025-07-03 13:26:32 [debug] Login setting: {
+  openAtLogin: false,
+  openAsHidden: false,
+  restoreState: false,
+  wasOpenedAtLogin: false,
+  wasOpenedAsHidden: false
+}
+2025-07-03 13:26:43 [debug] Found Node.js 22.14.0 at /usr/local/bin/node
+2025-07-03 13:26:43 [debug] Found Python 3.13.3 at /usr/bin/python3
+2025-07-03 13:26:48 [info] Config file written
+2025-07-03 13:28:47 [error] Error in claudeURLHandler: {
+  error: TypeError: Invalid URL
+      at new URL (node:internal/url:818:25)
+      at U8 (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:107:12091)
+      at App.<anonymous> (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:261:11579)
+      at App.emit (node:events:518:28)
+      at n.emit (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:28:29583) {
+    [stack]: [Getter/Setter],
+    [message]: 'Invalid URL',
+    code: 'ERR_INVALID_URL',
+    input: '/usr/lib/claude-desktop/app.asar'
+  }
+}
+2025-07-03 13:28:47 [info] Starting app {
+  appVersion: '0.11.6',
+  isPackaged: false,
+  platform: 'linux',
+  arch: 'x64',
+  nodeVersion: '22.17.0'
+}
+2025-07-03 13:28:47 [debug] Preferred languages: { langs: [ 'en-US', 'en-US', 'en', 'en', [length]: 4 ] }
+2025-07-03 13:28:47 [debug] Found exact match "en-US" in available locales
+2025-07-03 13:28:47 [debug] Switching to locale "en-US"
+2025-07-03 13:28:47 [error] [ClaudeSDK] Failed to load SDK: Cannot find package '@anthropic-ai/claude-cli' imported from /usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js
+2025-07-03 13:28:47 [error] Claude Studio: Failed to initialize package Cannot find package '@anthropic-ai/claude-cli' imported from /usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js
+2025-07-03 13:28:47 [debug] Creating send port for WebContents 1 (reverse-rpc-async-api)
+2025-07-03 13:28:47 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 13:28:47 [debug] Creating reply port for WebContents 2 (rpc-async-api)
+2025-07-03 13:28:47 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 13:28:47 [debug] Creating send port for WebContents 1 (reverse-rpc-async-api)
+2025-07-03 13:28:47 [debug] Creating reply port for WebContents 3 (rpc-async-api)
+2025-07-03 13:28:47 [info] App is not installed, not enabling auto-updates
+2025-07-03 13:28:47 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 13:28:47 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 13:29:06 [debug] createSettingsWindow
+2025-07-03 13:29:06 [debug] Creating reply port for WebContents 6 (rpc-async-api)
+2025-07-03 13:29:06 [debug] No User Agent Found {
+  requestHeaders: {
+    Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+  }
+}
+2025-07-03 13:29:07 [debug] Checking login setting
+2025-07-03 13:29:07 [debug] Login setting: {
+  openAtLogin: false,
+  openAsHidden: false,
+  restoreState: false,
+  wasOpenedAtLogin: false,
+  wasOpenedAsHidden: false
+}
+2025-07-03 13:29:21 [info] Main webview is unresponsive, will kill and reload
+2025-07-03 13:29:21 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 13:29:21 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 13:29:23 [debug] Switching to locale "en-US"
+2025-07-03 13:29:23 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 13:29:23 [debug] Creating send port for WebContents 6 (reverse-rpc-async-api)
+2025-07-03 13:29:23 [debug] Creating send port for WebContents 4 (reverse-rpc-async-api)
+2025-07-03 13:29:23 [debug] Creating send port for WebContents 1 (reverse-rpc-async-api)
+2025-07-03 13:29:23 [debug] Listing servers: [ [length]: 0 ]
+2025-07-03 13:30:33 [debug] Checking login setting
+2025-07-03 13:30:33 [debug] Login setting: {
+  openAtLogin: false,
+  openAsHidden: false,
+  restoreState: false,
+  wasOpenedAtLogin: false,
+  wasOpenedAsHidden: false
+}
+2025-07-03 13:30:33 [warn] Installing unsigned extension from /tmp/dxt-download-1751560230103.dxt
+2025-07-03 13:30:33 [debug] Zip extraction completed: 995 files, 6053KB uncompressed
+2025-07-03 13:30:33 [info] Successfully installed extension ant.dir.ant.anthropic.filesystem v0.1.3
+2025-07-03 13:30:33 [debug] Saved extension metadata for 1 extensions
+2025-07-03 13:30:33 [info] Added metadata for extension ant.dir.ant.anthropic.filesystem
+2025-07-03 13:30:33 [debug] Extension ant.dir.ant.anthropic.filesystem: enabled=false
+2025-07-03 13:30:34 [error] Error reading build props: {
+  error: Error: ENOENT, resources/build-props.json not found in /usr/lib/claude-desktop/app.asar
+      at createError (node:electron/js2c/node_init:2:2060)
+      at fsReadFileAsar (node:electron/js2c/node_init:2:8822)
+      at node:internal/util:472:21
+      at new Promise (<anonymous>)
+      at fsReadFileAsar (node:internal/util:458:12)
+      at t.promises.readFile (node:electron/js2c/node_init:2:10885)
+      at uq (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:107:11545)
+      at Cqe (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:199:1200)
+      at iZ (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:199:1494)
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+    [stack]: [Getter/Setter],
+    [message]: 'ENOENT, resources/build-props.json not found in /usr/lib/claude-desktop/app.asar',
+    code: 'ENOENT',
+    errno: -2
+  }
+}
+2025-07-03 13:30:34 [debug] Statsig event sent successfully
+2025-07-03 13:30:43 [debug] Saved settings for extension ant.dir.ant.anthropic.filesystem
+2025-07-03 13:30:43 [debug] Extension ant.dir.ant.anthropic.filesystem: enabled=true
+2025-07-03 13:30:43 [warn] No MCP config found for extension ant.dir.ant.anthropic.filesystem with manifest: {
+  dxt_version: '0.1',
+  name: 'Filesystem',
+  display_name: 'Filesystem',
+  version: '0.1.3',
+  description: 'Let Claude access your filesystem to read and write files.',
+  long_description: 'This extension allows Claude to interact with your local filesystem, enabling it to read and write files directly. This can be useful for tasks such as file management, data processing, and automation of repetitive tasks. The extension provides a set of tools that can be used to navigate directories, read file contents, and write new files or modify existing ones.\n' +
+    '\n' +
+    'Underneath the hood, it uses @modelcontextprotocol/server-filesystem.',
+  author: { name: 'Anthropic', url: 'https://www.claude.ai' },
+  homepage: 'https://www.claude.ai',
+  documentation: 'https://support.anthropic.com/en/collections/4078531-claude-ai',
+  support: 'https://support.anthropic.com/en/collections/4078531-claude-ai',
+  icon: 'icon.png',
+  server: {
+    type: 'node',
+    entry_point: 'server/index.js',
+    mcp_config: {
+      command: 'node',
+      args: [
+        '${__dirname}/server/index.js',
+        '${user_config.allowed_directories}',
+        [length]: 2
+      ]
+    }
+  },
+  tools: [
+    { name: 'read_file', description: 'Read the contents of a file' },
+    {
+      name: 'read_multiple_files',
+      description: 'Read the contents of multiple files'
+    },
+    { name: 'write_file', description: 'Write content to a file' },
+    { name: 'edit_file', description: 'Edit the contents of a file' },
+    { name: 'create_directory', description: 'Create a new directory' },
+    {
+      name: 'list_directory',
+      description: 'List contents of a directory'
+    },
+    {
+      name: 'directory_tree',
+      description: 'Display directory structure as a tree'
+    },
+    { name: 'move_file', description: 'Move or rename a file' },
+    {
+      name: 'search_files',
+      description: 'Search for files by name or content'
+    },
+    {
+      name: 'get_file_info',
+      description: 'Get information about a file'
+    },
+    {
+      name: 'list_allowed_directories',
+      description: 'List directories that can be accessed'
+    },
+    [length]: 11
+  ],
+  keywords: [ 'api', 'automation', 'productivity', [length]: 3 ],
+  license: 'MIT',
+  compatibility: {
+    claude_desktop: '>=0.10.0',
+    platforms: [ 'darwin', 'win32', 'linux', [length]: 3 ],
+    runtimes: { node: '>=16.0.0' }
+  },
+  user_config: {
+    allowed_directories: {
+      type: 'directory',
+      title: 'Allowed Directories',
+      description: 'Select directories the filesystem server can access',
+      required: true,
+      default: [ [length]: 0 ],
+      multiple: true
+    }
+  }
+}
+2025-07-03 13:30:43 [warn] No MCP config found for extension ant.dir.ant.anthropic.filesystem, skipping
+2025-07-03 13:30:43 [debug] Switching to locale "en-US"
+2025-07-03 13:30:43 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 13:30:43 [debug] Creating send port for WebContents 6 (reverse-rpc-async-api)
+2025-07-03 13:30:43 [debug] Creating send port for WebContents 4 (reverse-rpc-async-api)
+2025-07-03 13:30:43 [debug] Creating send port for WebContents 1 (reverse-rpc-async-api)
+2025-07-03 13:30:43 [debug] Extension ant.dir.ant.anthropic.filesystem: enabled=true
+2025-07-03 13:30:43 [warn] No MCP config found for extension ant.dir.ant.anthropic.filesystem with manifest: {
+  dxt_version: '0.1',
+  name: 'Filesystem',
+  display_name: 'Filesystem',
+  version: '0.1.3',
+  description: 'Let Claude access your filesystem to read and write files.',
+  long_description: 'This extension allows Claude to interact with your local filesystem, enabling it to read and write files directly. This can be useful for tasks such as file management, data processing, and automation of repetitive tasks. The extension provides a set of tools that can be used to navigate directories, read file contents, and write new files or modify existing ones.\n' +
+    '\n' +
+    'Underneath the hood, it uses @modelcontextprotocol/server-filesystem.',
+  author: { name: 'Anthropic', url: 'https://www.claude.ai' },
+  homepage: 'https://www.claude.ai',
+  documentation: 'https://support.anthropic.com/en/collections/4078531-claude-ai',
+  support: 'https://support.anthropic.com/en/collections/4078531-claude-ai',
+  icon: 'icon.png',
+  server: {
+    type: 'node',
+    entry_point: 'server/index.js',
+    mcp_config: {
+      command: 'node',
+      args: [
+        '${__dirname}/server/index.js',
+        '${user_config.allowed_directories}',
+        [length]: 2
+      ]
+    }
+  },
+  tools: [
+    { name: 'read_file', description: 'Read the contents of a file' },
+    {
+      name: 'read_multiple_files',
+      description: 'Read the contents of multiple files'
+    },
+    { name: 'write_file', description: 'Write content to a file' },
+    { name: 'edit_file', description: 'Edit the contents of a file' },
+    { name: 'create_directory', description: 'Create a new directory' },
+    {
+      name: 'list_directory',
+      description: 'List contents of a directory'
+    },
+    {
+      name: 'directory_tree',
+      description: 'Display directory structure as a tree'
+    },
+    { name: 'move_file', description: 'Move or rename a file' },
+    {
+      name: 'search_files',
+      description: 'Search for files by name or content'
+    },
+    {
+      name: 'get_file_info',
+      description: 'Get information about a file'
+    },
+    {
+      name: 'list_allowed_directories',
+      description: 'List directories that can be accessed'
+    },
+    [length]: 11
+  ],
+  keywords: [ 'api', 'automation', 'productivity', [length]: 3 ],
+  license: 'MIT',
+  compatibility: {
+    claude_desktop: '>=0.10.0',
+    platforms: [ 'darwin', 'win32', 'linux', [length]: 3 ],
+    runtimes: { node: '>=16.0.0' }
+  },
+  user_config: {
+    allowed_directories: {
+      type: 'directory',
+      title: 'Allowed Directories',
+      description: 'Select directories the filesystem server can access',
+      required: true,
+      default: [ [length]: 0 ],
+      multiple: true
+    }
+  }
+}
+2025-07-03 13:30:43 [warn] No MCP config found for extension ant.dir.ant.anthropic.filesystem, skipping
+2025-07-03 13:30:43 [debug] Listing servers: [ [length]: 0 ]
+2025-07-03 13:30:58 [debug] Saved settings for extension ant.dir.ant.anthropic.filesystem
+2025-07-03 13:31:05 [debug] Extension ant.dir.ant.anthropic.filesystem: enabled=true
+2025-07-03 13:33:04 [debug] Extension ant.dir.ant.anthropic.filesystem: enabled=true
+2025-07-03 13:33:08 [debug] Saved settings for extension ant.dir.ant.anthropic.filesystem
+2025-07-03 13:33:08 [debug] Extension ant.dir.ant.anthropic.filesystem: enabled=false
+2025-07-03 13:33:08 [debug] Saved settings for extension ant.dir.ant.anthropic.filesystem
+2025-07-03 13:33:08 [debug] Extension ant.dir.ant.anthropic.filesystem: enabled=true
+2025-07-03 13:33:09 [debug] Extension ant.dir.ant.anthropic.filesystem: enabled=true
+2025-07-03 13:33:10 [debug] Switching to locale "en-US"
+2025-07-03 13:33:10 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 13:33:10 [debug] Creating send port for WebContents 6 (reverse-rpc-async-api)
+2025-07-03 13:33:10 [debug] Creating send port for WebContents 4 (reverse-rpc-async-api)
+2025-07-03 13:33:10 [debug] Creating send port for WebContents 1 (reverse-rpc-async-api)
+2025-07-03 13:33:10 [debug] Extension ant.dir.ant.anthropic.filesystem: enabled=true
+2025-07-03 13:33:10 [debug] Listing servers: [ 'Filesystem', [length]: 1 ]
+2025-07-03 13:33:10 [debug] Checking server Filesystem
+2025-07-03 13:33:10 [debug] Extension ant.dir.ant.anthropic.filesystem: enabled=true
+2025-07-03 13:33:10 [info] Checking if UtilityProcess should be used for extension Filesystem
+2025-07-03 13:33:10 [info] Using UtilityProcess for extension Filesystem: appConfig.isUsingBuiltInNodeForMcp is true
+2025-07-03 13:33:10 [debug] [MCP Server stderr] Secure MCP Filesystem Server running on stdio
+
+2025-07-03 13:33:10 [debug] [MCP Server stderr] Allowed directories: [ '/home/khawarizmi/PP/Funeraria/inventary' ]
+
+2025-07-03 13:33:23 [debug] Extension ant.dir.ant.anthropic.filesystem: enabled=true
+2025-07-03 13:33:30 [debug] Extension ant.dir.ant.anthropic.filesystem: enabled=true
+2025-07-03 13:34:17 [debug] Extension ant.dir.ant.anthropic.filesystem: enabled=true
+2025-07-03 13:34:22 [debug] Checking login setting
+2025-07-03 13:34:22 [debug] Login setting: {
+  openAtLogin: false,
+  openAsHidden: false,
+  restoreState: false,
+  wasOpenedAtLogin: false,
+  wasOpenedAsHidden: false
+}
+2025-07-03 13:34:23 [debug] Extension ant.dir.ant.anthropic.filesystem: enabled=true
+2025-07-03 13:34:26 [debug] Extension ant.dir.ant.anthropic.filesystem: enabled=true
+2025-07-03 13:34:28 [debug] Checking login setting
+2025-07-03 13:34:28 [debug] Login setting: {
+  openAtLogin: false,
+  openAsHidden: false,
+  restoreState: false,
+  wasOpenedAtLogin: false,
+  wasOpenedAsHidden: false
+}
+2025-07-03 13:34:32 [debug] Extension ant.dir.ant.anthropic.filesystem: enabled=true
+2025-07-03 13:34:39 [debug] Extension ant.dir.ant.anthropic.filesystem: enabled=true
+2025-07-03 13:35:07 [debug] createSettingsWindow
+2025-07-03 13:35:07 [debug] Creating reply port for WebContents 7 (rpc-async-api)
+2025-07-03 13:35:07 [debug] No User Agent Found {
+  requestHeaders: {
+    Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+  }
+}
+2025-07-03 13:35:07 [debug] Checking login setting
+2025-07-03 13:35:07 [debug] Login setting: {
+  openAtLogin: false,
+  openAsHidden: false,
+  restoreState: false,
+  wasOpenedAtLogin: false,
+  wasOpenedAsHidden: false
+}
+2025-07-03 13:35:07 [debug] Extension ant.dir.ant.anthropic.filesystem: enabled=true
+2025-07-03 13:36:23 [debug] createSettingsWindow
+2025-07-03 13:36:23 [debug] Creating reply port for WebContents 8 (rpc-async-api)
+2025-07-03 13:36:23 [debug] No User Agent Found {
+  requestHeaders: {
+    Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+  }
+}
+2025-07-03 13:36:23 [debug] Checking login setting
+2025-07-03 13:36:23 [debug] Login setting: {
+  openAtLogin: false,
+  openAsHidden: false,
+  restoreState: false,
+  wasOpenedAtLogin: false,
+  wasOpenedAsHidden: false
+}
+2025-07-03 13:36:31 [debug] Extension ant.dir.ant.anthropic.filesystem: enabled=true
+2025-07-03 13:41:03 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 13:41:05 [error] Error in claudeURLHandler: {
+  error: TypeError: Invalid URL
+      at new URL (node:internal/url:818:25)
+      at U8 (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:107:12091)
+      at App.<anonymous> (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:261:11579)
+      at App.emit (node:events:518:28)
+      at n.emit (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:28:29583) {
+    [stack]: [Getter/Setter],
+    [message]: 'Invalid URL',
+    code: 'ERR_INVALID_URL',
+    input: '/usr/lib/claude-desktop/app.asar'
+  }
+}
+2025-07-03 13:41:05 [error] Failed to show toast: {
+  error: Error
+      at t (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:35:7575)
+      at new <anonymous> (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:37:57511)
+      at u (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:37:58345)
+      at /usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:37:57995
+      at t.<anonymous> (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:37:49923)
+      at t._execute (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:37:27742)
+      at t.execute (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:37:27565)
+      at t.flush (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:37:31962)
+      at listOnTimeout (node:internal/timers:588:17)
+      at process.processTimers (node:internal/timers:523:7) {
+    stack: 'Error\n' +
+      '    at t (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:35:7575)\n' +
+      '    at new <anonymous> (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:37:57511)\n' +
+      '    at u (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:37:58345)\n' +
+      '    at /usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:37:57995\n' +
+      '    at t.<anonymous> (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:37:49923)\n' +
+      '    at t._execute (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:37:27742)\n' +
+      '    at t.execute (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:37:27565)\n' +
+      '    at t.flush (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:37:31962)\n' +
+      '    at listOnTimeout (node:internal/timers:588:17)\n' +
+      '    at process.processTimers (node:internal/timers:523:7)',
+    message: 'Timeout has occurred',
+    name: 'TimeoutError',
+    info: { meta: null, lastValue: null, seen: 0 }
+  }
+}
+2025-07-03 13:41:05 [info] Starting app {
+  appVersion: '0.11.6',
+  isPackaged: false,
+  platform: 'linux',
+  arch: 'x64',
+  nodeVersion: '22.17.0'
+}
+2025-07-03 13:41:05 [debug] Preferred languages: { langs: [ 'en-US', 'en-US', 'en', 'en', [length]: 4 ] }
+2025-07-03 13:41:05 [debug] Found exact match "en-US" in available locales
+2025-07-03 13:41:05 [debug] Switching to locale "en-US"
+2025-07-03 13:41:05 [error] [ClaudeSDK] Failed to load SDK: Cannot find package '@anthropic-ai/claude-cli' imported from /usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js
+2025-07-03 13:41:05 [error] Claude Studio: Failed to initialize package Cannot find package '@anthropic-ai/claude-cli' imported from /usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js
+2025-07-03 13:41:05 [debug] Creating send port for WebContents 1 (reverse-rpc-async-api)
+2025-07-03 13:41:05 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 13:41:05 [debug] Creating reply port for WebContents 2 (rpc-async-api)
+2025-07-03 13:41:05 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 13:41:05 [debug] Creating send port for WebContents 1 (reverse-rpc-async-api)
+2025-07-03 13:41:05 [debug] Creating reply port for WebContents 3 (rpc-async-api)
+2025-07-03 13:41:05 [info] App is not installed, not enabling auto-updates
+2025-07-03 13:41:05 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 13:41:05 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 13:41:08 [warn] UtilityProcess did not exit gracefully, killing...
+2025-07-03 13:41:20 [info] Main webview is unresponsive, will kill and reload
+2025-07-03 13:41:20 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 13:41:20 [debug] No User Agent Found {
+  requestHeaders: {
+    'Content-Type': 'application/x-sentry-envelope',
+    'content-encoding': 'gzip'
+  }
+}
+2025-07-03 13:41:39 [info] Main webview is unresponsive, will kill and reload
+2025-07-03 13:41:39 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 13:41:39 [debug] No User Agent Found {
+  requestHeaders: {
+    'Content-Type': 'application/x-sentry-envelope',
+    'content-encoding': 'gzip'
+  }
+}
+2025-07-03 13:42:41 [error] Error in claudeURLHandler: {
+  error: TypeError: Invalid URL
+      at new URL (node:internal/url:818:25)
+      at U8 (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:107:12091)
+      at App.<anonymous> (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:261:11579)
+      at App.emit (node:events:518:28)
+      at n.emit (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:28:29583) {
+    [stack]: [Getter/Setter],
+    [message]: 'Invalid URL',
+    code: 'ERR_INVALID_URL',
+    input: '/usr/lib/claude-desktop/app.asar'
+  }
+}
+2025-07-03 13:42:41 [info] Starting app {
+  appVersion: '0.11.6',
+  isPackaged: false,
+  platform: 'linux',
+  arch: 'x64',
+  nodeVersion: '22.17.0'
+}
+2025-07-03 13:42:41 [debug] Preferred languages: { langs: [ 'en-US', 'en-US', 'en', 'en', [length]: 4 ] }
+2025-07-03 13:42:41 [debug] Found exact match "en-US" in available locales
+2025-07-03 13:42:41 [debug] Switching to locale "en-US"
+2025-07-03 13:42:41 [error] [ClaudeSDK] Failed to load SDK: Cannot find package '@anthropic-ai/claude-cli' imported from /usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js
+2025-07-03 13:42:41 [error] Claude Studio: Failed to initialize package Cannot find package '@anthropic-ai/claude-cli' imported from /usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js
+2025-07-03 13:42:41 [debug] Creating send port for WebContents 1 (reverse-rpc-async-api)
+2025-07-03 13:42:41 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 13:42:41 [debug] Creating reply port for WebContents 2 (rpc-async-api)
+2025-07-03 13:42:41 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 13:42:41 [debug] Creating send port for WebContents 1 (reverse-rpc-async-api)
+2025-07-03 13:42:41 [debug] Creating reply port for WebContents 3 (rpc-async-api)
+2025-07-03 13:42:41 [info] App is not installed, not enabling auto-updates
+2025-07-03 13:42:41 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 13:42:41 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 13:42:53 [debug] Failed to get currently focused app: {
+  error: TypeError: BF.getActiveWindowHandle is not a function
+      at rY (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:261:1805)
+      at nY (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:261:4106)
+      at oY (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:261:15699)
+      at Function.<anonymous> (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:261:11929) {
+    [stack]: [Getter/Setter],
+    [message]: 'BF.getActiveWindowHandle is not a function'
+  }
+}
+2025-07-03 13:42:53 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 13:42:56 [info] Main webview is unresponsive, will kill and reload
+2025-07-03 13:42:56 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 13:42:56 [debug] No User Agent Found {
+  requestHeaders: {
+    'Content-Type': 'application/x-sentry-envelope',
+    'content-encoding': 'gzip'
+  }
+}
+2025-07-03 13:42:58 [debug] Failed to get currently focused app: {
+  error: TypeError: BF.getActiveWindowHandle is not a function
+      at rY (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:261:1805)
+      at nY (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:261:4106)
+      at oY (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:261:15699)
+      at Function.<anonymous> (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:261:11929) {
+    [stack]: [Getter/Setter],
+    [message]: 'BF.getActiveWindowHandle is not a function'
+  }
+}
+2025-07-03 13:42:58 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 13:44:43 [error] Error in claudeURLHandler: {
+  error: TypeError: Invalid URL
+      at new URL (node:internal/url:818:25)
+      at U8 (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:107:12091)
+      at App.<anonymous> (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:261:11579)
+      at App.emit (node:events:518:28)
+      at n.emit (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:28:29583) {
+    [stack]: [Getter/Setter],
+    [message]: 'Invalid URL',
+    code: 'ERR_INVALID_URL',
+    input: '/usr/lib/claude-desktop/app.asar'
+  }
+}
+2025-07-03 13:44:43 [info] Starting app {
+  appVersion: '0.11.6',
+  isPackaged: false,
+  platform: 'linux',
+  arch: 'x64',
+  nodeVersion: '22.17.0'
+}
+2025-07-03 13:44:43 [debug] Preferred languages: { langs: [ 'en-US', 'en-US', 'en', 'en', [length]: 4 ] }
+2025-07-03 13:44:43 [debug] Found exact match "en-US" in available locales
+2025-07-03 13:44:43 [debug] Switching to locale "en-US"
+2025-07-03 13:44:43 [error] [ClaudeSDK] Failed to load SDK: Cannot find package '@anthropic-ai/claude-cli' imported from /usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js
+2025-07-03 13:44:43 [error] Claude Studio: Failed to initialize package Cannot find package '@anthropic-ai/claude-cli' imported from /usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js
+2025-07-03 13:44:43 [debug] Creating send port for WebContents 1 (reverse-rpc-async-api)
+2025-07-03 13:44:43 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 13:44:43 [debug] Creating reply port for WebContents 2 (rpc-async-api)
+2025-07-03 13:44:43 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 13:44:43 [debug] Creating send port for WebContents 1 (reverse-rpc-async-api)
+2025-07-03 13:44:43 [debug] Creating reply port for WebContents 3 (rpc-async-api)
+2025-07-03 13:44:43 [info] App is not installed, not enabling auto-updates
+2025-07-03 13:44:43 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 13:44:43 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 13:44:58 [info] Main webview is unresponsive, will kill and reload
+2025-07-03 13:44:58 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 13:44:58 [debug] No User Agent Found {
+  requestHeaders: {
+    'Content-Type': 'application/x-sentry-envelope',
+    'content-encoding': 'gzip'
+  }
+}
+2025-07-03 13:45:14 [info] Main webview is unresponsive, will kill and reload
+2025-07-03 13:45:14 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 13:45:14 [debug] No User Agent Found {
+  requestHeaders: {
+    'Content-Type': 'application/x-sentry-envelope',
+    'content-encoding': 'gzip'
+  }
+}
+2025-07-03 13:45:29 [info] Main webview is unresponsive, will kill and reload
+2025-07-03 13:45:29 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 13:45:29 [debug] No User Agent Found {
+  requestHeaders: {
+    'Content-Type': 'application/x-sentry-envelope',
+    'content-encoding': 'gzip'
+  }
+}
+2025-07-03 13:45:45 [info] Main webview is unresponsive, will kill and reload
+2025-07-03 13:45:45 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 13:45:45 [debug] No User Agent Found {
+  requestHeaders: {
+    'Content-Type': 'application/x-sentry-envelope',
+    'content-encoding': 'gzip'
+  }
+}
+2025-07-03 13:46:01 [info] Main webview is unresponsive, will kill and reload
+2025-07-03 13:46:01 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 13:46:01 [debug] No User Agent Found {
+  requestHeaders: {
+    'Content-Type': 'application/x-sentry-envelope',
+    'content-encoding': 'gzip'
+  }
+}
+2025-07-03 13:46:16 [info] Main webview is unresponsive, will kill and reload
+2025-07-03 13:46:16 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 13:46:16 [debug] No User Agent Found {
+  requestHeaders: {
+    'Content-Type': 'application/x-sentry-envelope',
+    'content-encoding': 'gzip'
+  }
+}
+2025-07-03 13:46:34 [info] Main webview is unresponsive, will kill and reload
+2025-07-03 13:46:34 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 13:46:34 [debug] No User Agent Found {
+  requestHeaders: {
+    'Content-Type': 'application/x-sentry-envelope',
+    'content-encoding': 'gzip'
+  }
+}
+2025-07-03 13:46:49 [info] Main webview is unresponsive, will kill and reload
+2025-07-03 13:46:49 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 13:46:49 [debug] No User Agent Found {
+  requestHeaders: {
+    'Content-Type': 'application/x-sentry-envelope',
+    'content-encoding': 'gzip'
+  }
+}
+2025-07-03 13:49:36 [error] Error in claudeURLHandler: {
+  error: TypeError: Invalid URL
+      at new URL (node:internal/url:818:25)
+      at U8 (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:107:12091)
+      at App.<anonymous> (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:261:11579)
+      at App.emit (node:events:518:28)
+      at n.emit (/usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js:28:29583) {
+    [stack]: [Getter/Setter],
+    [message]: 'Invalid URL',
+    code: 'ERR_INVALID_URL',
+    input: '/usr/lib/claude-desktop/app.asar'
+  }
+}
+2025-07-03 13:49:36 [info] Starting app {
+  appVersion: '0.11.6',
+  isPackaged: false,
+  platform: 'linux',
+  arch: 'x64',
+  nodeVersion: '22.17.0'
+}
+2025-07-03 13:49:36 [debug] Preferred languages: { langs: [ 'en-US', 'en-US', 'en', 'en', [length]: 4 ] }
+2025-07-03 13:49:36 [debug] Found exact match "en-US" in available locales
+2025-07-03 13:49:36 [debug] Switching to locale "en-US"
+2025-07-03 13:49:36 [error] [ClaudeSDK] Failed to load SDK: Cannot find package '@anthropic-ai/claude-cli' imported from /usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js
+2025-07-03 13:49:36 [error] Claude Studio: Failed to initialize package Cannot find package '@anthropic-ai/claude-cli' imported from /usr/lib/claude-desktop/app.asar/.vite/build/index-Dwt_NcbE.js
+2025-07-03 13:49:36 [debug] Creating send port for WebContents 1 (reverse-rpc-async-api)
+2025-07-03 13:49:36 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 13:49:36 [debug] Creating reply port for WebContents 2 (rpc-async-api)
+2025-07-03 13:49:36 [debug] Creating send port for WebContents 2 (reverse-rpc-async-api)
+2025-07-03 13:49:36 [debug] Creating send port for WebContents 1 (reverse-rpc-async-api)
+2025-07-03 13:49:36 [debug] Creating reply port for WebContents 3 (rpc-async-api)
+2025-07-03 13:49:36 [info] App is not installed, not enabling auto-updates
+2025-07-03 13:49:36 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 13:49:36 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 13:49:51 [info] Main webview is unresponsive, will kill and reload
+2025-07-03 13:49:51 [debug] No User Agent Found { requestHeaders: { 'Content-Type': 'application/x-sentry-envelope' } }
+2025-07-03 13:49:51 [debug] No User Agent Found {
+  requestHeaders: {
+    'Content-Type': 'application/x-sentry-envelope',
+    'content-encoding': 'gzip'
+  }
+}
+2025-07-03 15:15:43 [debug] Fetching blocklist from https://claude.ai/api/organizations/5e2f3c7d-47c1-42c1-8105-876497c498c3/dxt/blocklist
+2025-07-03 15:15:43 [debug] Checking 1 installed extensions for blocklist violations
+2025-07-03 15:15:43 [debug] Successfully fetched blocklist from https://claude.ai/api/organizations/5e2f3c7d-47c1-42c1-8105-876497c498c3/dxt/blocklist with 0 entries
+2025-07-03 15:15:43 [info] Fetched 1 blocklists with 0 total entries
+2025-07-03 15:15:43 [info] Saved 1 blocklists with 0 entries
+2025-07-03 15:15:43 [info] Successfully updated 1 blocklists

@@ -1,0 +1,21 @@
+#!/usr/bin/bash
+
+check_mullvad_cached() {
+  local cache="$HOME/.cache/mullvad_status"
+  local age=$(($(date +%s) - $(stat -c %Y "$cache" 2>/dev/null || echo 0)))
+
+  if (( age > 30 )); then
+    curl -s --max-time 1 https://am.i.mullvad.net/connected > "$cache" &
+  fi
+
+  if grep -q "*You are connected to Mullvad*" "$cache" 2>/dev/null; then
+    echo "🔐"
+    exit 0
+  else
+    echo "❌"
+    exit 1
+  fi
+}
+
+check_mullvad_cached
+

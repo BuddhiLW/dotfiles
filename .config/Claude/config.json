@@ -1,0 +1,58 @@
+{
+	"darkMode": "dark",
+	"scale": 0,
+	"locale": "en-US",
+	"quickWindowPosition": {
+		"absolutePointInWorkspace": {
+			"x": 657,
+			"y": 365
+		},
+		"monitor": {
+			"accelerometerSupport": "unknown",
+			"bounds": {
+				"x": 0,
+				"y": 0,
+				"width": 1920,
+				"height": 1200
+			},
+			"colorDepth": 24,
+			"colorSpace": "{primaries:BT709, transfer:SRGB, matrix:RGB, range:FULL}",
+			"depthPerComponent": 8,
+			"detected": true,
+			"displayFrequency": 60,
+			"id": 1881264395124802,
+			"internal": true,
+			"label": "Built-in display",
+			"maximumCursorSize": {
+				"width": 0,
+				"height": 0
+			},
+			"monochrome": false,
+			"nativeOrigin": {
+				"x": 0,
+				"y": 0
+			},
+			"rotation": 0,
+			"scaleFactor": 1,
+			"size": {
+				"width": 1920,
+				"height": 1200
+			},
+			"workArea": {
+				"x": 0,
+				"y": 0,
+				"width": 1920,
+				"height": 1200
+			},
+			"workAreaSize": {
+				"width": 1920,
+				"height": 1200
+			},
+			"touchSupport": "unknown"
+		},
+		"relativePointFromMonitor": {
+			"x": 657,
+			"y": 365
+		}
+	}
+}

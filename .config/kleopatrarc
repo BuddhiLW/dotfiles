@@ -1,0 +1,21 @@
+[CertifySettings]
+AdvancedOptionsExpanded=false
+ExportCheckState=false
+LastKey=B37F68897841628AA84193C6441BCF7757E375D1
+PublishCheckState=false
+
+[Import Certificate]
+last-open-file-directory[$e]=$HOME/Downloads
+
+[KeyTreeView_default]
+Expanded=E0DBF7F7DE29F6B05632D062B6AE37A9398497AA
+
+[Self-Test]
+run-at-startup=true
+
+[SigningPreferences]
+cmsSigningCertificate=
+pgpSigningCertificate=C0DE187EC1D06A58
+
+[UiSettings]
+ColorScheme=Breeze Light

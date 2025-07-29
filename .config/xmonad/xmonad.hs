@@ -103,6 +103,9 @@ myModMask = mod4Mask
 myTerminal :: String
 myTerminal = "kitty"    -- Sets default terminal
 
+myDocumentViewer :: String
+myDocumentViewer = "evince"  -- Sets default document viewer
+
 -- myDotPath :: String
 -- myDotPath = "~/dotfiles"
 
@@ -601,15 +604,16 @@ myKeys c =
 --   , ("M-p t", addName "Translate text"         $ spawn "dm-translate")]
 
   ^++^ subKeys "Favorite programs"
-  [ ("M-<Return>", addName "Launch terminal"      $ spawn (myTerminal))
-  , ("M5-<Return>", addName "Launch Alacritty"    $ spawn "alacritty")
-  , ("M-w",        addName "Launch web browser"   $ spawn (myBrowser))
-  , ("M-M1-h",     addName "Launch htop"          $ spawn (myTerminal ++ " -e htop"))
-  , ("M-r",        addName "Rofi"                 $ spawn "rofi -show run")
-  , ("M-b s",      addName "Slack"                $ spawn "/snap/bin/slack")
-  , ("M-b M-f",    addName "Yazi"                 $ spawn (myTerminal ++ " yazi"))
-  , ("M-b c",      addName "Conky clock"          $ spawn "rofi -show run conky-clock")
-  , ("M-b M-b",    addName "Bluetooth headset device switch card-profile"          $ spawn "switch-bluetooth-profile ")
+  [ ("M-<Return>",  addName "Launch terminal"        $ spawn (myTerminal))
+  , ("M-v",         addName "Launch Document Viewer" $ spawn (myDocumentViewer))
+  , ("M5-<Return>", addName "Launch Alacritty"       $ spawn "alacritty")
+  , ("M-w",         addName "Launch web browser"     $ spawn (myBrowser))
+  , ("M-M1-h",      addName "Launch htop"            $ spawn (myTerminal ++ " -e htop"))
+  , ("M-r",         addName "Rofi"                   $ spawn "rofi -show run")
+  , ("M-b s",       addName "Slack"                  $ spawn "/snap/bin/slack")
+  , ("M-b M-f",     addName "Yazi"                   $ spawn (myTerminal ++ " yazi"))
+  , ("M-b c",       addName "Conky clock"            $ spawn "rofi -show run conky-clock")
+  , ("M-b M-b",     addName "Bluetooth headset device switch card-profile"          $ spawn "switch-bluetooth-profile ")
   ]
 
   ^++^ subKeys "Monitors"
