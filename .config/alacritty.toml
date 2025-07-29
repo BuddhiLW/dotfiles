@@ -75,13 +75,13 @@ foreground = "0xeeffff"
 size = 25
 
 [font.bold]
-family = "Source Code Pro"
+family = "SpaceMono Nerd Font"
 
 [font.bold_italic]
-family = "Source Code Pro"
+family = "SpaceMono Nerd Font"
 
 [font.italic]
-family = "Source Code Pro"
+family = "SpaceMono Nerd Font"
 
 [font.normal]
 family = "FiraMono Nerd Font"

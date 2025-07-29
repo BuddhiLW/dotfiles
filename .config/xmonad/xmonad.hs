@@ -94,7 +94,7 @@ import Control.Monad (when)
 
 
 myFont :: String
-myFont = "xft:SauceCodePro Nerd Font Mono:size=60:regular:antialias=true:hinting=true"
+myFont = "xft:SauceCodePro Nerd Font Mono:size=12:regular:antialias=true:hinting=true"
 
 myModMask :: KeyMask
 myModMask = mod4Mask 
@@ -433,7 +433,7 @@ myTabTheme = def { fontName            = myFont
 -- Theme for showWName which prints current workspace when you change workspaces.
 myShowWNameTheme :: SWNConfig
 myShowWNameTheme = def
-  { swn_font              = "xft:Ubuntu:size=90:bold:antialias=true:hinting=true"
+  { swn_font              = "xft:Unifont Upper:size=36:bold:antialias=true:hinting=true"
   , swn_fade              = 1.2
   , swn_bgcolor           = "#1C1F24"
   , swn_color             = "#ffffff"
@@ -740,9 +740,9 @@ main = do
   -- let newPath = homePath ++ fromMaybe "" currentPath
   -- setEnv "PATH" newPath
   -- Launching three instances of xmobar on their monitors.
-  xmproc0 <- spawnPipe ("xmobar -x 0 $HOME/.config/xmobar/doom-one-xmobarrc-notebook")
-  xmproc1 <- spawnPipe ("xmobar -x 1 $HOME/.config/xmobar/" ++ colorScheme ++ "-xmobarrc")
-  xmproc2 <- spawnPipe ("xmobar -x 2 $HOME/.config/xmobar/" ++ colorScheme ++ "-xmobarrc")
+  xmproc0 <- spawnPipe ("xmobar -x 0 $HOME/.config/xmobar/doom-one-xmobarrc-pc-solo")
+  -- xmproc1 <- spawnPipe ("xmobar -x 1 $HOME/.config/xmobar/" ++ colorScheme ++ "-xmobarrc")
+  -- xmproc2 <- spawnPipe ("xmobar -x 2 $HOME/.config/xmobar/" ++ colorScheme ++ "-xmobarrc")
   -- the xmonad, ya know...what the WM is named after!
   xmonad $ addDescrKeys' ((mod4Mask, xK_F1), showKeybindings) myKeys $ ewmh $ docks $ def
     { manageHook         = myManageHook <+> manageDocks
@@ -758,8 +758,8 @@ main = do
     , focusFollowsMouse  = myMouseFocus
     , logHook = dynamicLogWithPP $  filterOutWsPP [scratchpadWorkspaceTag] $ xmobarPP
         { ppOutput = \x -> hPutStrLn xmproc0 x   -- xmobar on monitor 1
-                        >> hPutStrLn xmproc1 x   -- xmobar on monitor 2
-                        >> hPutStrLn xmproc2 x   -- xmobar on monitor 3
+                        -- >> hPutStrLn xmproc1 x   -- xmobar on monitor 2
+                        -- >> hPutStrLn xmproc2 x   -- xmobar on monitor 3
         , ppCurrent = xmobarColor color06 "" . wrap
                       ("<box type=Bottom width=2 mb=2 color=" ++ color06 ++ ">") "</box>"
           -- Visible but not current workspace

@@ -218,3 +218,5 @@ __debug*
 
 .local/bin/tailwindcss
 .authinfo
+
+.config/systemd/user/docker.service
