@@ -220,3 +220,4 @@ __debug*
 .authinfo
 
 .config/systemd/user/docker.service
+.local/bin/cursor.appimage
