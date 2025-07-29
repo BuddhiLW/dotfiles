@@ -4,6 +4,7 @@ OS intended: =Ubuntu= (Debian based, with access to standard =ppa=), =Guix=
 
 The main script currently works out of the batch, in a fresh =Ubuntu= installation.
 
+0. You should install `git`: `sudo apt-get install git`;
 1. Clone the repository, =git clone https://github.com/BuddhiLW/dotfiles.git=;
 2. =cd dotfiles=;
 3. =export DOTFILES=$(pwd)=
