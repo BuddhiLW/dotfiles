@@ -12,6 +12,12 @@ The main script currently works out of the batch, in a fresh =Ubuntu= installati
 
 That's it.
 
+As a one-liner:
+
+```
+sudo apt-get install -y git && git clone https://github.com/BuddhiLW/dotfiles.git && cd dotfiles && DOTFILES=$(pwd) bash ./main.sh
+```
+
 See the [[*IMPORTANT: Extra functionalities][IMPORTANT: Extra functionalities]] to understand more about extra functionalities and the main editors for this build!
 
 
