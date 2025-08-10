@@ -14,7 +14,7 @@ That's it.
 
 As a one-liner:
 
-```
+``` bash
 sudo apt-get install -y git && git clone https://github.com/BuddhiLW/dotfiles.git && cd dotfiles && DOTFILES=$(pwd) bash ./main.sh
 ```
 
