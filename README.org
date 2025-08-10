@@ -14,9 +14,9 @@ That's it.
 
 As a one-liner:
 
-``` bash
+#+begin_src shell
 sudo apt-get install -y git && git clone https://github.com/BuddhiLW/dotfiles.git && cd dotfiles && DOTFILES=$(pwd) bash ./main.sh
-```
+#+end_src
 
 See the [[*IMPORTANT: Extra functionalities][IMPORTANT: Extra functionalities]] to understand more about extra functionalities and the main editors for this build!
 
