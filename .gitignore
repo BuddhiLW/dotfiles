@@ -221,3 +221,16 @@ __debug*
 
 .config/systemd/user/docker.service
 .local/bin/cursor.appimage
+
+/tmp/
+/ssh/
+ssh
+tmp
+
+.config/Stationv2
+.config/Station
+.config/Mullvad\ VPN
+.config/Mullvad VPN/
+.config/kleopatrarc
+.local/bin/.cursor_version
+.config/totem/state.ini

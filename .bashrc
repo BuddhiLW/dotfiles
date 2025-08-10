@@ -556,34 +556,35 @@ complete -C lazywal lazywal
 
 . "$HOME/.local/share/../bin/env"
 export PATH=~/.npm-global/bin:$PATH
-. "/home/khawarizmi/.local/share/cargo/env"
+. "$HOME/.local/share/cargo/env"
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/khawarizmi/.conda/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$('/home/ramanujan/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/home/khawarizmi/.conda/etc/profile.d/conda.sh" ]; then
-        . "/home/khawarizmi/.conda/etc/profile.d/conda.sh"
+    if [ -f "/home/ramanujan/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/ramanujan/anaconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/home/khawarizmi/.conda/bin:$PATH"
+        export PATH="/home/ramanujan/anaconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
 # <<< conda initialize <<<
-export PATH="/home/khawarizmi/dotfiles/gitthings/flutter/bin:$PATH"
 
-[ -f "/home/khawarizmi/.ghcup/env" ] && . "/home/khawarizmi/.ghcup/env" # ghcup-env
+export PATH="$HOME/dotfiles/gitthings/flutter/bin:$PATH"
+
+[ -f "$HOME/.ghcup/env" ] && . "$HOME/.ghcup/env" # ghcup-env
 
 # <<<< arara local-bin setup
-export PATH="$PATH:/home/khawarizmi/.local/bin/blw"
+export PATH="$PATH:$HOME/.local/bin/blw"
 # >>>>
 
-. "/home/khawarizmi/.deno/env"
+. "$HOME/.deno/env"
 # pnpm
-export PNPM_HOME="/home/khawarizmi/.local/share/pnpm"
+export PNPM_HOME="$HOME/.local/share/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
@@ -607,3 +608,5 @@ export DOCKER_HOST=unix:///run/user/$(id -u)/docker.sock
 
 newshell
 [[ ${BLE_VERSION-} ]] && ble-attach
+. "$HOME/.local/share/cargo/env"
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"

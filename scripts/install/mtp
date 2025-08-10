@@ -1,0 +1,12 @@
+#!/usr/bin/bash
+
+sudo apt install build-essential libmtp-dev libfuse-dev pkg-config git autoconf-archive
+cd $DOTFILES/gitthings
+
+git clone https://github.com/phatina/simple-mtpfs.git
+cd simple-mtpfs
+
+mkdir build
+./configure
+make
+sudo make install

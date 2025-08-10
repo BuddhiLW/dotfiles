@@ -1,0 +1,45 @@
+#!/bin/bash
+
+set -e
+
+APP_NAME="Station"
+REPO="getstation/desktop-app"
+APPIMAGE_NAME="station.appimage"
+APP_DIR="$HOME/.local/bin"
+DESKTOP_FILE="$HOME/.local/share/applications/station.desktop"
+ICON_URL="https://avatars.githubusercontent.com/u/27734877?s=200&v=4"
+ICON_PATH="$HOME/.local/share/icons/hicolor/128x128/apps/station.png"
+
+echo "📦 Creating directories..."
+mkdir -p "$APP_DIR"
+mkdir -p "$(dirname "$DESKTOP_FILE")"
+mkdir -p "$(dirname "$ICON_PATH")"
+
+echo "⬇️ Downloading latest $APP_NAME release from GitHub..."
+cd /tmp
+gh release download --repo "$REPO" --pattern '*.AppImage' --output "$APPIMAGE_NAME"
+
+echo "🚚 Moving AppImage to $APP_DIR..."
+mv "$APPIMAGE_NAME" "$APP_DIR/"
+chmod +x "$APP_DIR/$APPIMAGE_NAME"
+
+echo "🖼️ Downloading icon..."
+wget -q "$ICON_URL" -O "$ICON_PATH"
+
+echo "📝 Creating .desktop entry..."
+cat > "$DESKTOP_FILE" <<EOF
+[Desktop Entry]
+Name=$APP_NAME
+Comment=Multi-messenger client
+Exec=$APP_DIR/$APPIMAGE_NAME
+Icon=station
+Terminal=false
+Type=Application
+Categories=Network;Chat;
+StartupWMClass=Station
+EOF
+
+echo "🔄 Updating desktop database..."
+update-desktop-database "$HOME/.local/share/applications" || true
+
+echo "✅ $APP_NAME has been installed and added to your app launcher!"

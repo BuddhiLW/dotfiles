@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+sudo snap install whatsapp-linux-desktop
+sudo apt-get install libatk1.0-dev

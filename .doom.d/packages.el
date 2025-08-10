@@ -184,7 +184,8 @@
 (package! google-translate)
 (package! google)
 (package! posframe)
-(package! go-translate)
+(package! go-translate
+  :recipe (:host github :repo "lorniu/go-translate"))
 
 (package! germanium)
 

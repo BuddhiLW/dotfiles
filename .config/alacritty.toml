@@ -16,9 +16,6 @@ action = "DecreaseFontSize"
 key = "Down"
 mods = "Shift|Alt"
 
-[general]
-live_config_reload = true
-
 [[colors.indexed_colors]]
 color = "0xf78c6c"
 index = 16
@@ -72,19 +69,19 @@ background = "0x181a20"
 foreground = "0xeeffff"
 
 [font]
-size = 25
+size = 30
 
 [font.bold]
-family = "SpaceMono Nerd Font"
+family = "Ubuntu Mono"
 
 [font.bold_italic]
-family = "SpaceMono Nerd Font"
+family = "Ubuntu"
 
 [font.italic]
-family = "SpaceMono Nerd Font"
+family = "Ubuntu Mono"
 
 [font.normal]
-family = "FiraMono Nerd Font"
+family = "Bitstream Vera Sans Mono"
 
 [window]
 opacity = 0.9

@@ -103,6 +103,9 @@ myModMask = mod4Mask
 myTerminal :: String
 myTerminal = "kitty"    -- Sets default terminal
 
+secondTerminal :: String
+secondTerminal = "alacritty"
+
 myDocumentViewer :: String
 myDocumentViewer = "evince"  -- Sets default document viewer
 
@@ -740,7 +743,7 @@ main = do
   -- let newPath = homePath ++ fromMaybe "" currentPath
   -- setEnv "PATH" newPath
   -- Launching three instances of xmobar on their monitors.
-  xmproc0 <- spawnPipe ("xmobar -x 0 $HOME/.config/xmobar/doom-one-xmobarrc-pc-solo")
+  xmproc0 <- spawnPipe ("xmobar -x 0 $HOME/.config/xmobar/doom-one-xmobarrc-notebook")
   -- xmproc1 <- spawnPipe ("xmobar -x 1 $HOME/.config/xmobar/" ++ colorScheme ++ "-xmobarrc")
   -- xmproc2 <- spawnPipe ("xmobar -x 2 $HOME/.config/xmobar/" ++ colorScheme ++ "-xmobarrc")
   -- the xmonad, ya know...what the WM is named after!

@@ -54,7 +54,7 @@ make distclean
             --with-wide-int \
             --with-x-toolkit=gtk3 \
             --with-modules \
-						--with-tree-sitter \
+	    --with-tree-sitter \
             CFLAGS="-O2 -g3 -fno-omit-frame-pointer -fsanitize=address" \
             LDFLAGS="-fsanitize=address"
 
@@ -64,8 +64,8 @@ make -j $(nproc)
 # Install Emacs after a successful build
 sudo make install
 
-cd ~/.emacs.d/
-git clone https://github.com/emacs-openai/openai.git
-git clone https://github.com/emacs-openai/chatgpt.git
-cp ./openai/*.el ./lisp/
-cp ./chatgpt/*.el ./lisp/
+# cd ~/.emacs.d/
+# git clone https://github.com/emacs-openai/openai.git
+# git clone https://github.com/emacs-openai/chatgpt.git
+# cp ./openai/*.el ./lisp/
+# cp ./chatgpt/*.el ./lisp/

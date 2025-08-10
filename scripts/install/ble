@@ -4,5 +4,3 @@ rm -rf $BPATH
 git clone --recursive https://github.com/akinomyoga/ble.sh.git $BPATH
 cd $BPATH
 make
-
-
