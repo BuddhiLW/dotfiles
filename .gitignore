@@ -234,3 +234,4 @@ tmp
 .config/kleopatrarc
 .local/bin/.cursor_version
 .config/totem/state.ini
+*.appimage
