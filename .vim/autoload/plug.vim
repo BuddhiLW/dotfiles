@@ -1,1 +1,0 @@
-/home/russell/dotfiles/vim/plug.vim

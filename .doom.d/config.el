@@ -1,8 +1,3 @@
-;; (add-to-list 'package-archives '( "jcs-elpa" . "https://jcs-emacs.github.io/jcs-elpa/packages/") t)
-
-;; (setq package-archive-priorities '(("melpa"    . 5)
-;;                                    ("jcs-elpa" . 0)))
-
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
 ;; Here are some additional functions/macros that could help you configure Doom:
@@ -77,6 +72,11 @@
       ;; scroll-preserve-screen-position 'always     ; Don't have `point' jump around
       scroll-margin 2)                            ; It's nice to maintain a little margin
 
+;; Prevent $HOME from being treated as a project root
+(after! projectile
+  (setq projectile-project-root-files-bottom-up
+        (remove ".git" projectile-project-root-files-bottom-up)))
+
 (display-time-mode 0)                             ; Enable time in the mode-line
 (display-battery-mode 0)                          ; it's nice to know how much power you have
 (global-subword-mode 1)                           ; Iterate through CamelCase words
@@ -117,15 +117,15 @@
 ;;   (setq org-log-done 'time)
 ;;   (setq org-log-into-drawer t)
 ;;   (setq org-agenda-files   '()))
-        ;; '(
-        ;;   ;; "~/PP/Notes/Agenda/Tasks.org"
-        ;;   "~/PP/Notes/Agenda/Habits.org"
-        ;;   "~/PP/Notes/Agenda/IMPA.org"
-        ;;   "~/PP/Notes/Agenda/ProcSel.org"
-        ;;   "~/PP/Notes/Agenda/University.org"
-        ;;   "~/PP/Notes/Agenda/Research.org"
-        ;;   "~/PP/Notes/Agenda/CafeDoBem.org"
-        ;;   "~/PP/Notes/Agenda/Facti.org")))
+;; '(
+;;   ;; "~/PP/Notes/Agenda/Tasks.org"
+;;   "~/PP/Notes/Agenda/Habits.org"
+;;   "~/PP/Notes/Agenda/IMPA.org"
+;;   "~/PP/Notes/Agenda/ProcSel.org"
+;;   "~/PP/Notes/Agenda/University.org"
+;;   "~/PP/Notes/Agenda/Research.org"
+;;   "~/PP/Notes/Agenda/CafeDoBem.org"
+;;   "~/PP/Notes/Agenda/Facti.org")))
 
 ;; (use-package! org-tanglesync
 ;;   :hook ((org-mode . org-tanglesync-mode)
@@ -144,9 +144,9 @@
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("f" . "font")
-        :desc "New default size" "d" #'blw/defdoom
-        :desc "New ch-default size" "c" #'blw/chdoom)))
+                   (:prefix ("f" . "font")
+                    :desc "New default size" "d" #'blw/defdoom
+                    :desc "New ch-default size" "c" #'blw/chdoom)))
 
 (map! :leader
       :desc "Yank history" "y" #'consult-yank-from-kill-ring)
@@ -232,9 +232,66 @@
   (deft-recursive t)
   (deft-use-filter-string-for-filename t)
   (deft-default-extension "org"))
-  ;; (deft-directory org-roam-directory))
+;; (deft-directory org-roam-directory))
 
 (use-package! pdf-tools)
+
+;; (setq codeium/metadata/api_key (nth 0 (process-lines "pass" "show" "apikeys/codeium")))
+(use-package! codeium
+  :after cape
+  :init
+  ;; use globally
+  (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)
+
+  :config
+
+  ;; (setq codeium/metadata/api_key (nth 0 (process-lines "pass" "show" "apikeys/codeium")))
+  ;; (defalias 'my/codeium-complete
+  ;;   (cape-interacive-capf #'codeium-completion-at-point))
+
+  ;; (map! :localleader
+  ;;       :map evil-normal-state-map
+  ;;       "c e" #'my/codeium-complete)
+
+  (setq codeium-api-enabled
+        (lambda (api)
+          (memq api '(GetCompletions Heartbeat CancelRequest
+                      GetAuthToken RegisterUser auth-redirect
+                      AcceptCompletion))))
+
+  ;; ----------
+  (setq use-dialog-box nil) ;; do not use popup boxes
+
+  ;; if you don't want to use customize to save the api-key
+  ;; (setq codeium/metadata/api_key "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx")
+
+  ;; get codeium status in the modeline
+  (setq codeium-mode-line-enable
+        (lambda (api) (not (memq api '(CancelRequest Heartbeat AcceptCompletion)))))
+  (add-to-list 'mode-line-format '(:eval (car-safe codeium-mode-line)) t)
+  ;; alternatively for a more extensive mode-line
+  ;; (add-to-list 'mode-line-format '(-50 "" codeium-mode-line) t)
+
+  ;; use M-x codeium-diagnose to see apis/fields that would be sent to the local language server
+  (setq codeium-api-enabled
+        (lambda (api)
+          (memq api '(GetCompletions Heartbeat CancelRequest GetAuthToken RegisterUser auth-redirect AcceptCompletion))))
+  ;; you can also set a config for a single buffer like this:
+  ;; (add-hook 'python-mode-hook
+  ;;     (lambda ()
+  ;;         (setq-local codeium/editor_options/tab_size 4)))
+
+  ;; You can overwrite all the codeium configs!
+  ;; for example, we recommend limiting the string sent to codeium for better performance
+  (defun my-codeium/document/text ()
+    (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (min (+ (point) 1000) (point-max))))
+  ;; if you change the text, you should also change the cursor_offset
+  ;; warning: this is measured by UTF-8 encoded bytes
+  (defun my-codeium/document/cursor_offset ()
+    (codeium-utf8-byte-length
+     (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (point))))
+  (setq codeium/document/text 'my-codeium/document/text)
+  (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset))
 
 (use-package! go-mode
   ;; :hook (prog-mode . company-mode)
@@ -266,30 +323,30 @@
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("n" . "navigate to")
-        :desc "Evil Deeds" "n" #'blw/find-evildeeds)))
+                   (:prefix ("n" . "navigate to")
+                    :desc "Evil Deeds" "n" #'blw/find-evildeeds)))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("n" . "navigate to")
-        :desc "Function at point" "f" #'find-function-at-point)))
+                   (:prefix ("n" . "navigate to")
+                    :desc "Function at point" "f" #'find-function-at-point)))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("n" . "navigate to")
-        :desc "Emacs.org" "e"  #'blw/goto-emacs-org
-        :desc "my-func.org" "F" #'blw/goto-my-func-org)))
+                   (:prefix ("n" . "navigate to")
+                    :desc "Emacs.org" "e"  #'blw/goto-emacs-org
+                    :desc "my-func.org" "F" #'blw/goto-my-func-org)))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("n" . "navigate to")
-        :desc "Active CS book" "a"  #'blw/goto-cs-active
-        :desc "CS books" "c" #'blw/goto-cs-books)))
+                   (:prefix ("n" . "navigate to")
+                    :desc "Active CS book" "a"  #'blw/goto-cs-active
+                    :desc "CS books" "c" #'blw/goto-cs-books)))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("n" . "navigate to")
-        :desc "Book notes" "n"  #'blw/goto-book-notes)))
+                   (:prefix ("n" . "navigate to")
+                    :desc "Book notes" "n"  #'blw/goto-book-notes)))
 
 (map! :leader
       :desc "Magit" "m" #'magit)
@@ -331,19 +388,19 @@
 (use-package! conda
   :config
   (custom-set-variables '(conda-anaconda-home "~/.conda/")))
-  ;; (setq
-  ;;  conda-env-home-directory (expand-file-name "~/opt/miniconda3/")
-  ;;  conda-env-subdirectory "envs/")
-  ;; (conda-env-initialize-interactive-shells)
-  ;; (conda-env-initialize-eshell)
-  ;; (conda-env-autoactivate-mode t))
+;; (setq
+;;  conda-env-home-directory (expand-file-name "~/opt/miniconda3/")
+;;  conda-env-subdirectory "envs/")
+;; (conda-env-initialize-interactive-shells)
+;; (conda-env-initialize-eshell)
+;; (conda-env-autoactivate-mode t))
 
 ;; (use-package! ein)
 ;; (require 'ein)
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-        :desc "python environment" "e" #'pyvenv-activate))
+       :desc "python environment" "e" #'pyvenv-activate))
 
 (require 'project)
 
@@ -368,9 +425,9 @@
   ;; (setq doom-modeline-height 1) ; optional
   ;; (setq doom-modeline-buffer-file-name-style 'truncate-upto-root)
   (custom-set-faces
-    '(mode-line ((t (:family "Gayathri" :size 10)))) ;; Free Sans
-    '(mode-line-active ((t (:family "Gayathri" :size 10)))) ; For 29+
-    '(mode-line-inactive ((t (:family "Gayathri" :size 10))))))
+   '(mode-line ((t (:family "Gayathri" :size 10)))) ;; Free Sans
+   '(mode-line-active ((t (:family "Gayathri" :size 10)))) ; For 29+
+   '(mode-line-inactive ((t (:family "Gayathri" :size 10))))))
 
 (use-package doom-themes
   :ensure t
@@ -396,9 +453,9 @@
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("s" . "search")
-        :desc "w3m search" "s" #'w3m-search
-        :desc "dictionary search" "d" #'dictionary-search)))
+                   (:prefix ("s" . "search")
+                    :desc "w3m search" "s" #'w3m-search
+                    :desc "dictionary search" "d" #'dictionary-search)))
 
 (use-package! sqlformat
   :config
@@ -407,19 +464,19 @@
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-        :desc "centered-cursor-mode" "C-l" #'centered-cursor-mode)
+       :desc "centered-cursor-mode" "C-l" #'centered-cursor-mode)
       (:prefix-map ("b" . "buddhi")
-        (:prefix ("u" . "utilities")
-          :desc "cfw with google calendar sync" "a" #'blw/calendar))
-      (:prefix-map ("b" . "buddhi")
-        :desc "ace follow link" "a" #'ace-link))
+                   (:prefix ("u" . "utilities")
+                    :desc "cfw with google calendar sync" "a" #'blw/calendar)))
+;;      (:prefix-map ("b" . "buddhi")
+;;       :desc "ace follow link" "a" #'ace-link))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("m" . "Multiple Cursors")
-          :desc "mc/mark-next-like-this" "n" #'mc/mark-next-like-this
-          :desc "mc/mark-previous-like-this" "p" #'mc/mark-previous-like-this
-          :desc "mc/mark-all-like-this" "a" #'mc/mark-all-like-this)))
+                   (:prefix ("m" . "Multiple Cursors")
+                    :desc "mc/mark-next-like-this" "n" #'mc/mark-next-like-this
+                    :desc "mc/mark-previous-like-this" "p" #'mc/mark-previous-like-this
+                    :desc "mc/mark-all-like-this" "a" #'mc/mark-all-like-this)))
 
 (map! :after multiple-cursors-mode
       :map multiple-cursors-map
@@ -496,21 +553,21 @@
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("l" . "load module")
-        :desc "Chinese" "c" #'blw/load-chinese
-        :desc "LaTeX" "l" #'blw/load-latex)))
+                   (:prefix ("l" . "load module")
+                    :desc "Chinese" "c" #'blw/load-chinese
+                    :desc "LaTeX" "l" #'blw/load-latex)))
 
 (load! "./blw-func/isosec.el")
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("z" . "Zettle funcs")
-          :desc "Isosec" "i" #'blw/insert-current-isosec)))
+                   (:prefix ("z" . "Zettle funcs")
+                    :desc "Isosec" "i" #'blw/insert-current-isosec)))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix-map ("r" . "read")
-        :desc "EPUB refresh size" "r" #'nov-render-document)))
+                   (:prefix-map ("r" . "read")
+                    :desc "EPUB refresh size" "r" #'nov-render-document)))
 
 (load! "./blw-func/fast-input-method.el")
 (evil-mode)
@@ -536,8 +593,8 @@
 
 ;; disable jshint since we prefer eslint checking
 (setq-default flycheck-disabled-checkers
-  (append flycheck-disabled-checkers
-    '(javascript-jshint)))
+              (append flycheck-disabled-checkers
+                      '(javascript-jshint)))
 
 ;; use eslint with web-mode for jsx files
 (flycheck-add-mode 'javascript-eslint 'web-mode)
@@ -547,8 +604,8 @@
 
 ;; disable json-jsonlist checking for json files
 (setq-default flycheck-disabled-checkers
-  (append flycheck-disabled-checkers
-    '(json-jsonlist)))
+              (append flycheck-disabled-checkers
+                      '(json-jsonlist)))
 
 ;; https://github.com/purcell/exec-path-from-shell
 ;; only need exec-path-from-shell on OSX
@@ -576,10 +633,10 @@
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("j" . "javascript")
-        :desc "go-to definition" "." #'tide-jump-to-definition
-        :desc "go-to implementation" "," #'tide-jump-implementation
-        :desc "back from go-to" "," #'tide-jump-back)))
+                   (:prefix ("j" . "javascript")
+                    :desc "go-to definition" "." #'tide-jump-to-definition
+                    :desc "go-to implementation" "," #'tide-jump-implementation
+                    :desc "back from go-to" "," #'tide-jump-back)))
 
 ;; Insert file name:
 ;; To easily point out stuff in files, in documentation processes
@@ -591,17 +648,17 @@
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("w" . "web")
-        :desc "attribute match" "m" #'web-mode-tag-match)))
+                   (:prefix ("w" . "web")
+                    :desc "attribute match" "m" #'web-mode-tag-match)))
 
 ;; accept completion from copilot and fallback to company
-(use-package! copilot
-  :hook (prog-mode . copilot-mode)
-  :bind (("C-TAB" . 'copilot-accept-completion-by-word)
-         ("C-<tab>" . 'copilot-accept-completion-by-word)
-         :map copilot-completion-map
-         ("<tab>" . 'copilot-accept-completion)
-         ("TAB" . 'copilot-accept-completion)))
+;; (use-package! copilot
+;;   :hook (prog-mode . copilot-mode)
+;;   :bind (("C-TAB" . 'copilot-accept-completion-by-word)
+;;          ("C-<tab>" . 'copilot-accept-completion-by-word)
+;;          :map copilot-completion-map
+;;          ("<tab>" . 'copilot-accept-completion)
+;;          ("TAB" . 'copilot-accept-completion)))
 
 ;; (map! :leader
 ;;       (:prefix-map ("b" . "buddhi")
@@ -644,7 +701,7 @@
         (progn
           (cancel-function-timers 'blw/timer-pomo)
           (setq-default mode-line-misc-info "No pomodoro running"))
-        (setq-default mode-line-misc-info pomo-output))))
+      (setq-default mode-line-misc-info pomo-output))))
 
 (defun blw/pomodoro-echo ()
   (interactive
@@ -685,8 +742,8 @@
 (with-eval-after-load 'org-superstar
   (set-face-attribute 'org-superstar-item nil :family "Noto Sans Arabic" :weight 'regular))
 
-  ;; (org-bullets-bullet-list '("ن" "ل" "ا" "م" "هـ" "ي" "ص")))
-  ;; Make sure org-indent face is available
+;; (org-bullets-bullet-list '("ن" "ل" "ا" "م" "هـ" "ي" "ص")))
+;; Make sure org-indent face is available
 (require 'org-indent)
 ;; (require 'org-indent
 ;; Ensure that anything that should be fixed-pitch in Org files appears that way
@@ -706,8 +763,8 @@
 ;; (set-face-attribute 'org-superstar-item nil :font "Noto Sans Arabic")
 
 ;; Install visual-fill-column
-(unless (package-installed-p 'visual-fill-column)
-  (package-install 'visual-fill-column))
+;;(unless (package-installed-p 'visual-fill-column)
+;;  (package-install 'visual-fill-column))
 
 
 (defun dw/org-present-start ()
@@ -727,16 +784,16 @@
   (org-show-children))
 
 (defun dw/org-present-hook ()
-       ;; Configure fill width
+  ;; Configure fill width
   (setq visual-fill-column-width 110
-      visual-fill-column-center-text t)
+        visual-fill-column-center-text t)
   (setq-local face-remapping-alist '((default (:height 1.5) variable-pitch)
-					  (header-line (:height 4.0) variable-pitch)
-					  (org-document-title (:height 1.75) org-document-title)
-					  (org-code (:height 1.55) org-code)
-					  (org-verbatim (:height 1.55) org-verbatim)
-					  (org-block (:height 1.40) org-block)
-					  (org-block-begin-line (:height 0.7) org-block)))
+				     (header-line (:height 4.0) variable-pitch)
+				     (org-document-title (:height 1.75) org-document-title)
+				     (org-code (:height 1.55) org-code)
+				     (org-verbatim (:height 1.55) org-verbatim)
+				     (org-block (:height 1.40) org-block)
+				     (org-block-begin-line (:height 0.7) org-block)))
   (setq header-line-format " ")
   (org-appear-mode -1)
   (org-display-inline-images)
@@ -761,12 +818,12 @@
 
 (use-package! org-present
   :bind (:map org-present-mode-keymap
-		   ("C-c C-j" . dw/org-present-next)
-		   ("C-c C-k" . dw/org-present-prev))
+	      ("C-c C-j" . dw/org-present-next)
+	      ("C-c C-k" . dw/org-present-prev))
   :hook ((org-present-mode . dw/org-present-hook)
-     (org-present-mode-quit . dw/org-present-quit-hook)
-     (org-present-mode-hook . dw/org-present-start)
-     (org-present-mode-quit-hook . dw/org-present-end)))
+         (org-present-mode-quit . dw/org-present-quit-hook)
+         (org-present-mode-hook . dw/org-present-start)
+         (org-present-mode-quit-hook . dw/org-present-end)))
 ;; Register hooks with org-present
 ;; (add-hook 'org-present-mode-hook 'my/org-present-start)
 ;; (add-hook 'org-present-mode-quit-hook 'my/org-present-end)
@@ -827,8 +884,8 @@
 ;;; Centering Org Documents --------------------------------
 
 ;; Install visual-fill-column
-(unless (package-installed-p 'visual-fill-column)
-  (package-install 'visual-fill-column))
+;;(unless (package-installed-p 'visual-fill-column)
+;;  (package-install 'visual-fill-column))
 
 ;; Configure fill width
 (setq visual-fill-column-width 110
@@ -837,8 +894,8 @@
 ;;; Org Present --------------------------------------------
 
 ;; Install org-present if needed
-(unless (package-installed-p 'org-present)
-  (package-install 'org-present))
+;;(unless (package-installed-p 'org-present)
+;;  (package-install 'org-present))
 
 (defun my/org-present-prepare-slide (buffer-name heading)
   ;; Show only top-level headlines
@@ -906,9 +963,9 @@
 
 (defmacro blw/define-user-eval-reitit (fn-name command)
   `(defun ,fn-name ()
-    (interactive)
-    (cider-eval-file (format (concat (getenv "CLJ_PLAYGROUND") "dev/src/user.clj"))) ;; "/path-to/dev/src/user.clj"
-    (cider-interactive-eval
+     (interactive)
+     (cider-eval-file (format (concat (getenv "CLJ_PLAYGROUND") "dev/src/user.clj"))) ;; "/path-to/dev/src/user.clj"
+     (cider-interactive-eval
       (format (concat "(" ,command ")")
               (cider-last-sexp)))))
 
@@ -919,10 +976,10 @@
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("c" . "clojure")
-        :desc "go - start reitit" "g" #'blw/eval-go
-        :desc "halt reitit server" "h" #'blw/eval-halt
-        :desc "reset reitit server" "r" #'blw/eval-reset)))
+                   (:prefix ("c" . "clojure")
+                    :desc "go - start reitit" "g" #'blw/eval-go
+                    :desc "halt reitit server" "h" #'blw/eval-halt
+                    :desc "reset reitit server" "r" #'blw/eval-reset)))
 
 ;; (getenv "CLJ")
 ;; (format (concat (getenv "CLJ_PLAYGROUND") "dev/src/user.clj"))
@@ -930,11 +987,11 @@
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("c" . "clojure")
-        (:prefix ("t" . "tests")
-          :desc "Run all tests" "p" #'cider-test-run-project-tests
-          :desc "Run tests in namespace" "n" #'cider-test-run-ns-tests
-          :desc "Run test under point" "t" #'cider-test-run-test))))
+                   (:prefix ("c" . "clojure")
+                            (:prefix ("t" . "tests")
+                             :desc "Run all tests" "p" #'cider-test-run-project-tests
+                             :desc "Run tests in namespace" "n" #'cider-test-run-ns-tests
+                             :desc "Run test under point" "t" #'cider-test-run-test))))
 
 ;; config.el
 (use-package! dartclojure
@@ -953,9 +1010,9 @@
 
 ;; Enable Clojure mode
 (use-package! clojure-mode
- :config
- ;; Enable automatic alignment of forms
- (setq clojure-align-forms-automatically t))
+  :config
+  ;; Enable automatic alignment of forms
+  (setq clojure-align-forms-automatically t))
 
 (use-package! cider
   :ensure t
@@ -979,8 +1036,8 @@
 ;;   :recipe (:host jcs-elpa
 ;;            :repo "https://jcs-emacs.github.io/jcs-elpa/packages/")) ;; Optional: specify a specific commit or version
 
-  ;; :recipe (:host jcs-elpa))
-           ;; :repo "https://github.com/emacs-openai/codegpt")) ;; Optional: specify a specific commit or version
+;; :recipe (:host jcs-elpa))
+;; :repo "https://github.com/emacs-openai/codegpt")) ;; Optional: specify a specific commit or version
 
 ;; (package! codegtp)
 
@@ -1034,36 +1091,36 @@
 
 (add-hook 'exwm-init 'blw/exwm-init)
 
-  ;; Make sure the server is started (better to do this in your main Emacs config!)
-  (server-start)
+;; Make sure the server is started (better to do this in your main Emacs config!)
+(server-start)
 
-  (defvar efs/polybar-process nil
-    "Holds the process of the running Polybar instance, if any")
+(defvar efs/polybar-process nil
+  "Holds the process of the running Polybar instance, if any")
 
-  (defun efs/kill-panel ()
-    (interactive)
-    (when efs/polybar-process
-      (ignore-errors
-        (kill-process efs/polybar-process)))
-    (setq efs/polybar-process nil))
+(defun efs/kill-panel ()
+  (interactive)
+  (when efs/polybar-process
+    (ignore-errors
+      (kill-process efs/polybar-process)))
+  (setq efs/polybar-process nil))
 
-  (defun efs/start-panel ()
-    (interactive)
-    (efs/kill-panel)
-    (setq efs/polybar-process (start-process-shell-command "polybar" nil "polybar panel")))
+(defun efs/start-panel ()
+  (interactive)
+  (efs/kill-panel)
+  (setq efs/polybar-process (start-process-shell-command "polybar" nil "polybar panel")))
 
-  (defun efs/send-polybar-hook (module-name hook-index)
-    (start-process-shell-command "polybar-msg" nil (format "polybar-msg hook %s %s" module-name hook-index)))
+(defun efs/send-polybar-hook (module-name hook-index)
+  (start-process-shell-command "polybar-msg" nil (format "polybar-msg hook %s %s" module-name hook-index)))
 
-  (defun efs/send-polybar-exwm-workspace ()
-    (efs/send-polybar-hook "exwm-workspace" 1))
+(defun efs/send-polybar-exwm-workspace ()
+  (efs/send-polybar-hook "exwm-workspace" 1))
 
-  ;; Update panel indicator when workspace changes
-  (add-hook 'exwm-workspace-switch-hook #'efs/send-polybar-exwm-workspace)
+;; Update panel indicator when workspace changes
+(add-hook 'exwm-workspace-switch-hook #'efs/send-polybar-exwm-workspace)
 
-  ;; "/run/user/1000/tmux-1000/default"
+;; "/run/user/1000/tmux-1000/default"
 
-  ;; (use-package! evil-nerd-commenter)
+;; (use-package! evil-nerd-commenter)
 
 (use-package! corfu
   :init
@@ -1081,64 +1138,33 @@
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-elisp-block)
   (add-to-list 'completion-at-point-functions #'codeium-completion-at-point))
-  (global-set-key (kbd "M-<return>") (cape-capf-interactive #'codeium-completion-at-point))
+(global-set-key (kbd "M-<return>") (cape-capf-interactive #'codeium-completion-at-point))
 
-;; (setq codeium/metadata/api_key (nth 0 (process-lines "pass" "show" "apikeys/codeium")))
-(use-package! codeium
-  :after cape
-  :init
-  ;; use globally
-  (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)
+;; ;; (use-package! go-translate
+;; ;;   :config
+;; (setq gt-langs '(en zh))
+;;                  ;; ("en" "ru")
+;;                  ;; ("en" "pt-br")
+;;                  ;; ("pt-br" "en")))
 
-  :config
+;; (setq gt-default-translator
+;;         (gt-translator
+;;          :taker   (gt-taker :text 'buffer :pick 'paragraph)
+;;          :engines  (list
+;;                    (gt-bing-engine)
+;;                    (gt-google-engine)
+;;                    (gt-google-rpc-engine))
+;;          :render
+;;          (gt-buffer-render)))
 
-  ;; (setq codeium/metadata/api_key (nth 0 (process-lines "pass" "show" "apikeys/codeium")))
-  ;; (defalias 'my/codeium-complete
-  ;;   (cape-interacive-capf #'codeium-completion-at-point))
+;; ;; (setq gt-langs '(en fr))        ; Default translation languages, at least two ​​must be specified
+;; (setq gt-taker-text 'word)      ; By default, the initial text is the word under the cursor. If there is active region, the selected text will be used first
+;; (setq gt-taker-pick 'paragraph) ; By default, the initial text will be split by paragraphs. If you don't want to use multi-parts translation, set it to nil
+;; (setq gt-taker-prompt nil)
+;; ;; (setq gt-default-translator (gt-translator :engines (gt-google-engine)))
 
-  ;; (map! :localleader
-  ;;       :map evil-normal-state-map
-  ;;       "c e" #'my/codeium-complete)
-
-  (setq codeium-api-enabled
-        (lambda (api)
-          (memq api '(GetCompletions Heartbeat CancelRequest
-                      GetAuthToken RegisterUser auth-redirect
-                      AcceptCompletion))))
-
-  ;; ----------
-  (setq use-dialog-box nil) ;; do not use popup boxes
-
-  ;; if you don't want to use customize to save the api-key
-  ;; (setq codeium/metadata/api_key "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx")
-
-  ;; get codeium status in the modeline
-  (setq codeium-mode-line-enable
-         (lambda (api) (not (memq api '(CancelRequest Heartbeat AcceptCompletion)))))
-  (add-to-list 'mode-line-format '(:eval (car-safe codeium-mode-line)) t)
-  ;; alternatively for a more extensive mode-line
-  ;; (add-to-list 'mode-line-format '(-50 "" codeium-mode-line) t)
-
-  ;; use M-x codeium-diagnose to see apis/fields that would be sent to the local language server
-  (setq codeium-api-enabled
-         (lambda (api)
-              (memq api '(GetCompletions Heartbeat CancelRequest GetAuthToken RegisterUser auth-redirect AcceptCompletion))))
-  ;; you can also set a config for a single buffer like this:
-  ;; (add-hook 'python-mode-hook
-  ;;     (lambda ()
-  ;;         (setq-local codeium/editor_options/tab_size 4)))
-
-  ;; You can overwrite all the codeium configs!
-  ;; for example, we recommend limiting the string sent to codeium for better performance
-  (defun my-codeium/document/text ()
-     (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (min (+ (point) 1000) (point-max))))
-  ;; if you change the text, you should also change the cursor_offset
-  ;; warning: this is measured by UTF-8 encoded bytes
-  (defun my-codeium/document/cursor_offset ()
-     (codeium-utf8-byte-length
-      (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (point))))
-  (setq codeium/document/text 'my-codeium/document/text)
-  (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset))
+;; (setq gt-buffer-evil-leading-key "x")
+;;        ;; (gt-posframe-pop-render))
 
 (setq telega-server-libs-prefix "~/dotfiles/gitthigs/td/")
 
@@ -1154,15 +1180,15 @@
   (global-treesit-auto-mode)
   :hook (prog-mode . treesit-auto-mode))
 
-(require 'tree-sitter)
-(require 'tree-sitter-langs)
-;; (treesit-auto-add-to-auto-mode-alist 'all)
-(global-tree-sitter-mode)
-(add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
-(add-to-list 'tree-sitter-major-mode-language-alist '(go-ts-mode . go))
-(dolist (entry tree-sitter-major-mode-language-alist)
-  (let ((mode (car entry)))
-    (add-hook (intern (concat (symbol-name mode) "-hook")) #'lsp-deferred)))
+;; (require 'tree-sitter)
+;; (require 'tree-sitter-langs)
+;; ;; (treesit-auto-add-to-auto-mode-alist 'all)
+;; (global-tree-sitter-mode)
+;; (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+;; (add-to-list 'tree-sitter-major-mode-language-alist '(go-ts-mode . go))
+;; (dolist (entry tree-sitter-major-mode-language-alist)
+;;   (let ((mode (car entry)))
+;;     (add-hook (intern (concat (symbol-name mode) "-hook")) #'lsp-deferred)))
 
 (load! "./blw-func/ewal.el")
 
@@ -1172,13 +1198,13 @@
 ;; binding
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-        (:prefix ("i" . "(system's) Integrations")
-         :desc "Yazi launch" "y" #'blw/run-yazi)))
+                   (:prefix ("i" . "(system's) Integrations")
+                    :desc "Yazi launch" "y" #'blw/run-yazi)))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-        (:prefix ("x" . "command")
-         :desc "Yazi-find" "f" #'blw/run-yazi)))
+                   (:prefix ("x" . "command")
+                    :desc "Yazi-find" "f" #'blw/run-yazi)))
 
 ;; defines blw/run-kitty
 (load! "./blw-func/terminal.el")
@@ -1186,8 +1212,8 @@
 ;; binding
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-        (:prefix ("i" . "(system's) Integrations")
-         :desc "Kitty terminal launch" "t" #'blw/run-kitty)))
+                   (:prefix ("i" . "(system's) Integrations")
+                    :desc "Kitty terminal launch" "t" #'blw/run-kitty)))
 
 ;; (defun eglot-format-buffer-before-save ()
 ;;    (add-hook 'before-save-hook #'eglot-format-buffer -10 t))
@@ -1249,19 +1275,19 @@
    ;; certain modes (like `prog-mode'), set it like this.
    citre-auto-enable-citre-mode-modes '(prog-mode)))
 
-  ;; (global-set-key (kbd "C-x c j") 'citre-jump)
-  ;; (global-set-key (kbd "C-x c J") 'citre-jump-back)
-  ;; (global-set-key (kbd "C-x c p") 'citre-ace-peek)
-  ;; (global-set-key (kbd "C-x c u") 'citre-update-this-tags-file)
+;; (global-set-key (kbd "C-x c j") 'citre-jump)
+;; (global-set-key (kbd "C-x c J") 'citre-jump-back)
+;; (global-set-key (kbd "C-x c p") 'citre-ace-peek)
+;; (global-set-key (kbd "C-x c u") 'citre-update-this-tags-file)
 ;;; Change to these kinds of bindings
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-        (:prefix ("c" . "Code|Citre|Clojure")
-         (:prefix ("c" . "Citre")
-          :desc "Jump" "j"               #'citre-jump
-          :desc "Jump back" "J"          #'citre-jump-back
-          :desc "Ace peek" "p"           #'citre-ace-peek
-          :desc "Update `tags` file" "u" #'citre-update-this-tags-file))))
+                   (:prefix ("c" . "Code|Citre|Clojure")
+                            (:prefix ("c" . "Citre")
+                             :desc "Jump" "j"               #'citre-jump
+                             :desc "Jump back" "J"          #'citre-jump-back
+                             :desc "Ace peek" "p"           #'citre-ace-peek
+                             :desc "Update `tags` file" "u" #'citre-update-this-tags-file))))
 
 ;; (use-package! company
 ;;     :defer 0.1
@@ -1302,54 +1328,29 @@
 (global-set-key (kbd "<f5>") #'dap-debug)
 
 (dap-register-debug-template "Go Debug"
-  (list :type "go"
-        :request "launch"
-        :name "Launch Go Program"
-        :mode "auto"
-        :program "${workspaceFolder}/main.go"
-        :buildFlags ""
-        :args []
-        ;; :env '(("GOPATH" . "${home}/go"))
-        :envFile nil
-        :dlvToolPath "dlv")) ;; Ensure `dlv` is in PATH
+                             (list :type "go"
+                                   :request "launch"
+                                   :name "Launch Go Program"
+                                   :mode "auto"
+                                   :program "${workspaceFolder}/main.go"
+                                   :buildFlags ""
+                                   :args []
+                                   ;; :env '(("GOPATH" . "${home}/go"))
+                                   :envFile nil
+                                   :dlvToolPath "dlv")) ;; Ensure `dlv` is in PATH
 
-(gptel-make-ollama "Ollama"             ;Any name of your choosing
-  :host "localhost:11434"               ;Where it's running
-  :stream t                             ;Stream responses
-  :models '(deepseek-r1:latest))          ;List of models
 
-;; (gptel-make-ollama "Ollama-coder"             ;Any name of your choosing
-;;   :host "localhost:11434"               ;Where it's running
-;;   :stream t                             ;Stream responses
-;;   :models '(deep-jibril:1.0))          ;List of models
 
-;; (gptel-make-ollama "Ollama-sql-coder"             ;Any name of your choosing
-;;   :host "localhost:11434"               ;Where it's running
-;;   :stream t                             ;Stream responses
-;;   :models '(codelama-jibril-SQLer:1.0))          ;List of models
+;; Global keybinding for the LLM menu
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("ai" . "LLM/AI")
+        :desc "LLM Menu" "m" #'my/llm-menu
+        :desc "Quick Chat" "c" #'gptel
+        :desc "Auto Route Model" "r" #'my/gptel-route
+        :desc "Select Model" "s" #'my/gptel-apply-preset
+        :desc "Aidermacs (Pair Programming)" "a" #'aidermacs-transient-menu)))
 
-;; (gptel-make-ollama "qwen2.5-coder:32B"             ;Any name of your choosing
-;;   :host "localhost:11434"               ;Where it's running
-;;   :stream t                             ;Stream responses
-;;   :models '(qwen2.5-coder:32B))          ;List of models
-
-(use-package! elysium)
-
-(use-package aider
-  :config
-  ;; For latest claude sonnet model
-  ;; (setq aider-args '("--model" "sonnet" "--no-auto-accept-architect"))
-  ;; (setenv "ANTHROPIC_API_KEY" anthropic-api-key)
-  ;; Or chatgpt model
-  ;; (setq aider-args '("--model" "o4-mini"))
-  ;; (setenv "OPENAI_API_KEY" <your-openai-api-key>)
-  ;; Or use your personal config file
-  ;; (setq aider-args `("--config" ,(expand-file-name "~/.aider.conf.yml")))
-  ;; ;;
-  ;; Optional: Set a key binding for the transient menu
-  (global-set-key (kbd "C-c a") 'aider-transient-menu) ;; for wider screen
-  ;; or use aider-transient-menu-2cols / aider-transient-menu-1col, for narrow screen
-  (aider-magit-setup-transients)) ;; add aider magit function to magit menu
 
 (server-force-delete)
 (server-start)

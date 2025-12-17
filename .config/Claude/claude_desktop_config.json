@@ -1,75 +1,14 @@
 {
   "mcpServers": {
     "clojure-mcp": {
-      "command": "clojure",
+      "command": "/bin/bash",
       "args": [
-        "-X:mcp",
-        ":port",
-        "7888"
+        "-c",
+        "cd /home/ramanujan/PP/funeraria/clojure-mcp && clojure -X:mcp :port 7888"
       ],
-      "disabled": false,
-      "autoApprove": [],
       "env": {
-        "MCP_PROJECT_ROOT": "/home/khawarizmi/PP/Funeraria/inventary"
-      },
-      "cwd": "/home/khawarizmi/PP/Funeraria/inventary"
-    },
-    "clojurescript-mcp": {
-      "command": "clojure",
-      "args": [
-        "-X:mcp",
-        ":port",
-        "7889"
-      ],
-      "disabled": false,
-      "autoApprove": [],
-      "env": {
-        "MCP_PROJECT_ROOT": "/home/khawarizmi/PP/Funeraria/inventary"
-      },
-      "cwd": "/home/khawarizmi/PP/Funeraria/inventary"
-    },
-    "clj-kondo": {
-      "command": "npx",
-      "args": [
-        "clj-kondo-mcp"
-      ],
-      "disabled": false,
-      "autoApprove": []
-    },
-    "shadow-cljs-mcp": {
-      "command": "npx",
-      "args": [
-        "shadow-cljs-mcp"
-      ],
-      "disabled": false,
-      "autoApprove": [],
-      "timeout": 60
-    },
-    "postgres": {
-      "command": "docker",
-      "args": [
-        "run",
-        "-i",
-        "--rm",
-        "-e",
-        "DATABASE_URI",
-        "crystaldba/postgres-mcp",
-        "--access-mode=unrestricted"
-      ],
-      "disabled": false,
-      "autoApprove": [],
-      "env": {
-        "DATABASE_URI": "postgresql://inventary:inventary123@localhost:5432/inventary_dev"
-      },
-      "timeout": 30
-    },
-    "mcp-server-kubernetes": {
-      "runtime": "node",
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-server-kubernetes"
-      ]
+        "MCP_PROJECT_ROOT": "/home/ramanujan/PP/funeraria/API-tax-returns/"
+      }
     }
   }
 }

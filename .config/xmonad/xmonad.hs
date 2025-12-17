@@ -92,6 +92,13 @@ import System.Process (readProcess)
 import Data.List (isInfixOf)
 import Control.Monad (when)
 
+-- taffybar (https://github.com/taffybar/taffybar/blob/master/example/xmonad.hs)
+-- import           Data.Default                    (def)
+-- import           XMonad                          (xmonad)
+-- import           XMonad.Hooks.EwmhDesktops       (ewmh)
+-- import           XMonad.Hooks.ManageDocks        (docks)
+import           XMonad.Hooks.TaffybarPagerHints (pagerHints)
+
 
 myFont :: String
 myFont = "xft:SauceCodePro Nerd Font Mono:size=12:regular:antialias=true:hinting=true"
@@ -743,11 +750,13 @@ main = do
   -- let newPath = homePath ++ fromMaybe "" currentPath
   -- setEnv "PATH" newPath
   -- Launching three instances of xmobar on their monitors.
-  xmproc0 <- spawnPipe ("xmobar -x 0 $HOME/.config/xmobar/doom-one-xmobarrc-notebook")
-  -- xmproc1 <- spawnPipe ("xmobar -x 1 $HOME/.config/xmobar/" ++ colorScheme ++ "-xmobarrc")
+  xmproc0 <- spawnPipe ("xmobar -x 0 $HOME/.config/xmobar/doom-one-xmobarrc-duo-screen")
+  xmproc1 <- spawnPipe ("xmobar -x 1 $HOME/.config/xmobar/doom-one-xmobarrc-notebook")
   -- xmproc2 <- spawnPipe ("xmobar -x 2 $HOME/.config/xmobar/" ++ colorScheme ++ "-xmobarrc")
   -- the xmonad, ya know...what the WM is named after!
-  xmonad $ addDescrKeys' ((mod4Mask, xK_F1), showKeybindings) myKeys $ ewmh $ docks $ def
+  xmonad
+    -- added $ pagerHints from taffybar
+    $ addDescrKeys' ((mod4Mask, xK_F1), showKeybindings) myKeys $ ewmh $ docks $ pagerHints $ def
     { manageHook         = myManageHook <+> manageDocks
     , handleEventHook    = windowedFullscreenFixEventHook <> swallowEventHook (className =? "Alacritty"  <||> className =? "st-256color" <||> className =? "XTerm") (return True) <> trayerPaddingXmobarEventHook
     , modMask            = myModMask
@@ -761,7 +770,7 @@ main = do
     , focusFollowsMouse  = myMouseFocus
     , logHook = dynamicLogWithPP $  filterOutWsPP [scratchpadWorkspaceTag] $ xmobarPP
         { ppOutput = \x -> hPutStrLn xmproc0 x   -- xmobar on monitor 1
-                        -- >> hPutStrLn xmproc1 x   -- xmobar on monitor 2
+                        >> hPutStrLn xmproc1 x   -- xmobar on monitor 2
                         -- >> hPutStrLn xmproc2 x   -- xmobar on monitor 3
         , ppCurrent = xmobarColor color06 "" . wrap
                       ("<box type=Bottom width=2 mb=2 color=" ++ color06 ++ ">") "</box>"

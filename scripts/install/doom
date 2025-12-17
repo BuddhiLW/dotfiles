@@ -6,3 +6,6 @@ $HOME/.emacs.d/bin/doom install
 
 rm -rf $HOME/.doom.d
 ln -sf $HOME/dotfiles/.doom.d $HOME
+
+echo "This config needs copilot language serve... So, we are going to install it: \n"
+sudo npm i -g @github/copilot-language-server

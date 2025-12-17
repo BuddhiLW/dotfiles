@@ -13,7 +13,7 @@
 
 ;; These keys should always pass through to Emacs
 (setq exwm-input-prefix-keys
-    '(?\C-x
+      '(?\C-x
         ?\C-u
         ?\C-h
         ?\M-x
@@ -61,9 +61,9 @@
 (require 'exwm-randr)
 (setq exwm-randr-workspace-output-plist '(0 "eDP1"))
 (add-hook 'exwm-randr-screen-change-hook
-      (lambda ()
-        (start-process-shell-command
-         "xrandr" nil "xrandr --output eDP1 --right-of HDMI-1-0 --auto")))
+          (lambda ()
+            (start-process-shell-command
+             "xrandr" nil "xrandr --output eDP1 --right-of HDMI-1-0 --auto")))
 (start-process-shell-command "xrandr" nil "xrandr --output eDP-1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output DP-1 --off --output DP-2 --off --output HDMI-1 --mode 2560x1080 --pos 1920x0 --rotate normal")
 (setq exwm-randr-workspace-monitor-plist '(2 "eDP-1" 3 "HDMI-1"))
 (exwm-randr-enable)

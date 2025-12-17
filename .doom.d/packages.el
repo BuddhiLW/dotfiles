@@ -1,10 +1,17 @@
+(package! cond-let)
+
 (package! org-tanglesync)
+
+(package! rainbow-delimiters)
 
 (package! elfeed)
 (package! webfeeder)
 
-(package! magit)
-(package! magit-section)
+(package! codeium :recipe (:host github :repo "Exafunction/codeium.el"))
+;; (package! cape)
+
+;; (package! magit)
+;; (package! magit-section)
 
 (package! conda)
 
@@ -46,8 +53,8 @@
 (package! flymd)
 
 (package! nov)
-  ;; :recipe (:host github
-  ;;          :repo "emacs-pe/nov.el"))
+;; :recipe (:host github
+;;          :repo "emacs-pe/nov.el"))
 
 (package! emojify)
 
@@ -82,12 +89,12 @@
 ;;         :recipe (:host github
 ;;                  :repo "swank-js/swank-js"))
 
-(package! copilot
-  :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el")))
+;;(package! copilot
+;;  :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el")))
 ;; (package! copilot
 ;;   :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
 
-  ;; :pin "0160a1108b3bc3fff7e9fe1ebb67e71c0c2a334d")
+;; :pin "0160a1108b3bc3fff7e9fe1ebb67e71c0c2a334d")
 
 (package! org-bullets)
 (package! org-superstar)
@@ -120,11 +127,11 @@
 
 ;; (package!
 ;; (require 'chatgpt)
-  ;; :recipe
-  ;; (:host github
-  ;;  :repo "emacs-openai/chatgpt"))
- ;; (use-package
- ;;  :straight (chatgpt :type git :host github :repo "emacs-openai/chatgpt"))
+;; :recipe
+;; (:host github
+;;  :repo "emacs-openai/chatgpt"))
+;; (use-package
+;;  :straight (chatgpt :type git :host github :repo "emacs-openai/chatgpt"))
 
 ;; (package! dall-e
 ;;   :recipe
@@ -149,43 +156,39 @@
 
 (package! exwm)
 
-  ;; (package! edwina)
-  ;; (package! evil-multiedit)
-  ;; (package! all-the-icons-completion)
-  ;; (package! all-the-icons-ivy)
-  ;; (package! all-the-icons-ibuffer)
-  ;; (package! dashboard)
-  ;; (package! quelpa-use-package)
-  ;; (package! eaf)
-  ;; (package! epc)
-  ;; (package! ctable)
-  ;; (package! deferred)
-  ;; (package! s)
-  ;; (package! elmacro)
-  ;; ;; (package! chembalance)
-  ;; (package! chemtable)
-  ;; (package! calfw-org)
-  ;; (package! calfw-cal)
-  ;; (package! calfw-ical)
-  ;; (package! calfw-gcal)
-  ;; (package! ox-reveal)
-  ;; (package! htmlize)
-  ;; (package! celestial-mode-line)
-  ;; (package! sunshine)
-  ;; (package! evil-nerd-commenter)
-  (package! queue)
-  (package! sesman)
-
-(package! codeium :recipe (:host github :repo "Exafunction/codeium.el"))
-;; (package! cape)
+;; (package! edwina)
+;; (package! evil-multiedit)
+;; (package! all-the-icons-completion)
+;; (package! all-the-icons-ivy)
+;; (package! all-the-icons-ibuffer)
+;; (package! dashboard)
+;; (package! quelpa-use-package)
+;; (package! eaf)
+;; (package! epc)
+;; (package! ctable)
+;; (package! deferred)
+;; (package! s)
+;; (package! elmacro)
+;; ;; (package! chembalance)
+;; (package! chemtable)
+;; (package! calfw-org)
+;; (package! calfw-cal)
+;; (package! calfw-ical)
+;; (package! calfw-gcal)
+;; (package! ox-reveal)
+;; (package! htmlize)
+;; (package! celestial-mode-line)
+;; (package! sunshine)
+;; (package! evil-nerd-commenter)
+(package! queue)
+(package! sesman)
 
 (package! http)
 
-(package! google-translate)
-(package! google)
-(package! posframe)
-(package! go-translate
-  :recipe (:host github :repo "lorniu/go-translate"))
+;; (package! google-translate)
+;; (package! google)
+;; (package! posframe)
+;; (package! go-translate)
 
 (package! germanium)
 
@@ -204,13 +207,20 @@
 
 (package! citre)
 
-(package! llama)
-(package! ellama)
-(package! ollama-buddy)
-(package! llama-cpp)
 
 (package! gptel)
 
+(package! llm)
+
 (package! elysium)
 
-(package! aider)
+;; (package! aider)
+
+(package! nov)
+
+(package! pdf-tools)
+(package! pdf-view-pagemark)
+(package! pdf-view-restore)
+(package! pdfgrep)
+
+(package! json-mode)

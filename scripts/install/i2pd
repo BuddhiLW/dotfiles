@@ -1,0 +1,24 @@
+#!/usr/bin/bash
+
+cd "$DOTFILES/gitthings"
+git clone https://github.com/PurpleI2P/i2pd.git
+cd i2pd
+
+sudo apt-get install build-essential debhelper cmake
+sudo apt-get install \
+    libboost-date-time-dev \
+    libboost-filesystem-dev \
+    libboost-program-options-dev \
+    libboost-system-dev \
+    libssl-dev \
+    zlib1g-dev
+sudo apt-get install libminiupnpc-dev
+sudo apt-get install fakeroot devscripts dh-apparmor
+debuild --no-tgz-check -us -uc -b
+
+make 
+cd i2pd/tests/
+make
+
+cd -
+make install

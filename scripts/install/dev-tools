@@ -1,0 +1,6 @@
+#!/bin/bash
+
+npm install -g stylelint stylelint-config-standard js-beautify
+echo '{"extends": "stylelint-config-standard"}' > ~/.stylelintrc.json
+
+go install github.com/jessfraz/dockfmt@latest

@@ -235,3 +235,17 @@ tmp
 .local/bin/.cursor_version
 .config/totem/state.ini
 *.appimage
+.aider*
+
+.config/Claude*
+.config/Ferdium/
+.config/ardour8/
+.config/argocd/
+.config/eddie/
+.config/helm/
+.config/rclone/
+.config/taffybar/
+.local/bin/cursor.appimage.zs-old
+talos/
+
+.config/xmonad/.stack-work/

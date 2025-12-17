@@ -2,12 +2,9 @@
 #+PROPERTY: header-args:emacs-lisp :tangle ./config.el
 
 * Base
-** JCS
-#+begin_src emacs-lisp
-;; (add-to-list 'package-archives '( "jcs-elpa" . "https://jcs-emacs.github.io/jcs-elpa/packages/") t)
-
-;; (setq package-archive-priorities '(("melpa"    . 5)
-;;                                    ("jcs-elpa" . 0)))
+** error fixing
+#+begin_src emacs-lisp :tangle packages.el
+(package! cond-let)
 #+end_src
 
 ** DOOM initial setup
@@ -85,6 +82,11 @@
       password-cache-expiry nil                   ; I can trust my computers ... can't I?
       ;; scroll-preserve-screen-position 'always     ; Don't have `point' jump around
       scroll-margin 2)                            ; It's nice to maintain a little margin
+
+;; Prevent $HOME from being treated as a project root
+(after! projectile
+  (setq projectile-project-root-files-bottom-up
+        (remove ".git" projectile-project-root-files-bottom-up)))
 
 (display-time-mode 0)                             ; Enable time in the mode-line
 (display-battery-mode 0)                          ; it's nice to know how much power you have
@@ -165,15 +167,15 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 ;;   (setq org-log-done 'time)
 ;;   (setq org-log-into-drawer t)
 ;;   (setq org-agenda-files   '()))
-        ;; '(
-        ;;   ;; "~/PP/Notes/Agenda/Tasks.org"
-        ;;   "~/PP/Notes/Agenda/Habits.org"
-        ;;   "~/PP/Notes/Agenda/IMPA.org"
-        ;;   "~/PP/Notes/Agenda/ProcSel.org"
-        ;;   "~/PP/Notes/Agenda/University.org"
-        ;;   "~/PP/Notes/Agenda/Research.org"
-        ;;   "~/PP/Notes/Agenda/CafeDoBem.org"
-        ;;   "~/PP/Notes/Agenda/Facti.org")))
+;; '(
+;;   ;; "~/PP/Notes/Agenda/Tasks.org"
+;;   "~/PP/Notes/Agenda/Habits.org"
+;;   "~/PP/Notes/Agenda/IMPA.org"
+;;   "~/PP/Notes/Agenda/ProcSel.org"
+;;   "~/PP/Notes/Agenda/University.org"
+;;   "~/PP/Notes/Agenda/Research.org"
+;;   "~/PP/Notes/Agenda/CafeDoBem.org"
+;;   "~/PP/Notes/Agenda/Facti.org")))
 #+end_src
 
 *** Bidirectional tangling
@@ -208,14 +210,20 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 #+RESULTS:
 : :emergency
 
+** Programming
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! rainbow-delimiters)
+#+end_src
+
 * Maps
 ** Font resize
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("f" . "font")
-        :desc "New default size" "d" #'blw/defdoom
-        :desc "New ch-default size" "c" #'blw/chdoom)))
+                   (:prefix ("f" . "font")
+                    :desc "New default size" "d" #'blw/defdoom
+                    :desc "New ch-default size" "c" #'blw/chdoom)))
 #+end_src
 
 ** General
@@ -352,7 +360,7 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
   (deft-recursive t)
   (deft-use-filter-string-for-filename t)
   (deft-default-extension "org"))
-  ;; (deft-directory org-roam-directory))
+;; (deft-directory org-roam-directory))
 
 #+end_src
 * PDFs in Emacs
@@ -360,6 +368,74 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 (use-package! pdf-tools)
 #+end_src
 * Programming Languages
+
+** Codeium
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! codeium :recipe (:host github :repo "Exafunction/codeium.el"))
+;; (package! cape)
+#+end_src
+
+#+begin_src emacs-lisp
+
+;; (setq codeium/metadata/api_key (nth 0 (process-lines "pass" "show" "apikeys/codeium")))
+(use-package! codeium
+  :after cape
+  :init
+  ;; use globally
+  (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)
+
+  :config
+
+  ;; (setq codeium/metadata/api_key (nth 0 (process-lines "pass" "show" "apikeys/codeium")))
+  ;; (defalias 'my/codeium-complete
+  ;;   (cape-interacive-capf #'codeium-completion-at-point))
+
+  ;; (map! :localleader
+  ;;       :map evil-normal-state-map
+  ;;       "c e" #'my/codeium-complete)
+
+  (setq codeium-api-enabled
+        (lambda (api)
+          (memq api '(GetCompletions Heartbeat CancelRequest
+                      GetAuthToken RegisterUser auth-redirect
+                      AcceptCompletion))))
+
+  ;; ----------
+  (setq use-dialog-box nil) ;; do not use popup boxes
+
+  ;; if you don't want to use customize to save the api-key
+  ;; (setq codeium/metadata/api_key "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx")
+
+  ;; get codeium status in the modeline
+  (setq codeium-mode-line-enable
+        (lambda (api) (not (memq api '(CancelRequest Heartbeat AcceptCompletion)))))
+  (add-to-list 'mode-line-format '(:eval (car-safe codeium-mode-line)) t)
+  ;; alternatively for a more extensive mode-line
+  ;; (add-to-list 'mode-line-format '(-50 "" codeium-mode-line) t)
+
+  ;; use M-x codeium-diagnose to see apis/fields that would be sent to the local language server
+  (setq codeium-api-enabled
+        (lambda (api)
+          (memq api '(GetCompletions Heartbeat CancelRequest GetAuthToken RegisterUser auth-redirect AcceptCompletion))))
+  ;; you can also set a config for a single buffer like this:
+  ;; (add-hook 'python-mode-hook
+  ;;     (lambda ()
+  ;;         (setq-local codeium/editor_options/tab_size 4)))
+
+  ;; You can overwrite all the codeium configs!
+  ;; for example, we recommend limiting the string sent to codeium for better performance
+  (defun my-codeium/document/text ()
+    (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (min (+ (point) 1000) (point-max))))
+  ;; if you change the text, you should also change the cursor_offset
+  ;; warning: this is measured by UTF-8 encoded bytes
+  (defun my-codeium/document/cursor_offset ()
+    (codeium-utf8-byte-length
+     (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (point))))
+  (setq codeium/document/text 'my-codeium/document/text)
+  (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset))
+#+end_src
+
 ** LaTeX
 #+begin_src emacs-lisp :tangle no :eval no
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 3.0))
@@ -372,7 +448,6 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
   :hook (go-mode . rainbow-delimiters-mode))
 #+end_src
 
-#+end_src
 
 * ERC/IRC Twitch
 
@@ -432,8 +507,8 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("n" . "navigate to")
-        :desc "Evil Deeds" "n" #'blw/find-evildeeds)))
+                   (:prefix ("n" . "navigate to")
+                    :desc "Evil Deeds" "n" #'blw/find-evildeeds)))
 #+end_src
 
 #+RESULTS:
@@ -443,8 +518,8 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("n" . "navigate to")
-        :desc "Function at point" "f" #'find-function-at-point)))
+                   (:prefix ("n" . "navigate to")
+                    :desc "Function at point" "f" #'find-function-at-point)))
 #+end_src
 
 #+RESULTS:
@@ -455,9 +530,9 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("n" . "navigate to")
-        :desc "Emacs.org" "e"  #'blw/goto-emacs-org
-        :desc "my-func.org" "F" #'blw/goto-my-func-org)))
+                   (:prefix ("n" . "navigate to")
+                    :desc "Emacs.org" "e"  #'blw/goto-emacs-org
+                    :desc "my-func.org" "F" #'blw/goto-my-func-org)))
 #+end_src
 
 #+RESULTS:
@@ -467,9 +542,9 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("n" . "navigate to")
-        :desc "Active CS book" "a"  #'blw/goto-cs-active
-        :desc "CS books" "c" #'blw/goto-cs-books)))
+                   (:prefix ("n" . "navigate to")
+                    :desc "Active CS book" "a"  #'blw/goto-cs-active
+                    :desc "CS books" "c" #'blw/goto-cs-books)))
 #+end_src
 
 #+RESULTS:
@@ -478,8 +553,8 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("n" . "navigate to")
-        :desc "Book notes" "n"  #'blw/goto-book-notes)))
+                   (:prefix ("n" . "navigate to")
+                    :desc "Book notes" "n"  #'blw/goto-book-notes)))
 #+end_src
 
 * Magit
@@ -588,12 +663,12 @@ Shell version to be used with =run-python=
 (use-package! conda
   :config
   (custom-set-variables '(conda-anaconda-home "~/.conda/")))
-  ;; (setq
-  ;;  conda-env-home-directory (expand-file-name "~/opt/miniconda3/")
-  ;;  conda-env-subdirectory "envs/")
-  ;; (conda-env-initialize-interactive-shells)
-  ;; (conda-env-initialize-eshell)
-  ;; (conda-env-autoactivate-mode t))
+;; (setq
+;;  conda-env-home-directory (expand-file-name "~/opt/miniconda3/")
+;;  conda-env-subdirectory "envs/")
+;; (conda-env-initialize-interactive-shells)
+;; (conda-env-initialize-eshell)
+;; (conda-env-autoactivate-mode t))
 #+end_src
 ** Ipython
 #+begin_src emacs-lisp :tangle packages.el
@@ -608,7 +683,7 @@ Shell version to be used with =run-python=
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-        :desc "python environment" "e" #'pyvenv-activate))
+       :desc "python environment" "e" #'pyvenv-activate))
 #+end_src
 
 * Haskell
@@ -675,9 +750,9 @@ Shell version to be used with =run-python=
   ;; (setq doom-modeline-height 1) ; optional
   ;; (setq doom-modeline-buffer-file-name-style 'truncate-upto-root)
   (custom-set-faces
-    '(mode-line ((t (:family "Gayathri" :size 10)))) ;; Free Sans
-    '(mode-line-active ((t (:family "Gayathri" :size 10)))) ; For 29+
-    '(mode-line-inactive ((t (:family "Gayathri" :size 10))))))
+   '(mode-line ((t (:family "Gayathri" :size 10)))) ;; Free Sans
+   '(mode-line-active ((t (:family "Gayathri" :size 10)))) ; For 29+
+   '(mode-line-inactive ((t (:family "Gayathri" :size 10))))))
 #+end_src
 
 #+RESULTS:
@@ -714,9 +789,9 @@ Shell version to be used with =run-python=
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("s" . "search")
-        :desc "w3m search" "s" #'w3m-search
-        :desc "dictionary search" "d" #'dictionary-search)))
+                   (:prefix ("s" . "search")
+                    :desc "w3m search" "s" #'w3m-search
+                    :desc "dictionary search" "d" #'dictionary-search)))
 #+end_src
 
 #+RESULTS:
@@ -1014,22 +1089,22 @@ Shell version to be used with =run-python=
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-        :desc "centered-cursor-mode" "C-l" #'centered-cursor-mode)
+       :desc "centered-cursor-mode" "C-l" #'centered-cursor-mode)
       (:prefix-map ("b" . "buddhi")
-        (:prefix ("u" . "utilities")
-          :desc "cfw with google calendar sync" "a" #'blw/calendar))
-      (:prefix-map ("b" . "buddhi")
-        :desc "ace follow link" "a" #'ace-link))
+                   (:prefix ("u" . "utilities")
+                    :desc "cfw with google calendar sync" "a" #'blw/calendar)))
+;;      (:prefix-map ("b" . "buddhi")
+;;       :desc "ace follow link" "a" #'ace-link))
 #+end_src
 
 ** Multiple Cursors
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("m" . "Multiple Cursors")
-          :desc "mc/mark-next-like-this" "n" #'mc/mark-next-like-this
-          :desc "mc/mark-previous-like-this" "p" #'mc/mark-previous-like-this
-          :desc "mc/mark-all-like-this" "a" #'mc/mark-all-like-this)))
+                   (:prefix ("m" . "Multiple Cursors")
+                    :desc "mc/mark-next-like-this" "n" #'mc/mark-next-like-this
+                    :desc "mc/mark-previous-like-this" "p" #'mc/mark-previous-like-this
+                    :desc "mc/mark-all-like-this" "a" #'mc/mark-all-like-this)))
 
 (map! :after multiple-cursors-mode
       :map multiple-cursors-map
@@ -1131,9 +1206,9 @@ To create new loadable modules,
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("l" . "load module")
-        :desc "Chinese" "c" #'blw/load-chinese
-        :desc "LaTeX" "l" #'blw/load-latex)))
+                   (:prefix ("l" . "load module")
+                    :desc "Chinese" "c" #'blw/load-chinese
+                    :desc "LaTeX" "l" #'blw/load-latex)))
 #+end_src
 
 * Datomic snippets?
@@ -1152,8 +1227,8 @@ To create new loadable modules,
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("z" . "Zettle funcs")
-          :desc "Isosec" "i" #'blw/insert-current-isosec)))
+                   (:prefix ("z" . "Zettle funcs")
+                    :desc "Isosec" "i" #'blw/insert-current-isosec)))
 #+end_src
 #+RESULTS:
 : blw/insert-current-isosec
@@ -1164,15 +1239,15 @@ To create new loadable modules,
 * EPUB reader
 #+begin_src emacs-lisp :tangle packages.el
 (package! nov)
-  ;; :recipe (:host github
-  ;;          :repo "emacs-pe/nov.el"))
+;; :recipe (:host github
+;;          :repo "emacs-pe/nov.el"))
 #+end_src
 
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix-map ("r" . "read")
-        :desc "EPUB refresh size" "r" #'nov-render-document)))
+                   (:prefix-map ("r" . "read")
+                    :desc "EPUB refresh size" "r" #'nov-render-document)))
 #+end_src
 
 #+RESULTS:
@@ -1251,8 +1326,8 @@ To create new loadable modules,
 
 ;; disable jshint since we prefer eslint checking
 (setq-default flycheck-disabled-checkers
-  (append flycheck-disabled-checkers
-    '(javascript-jshint)))
+              (append flycheck-disabled-checkers
+                      '(javascript-jshint)))
 
 ;; use eslint with web-mode for jsx files
 (flycheck-add-mode 'javascript-eslint 'web-mode)
@@ -1262,8 +1337,8 @@ To create new loadable modules,
 
 ;; disable json-jsonlist checking for json files
 (setq-default flycheck-disabled-checkers
-  (append flycheck-disabled-checkers
-    '(json-jsonlist)))
+              (append flycheck-disabled-checkers
+                      '(json-jsonlist)))
 
 ;; https://github.com/purcell/exec-path-from-shell
 ;; only need exec-path-from-shell on OSX
@@ -1327,10 +1402,10 @@ To create new loadable modules,
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("j" . "javascript")
-        :desc "go-to definition" "." #'tide-jump-to-definition
-        :desc "go-to implementation" "," #'tide-jump-implementation
-        :desc "back from go-to" "," #'tide-jump-back)))
+                   (:prefix ("j" . "javascript")
+                    :desc "go-to definition" "." #'tide-jump-to-definition
+                    :desc "go-to implementation" "," #'tide-jump-implementation
+                    :desc "back from go-to" "," #'tide-jump-back)))
 
 ;; Insert file name:
 ;; To easily point out stuff in files, in documentation processes
@@ -1346,29 +1421,29 @@ To create new loadable modules,
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("w" . "web")
-        :desc "attribute match" "m" #'web-mode-tag-match)))
+                   (:prefix ("w" . "web")
+                    :desc "attribute match" "m" #'web-mode-tag-match)))
 #+end_src
 
 * Copilot
 #+begin_src emacs-lisp :tangle packages.el
-(package! copilot
-  :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el")))
+;;(package! copilot
+;;  :recipe (:host github :repo "copilot-emacs/copilot.el" :files ("*.el")))
 ;; (package! copilot
 ;;   :recipe (:host github :repo "zerolfx/copilot.el" :files ("*.el" "dist")))
 
-  ;; :pin "0160a1108b3bc3fff7e9fe1ebb67e71c0c2a334d")
+;; :pin "0160a1108b3bc3fff7e9fe1ebb67e71c0c2a334d")
 #+end_src
 
 #+begin_src emacs-lisp
 ;; accept completion from copilot and fallback to company
-(use-package! copilot
-  :hook (prog-mode . copilot-mode)
-  :bind (("C-TAB" . 'copilot-accept-completion-by-word)
-         ("C-<tab>" . 'copilot-accept-completion-by-word)
-         :map copilot-completion-map
-         ("<tab>" . 'copilot-accept-completion)
-         ("TAB" . 'copilot-accept-completion)))
+;; (use-package! copilot
+;;   :hook (prog-mode . copilot-mode)
+;;   :bind (("C-TAB" . 'copilot-accept-completion-by-word)
+;;          ("C-<tab>" . 'copilot-accept-completion-by-word)
+;;          :map copilot-completion-map
+;;          ("<tab>" . 'copilot-accept-completion)
+;;          ("TAB" . 'copilot-accept-completion)))
 #+end_src
 
 ** Keymaps
@@ -1419,7 +1494,7 @@ To create new loadable modules,
         (progn
           (cancel-function-timers 'blw/timer-pomo)
           (setq-default mode-line-misc-info "No pomodoro running"))
-        (setq-default mode-line-misc-info pomo-output))))
+      (setq-default mode-line-misc-info pomo-output))))
 
 (defun blw/pomodoro-echo ()
   (interactive
@@ -1475,8 +1550,8 @@ To create new loadable modules,
 (with-eval-after-load 'org-superstar
   (set-face-attribute 'org-superstar-item nil :family "Noto Sans Arabic" :weight 'regular))
 
-  ;; (org-bullets-bullet-list '("ن" "ل" "ا" "م" "هـ" "ي" "ص")))
-  ;; Make sure org-indent face is available
+;; (org-bullets-bullet-list '("ن" "ل" "ا" "م" "هـ" "ي" "ص")))
+;; Make sure org-indent face is available
 (require 'org-indent)
 ;; (require 'org-indent
 ;; Ensure that anything that should be fixed-pitch in Org files appears that way
@@ -1502,8 +1577,8 @@ To create new loadable modules,
 
 #+begin_src emacs-lisp
 ;; Install visual-fill-column
-(unless (package-installed-p 'visual-fill-column)
-  (package-install 'visual-fill-column))
+;;(unless (package-installed-p 'visual-fill-column)
+;;  (package-install 'visual-fill-column))
 
 
 (defun dw/org-present-start ()
@@ -1523,16 +1598,16 @@ To create new loadable modules,
   (org-show-children))
 
 (defun dw/org-present-hook ()
-       ;; Configure fill width
+  ;; Configure fill width
   (setq visual-fill-column-width 110
-      visual-fill-column-center-text t)
+        visual-fill-column-center-text t)
   (setq-local face-remapping-alist '((default (:height 1.5) variable-pitch)
-					  (header-line (:height 4.0) variable-pitch)
-					  (org-document-title (:height 1.75) org-document-title)
-					  (org-code (:height 1.55) org-code)
-					  (org-verbatim (:height 1.55) org-verbatim)
-					  (org-block (:height 1.40) org-block)
-					  (org-block-begin-line (:height 0.7) org-block)))
+				     (header-line (:height 4.0) variable-pitch)
+				     (org-document-title (:height 1.75) org-document-title)
+				     (org-code (:height 1.55) org-code)
+				     (org-verbatim (:height 1.55) org-verbatim)
+				     (org-block (:height 1.40) org-block)
+				     (org-block-begin-line (:height 0.7) org-block)))
   (setq header-line-format " ")
   (org-appear-mode -1)
   (org-display-inline-images)
@@ -1557,12 +1632,12 @@ To create new loadable modules,
 
 (use-package! org-present
   :bind (:map org-present-mode-keymap
-		   ("C-c C-j" . dw/org-present-next)
-		   ("C-c C-k" . dw/org-present-prev))
+	      ("C-c C-j" . dw/org-present-next)
+	      ("C-c C-k" . dw/org-present-prev))
   :hook ((org-present-mode . dw/org-present-hook)
-     (org-present-mode-quit . dw/org-present-quit-hook)
-     (org-present-mode-hook . dw/org-present-start)
-     (org-present-mode-quit-hook . dw/org-present-end)))
+         (org-present-mode-quit . dw/org-present-quit-hook)
+         (org-present-mode-hook . dw/org-present-start)
+         (org-present-mode-quit-hook . dw/org-present-end)))
 ;; Register hooks with org-present
 ;; (add-hook 'org-present-mode-hook 'my/org-present-start)
 ;; (add-hook 'org-present-mode-quit-hook 'my/org-present-end)
@@ -1626,8 +1701,8 @@ To create new loadable modules,
 ;;; Centering Org Documents --------------------------------
 
 ;; Install visual-fill-column
-(unless (package-installed-p 'visual-fill-column)
-  (package-install 'visual-fill-column))
+;;(unless (package-installed-p 'visual-fill-column)
+;;  (package-install 'visual-fill-column))
 
 ;; Configure fill width
 (setq visual-fill-column-width 110
@@ -1636,8 +1711,8 @@ To create new loadable modules,
 ;;; Org Present --------------------------------------------
 
 ;; Install org-present if needed
-(unless (package-installed-p 'org-present)
-  (package-install 'org-present))
+;;(unless (package-installed-p 'org-present)
+;;  (package-install 'org-present))
 
 (defun my/org-present-prepare-slide (buffer-name heading)
   ;; Show only top-level headlines
@@ -1730,9 +1805,9 @@ To create new loadable modules,
 #+begin_src emacs-lisp
 (defmacro blw/define-user-eval-reitit (fn-name command)
   `(defun ,fn-name ()
-    (interactive)
-    (cider-eval-file (format (concat (getenv "CLJ_PLAYGROUND") "dev/src/user.clj"))) ;; "/path-to/dev/src/user.clj"
-    (cider-interactive-eval
+     (interactive)
+     (cider-eval-file (format (concat (getenv "CLJ_PLAYGROUND") "dev/src/user.clj"))) ;; "/path-to/dev/src/user.clj"
+     (cider-interactive-eval
       (format (concat "(" ,command ")")
               (cider-last-sexp)))))
 
@@ -1743,10 +1818,10 @@ To create new loadable modules,
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("c" . "clojure")
-        :desc "go - start reitit" "g" #'blw/eval-go
-        :desc "halt reitit server" "h" #'blw/eval-halt
-        :desc "reset reitit server" "r" #'blw/eval-reset)))
+                   (:prefix ("c" . "clojure")
+                    :desc "go - start reitit" "g" #'blw/eval-go
+                    :desc "halt reitit server" "h" #'blw/eval-halt
+                    :desc "reset reitit server" "r" #'blw/eval-reset)))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -1761,11 +1836,11 @@ To create new loadable modules,
 #+begin_src emacs-lisp
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-       (:prefix ("c" . "clojure")
-        (:prefix ("t" . "tests")
-          :desc "Run all tests" "p" #'cider-test-run-project-tests
-          :desc "Run tests in namespace" "n" #'cider-test-run-ns-tests
-          :desc "Run test under point" "t" #'cider-test-run-test))))
+                   (:prefix ("c" . "clojure")
+                            (:prefix ("t" . "tests")
+                             :desc "Run all tests" "p" #'cider-test-run-project-tests
+                             :desc "Run tests in namespace" "n" #'cider-test-run-ns-tests
+                             :desc "Run test under point" "t" #'cider-test-run-test))))
 #+end_src
 
 #+RESULTS:
@@ -1798,9 +1873,9 @@ To create new loadable modules,
 #+begin_src emacs-lisp
 ;; Enable Clojure mode
 (use-package! clojure-mode
- :config
- ;; Enable automatic alignment of forms
- (setq clojure-align-forms-automatically t))
+  :config
+  ;; Enable automatic alignment of forms
+  (setq clojure-align-forms-automatically t))
 #+end_src
 
 #+RESULTS:
@@ -1855,8 +1930,8 @@ To create new loadable modules,
 ;;   :recipe (:host jcs-elpa
 ;;            :repo "https://jcs-emacs.github.io/jcs-elpa/packages/")) ;; Optional: specify a specific commit or version
 
-  ;; :recipe (:host jcs-elpa))
-           ;; :repo "https://github.com/emacs-openai/codegpt")) ;; Optional: specify a specific commit or version
+;; :recipe (:host jcs-elpa))
+;; :repo "https://github.com/emacs-openai/codegpt")) ;; Optional: specify a specific commit or version
 
 ;; (package! codegtp)
 #+end_src
@@ -1869,11 +1944,11 @@ To create new loadable modules,
 
 ;; (package!
 ;; (require 'chatgpt)
-  ;; :recipe
-  ;; (:host github
-  ;;  :repo "emacs-openai/chatgpt"))
- ;; (use-package
- ;;  :straight (chatgpt :type git :host github :repo "emacs-openai/chatgpt"))
+;; :recipe
+;; (:host github
+;;  :repo "emacs-openai/chatgpt"))
+;; (use-package
+;;  :straight (chatgpt :type git :host github :repo "emacs-openai/chatgpt"))
 #+end_src
 
 #+begin_src emacs-lisp
@@ -2011,13 +2086,13 @@ To create new loadable modules,
 #+end_src
 
 #+begin_src emacs-lisp :tangle ./blw-func/exwm-init.el
-  (defun blw/exwm-init ()
-    (interactive)
-    (load! "$HOME/.doom.d/my-func/exwm.el"))
+(defun blw/exwm-init ()
+  (interactive)
+  (load! "$HOME/.doom.d/my-func/exwm.el"))
 ;; (load! "$HOME/.doom.d/desktop.el"))
 
-  (defun efs/exwm-update-class ()
-    (exwm-workspace-rename-buffer exwm-class-name))
+(defun efs/exwm-update-class ()
+  (exwm-workspace-rename-buffer exwm-class-name))
 #+end_src
 
 ** Configs
@@ -2038,7 +2113,7 @@ To create new loadable modules,
 
 ;; These keys should always pass through to Emacs
 (setq exwm-input-prefix-keys
-    '(?\C-x
+      '(?\C-x
         ?\C-u
         ?\C-h
         ?\M-x
@@ -2089,41 +2164,41 @@ To create new loadable modules,
 (require 'exwm-randr)
 (setq exwm-randr-workspace-output-plist '(0 "eDP1"))
 (add-hook 'exwm-randr-screen-change-hook
-      (lambda ()
-        (start-process-shell-command
-         "xrandr" nil "xrandr --output eDP1 --right-of HDMI-1-0 --auto")))
+          (lambda ()
+            (start-process-shell-command
+             "xrandr" nil "xrandr --output eDP1 --right-of HDMI-1-0 --auto")))
 (start-process-shell-command "xrandr" nil "xrandr --output eDP-1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output DP-1 --off --output DP-2 --off --output HDMI-1 --mode 2560x1080 --pos 1920x0 --rotate normal")
 (setq exwm-randr-workspace-monitor-plist '(2 "eDP-1" 3 "HDMI-1"))
 (exwm-randr-enable)
 #+end_src
 *** Polybar
 #+begin_src emacs-lisp
-  ;; Make sure the server is started (better to do this in your main Emacs config!)
-  (server-start)
+;; Make sure the server is started (better to do this in your main Emacs config!)
+(server-start)
 
-  (defvar efs/polybar-process nil
-    "Holds the process of the running Polybar instance, if any")
+(defvar efs/polybar-process nil
+  "Holds the process of the running Polybar instance, if any")
 
-  (defun efs/kill-panel ()
-    (interactive)
-    (when efs/polybar-process
-      (ignore-errors
-        (kill-process efs/polybar-process)))
-    (setq efs/polybar-process nil))
+(defun efs/kill-panel ()
+  (interactive)
+  (when efs/polybar-process
+    (ignore-errors
+      (kill-process efs/polybar-process)))
+  (setq efs/polybar-process nil))
 
-  (defun efs/start-panel ()
-    (interactive)
-    (efs/kill-panel)
-    (setq efs/polybar-process (start-process-shell-command "polybar" nil "polybar panel")))
+(defun efs/start-panel ()
+  (interactive)
+  (efs/kill-panel)
+  (setq efs/polybar-process (start-process-shell-command "polybar" nil "polybar panel")))
 
-  (defun efs/send-polybar-hook (module-name hook-index)
-    (start-process-shell-command "polybar-msg" nil (format "polybar-msg hook %s %s" module-name hook-index)))
+(defun efs/send-polybar-hook (module-name hook-index)
+  (start-process-shell-command "polybar-msg" nil (format "polybar-msg hook %s %s" module-name hook-index)))
 
-  (defun efs/send-polybar-exwm-workspace ()
-    (efs/send-polybar-hook "exwm-workspace" 1))
+(defun efs/send-polybar-exwm-workspace ()
+  (efs/send-polybar-hook "exwm-workspace" 1))
 
-  ;; Update panel indicator when workspace changes
-  (add-hook 'exwm-workspace-switch-hook #'efs/send-polybar-exwm-workspace)
+;; Update panel indicator when workspace changes
+(add-hook 'exwm-workspace-switch-hook #'efs/send-polybar-exwm-workspace)
 #+end_src
 
 #+RESULTS:
@@ -2160,41 +2235,41 @@ To create new loadable modules,
 
 ** TMUX
 #+begin_src emacs-lisp
-  ;; "/run/user/1000/tmux-1000/default"
+;; "/run/user/1000/tmux-1000/default"
 #+end_src
 
 * Packages dependencies
 #+begin_src emacs-lisp :tangle packages.el
-  ;; (package! edwina)
-  ;; (package! evil-multiedit)
-  ;; (package! all-the-icons-completion)
-  ;; (package! all-the-icons-ivy)
-  ;; (package! all-the-icons-ibuffer)
-  ;; (package! dashboard)
-  ;; (package! quelpa-use-package)
-  ;; (package! eaf)
-  ;; (package! epc)
-  ;; (package! ctable)
-  ;; (package! deferred)
-  ;; (package! s)
-  ;; (package! elmacro)
-  ;; ;; (package! chembalance)
-  ;; (package! chemtable)
-  ;; (package! calfw-org)
-  ;; (package! calfw-cal)
-  ;; (package! calfw-ical)
-  ;; (package! calfw-gcal)
-  ;; (package! ox-reveal)
-  ;; (package! htmlize)
-  ;; (package! celestial-mode-line)
-  ;; (package! sunshine)
-  ;; (package! evil-nerd-commenter)
-  (package! queue)
-  (package! sesman)
+;; (package! edwina)
+;; (package! evil-multiedit)
+;; (package! all-the-icons-completion)
+;; (package! all-the-icons-ivy)
+;; (package! all-the-icons-ibuffer)
+;; (package! dashboard)
+;; (package! quelpa-use-package)
+;; (package! eaf)
+;; (package! epc)
+;; (package! ctable)
+;; (package! deferred)
+;; (package! s)
+;; (package! elmacro)
+;; ;; (package! chembalance)
+;; (package! chemtable)
+;; (package! calfw-org)
+;; (package! calfw-cal)
+;; (package! calfw-ical)
+;; (package! calfw-gcal)
+;; (package! ox-reveal)
+;; (package! htmlize)
+;; (package! celestial-mode-line)
+;; (package! sunshine)
+;; (package! evil-nerd-commenter)
+(package! queue)
+(package! sesman)
 #+end_src
 
 #+begin_src emacs-lisp
-  ;; (use-package! evil-nerd-commenter)
+;; (use-package! evil-nerd-commenter)
 #+end_src
 * Complete (corfu and cape)
 
@@ -2220,74 +2295,7 @@ To create new loadable modules,
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-elisp-block)
   (add-to-list 'completion-at-point-functions #'codeium-completion-at-point))
-  (global-set-key (kbd "M-<return>") (cape-capf-interactive #'codeium-completion-at-point))
-#+end_src
-
-* Codeium
-
-#+begin_src emacs-lisp :tangle packages.el
-(package! codeium :recipe (:host github :repo "Exafunction/codeium.el"))
-;; (package! cape)
-#+end_src
-
-#+begin_src emacs-lisp
-
-;; (setq codeium/metadata/api_key (nth 0 (process-lines "pass" "show" "apikeys/codeium")))
-(use-package! codeium
-  :after cape
-  :init
-  ;; use globally
-  (add-to-list 'completion-at-point-functions #'codeium-completion-at-point)
-
-  :config
-
-  ;; (setq codeium/metadata/api_key (nth 0 (process-lines "pass" "show" "apikeys/codeium")))
-  ;; (defalias 'my/codeium-complete
-  ;;   (cape-interacive-capf #'codeium-completion-at-point))
-
-  ;; (map! :localleader
-  ;;       :map evil-normal-state-map
-  ;;       "c e" #'my/codeium-complete)
-
-  (setq codeium-api-enabled
-        (lambda (api)
-          (memq api '(GetCompletions Heartbeat CancelRequest
-                      GetAuthToken RegisterUser auth-redirect
-                      AcceptCompletion))))
-
-  ;; ----------
-  (setq use-dialog-box nil) ;; do not use popup boxes
-
-  ;; if you don't want to use customize to save the api-key
-  ;; (setq codeium/metadata/api_key "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx")
-
-  ;; get codeium status in the modeline
-  (setq codeium-mode-line-enable
-         (lambda (api) (not (memq api '(CancelRequest Heartbeat AcceptCompletion)))))
-  (add-to-list 'mode-line-format '(:eval (car-safe codeium-mode-line)) t)
-  ;; alternatively for a more extensive mode-line
-  ;; (add-to-list 'mode-line-format '(-50 "" codeium-mode-line) t)
-
-  ;; use M-x codeium-diagnose to see apis/fields that would be sent to the local language server
-  (setq codeium-api-enabled
-         (lambda (api)
-              (memq api '(GetCompletions Heartbeat CancelRequest GetAuthToken RegisterUser auth-redirect AcceptCompletion))))
-  ;; you can also set a config for a single buffer like this:
-  ;; (add-hook 'python-mode-hook
-  ;;     (lambda ()
-  ;;         (setq-local codeium/editor_options/tab_size 4)))
-
-  ;; You can overwrite all the codeium configs!
-  ;; for example, we recommend limiting the string sent to codeium for better performance
-  (defun my-codeium/document/text ()
-     (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (min (+ (point) 1000) (point-max))))
-  ;; if you change the text, you should also change the cursor_offset
-  ;; warning: this is measured by UTF-8 encoded bytes
-  (defun my-codeium/document/cursor_offset ()
-     (codeium-utf8-byte-length
-      (buffer-substring-no-properties (max (- (point) 3000) (point-min)) (point))))
-  (setq codeium/document/text 'my-codeium/document/text)
-  (setq codeium/document/cursor_offset 'my-codeium/document/cursor_offset))
+(global-set-key (kbd "M-<return>") (cape-capf-interactive #'codeium-completion-at-point))
 #+end_src
 
 * HTTP interface
@@ -2311,38 +2319,38 @@ Content-Type: application/json
 You can issue the http request by: =M-x http-process (C-c C-c)=
 * Language learning
 #+begin_src emacs-lisp :tangle packages.el
-(package! google-translate)
-(package! google)
-(package! posframe)
-(package! go-translate)
+;; (package! google-translate)
+;; (package! google)
+;; (package! posframe)
+;; (package! go-translate)
 #+end_src
 
-#+begin_src emacs-lisp :tangle yes
-;; (use-package! go-translate
-;;   :config
-(setq gt-langs '(en zh))
-                 ;; ("en" "ru")
-                 ;; ("en" "pt-br")
-                 ;; ("pt-br" "en")))
+#+begin_src emacs-lisp 
+;; ;; (use-package! go-translate
+;; ;;   :config
+;; (setq gt-langs '(en zh))
+;;                  ;; ("en" "ru")
+;;                  ;; ("en" "pt-br")
+;;                  ;; ("pt-br" "en")))
 
-(setq gt-default-translator
-        (gt-translator
-         :taker   (gt-taker :text 'buffer :pick 'paragraph)
-         :engines  (list
-                   (gt-bing-engine)
-                   (gt-google-engine)
-                   (gt-google-rpc-engine))
-         :render
-         (gt-buffer-render)))
+;; (setq gt-default-translator
+;;         (gt-translator
+;;          :taker   (gt-taker :text 'buffer :pick 'paragraph)
+;;          :engines  (list
+;;                    (gt-bing-engine)
+;;                    (gt-google-engine)
+;;                    (gt-google-rpc-engine))
+;;          :render
+;;          (gt-buffer-render)))
 
-;; (setq gt-langs '(en fr))        ; Default translation languages, at least two ​​must be specified
-(setq gt-taker-text 'word)      ; By default, the initial text is the word under the cursor. If there is active region, the selected text will be used first
-(setq gt-taker-pick 'paragraph) ; By default, the initial text will be split by paragraphs. If you don't want to use multi-parts translation, set it to nil
-(setq gt-taker-prompt nil)
-;; (setq gt-default-translator (gt-translator :engines (gt-google-engine)))
+;; ;; (setq gt-langs '(en fr))        ; Default translation languages, at least two ​​must be specified
+;; (setq gt-taker-text 'word)      ; By default, the initial text is the word under the cursor. If there is active region, the selected text will be used first
+;; (setq gt-taker-pick 'paragraph) ; By default, the initial text will be split by paragraphs. If you don't want to use multi-parts translation, set it to nil
+;; (setq gt-taker-prompt nil)
+;; ;; (setq gt-default-translator (gt-translator :engines (gt-google-engine)))
 
-(setq gt-buffer-evil-leading-key "x")
-       ;; (gt-posframe-pop-render))
+;; (setq gt-buffer-evil-leading-key "x")
+;;        ;; (gt-posframe-pop-render))
 #+end_src
 
 * Telegram
@@ -2387,15 +2395,15 @@ You can issue the http request by: =M-x http-process (C-c C-c)=
 #+end_src
 
 #+begin_src emacs-lisp
-(require 'tree-sitter)
-(require 'tree-sitter-langs)
-;; (treesit-auto-add-to-auto-mode-alist 'all)
-(global-tree-sitter-mode)
-(add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
-(add-to-list 'tree-sitter-major-mode-language-alist '(go-ts-mode . go))
-(dolist (entry tree-sitter-major-mode-language-alist)
-  (let ((mode (car entry)))
-    (add-hook (intern (concat (symbol-name mode) "-hook")) #'lsp-deferred)))
+;; (require 'tree-sitter)
+;; (require 'tree-sitter-langs)
+;; ;; (treesit-auto-add-to-auto-mode-alist 'all)
+;; (global-tree-sitter-mode)
+;; (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+;; (add-to-list 'tree-sitter-major-mode-language-alist '(go-ts-mode . go))
+;; (dolist (entry tree-sitter-major-mode-language-alist)
+;;   (let ((mode (car entry)))
+;;     (add-hook (intern (concat (symbol-name mode) "-hook")) #'lsp-deferred)))
 #+end_src
 
 * YAML
@@ -2438,13 +2446,13 @@ sudo update-alternatives --config x-terminal-emulator
 ;; binding
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-        (:prefix ("i" . "(system's) Integrations")
-         :desc "Yazi launch" "y" #'blw/run-yazi)))
+                   (:prefix ("i" . "(system's) Integrations")
+                    :desc "Yazi launch" "y" #'blw/run-yazi)))
 
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-        (:prefix ("x" . "command")
-         :desc "Yazi-find" "f" #'blw/run-yazi)))
+                   (:prefix ("x" . "command")
+                    :desc "Yazi-find" "f" #'blw/run-yazi)))
 #+end_src
 
 #+RESULTS:
@@ -2458,8 +2466,8 @@ sudo update-alternatives --config x-terminal-emulator
 ;; binding
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-        (:prefix ("i" . "(system's) Integrations")
-         :desc "Kitty terminal launch" "t" #'blw/run-kitty)))
+                   (:prefix ("i" . "(system's) Integrations")
+                    :desc "Kitty terminal launch" "t" #'blw/run-kitty)))
 #+end_src
 
 #+RESULTS:
@@ -2540,19 +2548,19 @@ sudo update-alternatives --config x-terminal-emulator
    ;; certain modes (like `prog-mode'), set it like this.
    citre-auto-enable-citre-mode-modes '(prog-mode)))
 
-  ;; (global-set-key (kbd "C-x c j") 'citre-jump)
-  ;; (global-set-key (kbd "C-x c J") 'citre-jump-back)
-  ;; (global-set-key (kbd "C-x c p") 'citre-ace-peek)
-  ;; (global-set-key (kbd "C-x c u") 'citre-update-this-tags-file)
+;; (global-set-key (kbd "C-x c j") 'citre-jump)
+;; (global-set-key (kbd "C-x c J") 'citre-jump-back)
+;; (global-set-key (kbd "C-x c p") 'citre-ace-peek)
+;; (global-set-key (kbd "C-x c u") 'citre-update-this-tags-file)
 ;;; Change to these kinds of bindings
 (map! :leader
       (:prefix-map ("b" . "buddhi")
-        (:prefix ("c" . "Code|Citre|Clojure")
-         (:prefix ("c" . "Citre")
-          :desc "Jump" "j"               #'citre-jump
-          :desc "Jump back" "J"          #'citre-jump-back
-          :desc "Ace peek" "p"           #'citre-ace-peek
-          :desc "Update `tags` file" "u" #'citre-update-this-tags-file))))
+                   (:prefix ("c" . "Code|Citre|Clojure")
+                            (:prefix ("c" . "Citre")
+                             :desc "Jump" "j"               #'citre-jump
+                             :desc "Jump back" "J"          #'citre-jump-back
+                             :desc "Ace peek" "p"           #'citre-ace-peek
+                             :desc "Update `tags` file" "u" #'citre-update-this-tags-file))))
 #+end_src
 
 * KILL Company
@@ -2644,16 +2652,16 @@ sudo update-alternatives --config x-terminal-emulator
 
 #+begin_src emacs-lisp
 (dap-register-debug-template "Go Debug"
-  (list :type "go"
-        :request "launch"
-        :name "Launch Go Program"
-        :mode "auto"
-        :program "${workspaceFolder}/main.go"
-        :buildFlags ""
-        :args []
-        ;; :env '(("GOPATH" . "${home}/go"))
-        :envFile nil
-        :dlvToolPath "dlv")) ;; Ensure `dlv` is in PATH
+                             (list :type "go"
+                                   :request "launch"
+                                   :name "Launch Go Program"
+                                   :mode "auto"
+                                   :program "${workspaceFolder}/main.go"
+                                   :buildFlags ""
+                                   :args []
+                                   ;; :env '(("GOPATH" . "${home}/go"))
+                                   :envFile nil
+                                   :dlvToolPath "dlv")) ;; Ensure `dlv` is in PATH
 #+end_src
 * EAF - Emacs Application Framework
 
@@ -2679,7 +2687,7 @@ sudo update-alternatives --config x-terminal-emulator
 (use-package! eaf
   :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
   :custom
-  ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
+                                        ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
   (setq eaf-browser-default-search-engine "duckduckgo")
   (eaf-browser-continue-where-left-off t)
   (eaf-browser-enable-adblocker t)
@@ -2698,11 +2706,49 @@ sudo update-alternatives --config x-terminal-emulator
 * Lookup setup
 
 * LLMS
+
+This section configures multiple AI tools and models:
+
+** Local Ollama Models:
+- *deepseek-r1:latest* → Hard reasoning, multi-file refactors, complex analysis
+- *qwen3:latest* → General coding assistant, Go/Clojure/TypeScript 
+- *llama3.2:latest* → Quick drafts, low latency interactions
+- *gemma3:latest* → Summarization, documentation polish
+- *gpt-oss:latest* → Fallback generalist, agentic tasks
+- *nomic-embed-text:latest* → Embeddings
+
+** AI Pair Programming:
+- *Aidermacs* → AI pair programming with built-in Ediff integration, uses OpenRouter's free `nousresearch/deephermes-3-llama-3-8b-preview:free` model
+- *GPTel* → Direct chat interface with multiple model support
+- *Ellama* → Specialized AI tasks (coding, summarization, translation)
+
+** Usage
+
+- =SPC b ai m= → Open LLM transient menu
+- =SPC b ai c= → Quick gptel chat
+- =SPC b ai r= → Auto-route model based on content
+- =SPC b ai s= → Manually select model
+- =SPC b ai e= → Ellama transient menu
+- =SPC b ai E= → Ellama chat
+- =SPC b ai a= → Aidermacs (AI Pair Programming)
+- =SPC b ai A= → Aidermacs transient menu
+- =C-c A= → Quick access to Aidermacs menu
+
+** Auto-routing Logic
+
+The system automatically selects models based on:
+- Content length (>1500 chars → deepseek-r1)
+- Keywords (refactor/test/debug → deepseek-r1)
+- Major mode (go/clojure/typescript → qwen3)
+- Task type (summarize/polish → gemma3)
+- Default (llama3.2 for speed)
+
 #+begin_src emacs-lisp :tangle packages.el
-(package! llama)
-(package! ellama)
-(package! ollama-buddy)
-(package! llama-cpp)
+;;(package! llama)
+;;(package! ellama)
+;;(package! ollama-buddy)
+;;(package! llama-cpp)
+;;(package! aidermacs)
 #+end_src
 
 ** GPTel
@@ -2711,105 +2757,222 @@ sudo update-alternatives --config x-terminal-emulator
 (package! gptel)
 #+end_src
 
-#+begin_src emacs-lisp
-(gptel-make-ollama "Ollama"             ;Any name of your choosing
-  :host "localhost:11434"               ;Where it's running
-  :stream t                             ;Stream responses
-  :models '(deepseek-r1:latest))          ;List of models
+#+begin_src emacs-lisp :no-tangle
+;; Core gptel setup with multiple Ollama models
+(use-package! gptel
+  :ensure t
+  :init
+  (setq gptel-default-mode 'org-mode)
+  :config
+  ;; Main Ollama backend with all models
+  (setq gptel-backend
+        (gptel-make-ollama "Ollama"
+          :host "localhost:11434"
+          :stream t
+          :models '(deepseek-r1:latest
+                    qwen3:latest
+                    llama3.2:latest
+                    gemma3:latest
+                    gpt-oss:latest
+                    nomic-embed-text:latest)))
+
+  ;; Model presets for different use cases
+  (defvar my/ollama-presets
+    '((:name "deepseek-r1"  :model "deepseek-r1:latest"  :temp 0.1 :max 4096 :use-case "Hard reasoning, multi-file refactors, complex analysis")
+      (:name "qwen3"        :model "qwen3:latest"        :temp 0.2 :max 2048 :use-case "General coding assistant, Go/Clojure/TypeScript")
+      (:name "llama3.2"     :model "llama3.2:latest"     :temp 0.3 :max 1536 :use-case "Quick drafts, low latency interactions")
+      (:name "gemma3"       :model "gemma3:latest"       :temp 0.5 :max 2048 :use-case "Summarization, documentation polish")
+      (:name "gpt-oss"      :model "gpt-oss:latest"      :temp 0.3 :max 2048 :use-case "Fallback generalist, agentic tasks"))
+    "Model presets with their optimal configurations and use cases.")
+
+  (defun my/gptel-apply-preset (preset)
+    "Apply PRESET plist to gptel for this buffer."
+    (interactive
+     (list (let* ((names (mapcar (lambda (p) 
+                                   (format "%s - %s" 
+                                           (plist-get p :name)
+                                           (plist-get p :use-case))) 
+                                 my/ollama-presets))
+                  (choice (completing-read "Model: " names nil t))
+                  (name (car (split-string choice " - "))))
+             (seq-find (lambda (p) (equal (plist-get p :name) name)) my/ollama-presets))))
+    (let* ((model (plist-get preset :model))
+           (temp  (or (plist-get preset :temp) 0.2))
+           (max   (or (plist-get preset :max) 1024)))
+      (setq-local gptel-model model
+                  gptel-temperature temp
+                  gptel-max-tokens max)
+      (message "gptel → %s (T=%.1f, max=%d)" model temp max)))
+
+  (defun my/gptel-route ()
+    "Heuristic model routing based on region/buffer content and major-mode."
+    (interactive)
+    (let* ((text (if (use-region-p)
+                     (buffer-substring-no-properties (region-beginning) (region-end))
+                   (buffer-substring-no-properties (point-min) (min (point-max) (+ (point-min) 2000)))))
+           (len (length text))
+           (lang (symbol-name major-mode))
+           (pick (cond
+                  ;; Heavy reasoning or long prompts
+                  ((or (> len 1500)
+                       (string-match-p "\\b(refactor|rewrite|test|architecture|explain.*step|analyze|debug)" text))
+                   "deepseek-r1")
+                  ;; Code modes for languages you use frequently
+                  ((string-match-p "\\b(go-mode\\|go-ts-mode\\|clojure-mode\\|clojurescript-mode\\|typescript-\\|tsx-\\|js-\\|web-mode\\|elm-mode)" lang)
+                   "qwen3")
+                  ;; Summarization and documentation tasks
+                  ((string-match-p "\\b(summarize\\|summary\\|bullets?\\|title\\|abstract\\|tl;?dr\\|polish\\|rewrite)" text)
+                   "gemma3")
+                  ;; Low-latency default for quick interactions
+                  (t "llama3.2"))))
+      (let ((preset (seq-find (lambda (p) (equal (plist-get p :name) pick)) my/ollama-presets)))
+        (my/gptel-apply-preset preset)
+        (message "Auto-routed to %s: %s" pick (plist-get preset :use-case)))))
+
+  ;; Keybindings for gptel mode
+  (define-key gptel-mode-map (kbd "C-c m r") #'my/gptel-route)
+  (define-key gptel-mode-map (kbd "C-c m s") #'my/gptel-apply-preset))
+
+;; Transient menu for easy model selection
+(use-package! transient
+  :ensure t
+  :config
+  (transient-define-prefix my/llm-menu ()
+    "LLM Model Selection and Actions"
+    ["Models (Ollama)"
+     ("d" "DeepSeek-R1 (reasoning)" 
+      (lambda () (interactive) 
+        (my/gptel-apply-preset (seq-find (lambda (p) (equal (plist-get p :name) "deepseek-r1")) my/ollama-presets))))
+     ("q" "Qwen3 (coding)" 
+      (lambda () (interactive) 
+        (my/gptel-apply-preset (seq-find (lambda (p) (equal (plist-get p :name) "qwen3")) my/ollama-presets))))
+     ("l" "Llama3.2 (quick)" 
+      (lambda () (interactive) 
+        (my/gptel-apply-preset (seq-find (lambda (p) (equal (plist-get p :name) "llama3.2")) my/ollama-presets))))
+     ("g" "Gemma3 (docs)" 
+      (lambda () (interactive) 
+        (my/gptel-apply-preset (seq-find (lambda (p) (equal (plist-get p :name) "gemma3")) my/ollama-presets))))
+     ("o" "GPT-OSS (agentic)" 
+      (lambda () (interactive) 
+        (my/gptel-apply-preset (seq-find (lambda (p) (equal (plist-get p :name) "gpt-oss")) my/ollama-presets))))]
+    ["Actions"
+     ("r" "Auto Route" my/gptel-route)
+     ("s" "Select Model" my/gptel-apply-preset)
+     ("RET" "Send Message" gptel-send)
+     ("c" "New Chat" gptel)]))
+
+;; Global keybinding for the LLM menu
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("ai" . "LLM/AI")
+        :desc "LLM Menu" "m" #'my/llm-menu
+        :desc "Quick Chat" "c" #'gptel
+        :desc "Auto Route Model" "r" #'my/gptel-route
+        :desc "Select Model" "s" #'my/gptel-apply-preset
+        :desc "Aidermacs (Pair Programming)" "a" #'aidermacs-transient-menu)))
 #+end_src
 
-#+RESULTS:
-: #s(gptel-ollama "Ollama" "localhost:11434" nil "http" t "/api/chat" nil (deepseek-r1:latest) "http://localhost:11434/api/chat" nil nil nil)
 
-#+begin_src emacs-lisp
-;; (gptel-make-ollama "Ollama-coder"             ;Any name of your choosing
-;;   :host "localhost:11434"               ;Where it's running
-;;   :stream t                             ;Stream responses
-;;   :models '(deep-jibril:1.0))          ;List of models
-
-;; (gptel-make-ollama "Ollama-sql-coder"             ;Any name of your choosing
-;;   :host "localhost:11434"               ;Where it's running
-;;   :stream t                             ;Stream responses
-;;   :models '(codelama-jibril-SQLer:1.0))          ;List of models
-
-;; (gptel-make-ollama "qwen2.5-coder:32B"             ;Any name of your choosing
-;;   :host "localhost:11434"               ;Where it's running
-;;   :stream t                             ;Stream responses
-;;   :models '(qwen2.5-coder:32B))          ;List of models
-#+end_src
 
 ** ELLAMA
-Use =ollama= inside Emacs the way the like it!
+Use =ollama= inside Emacs with specialized providers for different tasks!
 
-#+begin_src emacs-lisp :tangle packages.el :tangle no
+#+begin_src emacs-lisp :tangle packages.el
 (package! ellama)
 (package! llm)
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
 (use-package! llm)
 
 (use-package! ellama
   :bind ("C-c e" . ellama-transient-main-menu)
   :init
-  ;; setup key bindings (optional: uncomment to set a custom keymap prefix)
-  ;; (setopt ellama-keymap-prefix "C-c e")
   ;; language you want ellama to translate to
   (setopt ellama-language "Brazilian Portuguese")
   ;; use the ollama provider from llm
   (require 'llm-ollama)
+  
+  ;; Default provider - use llama3.2 for general tasks (fast)
   (setopt ellama-provider
           (make-llm-ollama
-           ;; Use the latest version of the model
-           :chat-model "llama3:latest"
-           :embedding-model "nomic-embed-text"
+           :chat-model "llama3.2:latest"
+           :embedding-model "nomic-embed-text:latest"
            :default-chat-non-standard-params '(("num_ctx" . 8192))))
+  
+  ;; Summarization - use gemma3 for document processing
   (setopt ellama-summarization-provider
           (make-llm-ollama
-           :chat-model "qwen2.5:latest"
-           :embedding-model "nomic-embed-text"
-           :default-chat-non-standard-params '(("num_ctx" . 32768))))
+           :chat-model "gemma3:latest"
+           :embedding-model "nomic-embed-text:latest"
+           :default-chat-non-standard-params '(("num_ctx" . 16384))))
+  
+  ;; Coding - use qwen3 for code-related tasks
   (setopt ellama-coding-provider
           (make-llm-ollama
-           :chat-model "qwen2.5-coder:latest"
-           :embedding-model "nomic-embed-text"
-           :default-chat-non-standard-params '(("num_ctx" . 32768))))
-  ;; Predefined llm providers for interactive switching.
+           :chat-model "qwen3:latest"
+           :embedding-model "nomic-embed-text:latest"
+           :default-chat-non-standard-params '(("num_ctx" . 16384))))
+  
+  ;; Predefined llm providers for interactive switching
   (setopt ellama-providers
-          '(("zephyr" . (make-llm-ollama
-                         :chat-model "zephyr:latest"
-                         :embedding-model "zephyr:latest"))
-            ("mistral" . (make-llm-ollama
-                          :chat-model "mistral:latest"
-                          :embedding-model "mistral:latest"))
-            ("mixtral" . (make-llm-ollama
-                          :chat-model "mixtral:latest"
-                          :embedding-model "mixtral:latest"))))
-  ;; Naming new sessions with llm using the latest model version
+          '(("deepseek-r1" . (make-llm-ollama
+                              :chat-model "deepseek-r1:latest"
+                              :embedding-model "nomic-embed-text:latest"
+                              :default-chat-non-standard-params '(("num_ctx" . 32768))))
+            ("qwen3" . (make-llm-ollama
+                        :chat-model "qwen3:latest"
+                        :embedding-model "nomic-embed-text:latest"
+                        :default-chat-non-standard-params '(("num_ctx" . 16384))))
+            ("llama3.2" . (make-llm-ollama
+                           :chat-model "llama3.2:latest"
+                           :embedding-model "nomic-embed-text:latest"
+                           :default-chat-non-standard-params '(("num_ctx" . 8192))))
+            ("gemma3" . (make-llm-ollama
+                         :chat-model "gemma3:latest"
+                         :embedding-model "nomic-embed-text:latest"
+                         :default-chat-non-standard-params '(("num_ctx" . 16384))))
+            ("gpt-oss" . (make-llm-ollama
+                          :chat-model "gpt-oss:latest"
+                          :embedding-model "nomic-embed-text:latest"
+                          :default-chat-non-standard-params '(("num_ctx" . 16384))))))
+  
+  ;; Naming new sessions - use llama3.2 for quick naming
   (setopt ellama-naming-provider
           (make-llm-ollama
-           :chat-model "llama3:latest"
-           :embedding-model "nomic-embed-text"
-           :default-chat-non-standard-params '(("stop" . ("\n")))))
+           :chat-model "llama3.2:latest"
+           :embedding-model "nomic-embed-text:latest"
+           :default-chat-non-standard-params '(("stop" . ("\n")) ("num_ctx" . 4096))))
   (setopt ellama-naming-scheme 'ellama-generate-name-by-llm)
-  ;; Translation llm provider using latest tag
+  
+  ;; Translation - use gemma3 for language tasks
   (setopt ellama-translation-provider
           (make-llm-ollama
-           :chat-model "qwen2.5:latest"
-           :embedding-model "nomic-embed-text"
-           :default-chat-non-standard-params '(("num_ctx" . 32768))))
-  ;; Extraction llm provider with the latest version
+           :chat-model "gemma3:latest"
+           :embedding-model "nomic-embed-text:latest"
+           :default-chat-non-standard-params '(("num_ctx" . 16384))))
+  
+  ;; Extraction - use deepseek-r1 for complex analysis
   (setopt ellama-extraction-provider
           (make-llm-ollama
-           :chat-model "qwen2.5-coder:latest"
-           :embedding-model "nomic-embed-text"
+           :chat-model "deepseek-r1:latest"
+           :embedding-model "nomic-embed-text:latest"
            :default-chat-non-standard-params '(("num_ctx" . 32768))))
+  
   ;; customize display buffer behaviour
   (setopt ellama-chat-display-action-function #'display-buffer-full-frame)
   (setopt ellama-instant-display-action-function #'display-buffer-at-bottom)
   :config
   ;; send last message in chat buffer with C-c C-c
   (add-hook 'org-ctrl-c-ctrl-c-hook #'ellama-chat-send-last-message))
+
+;; Add ellama to the LLM menu
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("ai" . "LLM/AI")
+        :desc "Ellama Menu" "e" #'ellama-transient-main-menu
+        :desc "Ellama Chat" "E" #'ellama-chat
+        :desc "Aidermacs Menu" "A" #'aidermacs-transient-menu)))
 #+end_src
 
 ** evedel
@@ -2896,7 +3059,7 @@ https://github.com/douo/magit-gptcommit
   :straight (consult-omni :type git :host github :repo "armindarvish/consult-omni" :branch "main" :files (:defaults "sources/*.el"))
   :after consult
   :custom
-   ;; General settings that apply to all sources
+  ;; General settings that apply to all sources
   (consult-omni-show-preview t) ;;; show previews
   (consult-omni-preview-key "C-o") ;;; set the preview key to C-o
   :config
@@ -2908,7 +3071,7 @@ https://github.com/douo/magit-gptcommit
   ;; Either load all source modules or a selected list
 
   ;;; Select a list of modules you want to aload, otherwise all sources all laoded
-  ; (setq consult-omni-sources-modules-to-load (list 'consult-omni-wkipedia 'consult-omni-notes))
+                                        ; (setq consult-omni-sources-modules-to-load (list 'consult-omni-wkipedia 'consult-omni-notes))
   (consult-omni-sources-load-modules)
   ;;; set multiple sources for consult-omni-multi command. Change these lists as needed for different interactive commands. Keep in mind that each source has to be a key in `consult-omni-sources-alist'.
   (setq consult-omni-multi-sources '("calc"
@@ -2930,7 +3093,7 @@ https://github.com/douo/magit-gptcommit
                                      ;; "YouTube"
                                      "Invidious"))
 
-;; Per source customization
+  ;; Per source customization
 
   ;;; Set API KEYs. It is recommended to use a function that returns the string for better security.
   (setq consult-omni-google-customsearch-key "YOUR-GOOGLE-API-KEY-OR-FUNCTION")
@@ -2981,6 +3144,83 @@ https://github.com/douo/magit-gptcommit
   ;; or use aider-transient-menu-2cols / aider-transient-menu-1col, for narrow screen
   (aider-magit-setup-transients)) ;; add aider magit function to magit menu
 #+end_src
+
+** Aidermacs
+AI Pair Programming in Emacs with Aider - a more Emacs-native experience with enhanced features:
+
+- **Built-in Ediff Integration**: Automatically shows diffs for AI-modified files
+- **Intelligent Model Selection**: Automatic discovery and compatibility checking
+- **Flexible Terminal Backends**: Support for both comint and vterm
+- **Enhanced File Management**: Add/drop files, view history, create scratchpads
+- **Multiline Input Support**: Natural handling of complex prompts
+- **Community-Driven**: Actively developed with user feedback
+
+#+begin_src emacs-lisp
+(use-package! aidermacs
+  :init
+  ;; Set the OpenRouter API key from pass BEFORE loading
+  (setenv "OPENROUTER_API_KEY" (nth 0 (process-lines "pass" "show" "openrouter/keys/ff")))
+  
+  :custom
+  ;; Configure the default model - nousresearch/deephermes-3-llama-3-8b-preview:free
+  (aidermacs-default-chat-mode 'architect)
+  
+  :config
+  ;; Configure the model and provider
+  (setq aidermacs-model "openrouter/nousresearch/deephermes-3-llama-3-8b-preview:free")
+  (setq aidermacs-provider "openrouter")
+  
+  ;; Additional configuration options - specify the model explicitly in extra args
+  (setq aidermacs-extra-args
+        (list "--model" "openrouter/nousresearch/deephermes-3-llama-3-8b-preview:free"
+              "--no-auto-commits"  ; Disable auto-commits for more control
+              "--no-pretty"        ; Disable pretty formatting for cleaner output
+              "--chat-language" "en" ; Set chat language to English
+              "--no-show-model-warnings")) ; Suppress model warnings
+
+  ;; Configure terminal backend (vterm is recommended for better performance)
+  (setq aidermacs-backend 'vterm)
+
+  ;; Enable automatic model discovery for OpenRouter
+  (setq aidermacs-auto-discover-models t)
+
+  ;; Set up keybindings
+  (global-set-key (kbd "C-c A") 'aidermacs-transient-menu)
+  
+  ;; Create a default .aider.conf.yml file if it doesn't exist
+  (let ((aider-config-file (expand-file-name "~/.aider.conf.yml")))
+    (unless (file-exists-p aider-config-file)
+      (with-temp-file aider-config-file
+        (insert "# Aidermacs default configuration\n")
+        (insert "model: openrouter/nousresearch/deephermes-3-llama-3-8b-preview:free\n")
+        (insert "no-auto-commits: true\n")
+        (insert "no-pretty: true\n")
+        (insert "chat-language: en\n")
+        (insert "no-show-model-warnings: true\n")
+        (insert "architect: true\n")))))
+#+end_src
+* Reader
+
+** Epub
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! nov)
+#+end_src
+
+** PDF tools
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! pdf-tools)
+(package! pdf-view-pagemark)
+(package! pdf-view-restore)
+(package! pdfgrep)
+#+end_src
+* Json
+
+#+begin_src emacs-lisp :tangle ./packages.el
+(package! json-mode)
+#+end_src
+
 * Server
 #+begin_src emacs-lisp
 (server-force-delete)

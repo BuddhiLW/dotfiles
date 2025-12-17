@@ -1,12 +1,12 @@
 #!/usr/bin/bash
 
-wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-ubuntu2404.pin
-sudo mv cuda-ubuntu2404.pin /etc/apt/preferences.d/cuda-repository-pin-600
-wget https://developer.download.nvidia.com/compute/cuda/12.8.1/local_installers/cuda-repo-ubuntu2404-12-8-local_12.8.1-570.124.06-1_amd64.deb
-sudo dpkg -i cuda-repo-ubuntu2404-12-8-local_12.8.1-570.124.06-1_amd64.deb
-sudo cp /var/cuda-repo-ubuntu2404-12-8-local/cuda-*-keyring.gpg /usr/share/keyrings/
+cd $DOTFILES
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
+sudo dpkg -i cuda-keyring_1.1-1_all.deb
 sudo apt-get update
-sudo apt-get -y install cuda-toolkit-12-8
+sudo apt-get -y install cuda-toolkit-13-1
 sudo apt-get install -y cuda-drivers
-sudo apt-get install -y nvidia-driver-570-open
-sudo apt-get install -y cuda-drivers-fabricmanager-570
+sudo apt-get install -y cudnn9-cuda-13
+sudo apt-get -y install cudnn9-jit-cuda-13
+#sudo apt-get install -y nvidia-driver-570-open
+#sudo apt-get install -y cuda-drivers-fabricmanager-570

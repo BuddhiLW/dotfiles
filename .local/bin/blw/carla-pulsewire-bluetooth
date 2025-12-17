@@ -1,0 +1,6 @@
+#!/usr/bin/bash
+
+env -i HOME="$HOME" USER="$USER" DISPLAY="$DISPLAY" \
+XDG_RUNTIME_DIR="$XDG_RUNTIME_DIR" DBUS_SESSION_BUS_ADDRESS="$DBUS_SESSION_BUS_ADDRESS" \
+PATH="/usr/bin:/bin:/usr/sbin:/sbin" \
+pw-jack /usr/bin/carla

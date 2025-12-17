@@ -1,0 +1,11 @@
+#!/usr/bin/bash
+
+BRANCH="$@"
+
+if [ -z "$BRANCH" ]; then
+	BRANCH="main"
+fi
+
+git fetch origin
+git reset --hard origin/"$BRANCH"
+git clean -fd

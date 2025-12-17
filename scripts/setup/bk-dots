@@ -1,7 +1,36 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
-BACKUP=$HOME/dotbk-$(date +%s)
-mkdir $BACKUP
+BACKUP="$HOME/dotbk-$(date +%Y%m%d-%H%M%S)"
+mkdir -p "$BACKUP"
 
-mv "$HOME/.config" "$BACKUP/config"
-mv "$HOME/.local"  "$BACKUP/local"
+DOTFILES="${DOTFILES:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+
+# Load targets (shared)
+source $DOTFILES/scripts/setup/targets
+
+# Build list of destinations
+declare -a DESTS=()
+for rel in "${LINKSC[@]}"; do
+  DESTS+=("$HOME/$(basename "$rel")")
+done
+for rel in "${LINKSD[@]}"; do
+  DESTS+=("$HOME/$(basename "$rel")")
+done
+DESTS+=("${SPECIAL_DESTS[@]}")
+
+rel_to_home() {
+  local p="$1"
+  printf '%s\n' "${p#"$HOME/"}"
+}
+
+echo "⇒ Backup directory: $BACKUP"
+for dest in "${DESTS[@]}"; do
+  if [[ -e "$dest" || -L "$dest" ]]; then
+    to="$BACKUP/$(rel_to_home "$dest")"
+    mkdir -p "$(dirname "$to")"
+    echo "• Moving $dest -> $to"
+    mv -v "$dest" "$to"
+  fi
+done
+echo "✓ Backup complete."

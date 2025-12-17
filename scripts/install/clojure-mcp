@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+
+cd "$DOTFILES/gitthings"
+gh repo clone bhauman/clojure-mcp
+gh repo clone bhauman/clojure-mcp-light

@@ -1,25 +1,45 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
-## Link in `.config` folder
-LINKSC=("tmux/.tmux.conf" "vim/.vimrc")
+# Figure out DOTFILES root if not exported
+DOTFILES="${DOTFILES:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
 
-linkc() {
-  ln -sf $DOTFILES/.config/$1 $HOME
+# Load targets (shared)
+source $DOTFILES/scripts/setup/targets
+
+backup_then_link() {
+  local src="$1" dest="$2"
+  mkdir -p "$(dirname "$dest")"
+
+  if [[ -L "$dest" ]]; then
+    if [[ "$(readlink -f "$dest")" == "$(readlink -f "$src")" ]]; then
+      echo "✓ Already linked: $dest -> $src"
+      return 0
+    fi
+    mv -v "$dest" "$dest.bak.$(date +%Y%m%d-%H%M%S)"
+  elif [[ -e "$dest" ]]; then
+    mv -v "$dest" "$dest.bak.$(date +%Y%m%d-%H%M%S)"
+  fi
+
+  ln -svfT "$src" "$dest"
 }
 
-for i in "${LINKSC[@]}"; do
-  linkc $i
+# From LINKSC (inside .config)
+for rel in "${LINKSC[@]}"; do
+  src="$DOTFILES/.config/$rel"
+  dest="$HOME/$(basename "$rel")"
+  backup_then_link "$src" "$dest"
 done
 
-## Link directly the files; not in `.config` but are config files.
-LINKSD=(".bashrc" ".vim" ".doom.d")
-
-linkd() {
-  ln -sf "$DOTFILES/$1" "$HOME"
-}
-
-for i in "${LINKSD[@]}"; do
-  linkd "$i"
+# From LINKSD (direct in DOTFILES)
+for rel in "${LINKSD[@]}"; do
+  src="$DOTFILES/$rel"
+  dest="$HOME/$(basename "$rel")"
+  backup_then_link "$src" "$dest"
 done
 
-ln -sf $HOME/.config/X11/xinitrc $HOME/.xinitrc
+# Specials
+for dest in "${SPECIAL_DESTS[@]}"; do
+  src="$DOTFILES/.config/X11/xinitrc"  # adjust if different
+  backup_then_link "$src" "$dest"
+done

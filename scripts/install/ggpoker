@@ -1,0 +1,15 @@
+#!/usr/bin/bash
+
+sudo add-apt-repository ppa:lutris-team/lutris
+sudo apt update
+sudo apt install lutris wine winetricks
+winetricks corefonts vcrun2019 vcrun2017 dotnet48
+winetricks dotnet40 dotnet48
+
+mkdir -p "$HOME/Games/ggpoker"
+WINEPREFIX=$HOME/Games/ggpoker wineboot
+WINEPREFIX=$HOME/Games/ggpoker winetricks -q corefonts vcrun2019 vcrun2017 dotnet48
+cd $HOME/Downloads
+WINEPREFIX=$HOME/Games/ggpoker wine msiexec /i Installer_GGPoker_en.msi
+
+

@@ -1,0 +1,410 @@
+---
+description: CLARITY principles
+alwaysApply: true
+---
+
+# CLARITY — LLM Operating Contract
+
+## Purpose
+Provide a drop-in prompt template that instructs LLMs to apply CLARITY principles autonomously during code review, refactoring, and implementation.
+
+---
+
+## Standard Prompt Template
+
+Use this prompt when requesting code review or refactoring:
+
+```
+Apply the CLARITY rule:
+
+**Compose** (Decorator/Strategy/Builder), keep layers pure with Adapters.
+**Achieve speed architecturally** (cache/index/paginate IDs).
+**Represent intent** with Parameter/Value Objects (+ Builders/Options).
+**Guard inputs** via validation chains; add timeouts/metrics/logs.
+**Prefer generics** for typed results/caches; centralize errors/config.
+
+For each finding, output:
+
+### Findings
+(code smells + violated CLARITY principle)
+
+### Proposed Refactor
+(patterns to apply, new types/interfaces, before/after signatures)
+
+### Migration & Tests
+(compile-break steps, validation/infra tests, perf checks)
+
+### Expected Impact
+(readability improvements, safety guarantees, target latency/cache-hit rate)
+```
+
+---
+
+## Detailed Analysis Prompt
+
+For comprehensive refactoring sessions:
+
+```
+Perform a CLARITY audit on [FILE/PACKAGE]:
+
+1. **Composition (C)**
+   - Are behaviors extended via Decorator/Strategy/Builder?
+   - Is modification happening where composition should be used?
+   - Rate: ⚪️⚪️⚪️⚪️⚪️ (1-5)
+
+2. **Layer Purity (L)**
+   - Are layers cleanly separated (Presentation → Application → Domain → Infrastructure)?
+   - Are adapters used at boundaries?
+   - Are there any layer violations? (domain depending on infra?)
+   - Rate: ⚪️⚪️⚪️⚪️⚪️
+
+3. **Architectural Performance (A)**
+   - Is performance achieved through caching/indexing/pagination?
+   - Are there premature micro-optimizations?
+   - Are queries selecting only needed columns?
+   - Are IDs paginated instead of offset/limit?
+   - Rate: ⚪️⚪️⚪️⚪️⚪️
+
+4. **Represent Intent (R)**
+   - Are there long parameter lists (>3 params)?
+   - Are primitives used where Value Objects should be?
+   - Are domain concepts explicit in types?
+   - Is the ubiquitous language visible in code?
+   - Rate: ⚪️⚪️⚪️⚪️⚪️
+
+5. **Input Guarding (I)**
+   - Are inputs validated at boundaries?
+   - Are validation errors consistent and clear?
+   - Is there fail-fast and/or collect-all validation?
+   - Rate: ⚪️⚪️⚪️⚪️⚪️
+
+6. **Telemetry (T)**
+   - Are all I/O operations timed and logged?
+   - Are there context timeouts everywhere?
+   - Are metrics/counters/histograms emitted?
+   - Is structured logging used?
+   - Rate: ⚪️⚪️⚪️⚪️⚪️
+
+7. **Yield Safe Failure (Y)**
+   - Are there sane defaults for configuration?
+   - Is there graceful degradation on dependency failure?
+   - Are feature flags used for risky changes?
+   - Rate: ⚪️⚪️⚪️⚪️⚪️
+
+**Overall CLARITY Score**: __/35
+
+For each principle scoring <4, provide:
+- Specific code locations violating the principle
+- Concrete refactoring proposal with code examples
+- Test strategy for validating the refactor
+- Expected improvement metrics
+```
+
+---
+
+## Quick Code Smell Detection Prompt
+
+For rapid assessment:
+
+```
+Scan this code for CLARITY violations:
+
+**Report only**:
+1. Functions with >3 parameters → suggest Parameter Object
+2. Primitive obsession → suggest Value Object
+3. DB/cache logic in domain layer → suggest Adapter
+4. Cross-cutting concerns mixed with logic → suggest Decorator
+5. I/O without timeouts/logging → add instrumentation
+6. Magic numbers/strings → centralize as constants
+7. Type assertions (`interface{}`) → suggest generics
+
+Format:
+❌ Line X: [Smell] → ✅ [Pattern to apply]
+```
+
+---
+
+## Refactoring Response Template
+
+LLM should structure refactoring responses as follows:
+
+```markdown
+## Refactoring Analysis
+
+### 1. Findings
+
+#### [PRINCIPLE] — [Description]
+- **Location**: `file.go:123-145`
+- **Smell**: [Specific code smell]
+- **Impact**: [Why this matters]
+- **Violation**: [Which CLARITY principle is violated]
+
+### 2. Proposed Refactor
+
+#### Pattern: [Decorator/Builder/Value Object/etc.]
+
+**Before**:
+```go
+func OldWay(p1, p2, p3, p4 string) ([]Result, error) {
+    // ...
+}
+```
+
+**After**:
+```go
+type SearchParams struct {
+    Field1 string
+    Field2 ValueObject
+    Field3 *Optional[string]
+}
+
+type Result[T any] struct {
+    Data  []T
+    Total int
+    Meta  Metadata
+}
+
+func NewWay(params SearchParams) Result[Entity] {
+    // ...
+}
+```
+
+**New Types**:
+```go
+// Value Object for Field2
+type ValueObject struct { ... }
+
+// Parameter Object
+type SearchParams struct { ... }
+
+// Generic Result
+type Result[T any] struct { ... }
+```
+
+### 3. Migration Steps
+
+1. **Phase 1: Add new types** (non-breaking)
+   ```bash
+   # Add Value Objects, Parameter Objects, Result types
+   # No existing code changes yet
+   ```
+
+2. **Phase 2: Add new function alongside old** (parallel run)
+   ```go
+   func OldWay(...) ([]Result, error) { ... }  // Keep for compatibility
+   func NewWay(params SearchParams) Result[Entity] { ... }
+   ```
+
+3. **Phase 3: Migrate callers**
+   ```bash
+   # Update call sites one by one
+   # Compile should catch all issues
+   ```
+
+4. **Phase 4: Deprecate old function**
+   ```go
+   // Deprecated: Use NewWay instead
+   func OldWay(...) ([]Result, error) {
+       return NewWay(SearchParams{...})
+   }
+   ```
+
+5. **Phase 5: Remove old function** (after migration period)
+
+### 4. Testing Strategy
+
+#### Unit Tests
+```go
+func TestSearchParams_Validation(t *testing.T) {
+    tests := []struct {
+        name    string
+        params  SearchParams
+        wantErr bool
+    }{
+        {"valid params", validParams(), false},
+        {"empty field1", SearchParams{Field1: ""}, true},
+        // ...
+    }
+    // ...
+}
+```
+
+#### Integration Tests
+```go
+func TestNewWay_Integration(t *testing.T) {
+    // Test with real DB/cache
+}
+```
+
+#### Performance Tests
+```go
+func BenchmarkNewWay(b *testing.B) {
+    params := SearchParams{...}
+    for i := 0; i < b.N; i++ {
+        _ = NewWay(params)
+    }
+}
+```
+
+### 5. Expected Impact
+
+| Metric | Before | After | Improvement |
+|--------|--------|-------|-------------|
+| Readability | Parameter confusion | Clear intent | ✅ Easier to understand |
+| Safety | No validation | Guarded construction | ✅ Type-safe |
+| Performance | N+1 queries | ID pagination + cache | ✅ 10x faster |
+| Testability | Hard to mock | Pure functions | ✅ Easy to test |
+| Maintainability | Scattered validation | Centralized | ✅ Single source of truth |
+
+### 6. Checklist
+
+- [ ] New types compile
+- [ ] Unit tests pass (>90% coverage)
+- [ ] Integration tests pass
+- [ ] Performance benchmarks meet targets
+- [ ] Documentation updated
+- [ ] Migration guide written
+- [ ] Deprecation warnings added
+- [ ] No layer violations introduced
+- [ ] Telemetry added (logs/metrics)
+- [ ] Error handling consistent
+```
+
+---
+
+## Autonomous Code Review Mode
+
+For automated code review:
+
+```
+Review this Pull Request using CLARITY principles.
+
+For each file changed:
+
+1. **Automatic Pass** ✅ if:
+   - Uses Parameter/Value Objects appropriately
+   - Layers are pure (adapters at boundaries)
+   - All I/O has timeouts and logging
+   - Validation at boundaries
+   - No primitive obsession
+   - Generics used for type safety
+
+2. **Request Changes** ❌ if:
+   - Long parameter lists (>3)
+   - Domain depending on infrastructure
+   - I/O without instrumentation
+   - Magic numbers/strings
+   - Type assertions without necessity
+
+3. **Suggest Improvements** 💡 for:
+   - Potential performance improvements (caching/indexing)
+   - Better naming for intent
+   - Additional validation
+   - More comprehensive tests
+
+**Format**:
+```
+### File: `path/to/file.go`
+
+**Status**: ✅ Approved | ❌ Changes Requested | 💡 Suggestions
+
+**Findings**:
+- Line 42: ❌ Function has 5 parameters → Use Parameter Object
+- Line 78: 💡 Consider caching this query result
+- Line 123: ✅ Good use of Value Object for validation
+
+**Suggested Refactor**:
+[Concrete code example]
+```
+```
+
+---
+
+## Integration with Development Workflow
+
+### Pre-Commit Hook Prompt
+```bash
+# .git/hooks/pre-commit
+#!/bin/bash
+echo "Running CLARITY check..."
+llm --prompt "Quick CLARITY scan of staged files" $(git diff --cached --name-only)
+```
+
+### CI/CD Integration Prompt
+```yaml
+# .github/workflows/clarity-check.yml
+- name: CLARITY Analysis
+  run: |
+    llm analyze --template clarity \
+      --files $(git diff origin/main --name-only) \
+      --output clarity-report.md
+```
+
+### IDE Integration (Cursor/VSCode)
+```json
+{
+  "clarity.autoAnalyze": true,
+  "clarity.onSave": "quick-scan",
+  "clarity.onPR": "detailed-audit"
+}
+```
+
+---
+
+## Context-Specific Variations
+
+### For New Features
+```
+Design this feature using CLARITY:
+
+1. **Domain Model**: What Value Objects and entities are needed?
+2. **Boundaries**: Where are the adapters?
+3. **Performance**: What caching/indexing strategy?
+4. **Validation**: What guards at boundaries?
+5. **Observability**: What metrics/logs?
+6. **Failure Modes**: What are the fallbacks?
+
+Provide skeleton code with clear boundaries.
+```
+
+### For Bug Fixes
+```
+Analyze this bug through CLARITY lens:
+
+1. **Root Cause**: Which CLARITY principle was violated?
+2. **Fix**: How to fix while improving CLARITY score?
+3. **Prevention**: What pattern prevents recurrence?
+4. **Tests**: What tests catch this class of bugs?
+```
+
+### For Performance Issues
+```
+Optimize using CLARITY architectural performance principles:
+
+1. **Current Bottleneck**: Profile and identify
+2. **Architectural Solution**: Cache/index/paginate?
+3. **Before/After**: Show performance impact
+4. **Trade-offs**: What complexity does this add?
+```
+
+---
+
+## Summary
+
+This operating contract provides:
+
+✅ **Standard templates** for common scenarios
+✅ **Structured output format** for consistency
+✅ **Autonomous review capability** for LLMs
+✅ **Integration patterns** for dev workflow
+✅ **Context-specific variations** for different tasks
+
+**Usage**: Copy the relevant prompt template and paste it before your code/file reference.
+
+**Customization**: Adjust the prompts based on:
+- Team preferences
+- Language-specific idioms
+- Project constraints
+- Performance requirements
+
+**Iteration**: Refine prompts based on LLM output quality and team feedback.

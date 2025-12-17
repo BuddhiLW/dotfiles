@@ -1,0 +1,104 @@
+---
+description: CLARITY principles
+globs: 
+alwaysApply: true
+---
+
+# MASTER RULE: CLARITY
+
+## Purpose
+Provide a high-level design principle for building composable, maintainable, and performant systems that complement and extend SOLID principles.
+
+## The CLARITY Principle
+
+> **C L A R I T Y** — *Compose systems so intent is clear, boundaries are pure, performance is architectural, and failure is safe.*
+
+### Core Tenets
+
+#### **C — Compose, don't modify**
+- Prefer Decorator/Strategy/Builder patterns over direct modification
+- Extend behavior without changing existing code (Open/Closed Principle)
+- Use composition over inheritance
+
+#### **L — Layer purity**
+- Maintain clean architecture layers: Presentation → Application → Domain → Infrastructure
+- Use Adapters at boundaries to prevent leaks
+- Domain layer depends only on abstractions, never on infrastructure
+
+#### **A — Architectural performance**
+- Achieve speed through structural decisions (caching, indexing, pagination)
+- Don't optimize prematurely; optimize architecturally
+- Make performance decisions at design time, not implementation time
+
+#### **R — Represent intent**
+- Use Parameter Objects and Value Objects to express domain language
+- Make implicit concepts explicit through types
+- Encode business rules in the type system
+
+#### **I — Input is guarded**
+- Validate at boundaries using validation chains and guards
+- Fail fast for UX; collect all errors for diagnostics
+- Use consistent error codes and messages
+
+#### **T — Telemetry first**
+- Add metrics, timeouts, and structured logging everywhere
+- Make observability a first-class concern, not an afterthought
+- Instrument I/O operations with duration tracking
+
+#### **Y — Yield safe failure**
+- Use feature flags for gradual rollouts
+- Provide sane defaults for all configurations
+- Design for graceful degradation when dependencies fail
+
+---
+
+## Relationship to SOLID
+
+CLARITY extends SOLID by adding:
+- **Explicit performance architecture** (not covered by SOLID)
+- **Observability as a design principle** (T)
+- **Safe failure patterns** (Y)
+- **Intent representation through rich types** (R)
+- **Boundary validation patterns** (I)
+
+CLARITY assumes SOLID compliance and builds on top of it.
+
+---
+
+## When to Apply
+
+Apply CLARITY when:
+- [ ] Designing new systems or major refactors
+- [ ] Performance becomes a concern
+- [ ] System boundaries need clarification
+- [ ] Observability is lacking
+- [ ] Error handling is inconsistent
+- [ ] Intent is unclear from code
+
+---
+
+## Quick Reference
+
+| Letter | Principle | Pattern Examples |
+|--------|-----------|------------------|
+| C | Compose | Decorator, Strategy, Builder, Functional Options |
+| L | Layer purity | Hexagonal Architecture, Ports & Adapters, Clean Architecture |
+| A | Architectural performance | Cache-aside, Index-first queries, ID pagination |
+| R | Represent intent | Parameter Objects, Value Objects, Domain Types |
+| I | Input guarded | Chain of Responsibility, Guard Pattern, Validation Pipeline |
+| T | Telemetry first | Structured logging, Metrics, Distributed tracing |
+| Y | Yield safe failure | Feature flags, Circuit breakers, Fallback strategies |
+
+---
+
+## Summary
+
+**Golden Rule**: Code should read like a conversation in the domain language, be fast by design, safe by default, and observable everywhere.
+
+CLARITY ensures that systems are:
+- ✅ **Composable** (easy to extend)
+- ✅ **Clear** (intent is obvious)
+- ✅ **Correct** (validated inputs)
+- ✅ **Fast** (architectural decisions)
+- ✅ **Observable** (instrumented)
+- ✅ **Resilient** (safe failure modes)

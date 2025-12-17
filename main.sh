@@ -8,7 +8,7 @@ SC="$DOTFILES/scripts/"
 cd $SC
 bash ./setup/bk-dots
 bash ./setup/init
-bash ./scripts/setup/link-config
+bash ./setup/link-config
 
 source $HOME/.bashrc
 

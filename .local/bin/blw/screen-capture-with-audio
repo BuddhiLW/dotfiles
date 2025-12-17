@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+
+DATE=$(date +%Y-%m-%d-%H-%M-%S)
+
+ffmpeg -f x11grab -video_size 2560x1600 -framerate 30 -i $DISPLAY -f alsa -i default -c:v libx264 -preset ultrafast -c:a aac "screen-capture-$DATE.mp4"
+
+

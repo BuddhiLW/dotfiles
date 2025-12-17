@@ -1,0 +1,682 @@
+---
+description: CLARITY principles
+globs: 
+alwaysApply: true
+---
+
+# CLARITY Sub-Rules — Actionable Patterns
+
+## Purpose
+Provide specific "Trigger → Action" patterns that LLMs and developers can apply automatically to improve code quality using CLARITY principles.
+
+---
+
+## 1. Parameter & Result Objects
+
+**Trigger**: 
+- Functions with 4+ parameters
+- Tuple returns like `([]*Entity, int, error)`
+- Parameter order confusion
+- Difficulty adding new parameters
+
+**Action**:
+1. Create a **Parameter Object** (e.g., `QueryOptions`, `SearchParams`)
+2. Create a **Result[T]** wrapper with metadata
+3. Use **Functional Options** pattern for optional parameters
+4. Make function signature: `func Query(opts QueryOptions) Result[Entity]`
+
+**Example**:
+```go
+// ❌ Before
+func Search(name, city string, minAge, maxAge int, offset, limit int, sort string) ([]*User, int, error)
+
+// ✅ After
+type SearchParams struct {
+    Name     string
+    City     string
+    AgeRange AgeRange
+    Page     PageRequest
+    Sort     SortOrder
+}
+
+type Result[T any] struct {
+    Data     []T
+    Total    int
+    Duration time.Duration
+    Source   string
+}
+
+func Search(params SearchParams) Result[User]
+```
+
+**Benefits**:
+- Order-independent parameters
+- Easy to add new fields (Open/Closed Principle)
+- Self-documenting
+- Type-safe defaults
+
+---
+
+## 2. Value Objects for Policy-Laden Data
+
+**Trigger**:
+- Primitive obsession (strings for dates, ints for IDs)
+- Repeated validation logic
+- Business rules scattered across codebase
+- Type confusion (what string format is this?)
+
+**Action**:
+1. Create **Value Object** with private fields
+2. Add guarded constructor (`NewX()`) that validates
+3. Provide typed methods (no raw getters)
+4. Make immutable
+
+**Example**:
+```go
+// ❌ Before
+func ProcessDate(dateStr string) error {
+    // Repeated parsing/validation everywhere
+    date, err := time.Parse("2006-01-02", dateStr)
+    if err != nil { return err }
+    if date.After(time.Now()) { return errors.New("future date") }
+    // ...
+}
+
+// ✅ After
+type RecordDate struct {
+    value time.Time
+}
+
+func NewRecordDate(s string) (RecordDate, error) {
+    t, err := time.Parse("2006-01-02", s)
+    if err != nil { return RecordDate{}, fmt.Errorf("invalid date format: %w", err) }
+    if t.After(time.Now()) { return RecordDate{}, errors.New("date cannot be in future") }
+    return RecordDate{value: t}, nil
+}
+
+func (d RecordDate) IsOlderThan(years int) bool {
+    return time.Since(d.value) > time.Duration(years)*365*24*time.Hour
+}
+```
+
+**Common Value Objects**:
+- `DateRange`, `TimeWindow`
+- `PageRequest`, `PageResult`
+- `Email`, `PhoneNumber`
+- `Money`, `Percentage`
+- `NormalizedText`, `Slug`
+
+---
+
+## 3. Builders for Complex Construction
+
+**Trigger**:
+- Complex object initialization with many steps
+- Optional fields requiring validation
+- Need for fluent, readable construction
+- Repeated setup code
+
+**Action**:
+1. Create **Builder** with fluent interface
+2. Keep constructor minimal (required fields only)
+3. Add validation in `Build()` method
+4. Return errors from `Build()`, not setters
+
+**Example**:
+```go
+// ✅ Builder Pattern
+type QueryBuilder struct {
+    filters []Filter
+    sort    SortOrder
+    page    PageRequest
+    cache   bool
+}
+
+func NewQuery() *QueryBuilder {
+    return &QueryBuilder{
+        page:  DefaultPage(),
+        cache: true,
+    }
+}
+
+func (b *QueryBuilder) WithFilter(f Filter) *QueryBuilder {
+    b.filters = append(b.filters, f)
+    return b
+}
+
+func (b *QueryBuilder) WithSort(s SortOrder) *QueryBuilder {
+    b.sort = s
+    return b
+}
+
+func (b *QueryBuilder) Build() (Query, error) {
+    if len(b.filters) == 0 {
+        return Query{}, errors.New("at least one filter required")
+    }
+    return Query{
+        filters: b.filters,
+        sort:    b.sort,
+        page:    b.page,
+        cache:   b.cache,
+    }, nil
+}
+```
+
+---
+
+## 4. Adapters at Boundaries
+
+**Trigger**:
+- Database/encoding/cache code in domain layer
+- Domain types coupled to infrastructure
+- Cannot test domain logic without infrastructure
+- Violates Dependency Inversion Principle
+
+**Action**:
+1. Define **Port** (interface) in domain layer
+2. Implement **Adapter** in infrastructure layer
+3. Inject adapter through constructor
+4. Domain depends only on interface, never on implementation
+
+**Example**:
+```go
+// Domain Layer (port)
+type UserRepository interface {
+    FindByID(ctx context.Context, id string) (User, error)
+    Save(ctx context.Context, user User) error
+}
+
+// Infrastructure Layer (adapter)
+type PostgresUserRepository struct {
+    db *sql.DB
+}
+
+func (r *PostgresUserRepository) FindByID(ctx context.Context, id string) (User, error) {
+    // SQL/scanning details hidden here
+    var dto UserDTO
+    err := r.db.QueryRowContext(ctx, "SELECT ...").Scan(&dto)
+    return dto.ToDomain(), err
+}
+
+// Application Layer (composition)
+type UserService struct {
+    repo UserRepository  // Depends on abstraction
+}
+
+func NewUserService(repo UserRepository) *UserService {
+    return &UserService{repo: repo}
+}
+```
+
+---
+
+## 5. Decorators for Cross-Cutting Concerns
+
+**Trigger**:
+- Logging/metrics/caching mixed with business logic
+- Repeated cross-cutting code
+- Need to add behavior without modifying existing code
+
+**Action**:
+1. Create **Decorator** implementing same interface
+2. Wrap original implementation
+3. Add cross-cutting behavior before/after delegation
+4. Stack multiple decorators for composition
+
+**Example**:
+```go
+// Original implementation
+type SimpleUserService struct { ... }
+
+// Caching decorator
+type CachedUserService struct {
+    wrapped UserService
+    cache   Cache
+}
+
+func (c *CachedUserService) FindByID(ctx context.Context, id string) (User, error) {
+    if user, ok := c.cache.Get(id); ok {
+        return user, nil
+    }
+    user, err := c.wrapped.FindByID(ctx, id)
+    if err == nil {
+        c.cache.Set(id, user)
+    }
+    return user, err
+}
+
+// Logging decorator
+type LoggedUserService struct {
+    wrapped UserService
+    logger  Logger
+}
+
+func (l *LoggedUserService) FindByID(ctx context.Context, id string) (User, error) {
+    start := time.Now()
+    user, err := l.wrapped.FindByID(ctx, id)
+    l.logger.Info("FindByID", "id", id, "duration", time.Since(start), "error", err)
+    return user, err
+}
+
+// Composition
+service := NewSimpleUserService(repo)
+service = NewCachedUserService(service, cache)
+service = NewLoggedUserService(service, logger)
+```
+
+---
+
+## 6. Micro-Domain Decomposition (FieldSet → Builder → Entity)
+
+**Trigger**:
+- 200+ line database methods
+- Complex scanning/building logic inline
+- Difficult to test entity construction
+- Mixed concerns (scanning + validation + construction)
+
+**Action**:
+1. Scan DB rows into **FieldSet** (DTO/struct)
+2. Pass FieldSet to **EntityBuilder** (Factory)
+3. Builder validates and constructs domain entity
+4. Keep query method simple: scan → build → return
+
+**Example**:
+```go
+// Step 1: FieldSet (data transfer)
+type UserFieldSet struct {
+    ID        string
+    Email     string
+    CreatedAt time.Time
+    // Raw DB fields
+}
+
+// Step 2: Builder (validation + construction)
+type UserBuilder struct {
+    fields UserFieldSet
+}
+
+func NewUserBuilder(fs UserFieldSet) *UserBuilder {
+    return &UserBuilder{fields: fs}
+}
+
+func (b *UserBuilder) Build() (User, error) {
+    email, err := NewEmail(b.fields.Email)
+    if err != nil {
+        return User{}, fmt.Errorf("invalid email: %w", err)
+    }
+    return User{
+        id:        UserID(b.fields.ID),
+        email:     email,
+        createdAt: b.fields.CreatedAt,
+    }, nil
+}
+
+// Step 3: Repository (simple pipeline)
+func (r *PostgresUserRepository) FindByID(ctx context.Context, id string) (User, error) {
+    var fs UserFieldSet
+    err := r.db.QueryRowContext(ctx, "SELECT ...").Scan(&fs.ID, &fs.Email, &fs.CreatedAt)
+    if err != nil {
+        return User{}, err
+    }
+    return NewUserBuilder(fs).Build()
+}
+```
+
+---
+
+## 7. Validation Chains (Guard Pattern)
+
+**Trigger**:
+- Scattered validation across codebase
+- Inconsistent error messages
+- Need to fail-fast OR collect all errors
+- Difficult to add new validations
+
+**Action**:
+1. Create **Validator** interface
+2. Implement validators as chain links
+3. Compose validators using Chain of Responsibility
+4. Support both fail-fast and collect-all modes
+
+**Example**:
+```go
+type Validator interface {
+    Validate(ctx context.Context) error
+}
+
+type ValidationChain struct {
+    validators []Validator
+}
+
+func (c *ValidationChain) Validate(ctx context.Context) error {
+    for _, v := range c.validators {
+        if err := v.Validate(ctx); err != nil {
+            return err  // Fail-fast
+        }
+    }
+    return nil
+}
+
+func (c *ValidationChain) ValidateAll(ctx context.Context) []error {
+    var errs []error
+    for _, v := range c.validators {
+        if err := v.Validate(ctx); err != nil {
+            errs = append(errs, err)  // Collect all
+        }
+    }
+    return errs
+}
+
+// Usage
+chain := &ValidationChain{
+    validators: []Validator{
+        &NotEmptyValidator{field: "email"},
+        &EmailFormatValidator{email: email},
+        &UniqueEmailValidator{repo: repo, email: email},
+    },
+}
+if err := chain.Validate(ctx); err != nil {
+    return err
+}
+```
+
+---
+
+## 8. Architectural Performance
+
+**Trigger**:
+- Slow pagination queries
+- Full table scans
+- N+1 query problems
+- Repeated COUNT(*) queries
+
+**Action**:
+1. **Paginate IDs first**, then fetch details
+2. Use **prefetch caching** for small/stable datasets
+3. **Select only needed columns**
+4. **Index** frequently filtered/sorted columns
+5. **Filter early** in SQL JOINs
+
+**Example**:
+```go
+// ❌ Before: Full scan with offset
+func GetUsers(offset, limit int) ([]User, error) {
+    return db.Query("SELECT * FROM users LIMIT ? OFFSET ?", limit, offset)
+}
+
+// ✅ After: ID pagination with caching
+func GetUsers(lastID string, limit int) ([]User, error) {
+    // Step 1: Get IDs only (fast)
+    ids, err := db.Query("SELECT id FROM users WHERE id > ? ORDER BY id LIMIT ?", lastID, limit)
+    
+    // Step 2: Check cache for each ID
+    var uncached []string
+    var users []User
+    for _, id := range ids {
+        if user, ok := cache.Get(id); ok {
+            users = append(users, user)
+        } else {
+            uncached = append(uncached, id)
+        }
+    }
+    
+    // Step 3: Fetch uncached in batch
+    if len(uncached) > 0 {
+        fetched, err := db.Query("SELECT * FROM users WHERE id IN (?)", uncached)
+        users = append(users, fetched...)
+        // Step 4: Update cache
+        for _, u := range fetched {
+            cache.Set(u.ID, u)
+        }
+    }
+    
+    return users, nil
+}
+```
+
+---
+
+## 9. Cache Strategy as Policy
+
+**Trigger**:
+- Per-page cache misses
+- Unstable cache keys
+- No cache invalidation strategy
+- Cold start performance issues
+
+**Action**:
+1. Use **single "All" cache key** for small datasets (<10k items)
+2. Page in memory, not in cache keys
+3. Use **stable keying** (not query-dependent)
+4. Set **TTL based on data volatility**
+5. Implement **background refresh**
+6. **Stale-serve on errors**
+
+**Example**:
+```go
+type CachePolicy struct {
+    Key         string
+    TTL         time.Duration
+    RefreshFunc func(context.Context) (interface{}, error)
+    OnError     func(error) interface{}  // Stale fallback
+}
+
+type TypedCache[T any] struct {
+    policy CachePolicy
+    store  Cache
+}
+
+func (c *TypedCache[T]) Get(ctx context.Context) (T, error) {
+    // Try cache first
+    if val, ok := c.store.Get(c.policy.Key); ok {
+        return val.(T), nil
+    }
+    
+    // Fetch fresh
+    val, err := c.policy.RefreshFunc(ctx)
+    if err != nil {
+        // Return stale if available
+        if stale := c.policy.OnError(err); stale != nil {
+            return stale.(T), nil
+        }
+        return *new(T), err
+    }
+    
+    // Update cache
+    c.store.Set(c.policy.Key, val, c.policy.TTL)
+    return val.(T), nil
+}
+```
+
+---
+
+## 10. Observability & Timeouts Everywhere
+
+**Trigger**:
+- I/O operations without timeouts
+- No duration metrics
+- Difficult to debug slow requests
+- No visibility into external dependencies
+
+**Action**:
+1. Wrap all I/O with **context timeouts**
+2. Log **duration** for every operation
+3. Emit **metrics** (counters, histograms)
+4. Add **health checks** for dependencies
+5. Use **structured logging** with context
+
+**Example**:
+```go
+func (r *InstrumentedRepository) FindByID(ctx context.Context, id string) (User, error) {
+    // 1. Add timeout
+    ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
+    defer cancel()
+    
+    // 2. Track duration
+    start := time.Now()
+    defer func() {
+        duration := time.Since(start)
+        metrics.Histogram("repo.find_by_id.duration", duration)
+        if duration > 1*time.Second {
+            log.Warn("slow query", "id", id, "duration", duration)
+        }
+    }()
+    
+    // 3. Execute with instrumentation
+    user, err := r.wrapped.FindByID(ctx, id)
+    
+    // 4. Track outcomes
+    if err != nil {
+        metrics.Counter("repo.find_by_id.errors").Inc()
+        log.Error("find failed", "id", id, "error", err)
+        return User{}, err
+    }
+    
+    metrics.Counter("repo.find_by_id.success").Inc()
+    return user, nil
+}
+```
+
+---
+
+## 11. Error & Config Hygiene
+
+**Trigger**:
+- Stringly-typed errors ("user not found" vs "User not found")
+- Magic numbers in code
+- Environment variables accessed directly
+- No validation of configuration
+
+**Action**:
+1. Centralize **error constants** with codes
+2. Implement **Resilient Configuration** pattern
+3. Validate config at startup
+4. Provide **sane defaults**
+
+**Example**:
+```go
+// Centralized errors
+var (
+    ErrUserNotFound = errors.New("USER_NOT_FOUND: user does not exist")
+    ErrInvalidEmail = errors.New("INVALID_EMAIL: email format is invalid")
+)
+
+// Resilient configuration
+type Config struct {
+    DBHost       string
+    DBPort       int
+    MaxConns     int
+    Timeout      time.Duration
+    CacheTTL     time.Duration
+}
+
+func LoadConfig() (Config, error) {
+    cfg := Config{
+        // Sane defaults
+        DBPort:   5432,
+        MaxConns: 10,
+        Timeout:  30 * time.Second,
+        CacheTTL: 5 * time.Minute,
+    }
+    
+    // Override from environment
+    if host := os.Getenv("DB_HOST"); host != "" {
+        cfg.DBHost = host
+    }
+    if port := os.Getenv("DB_PORT"); port != "" {
+        cfg.DBPort, _ = strconv.Atoi(port)
+    }
+    
+    // Validate
+    if cfg.DBHost == "" {
+        return Config{}, errors.New("DB_HOST is required")
+    }
+    if cfg.MaxConns < 1 {
+        return Config{}, errors.New("MAX_CONNS must be positive")
+    }
+    
+    return cfg, nil
+}
+```
+
+---
+
+## 12. Generics for Safety & Reuse
+
+**Trigger**:
+- Repeated code for different types
+- Type assertions (`interface{}` casts)
+- Loss of type safety
+- Cannot leverage compiler for correctness
+
+**Action**:
+1. Use **generics** for containers (Result[T], Cache[T])
+2. Create **type-safe wrappers** for common patterns
+3. Let compiler enforce constraints
+
+**Example**:
+```go
+// Generic result wrapper
+type Result[T any] struct {
+    Data     T
+    Error    error
+    Metadata ResultMetadata
+}
+
+func (r Result[T]) Unwrap() (T, error) {
+    return r.Data, r.Error
+}
+
+func (r Result[T]) OrDefault(def T) T {
+    if r.Error != nil {
+        return def
+    }
+    return r.Data
+}
+
+// Generic cache
+type TypedCache[T any] struct {
+    store map[string]CacheEntry[T]
+    mu    sync.RWMutex
+}
+
+func (c *TypedCache[T]) Get(key string) (T, bool) {
+    c.mu.RLock()
+    defer c.mu.RUnlock()
+    entry, ok := c.store[key]
+    if !ok || entry.IsExpired() {
+        return *new(T), false
+    }
+    return entry.Value, true
+}
+
+func (c *TypedCache[T]) Set(key string, val T, ttl time.Duration) {
+    c.mu.Lock()
+    defer c.mu.Unlock()
+    c.store[key] = CacheEntry[T]{
+        Value:     val,
+        ExpiresAt: time.Now().Add(ttl),
+    }
+}
+```
+
+---
+
+## Summary
+
+These 12 sub-rules provide concrete patterns for applying CLARITY principles:
+
+1. **Parameter & Result Objects** → Clear intent, OCP compliance
+2. **Value Objects** → Domain language, encapsulated validation
+3. **Builders** → Fluent construction, validation at build time
+4. **Adapters** → Layer purity, DIP compliance
+5. **Decorators** → Cross-cutting concerns, composition over modification
+6. **Micro-Domain Decomposition** → Separation of concerns in data access
+7. **Validation Chains** → Consistent, composable validation
+8. **Architectural Performance** → Speed by design, not hacks
+9. **Cache Strategy** → Predictable, policy-driven caching
+10. **Observability & Timeouts** → Safe I/O, instrumented everywhere
+11. **Error & Config Hygiene** → Centralized, validated, defaulted
+12. **Generics** → Type safety, reusable abstractions
+
+**Use these patterns as a checklist during code review and refactoring.**

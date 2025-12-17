@@ -35,7 +35,10 @@ export ELM_B="$CS_LANG_B/Elm"
 export PP="$HOME/PP" #Programming Projects
 export CS_LANG_B="$CS_B/Languages"
 export GUIX_PROFILE="/home/$USER/.guix-profile" # Environmental variable for GUIX
-export DOTFILES="$HOME/dotfiles/"
+
+export DOTFILES="$HOME/dotfiles"
+export KUBECONFIG="$DOTFILES/talos/base/kubeconfig"
+export TALOSCONFIG="$DOTFILES/talos/base/talosconfig"
 export INSTALL_SCRIPTS="$DOTFILES/scripts/install/"
 export DOOMDIR="$HOME/.doom.d/"
 export DOOM="$HOME/doom-emacs/"
@@ -45,7 +48,7 @@ export SNIPPETS="$DOTFILES/snippets"
 export keg="$DOTFILES/keg"
 export SEARX_SETTINGS_PATH="$HOME/.config/searx/"
 export SNIPPETSROB="$DOTFILES/dotfiles-rob/snippets"
-export HELP_BROWSER=lynx
+# export HELP_BROWSER=lynx
 export DESKTOP="$HOME/Desktop"
 export DOCUMENTS="$HOME/Documents"
 export WALLPAPER_DIR="$HOME/Pictures/Wallpapers/Animated"
@@ -67,6 +70,26 @@ export GHCUP="$GHCUP_INSTALL_BASE_PREFIX/.ghcup/bin"
 export GOPATH="$HOME/go"
 export GOBIN="$HOME/go/bin"
 export GOPRIVATE="github.com/Assistencia-Familiar-Francana/*"
+
+# Configure Git authentication for private GitHub modules
+# Retrieve PAT from password store and configure Git to use it
+# if command -v pass &> /dev/null; then
+#   # Try to get PAT from password store (try ghp first, then pat as fallback)
+#   if GITHUB_TOKEN=$(pass Github/BuddhiLW/ghp/all 2>/dev/null | head -1 || pass Github/BuddhiLW/pat/all 2>/dev/null | head -1); then
+#     export GITHUB_TOKEN
+#     # Configure Git to use token for GitHub HTTPS URLs using credential helper
+#     # This approach is more reliable than URL rewriting
+#     git config --global credential.helper store 2>/dev/null || true
+#     # Write credentials to ~/.git-credentials
+#     echo "https://${GITHUB_TOKEN}@github.com" > ~/.git-credentials 2>/dev/null || true
+#     chmod 600 ~/.git-credentials 2>/dev/null || true
+#     # Clean up any old URL rewrite entries to prevent duplicates
+#     git config --global --get-regexp url 2>/dev/null | cut -d' ' -f1 | xargs -r -I {} git config --global --unset {} 2>/dev/null || true
+#     # Set URL rewrite with current token
+#     git config --global url."https://${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/" 2>/dev/null || true
+#   fi
+# fi
+
 export NATIVEFIER="$HOME/.local/nativefier"
 export GTAGSOBJDIRPREFIX="$HOME/.cache/gtags/"
 export GTAGSCONF="/etc/gtags/gtags.conf"
@@ -79,7 +102,7 @@ export ANDROID_AVD_HOME="$HOME/Android/system-images/"
 export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 
-export OPENAI_API_KEY="$(pass LLMs/OpenAI-keys)"
+# export OPENAI_API_KEY="$(pass LLMs/OpenAI-keys)"
 export GOROOT="/usr/local/go"
 export LC_COLLATE=C
 export LESS_TERMCAP_mb="[35m" # magenta
@@ -93,7 +116,7 @@ export LESS_TERMCAP_us="[4m"  # underline
 [[ -d /.vim/spell ]] && export VIMSPELL=("$HOME/.vim/spell/*.add")
 
 # ------------------------------- pager ------------------------------
-
+#export PAGER=ov
 if [[ -x /usr/bin/lesspipe ]]; then
     export LESSOPEN="| /usr/bin/lesspipe %s"
     export LESSCLOSE="/usr/bin/lesspipe %s %s"
@@ -164,7 +187,6 @@ pathprepend \
     "$GUIX_PROFILE/bin" \
     "$HOME/.emacs.d/bin/" \
     "$HOME/.conda/bin/" \
-    "$HOME/.local/share/cargo/bin/" \
     "$HOME/.roswell/bin/" \
     "$DOTFILES/gitthings/flutter/flutter/bin" \
     "$DOTFILES/gitthings/graalvm/bin" \
@@ -238,8 +260,8 @@ __ps1() { # g='\[\e[30m\]'
     # double="$g╔ $u\u$g$PROMPT_AT$h\h$g:$w$dir\n$g║ $B\n$g╚ $p$P$x $w(λ) "
 
     short="$u\u$g$PROMPT_AT$h\h$g:$w$dir$B$w($pλ$w)$x "
-    long="$g꧁ $u\u$g$PROMPT_AT$h\h$g ⟐ $w$dir$B\n$g꧂ $w($pλ$w)$x "
-    double="$g꧁ $u\u$g$PROMPT_AT$h\h$g ⟐ $w$dir\n$g║ $B\n$g꧂ $w($pλ$w)$x "
+    long="$g꧁  $u\u$g$PROMPT_AT$h\h$g ⟐ $w$dir$B\n$g꧂  $w($pλ$w)$x "
+    double="$g꧁  $u\u$g$PROMPT_AT$h\h$g ⟐ $w$dir\n$g║ $B\n$g꧂  $w($pλ$w)$x "
 
     if ((${#countme} > PROMPT_MAX)); then
         PS1="$double"
@@ -300,8 +322,8 @@ alias view='vi -R' # which is usually linked to vim
 alias c='printf "\e[H\e[2J"'
 alias clear='printf "\e[H\e[2J"'
 alias coin="clip '(yes|no)'"
-alias grep="grep -P"
 alias minidockenv=". <(minikube docker-env)"
+alias grep='grep --color=auto'
 # alias torb="start-tor-browser"
 alias books="cd $BOOKS"
 alias zp="zhpron"
@@ -356,7 +378,7 @@ _have kubectl && . <(kubectl completion bash)
 _have clusterctl && . <(clusterctl completion bash)
 _have k && complete -o default -F __start_kubectl k
 _have kind && . <(kind completion bash)
-_have yq && . <(yq shell-completion bash)
+# _have yq && . <(yq shell-completion bash)
 _have helm && . <(helm completion bash)
 _have minikube && . <(minikube completion bash)
 _have mk && complete -o default -F __start_minikube mk
@@ -375,11 +397,8 @@ export VISUAL="vim"
 ## export VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI mode
 export TERMINAL="st"
 #export BROWSER="qutebrowser"
-export BROWSER="chromium"
-export CHROME_EXECUTABLE="chromium"
-
-# PPI related
-export LINFO="$HOME/facti/linfo-ppi"
+#export BROWSER="chromium"
+#export CHROME_EXECUTABLE="chromium"
 
 # Clojure related
 export CLJ="$HOME/PP/Clojure/"
@@ -556,19 +575,19 @@ complete -C lazywal lazywal
 
 . "$HOME/.local/share/../bin/env"
 export PATH=~/.npm-global/bin:$PATH
-. "$HOME/.local/share/cargo/env"
+# . "$HOME/.local/share/cargo/env"
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/ramanujan/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$('/home/lages/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/home/ramanujan/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/ramanujan/anaconda3/etc/profile.d/conda.sh"
+    if [ -f "/home/lages/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/lages/anaconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/home/ramanujan/anaconda3/bin:$PATH"
+        export PATH="/home/lages/anaconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
@@ -601,12 +620,26 @@ if ! shopt -oq posix; then
   fi
 fi
 
-export NVM_DIR="$HOME/.config/nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 export DOCKER_HOST=unix:///run/user/$(id -u)/docker.sock
 
 newshell
 [[ ${BLE_VERSION-} ]] && ble-attach
 . "$HOME/.local/share/cargo/env"
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+. "/home/ramanujan/.local/share/cargo/env"
+export PATH="$HOME/.local/bin:$PATH"
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/home/ramanujan/google-cloud-sdk/path.bash.inc' ]; then . '/home/ramanujan/google-cloud-sdk/path.bash.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/home/ramanujan/google-cloud-sdk/completion.bash.inc' ]; then . '/home/ramanujan/google-cloud-sdk/completion.bash.inc'; fi
+
+export FLYCTL_INSTALL="$HOME/.fly"
+export PATH="$FLYCTL_INSTALL/bin:$PATH"
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+. "/home/lages/.local/share/cargo/env"
+
+export NVM_DIR="$HOME/.config/nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+
+PASS="$(pass transmission/buddhilw)"
+
+sudo docker run --net=host -d -e HOSTPORT=localhost:9091 -e TR_AUTH=buddhilw:"$PASS" --name=transmission-tracker-add andrewmhub/transmission-tracker-add:latest

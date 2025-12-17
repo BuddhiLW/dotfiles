@@ -6,7 +6,7 @@
 ### The directory you want to install LC0 at:
 cd $DOTFILES/gitthings/
 
-git clone -b release/0.31 --recurse-submodules https://github.com/LeelaChessZero/lc0.git
+git clone -b release/0.32 --recurse-submodules https://github.com/LeelaChessZero/lc0.git
 cd lc0
 ./build.sh
 sudo cp build/release/lc0 /usr/games/lc0

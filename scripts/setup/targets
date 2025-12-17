@@ -1,0 +1,10 @@
+# scripts/setup/targets.sh
+# Items inside DOTFILES/.config whose basename goes to $HOME
+LINKSC=("tmux/.tmux.conf" "vim/.vimrc")
+
+# Items at DOTFILES/<name> -> $HOME/<name>
+LINKSD=(".bashrc" ".vim" ".doom.d")
+
+# Absolute destinations that get linked specially
+SPECIAL_DESTS=("$HOME/.xinitrc")
+

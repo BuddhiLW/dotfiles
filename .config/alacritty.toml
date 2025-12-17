@@ -81,7 +81,7 @@ family = "Ubuntu"
 family = "Ubuntu Mono"
 
 [font.normal]
-family = "Bitstream Vera Sans Mono"
+family = "Liberation Mono" # "Bitstream Vera Sans Mono"
 
 [window]
 opacity = 0.9

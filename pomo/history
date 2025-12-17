@@ -1,4 +1,4 @@
-0001-01-01T00:00:00Z duration=25
+0001-01-01T00:00:00Z duration=153722867
 2021-12-13T16:52:39-03:00 description="Comp Prog" duration=25
 2021-12-13T17:39:54-03:00 duration=1
 2021-12-13T17:41:19-03:00 description=Programação duration=4
@@ -600,3 +600,17 @@
 2025-07-22T14:22:20-03:00 description=kubernetes duration=60
 2025-07-22T16:27:31-03:00 description="kubernetes: service discovery" duration=1621
 2025-07-31T11:24:50-03:00 description="download music" duration=60
+2025-08-29T20:36:46-03:00 description="Literatura - O vermelho e o preto" duration=9
+2025-08-29T21:15:31-03:00 description="DevOps: kubernetes, gitops, terraform etc" duration=60
+2025-09-12T09:49:26-03:00 description="feat: argocd syncing cartas app" duration=91
+2025-09-12T09:49:26-03:00 description="feat: argocd syncing cartas app" duration=25
+2025-09-12T11:49:08-03:00 description="feat: argocd syncing cartas app" duration=40
+2025-09-17T11:15:32-03:00 description="feat: kubernetes bulletproof DNS/CNI setup" duration=40
+2025-09-22T10:21:19-03:00 description="feat: kubernetes bulletproof DNS/CNI setup" duration=40
+2025-09-23T12:24:39-03:00 description="chore: wire all microsservices to CI/CD" duration=60
+2025-09-23T15:07:44-03:00 description="chore: wire all microsservices to CI/CD" duration=22
+2025-09-24T11:09:59-03:00 description="chore: wire all microsservices to CI/CD" duration=60
+2025-09-30T15:35:33-03:00 description="feat: k8s overlays" duration=60
+2025-10-11T15:04:05-03:00 description="rw: obitos-backend - utf8" duration=40
+2025-10-13T18:19:04-03:00 description="staging obituary fullstack" duration=60
+2025-10-22T10:17:33-03:00 description="CI/CD: cartas" duration=30

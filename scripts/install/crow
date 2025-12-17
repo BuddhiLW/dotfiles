@@ -1,0 +1,26 @@
+#!/usr/bin/bash
+
+
+cd $DOTFILES/gitthings
+
+git clone https://github.com/crow-translate/crow-translate.git
+cd crow-translate
+git submodule update --init --recursive
+
+sudo apt-get install libtesseract-dev libleptonica-dev
+
+
+## qt libraries to build the project
+sudo apt-get install extra-cmake-modules extra-cmake-modules libkf5wayland-dev qtbase5-dev qttools5-dev libqt5x11extras5-dev qtmultimedia5-dev libkf5notifications-dev libqt5svg5-dev
+
+sudo apt-get install extra-cmake-modules qt6-base-dev qt6-tools-dev qt6-multimedia-dev libkf5notifications-dev
+
+## Multimedia support
+sudo apt-get install gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-libav libqt5multimedia5-plugins
+
+mkdir build
+cd build
+cmake .. # Or `cmake -D CMAKE_BUILD_TYPE=Release ..` for single-configuration generators such as Ninja or GNU Make
+cmake --build . # Or `cmake --build . --config Release` for multi-config generators such as Visual Studio Generators or Xcode
+PATH=/usr/bin:/bin:/usr/local/bin LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu cmake --build . -j$(nproc) 2>&1
+sudo cmake --install .
