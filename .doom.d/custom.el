@@ -7,8 +7,8 @@
  '(conda-anaconda-home "~/.conda/")
  '(elfeed-feeds
    '("https://lists.riseupneky36dttqbzckcq752yw25txbnrhpguip63dk7yr3a33akbid.onion/www/rss/latest_arc/rega"
-     "https://lists.riseupneky36dttqbzckcq752yw25txbnrhpguip63dk7yr3a33akbid.onion/www/rss/active_lists"))
- '(package-selected-packages nil))
+     "https://lists.riseupneky36dttqbzckcq752yw25txbnrhpguip63dk7yr3a33akbid.onion/www/rss/active_lists") t)
+ '(package-selected-packages '(claude-code)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

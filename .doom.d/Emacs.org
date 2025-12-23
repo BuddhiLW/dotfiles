@@ -85,8 +85,8 @@
 
 ;; Prevent $HOME from being treated as a project root
 (after! projectile
-  (setq projectile-project-root-files-bottom-up
-        (remove ".git" projectile-project-root-files-bottom-up)))
+  (add-to-list 'projectile-ignored-projects "~/")
+  (add-to-list 'projectile-ignored-projects "/home/lages/"))
 
 (display-time-mode 0)                             ; Enable time in the mode-line
 (display-battery-mode 0)                          ; it's nice to know how much power you have
@@ -2721,6 +2721,7 @@ This section configures multiple AI tools and models:
 - *Aidermacs* → AI pair programming with built-in Ediff integration, uses OpenRouter's free `nousresearch/deephermes-3-llama-3-8b-preview:free` model
 - *GPTel* → Direct chat interface with multiple model support
 - *Ellama* → Specialized AI tasks (coding, summarization, translation)
+- *Claude Code* → Full Claude Code CLI integration with terminal embedding, session management
 
 ** Usage
 
@@ -2733,6 +2734,9 @@ This section configures multiple AI tools and models:
 - =SPC b ai a= → Aidermacs (AI Pair Programming)
 - =SPC b ai A= → Aidermacs transient menu
 - =C-c A= → Quick access to Aidermacs menu
+- =SPC b ai C= → Claude Code session
+- =SPC b ai M= → Claude Code transient menu
+- =C-c C= → Quick access to Claude Code menu
 
 ** Auto-routing Logic
 
@@ -2744,11 +2748,12 @@ The system automatically selects models based on:
 - Default (llama3.2 for speed)
 
 #+begin_src emacs-lisp :tangle packages.el
-;;(package! llama)
-;;(package! ellama)
-;;(package! ollama-buddy)
-;;(package! llama-cpp)
-;;(package! aidermacs)
+;; llama is required by magit-base (short lambda syntax library)
+(package! llama)
+(package! ellama)
+(package! ollama-buddy)
+(package! llama-cpp)
+(package! aidermacs)
 #+end_src
 
 ** GPTel
@@ -3199,6 +3204,70 @@ AI Pair Programming in Emacs with Aider - a more Emacs-native experience with en
         (insert "no-show-model-warnings: true\n")
         (insert "architect: true\n")))))
 #+end_src
+
+** Claude Code
+Integration with the [[https://github.com/anthropics/claude-code][Claude Code CLI]] directly from Emacs using [[https://github.com/stevemolitor/claude-code.el][claude-code.el]].
+
+Features:
+- Multi-backend terminal support (eat/vterm)
+- Multiple named instances per project
+- Send regions, buffers, and errors to Claude
+- Transient menus for organized command access
+- Hook integration for bidirectional CLI communication
+
+#+begin_src emacs-lisp :tangle packages.el
+;; Dependencies for claude-code.el
+(package! inheritenv)
+(package! eat)
+
+;; Claude Code from local clone (has newer functions)
+(package! claude-code
+  :recipe (:local-repo "claude-code.el"
+           :files ("*.el")))
+#+end_src
+
+#+begin_src emacs-lisp
+;; Keybindings (set up immediately, autoload handles lazy loading)
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("ai" . "LLM/AI")
+        :desc "Claude Code" "C" #'claude-code
+        :desc "Claude Continue" "x" #'claude-code-continue
+        :desc "Claude Resume" "R" #'claude-code-resume
+        :desc "Claude Menu" "M" #'claude-code-transient
+        :desc "Send Region to Claude" "S" #'claude-code-send-region
+        :desc "Fix Error with Claude" "F" #'claude-code-fix-error-at-point)))
+
+;; Global keybinding for quick access
+(global-set-key (kbd "C-c C") #'claude-code-transient)
+
+;; Configure claude-code after it loads
+(after! claude-code
+  ;; Use eat as the terminal backend (default, more modern)
+  (setq claude-code-terminal-backend 'eat)
+  ;; Enable notifications when Claude needs attention
+  (setq claude-code-enable-notifications t)
+  ;; Ask before killing Claude sessions
+  (setq claude-code-confirm-kill t)
+  ;; RET sends, Shift-RET for newlines (default)
+  (setq claude-code-newline-keybinding-style 'newline-on-shift-return))
+#+end_src
+
+*** Usage
+- =SPC b ai C= → Start Claude Code session
+- =SPC b ai x= → Continue previous conversation
+- =SPC b ai R= → Resume specific past session
+- =SPC b ai M= → Claude Code transient menu
+- =SPC b ai S= → Send region/buffer to Claude
+- =SPC b ai F= → Fix flycheck/flymake error at point
+- =C-c C= → Quick access to Claude Code transient menu
+
+In a Claude buffer:
+- =RET= → Send message
+- =S-RET= → Insert newline
+- =y= / =n= → Quick yes/no responses
+- =C-c c z= → Toggle read-only mode for text selection
+
 * Reader
 
 ** Epub

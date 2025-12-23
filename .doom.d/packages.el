@@ -10,8 +10,8 @@
 (package! codeium :recipe (:host github :repo "Exafunction/codeium.el"))
 ;; (package! cape)
 
-;; (package! magit)
-;; (package! magit-section)
+(package! magit)
+(package! magit-section)
 
 (package! conda)
 
@@ -207,14 +207,30 @@
 
 (package! citre)
 
+;; llama is required by magit-base (short lambda syntax library)
+(package! llama)
+(package! ellama)
+(package! ollama-buddy)
+(package! llama-cpp)
+(package! aidermacs)
 
 (package! gptel)
 
+(package! ellama)
 (package! llm)
 
 (package! elysium)
 
-;; (package! aider)
+(package! aider)
+
+;; Dependencies for claude-code.el
+(package! inheritenv)
+(package! eat)
+
+;; Claude Code from local clone (has newer functions)
+(package! claude-code
+  :recipe (:local-repo "claude-code.el"
+           :files ("*.el")))
 
 (package! nov)
 

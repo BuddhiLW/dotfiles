@@ -74,8 +74,8 @@
 
 ;; Prevent $HOME from being treated as a project root
 (after! projectile
-  (setq projectile-project-root-files-bottom-up
-        (remove ".git" projectile-project-root-files-bottom-up)))
+  (add-to-list 'projectile-ignored-projects "~/")
+  (add-to-list 'projectile-ignored-projects "/home/lages/"))
 
 (display-time-mode 0)                             ; Enable time in the mode-line
 (display-battery-mode 0)                          ; it's nice to know how much power you have
@@ -1339,7 +1339,108 @@
                                    :envFile nil
                                    :dlvToolPath "dlv")) ;; Ensure `dlv` is in PATH
 
+;; Core gptel setup with multiple Ollama models
+(use-package! gptel
+  :ensure t
+  :init
+  (setq gptel-default-mode 'org-mode)
+  :config
+  ;; Main Ollama backend with all models
+  (setq gptel-backend
+        (gptel-make-ollama "Ollama"
+          :host "localhost:11434"
+          :stream t
+          :models '(deepseek-r1:latest
+                    qwen3:latest
+                    llama3.2:latest
+                    gemma3:latest
+                    gpt-oss:latest
+                    nomic-embed-text:latest)))
 
+  ;; Model presets for different use cases
+  (defvar my/ollama-presets
+    '((:name "deepseek-r1"  :model "deepseek-r1:latest"  :temp 0.1 :max 4096 :use-case "Hard reasoning, multi-file refactors, complex analysis")
+      (:name "qwen3"        :model "qwen3:latest"        :temp 0.2 :max 2048 :use-case "General coding assistant, Go/Clojure/TypeScript")
+      (:name "llama3.2"     :model "llama3.2:latest"     :temp 0.3 :max 1536 :use-case "Quick drafts, low latency interactions")
+      (:name "gemma3"       :model "gemma3:latest"       :temp 0.5 :max 2048 :use-case "Summarization, documentation polish")
+      (:name "gpt-oss"      :model "gpt-oss:latest"      :temp 0.3 :max 2048 :use-case "Fallback generalist, agentic tasks"))
+    "Model presets with their optimal configurations and use cases.")
+
+  (defun my/gptel-apply-preset (preset)
+    "Apply PRESET plist to gptel for this buffer."
+    (interactive
+     (list (let* ((names (mapcar (lambda (p) 
+                                   (format "%s - %s" 
+                                           (plist-get p :name)
+                                           (plist-get p :use-case))) 
+                                 my/ollama-presets))
+                  (choice (completing-read "Model: " names nil t))
+                  (name (car (split-string choice " - "))))
+             (seq-find (lambda (p) (equal (plist-get p :name) name)) my/ollama-presets))))
+    (let* ((model (plist-get preset :model))
+           (temp  (or (plist-get preset :temp) 0.2))
+           (max   (or (plist-get preset :max) 1024)))
+      (setq-local gptel-model model
+                  gptel-temperature temp
+                  gptel-max-tokens max)
+      (message "gptel → %s (T=%.1f, max=%d)" model temp max)))
+
+  (defun my/gptel-route ()
+    "Heuristic model routing based on region/buffer content and major-mode."
+    (interactive)
+    (let* ((text (if (use-region-p)
+                     (buffer-substring-no-properties (region-beginning) (region-end))
+                   (buffer-substring-no-properties (point-min) (min (point-max) (+ (point-min) 2000)))))
+           (len (length text))
+           (lang (symbol-name major-mode))
+           (pick (cond
+                  ;; Heavy reasoning or long prompts
+                  ((or (> len 1500)
+                       (string-match-p "\\b(refactor|rewrite|test|architecture|explain.*step|analyze|debug)" text))
+                   "deepseek-r1")
+                  ;; Code modes for languages you use frequently
+                  ((string-match-p "\\b(go-mode\\|go-ts-mode\\|clojure-mode\\|clojurescript-mode\\|typescript-\\|tsx-\\|js-\\|web-mode\\|elm-mode)" lang)
+                   "qwen3")
+                  ;; Summarization and documentation tasks
+                  ((string-match-p "\\b(summarize\\|summary\\|bullets?\\|title\\|abstract\\|tl;?dr\\|polish\\|rewrite)" text)
+                   "gemma3")
+                  ;; Low-latency default for quick interactions
+                  (t "llama3.2"))))
+      (let ((preset (seq-find (lambda (p) (equal (plist-get p :name) pick)) my/ollama-presets)))
+        (my/gptel-apply-preset preset)
+        (message "Auto-routed to %s: %s" pick (plist-get preset :use-case)))))
+
+  ;; Keybindings for gptel mode
+  (define-key gptel-mode-map (kbd "C-c m r") #'my/gptel-route)
+  (define-key gptel-mode-map (kbd "C-c m s") #'my/gptel-apply-preset))
+
+;; Transient menu for easy model selection
+(use-package! transient
+  :ensure t
+  :config
+  (transient-define-prefix my/llm-menu ()
+    "LLM Model Selection and Actions"
+    ["Models (Ollama)"
+     ("d" "DeepSeek-R1 (reasoning)" 
+      (lambda () (interactive) 
+        (my/gptel-apply-preset (seq-find (lambda (p) (equal (plist-get p :name) "deepseek-r1")) my/ollama-presets))))
+     ("q" "Qwen3 (coding)" 
+      (lambda () (interactive) 
+        (my/gptel-apply-preset (seq-find (lambda (p) (equal (plist-get p :name) "qwen3")) my/ollama-presets))))
+     ("l" "Llama3.2 (quick)" 
+      (lambda () (interactive) 
+        (my/gptel-apply-preset (seq-find (lambda (p) (equal (plist-get p :name) "llama3.2")) my/ollama-presets))))
+     ("g" "Gemma3 (docs)" 
+      (lambda () (interactive) 
+        (my/gptel-apply-preset (seq-find (lambda (p) (equal (plist-get p :name) "gemma3")) my/ollama-presets))))
+     ("o" "GPT-OSS (agentic)" 
+      (lambda () (interactive) 
+        (my/gptel-apply-preset (seq-find (lambda (p) (equal (plist-get p :name) "gpt-oss")) my/ollama-presets))))]
+    ["Actions"
+     ("r" "Auto Route" my/gptel-route)
+     ("s" "Select Model" my/gptel-apply-preset)
+     ("RET" "Send Message" gptel-send)
+     ("c" "New Chat" gptel)]))
 
 ;; Global keybinding for the LLM menu
 (map! :leader
@@ -1351,6 +1452,182 @@
         :desc "Select Model" "s" #'my/gptel-apply-preset
         :desc "Aidermacs (Pair Programming)" "a" #'aidermacs-transient-menu)))
 
+(use-package! llm)
+
+(use-package! ellama
+  :bind ("C-c e" . ellama-transient-main-menu)
+  :init
+  ;; language you want ellama to translate to
+  (setopt ellama-language "Brazilian Portuguese")
+  ;; use the ollama provider from llm
+  (require 'llm-ollama)
+  
+  ;; Default provider - use llama3.2 for general tasks (fast)
+  (setopt ellama-provider
+          (make-llm-ollama
+           :chat-model "llama3.2:latest"
+           :embedding-model "nomic-embed-text:latest"
+           :default-chat-non-standard-params '(("num_ctx" . 8192))))
+  
+  ;; Summarization - use gemma3 for document processing
+  (setopt ellama-summarization-provider
+          (make-llm-ollama
+           :chat-model "gemma3:latest"
+           :embedding-model "nomic-embed-text:latest"
+           :default-chat-non-standard-params '(("num_ctx" . 16384))))
+  
+  ;; Coding - use qwen3 for code-related tasks
+  (setopt ellama-coding-provider
+          (make-llm-ollama
+           :chat-model "qwen3:latest"
+           :embedding-model "nomic-embed-text:latest"
+           :default-chat-non-standard-params '(("num_ctx" . 16384))))
+  
+  ;; Predefined llm providers for interactive switching
+  (setopt ellama-providers
+          '(("deepseek-r1" . (make-llm-ollama
+                              :chat-model "deepseek-r1:latest"
+                              :embedding-model "nomic-embed-text:latest"
+                              :default-chat-non-standard-params '(("num_ctx" . 32768))))
+            ("qwen3" . (make-llm-ollama
+                        :chat-model "qwen3:latest"
+                        :embedding-model "nomic-embed-text:latest"
+                        :default-chat-non-standard-params '(("num_ctx" . 16384))))
+            ("llama3.2" . (make-llm-ollama
+                           :chat-model "llama3.2:latest"
+                           :embedding-model "nomic-embed-text:latest"
+                           :default-chat-non-standard-params '(("num_ctx" . 8192))))
+            ("gemma3" . (make-llm-ollama
+                         :chat-model "gemma3:latest"
+                         :embedding-model "nomic-embed-text:latest"
+                         :default-chat-non-standard-params '(("num_ctx" . 16384))))
+            ("gpt-oss" . (make-llm-ollama
+                          :chat-model "gpt-oss:latest"
+                          :embedding-model "nomic-embed-text:latest"
+                          :default-chat-non-standard-params '(("num_ctx" . 16384))))))
+  
+  ;; Naming new sessions - use llama3.2 for quick naming
+  (setopt ellama-naming-provider
+          (make-llm-ollama
+           :chat-model "llama3.2:latest"
+           :embedding-model "nomic-embed-text:latest"
+           :default-chat-non-standard-params '(("stop" . ("\n")) ("num_ctx" . 4096))))
+  (setopt ellama-naming-scheme 'ellama-generate-name-by-llm)
+  
+  ;; Translation - use gemma3 for language tasks
+  (setopt ellama-translation-provider
+          (make-llm-ollama
+           :chat-model "gemma3:latest"
+           :embedding-model "nomic-embed-text:latest"
+           :default-chat-non-standard-params '(("num_ctx" . 16384))))
+  
+  ;; Extraction - use deepseek-r1 for complex analysis
+  (setopt ellama-extraction-provider
+          (make-llm-ollama
+           :chat-model "deepseek-r1:latest"
+           :embedding-model "nomic-embed-text:latest"
+           :default-chat-non-standard-params '(("num_ctx" . 32768))))
+  
+  ;; customize display buffer behaviour
+  (setopt ellama-chat-display-action-function #'display-buffer-full-frame)
+  (setopt ellama-instant-display-action-function #'display-buffer-at-bottom)
+  :config
+  ;; send last message in chat buffer with C-c C-c
+  (add-hook 'org-ctrl-c-ctrl-c-hook #'ellama-chat-send-last-message))
+
+;; Add ellama to the LLM menu
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("ai" . "LLM/AI")
+        :desc "Ellama Menu" "e" #'ellama-transient-main-menu
+        :desc "Ellama Chat" "E" #'ellama-chat
+        :desc "Aidermacs Menu" "A" #'aidermacs-transient-menu)))
+
+(use-package! elysium)
+
+(use-package aider
+  :config
+  ;; For latest claude sonnet model
+  ;; (setq aider-args '("--model" "sonnet" "--no-auto-accept-architect"))
+  ;; (setenv "ANTHROPIC_API_KEY" anthropic-api-key)
+  ;; Or chatgpt model
+  ;; (setq aider-args '("--model" "o4-mini"))
+  ;; (setenv "OPENAI_API_KEY" <your-openai-api-key>)
+  ;; Or use your personal config file
+  ;; (setq aider-args `("--config" ,(expand-file-name "~/.aider.conf.yml")))
+  ;; ;;
+  ;; Optional: Set a key binding for the transient menu
+  (global-set-key (kbd "C-c a") 'aider-transient-menu) ;; for wider screen
+  ;; or use aider-transient-menu-2cols / aider-transient-menu-1col, for narrow screen
+  (aider-magit-setup-transients)) ;; add aider magit function to magit menu
+
+(use-package! aidermacs
+  :init
+  ;; Set the OpenRouter API key from pass BEFORE loading
+  (setenv "OPENROUTER_API_KEY" (nth 0 (process-lines "pass" "show" "openrouter/keys/ff")))
+  
+  :custom
+  ;; Configure the default model - nousresearch/deephermes-3-llama-3-8b-preview:free
+  (aidermacs-default-chat-mode 'architect)
+  
+  :config
+  ;; Configure the model and provider
+  (setq aidermacs-model "openrouter/nousresearch/deephermes-3-llama-3-8b-preview:free")
+  (setq aidermacs-provider "openrouter")
+  
+  ;; Additional configuration options - specify the model explicitly in extra args
+  (setq aidermacs-extra-args
+        (list "--model" "openrouter/nousresearch/deephermes-3-llama-3-8b-preview:free"
+              "--no-auto-commits"  ; Disable auto-commits for more control
+              "--no-pretty"        ; Disable pretty formatting for cleaner output
+              "--chat-language" "en" ; Set chat language to English
+              "--no-show-model-warnings")) ; Suppress model warnings
+
+  ;; Configure terminal backend (vterm is recommended for better performance)
+  (setq aidermacs-backend 'vterm)
+
+  ;; Enable automatic model discovery for OpenRouter
+  (setq aidermacs-auto-discover-models t)
+
+  ;; Set up keybindings
+  (global-set-key (kbd "C-c A") 'aidermacs-transient-menu)
+  
+  ;; Create a default .aider.conf.yml file if it doesn't exist
+  (let ((aider-config-file (expand-file-name "~/.aider.conf.yml")))
+    (unless (file-exists-p aider-config-file)
+      (with-temp-file aider-config-file
+        (insert "# Aidermacs default configuration\n")
+        (insert "model: openrouter/nousresearch/deephermes-3-llama-3-8b-preview:free\n")
+        (insert "no-auto-commits: true\n")
+        (insert "no-pretty: true\n")
+        (insert "chat-language: en\n")
+        (insert "no-show-model-warnings: true\n")
+        (insert "architect: true\n")))))
+
+;; Keybindings (set up immediately, autoload handles lazy loading)
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("ai" . "LLM/AI")
+        :desc "Claude Code" "C" #'claude-code
+        :desc "Claude Continue" "x" #'claude-code-continue
+        :desc "Claude Resume" "R" #'claude-code-resume
+        :desc "Claude Menu" "M" #'claude-code-transient
+        :desc "Send Region to Claude" "S" #'claude-code-send-region
+        :desc "Fix Error with Claude" "F" #'claude-code-fix-error-at-point)))
+
+;; Global keybinding for quick access
+(global-set-key (kbd "C-c C") #'claude-code-transient)
+
+;; Configure claude-code after it loads
+(after! claude-code
+  ;; Use eat as the terminal backend (default, more modern)
+  (setq claude-code-terminal-backend 'eat)
+  ;; Enable notifications when Claude needs attention
+  (setq claude-code-enable-notifications t)
+  ;; Ask before killing Claude sessions
+  (setq claude-code-confirm-kill t)
+  ;; RET sends, Shift-RET for newlines (default)
+  (setq claude-code-newline-keybinding-style 'newline-on-shift-return))
 
 (server-force-delete)
 (server-start)
