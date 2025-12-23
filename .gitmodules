@@ -22,3 +22,6 @@
 [submodule "gitthings/dmenu"]
 	path = gitthings/dmenu
 	url = https://gitlab.com/dwt1/dmenu-distrotube.git
+[submodule ".claude"]
+	path = .claude
+	url = git@github.com:BuddhiLW/.claude.git
