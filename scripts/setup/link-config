@@ -43,3 +43,23 @@ for dest in "${SPECIAL_DESTS[@]}"; do
   src="$DOTFILES/.config/X11/xinitrc"  # adjust if different
   backup_then_link "$src" "$dest"
 done
+
+# Config files (source:dest pairs)
+if [[ -v CONFIG_FILES ]]; then
+  for pair in "${CONFIG_FILES[@]}"; do
+    IFS=':' read -r srcrel destrel <<< "$pair"
+    src="$DOTFILES/.config/$srcrel"
+    dest="$HOME/.config/$destrel"
+    backup_then_link "$src" "$dest"
+  done
+fi
+
+# Local bin scripts
+if [[ -v LOCAL_BIN_SCRIPTS ]]; then
+  mkdir -p "$HOME/.local/bin"
+  for script in "${LOCAL_BIN_SCRIPTS[@]}"; do
+    src="$DOTFILES/.local/bin/$script"
+    dest="$HOME/.local/bin/$script"
+    backup_then_link "$src" "$dest"
+  done
+fi

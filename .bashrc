@@ -23,8 +23,8 @@ _source_if() { [[ -r "$1" ]] && source "$1"; }
 
 # ----------------------- environment variables ----------------------
 #                           (also see envx)
-
-# export USER="buddhilw"
+export TRANSMISSION_USER="buddhilw"                                                    
+export TRANSMISSION_PASS="$(pass transmission/buddhilw)"
 export BOOKS="$DOCUMENTS/Books"
 export CS_B="$BOOKS/CS"
 export BNOTES="$PP/Notes/Books"
@@ -35,8 +35,11 @@ export ELM_B="$CS_LANG_B/Elm"
 export PP="$HOME/PP" #Programming Projects
 export CS_LANG_B="$CS_B/Languages"
 export GUIX_PROFILE="/home/$USER/.guix-profile" # Environmental variable for GUIX
+export OPENROUTER_API_KEY="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"
 
 export DOTFILES="$HOME/dotfiles"
+# export EMACS_MCP_DIR="$DOTFILES/gitthings/hive-mcp"
+export HIVE_MCP_DIR="$HOME/PP/hive/hive-mcp"
 export KUBECONFIG="$DOTFILES/talos/base/kubeconfig"
 export TALOSCONFIG="$DOTFILES/talos/base/talosconfig"
 export INSTALL_SCRIPTS="$DOTFILES/scripts/install/"
@@ -191,6 +194,7 @@ pathprepend \
     "$DOTFILES/gitthings/flutter/flutter/bin" \
     "$DOTFILES/gitthings/graalvm/bin" \
     "$DOTFILES/.npm-global/bin" \
+    "$DOOMDIR/bin"
 
 # export PATH="$DOTFILES/gitthings/flutter/flutter/bin:$PATH"
 #    "$HOME/.conda/envs/simple-signer-env/bin" \
@@ -643,3 +647,16 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+. "/home/lages/.deno/env"
+
+# Go module proxy configuration
+export GOPROXY=https://proxy.golang.org,direct
+export GOSUMDB=sum.golang.org
+
+# hive-mcp-cli managed - START
+export HIVE_MCP_DIR="$HOME/PP/hive/hive-mcp"
+export BB_MCP_DIR="$HOME/PP/hive/bb-mcp"
+# hive-mcp-cli managed - END
+export QT_XCB_GL_INTEGRATION=xcb_glx
+export PATH="/home/lages/anaconda3/envs/hive/bin:$PATH"
+export GOROOT=/home/linuxbrew/.linuxbrew/Cellar/go/1.25.7_1/libexec

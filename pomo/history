@@ -614,3 +614,84 @@
 2025-10-11T15:04:05-03:00 description="rw: obitos-backend - utf8" duration=40
 2025-10-13T18:19:04-03:00 description="staging obituary fullstack" duration=60
 2025-10-22T10:17:33-03:00 description="CI/CD: cartas" duration=30
+2025-12-29T09:11:17-03:00 description="publish emacs-mcp to melpa" duration=30
+2025-12-29T14:32:58-03:00 description="emacs-mcp: add-ons work" duration=78
+2025-12-29T14:32:58-03:00 description="emacs-mcp: add-ons work" duration=25
+2025-12-29T15:50:56-03:00 description="emacs-mcp: add-ons work" duration=26
+2026-01-01T12:45:39-03:00 description="Video showcase: pomodoro MCP demo (live!)" duration=1 tags=demo,video,mcp,claude-code,live
+2026-01-01T13:04:59-03:00 description="Recording Pomodoro MCP demo video (short demo)" duration=1 tags=demo,video,mcp
+2026-01-01T16:02:10-03:00 description="clel-015: Implement atom watch functions (add-watch, remove-watch)" duration=11 tags=clojure-elisp,swarm,runtime
+2026-01-01T16:42:15-03:00 description="Explored bonzai project, indexed it, planned MCP-native tasks, implemented Phase 1 via swarm" duration=116 tags=exploration,planning,mcp,bonzai
+2026-01-01T16:42:15-03:00 description="Explored bonzai project, indexed it, planned MCP-native tasks, implemented Phase 1 via swarm" duration=25 tags=exploration,planning,mcp,bonzai
+2026-01-02T10:24:47-03:00 description="Update cartas-frontend to use dynamic current year instead of hardcoded 2025" duration=25 tags=elm,cartas-frontend,refactoring
+2026-01-02T15:43:03-03:00 description="bb-mcp dynamic tool loading fix" duration=25 tags=bb-mcp,dynamic,debugging
+2026-01-03T17:16:23-03:00 description="demo for emacs-mcp" duration=25 tags=demo,emacs-mcp,hivemind
+2026-01-03T18:08:26-03:00 description="emacs-mcp demo - ling-to-ling setup" duration=15 tags=emacs-mcp,demo,swarm
+2026-01-03T18:42:33-03:00 description="emacs-mcp hive chat demo" duration=2 tags=demo,swarm,hivemind
+2026-01-04T14:16:05-03:00 description="emacs-mcp: crystalinization wrap/catchup" duration=30
+2026-01-05T20:16:41-03:00 description="Fix TCP channel bidirectional communication" duration=25 tags=hive-mcp,channel,debugging
+2026-01-06T10:06:28-03:00 description="CiderBackend demo/test workflow" duration=13 tags=hive-mcp,cider,demo,testing
+2026-01-07T12:08:30-03:00 description="WebSocket MCP transport + two-tier ling workflow" duration=24 tags=hive-mcp,websocket,openrouter,architecture
+2026-01-07T12:32:35-03:00 description="Test WebSocket transport + delegate_ling workflow" duration=5 tags=hive-mcp,testing,websocket,delegate-ling,integration
+2026-01-07T14:04:15-03:00 description="Demo: Two-tier OpenRouter delegation with WebSocket" duration=25 tags=demo,openrouter,delegation,websocket
+2026-01-07T14:42:14-03:00 description="core.logic permission rules + swarm coordination" duration=25 tags=core-logic,permissions,swarm,architecture
+2026-01-08T12:02:44-03:00 description="Testing drone delegation workflow end-to-end" duration=18 tags=hive-mcp,testing,drone
+2026-01-08T12:25:07-03:00 description="Multi-agent swarm coordination test" duration=25 tags=hive-mcp,swarm,integration-test
+2026-01-08T16:22:27-03:00 description="Tag-base cursor read-tags for hive communication" duration=25 tags=hive-mcp,hivemind,channel
+2026-01-12T13:34:12-03:00 description="Swarm refactoring - quality & complexity reduction" duration=25 tags=refactor,swarm,code-quality,complexity
+2026-01-13T23:01:54-03:00 description="Wave 3: Refactoring (memory.clj, swarm.clj) + MCP bug fix" duration=25 tags=hive-mcp,refactoring,swarm-wave
+2026-01-14T09:27:36-03:00 description=hive-mcp duration=30
+2026-01-14T15:28:50-03:00 description="Swarm wave: hive-events integration (4 lings working)" duration=25 tags=swarm,hive-events,integration
+2026-01-14T16:14:35-03:00 description="hive-events Phase 4 Bridge: hook→event bridge, channel wiring" duration=43 tags=hive-events,poc,phase-4,bridge
+2026-01-14T16:14:35-03:00 description="hive-events Phase 4 Bridge: hook→event bridge, channel wiring" duration=25 tags=hive-events,poc,phase-4,bridge
+2026-01-14T19:56:02-03:00 description="hive-events POC-05/06/07 core effects wave" duration=25 tags=hive-events,swarm,effects
+2026-01-14T22:12:15-03:00 description="A+ Compliance Sprint - Swarm Wave" duration=25 tags=hive-mcp,swarm,compliance,sprint
+2026-01-14T22:48:01-03:00 description="Sprint 2: A- → A+ (TDD recovery, Kondo <50)" duration=10 tags=sprint-2,compliance,tdd,hive-mcp
+2026-01-15T10:47:05-03:00 description="Sprint wave: memory update tags tool + architecture primer tagging" duration=25 tags=hive-mcp,sprint-2,memory-api
+2026-01-15T11:15:38-03:00 description="DRY refactor coordination + drone wave debug + hive-hot integration" duration=25 tags=hive-mcp,sprint-2,dry-refactor,debug
+2026-01-15T11:54:11-03:00 description="Sprint wave: hot-reload init, case conversion helper, DRY refactor" duration=25 tags=sprint,wave,lings
+2026-01-15T12:45:55-03:00 description="Sprint wave - parallel ling tasks" duration=25 tags=sprint,lings,kanban
+2026-01-15T13:33:03-03:00 description="Hot-reload bug fix" duration=25 tags=bug-fix,hive-hot,sprint-2
+2026-01-15T14:10:18-03:00 description="Ling wave: hot-reload, wrap_notify, CIDER + coordinator kanban work" duration=26 tags=hive-mcp,sprint-2,ling-wave
+2026-01-16T13:20:40-03:00 description="Implementation wave: team_select tool + parallel reviews" duration=13 tags=swarm,implementation,team-select,drone-wave
+2026-01-16T13:36:43-03:00 description="Validate fixes: team_select, wrap_notify, drone wave" duration=25 tags=testing,validation,swarm
+2026-01-16T14:45:20-03:00 description="Wave: TODO kanban tasks" duration=25 tags=hive-mcp,sprint-2,wave
+2026-01-16T15:41:33-03:00 description="Swarm stress test + kanban tasks" duration=25 tags=swarm,stress-test,kanban
+2026-01-16T16:06:46-03:00 description="Bug fixes + file-claim architecture" duration=19 tags=bugs,architecture,hive-events
+2026-01-16T17:01:40-03:00 description="File-claim event cascade implementation" duration=25 tags=hive-mcp,events,file-claims,swarm
+2026-01-16T18:09:09-03:00 description="Observability: Prometheus + Loki integration planning" duration=25 tags=observability,prometheus,loki,telemetry,planning
+2026-01-17T14:08:30-03:00 description="Swarm coordination: kanban scoping + drone wave fix" duration=25 tags=hive-mcp,swarm,refactoring
+2026-01-17T15:30:58-03:00 description="hive-mcp: debugging critial issue with test-isolation" duration=33
+2026-01-17T15:30:58-03:00 description="hive-mcp: debugging critial issue with test-isolation" duration=25
+2026-01-17T16:24:57-03:00 description="Drone/CIDER/Hot-reload fixes wave" duration=7 tags=hive-mcp,bug-fixes,swarm-wave
+2026-01-18T16:16:13-03:00 description="Prometheus/Loki MCP tools implementation" duration=25 tags=hive-mcp,telemetry,implementation
+2026-01-18T16:46:33-03:00 description="Olympus Wave 2 - Swarm Control Room" duration=25 tags=olympus,swarm,wave-2
+2026-01-20T09:37:57-03:00 description="hive-mcp blog post for HN launch - ling team iterating to Nash equilibrium" duration=23 tags=hive-mcp,blog,dogfooding,autopoiesis,launch
+2026-01-20T11:05:32-03:00 description="Agora EPIC - Multi-Ling Dialogue Infrastructure exploration" duration=25 tags=agora,epic,exploration,hive-event,hive-hot
+2026-01-20T11:51:56-03:00 description="hive-mcp: agora technique" duration=30
+2026-01-21T08:28:34-03:00 description="Validate KG/Agora features + project-scoping fixes" duration=15 tags=hive-mcp,validation,project-scoping
+2026-01-21T08:47:53-03:00 description="HIVEMIND project-scoping + graph/impl fix" duration=45 tags=hive-mcp,hivemind,project-scoping
+2026-01-21T09:41:17-03:00 description="Wave: KG Phases, Agora, Telemetry, Drone/nREPL (5 lings)" duration=45 tags=hive-mcp,kg,agora,telemetry,wave
+2026-01-21T10:38:06-03:00 description="hive-mcp: CTX migration + KG edge fixes" duration=25 tags=hive-mcp,ctx,knowledge-graph
+2026-01-21T11:17:49-03:00 description="hive-mcp: KG, Agora, Bugs, Claims TTL wave" duration=25 tags=hive-mcp,kg,agora,bugs,claims
+2026-01-22T10:05:07-03:00 description="Wiki documentation: Infrastructure, Emacs config, Troubleshooting" duration=25 tags=docs,wiki,hive-mcp
+2026-01-22T11:48:03-03:00 description="hive-mcp-cli Bonzai implementation" duration=45 tags=hive-mcp-cli,bonzai,implementation
+2026-01-24T20:25:33-03:00 description="Arara ling wave: architecture analysis, TUI fix, Bonzai/MCP planning" duration=25 tags=arara,swarm,architecture,bonzai,mcp
+2026-01-24T21:25:53-03:00 description="Wave 3 arara TDD refactor - create/sync" duration=25 tags=arara,refactor,drones,feedback
+2026-01-25T00:49:45-03:00 description="Test native break" duration=5
+2026-01-26T16:23:25-03:00 description="Hive-mcp: Fix sync tests, event bus, dispatch race condition" duration=25 tags=hive-mcp,tests,fixes,lings
+2026-01-26T16:54:12-03:00 description="Agora/TDD/ToolProxy architecture wave" duration=25 tags=hive-mcp,architecture,swarm
+2026-01-26T18:39:29-03:00 description="Wave: Migrate swarm state from Elisp to DataScript-only" duration=25 tags=hive-mcp,architecture,swarm,datascript
+2026-01-27T14:29:01-03:00 description="Hive-MCP session: drone feedback testing, Datalevin migration, KG wiring, catchup injection, backup scripts" duration=25 tags=hive-mcp,datalevin,kg,drone-feedback,architecture
+2026-01-27T21:20:05-03:00 description="Hive-MCP session: Clojure + Elisp work" duration=60 tags=hive-mcp,clojure,elisp
+2026-01-28T16:17:47-03:00 description="hive-mcp: KG  - yggdrasil exploration" duration=30
+2026-01-28T17:28:08-03:00 description="Bayesian Staleness + Parser Fix — DAG-Wave implementation" duration=30 tags=hive-mcp,bayesian,dag-wave,parser-fix
+2026-01-28T23:00:27-03:00 description="L1-P2 Wave 2: Transitive Staleness Propagation" duration=25 tags=L1,phase-2,transitive-staleness,wave-2
+2026-01-29T21:32:21-03:00 description="BRB: morning coffee" duration=3751 tags=dag-wave,swarm
+2026-01-29T21:32:21-03:00 description="BRB: morning coffee" duration=25 tags=dag-wave,swarm
+2026-02-01T12:03:47-03:00 description="BRB: morning coffe" duration=15
+2026-02-01T12:38:18-03:00 description="Bug hunting: preset injection, consolidated tools fixes" duration=50 tags=hive-mcp,bug-fix,preset-injection
+2026-02-01T21:35:53-03:00 description="DAGWave: Datahike migration lings" duration=25 tags=wave,swarm
+2026-02-01T22:47:29-03:00 description="Hive-MCP session: Olympus fix, atomic commits, memory cleanup" duration=25 tags=hive-mcp,bugfix,maintenance
+2026-02-04T12:02:22-03:00 description="hive-mcp: lazy preset loading, migration tests, kill context fix" duration=25 tags=preset,migration,bugfix
+2026-02-04T13:01:15-03:00 description="Wave 0 Infrastructure + ArgoCD SAA" duration=25 tags=infrastructure,argocd,ci-fix

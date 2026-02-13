@@ -517,3 +517,26 @@
 (use-package! auto-complete-auctex)
 
 (use-package ox-reveal)
+
+;; emacs-mcp Chroma configuration for semantic memory search
+;; These environment variables are read by the MCP server at startup
+
+;; Chroma vector database connection
+(setenv "CHROMA_HOST" "localhost")
+(setenv "CHROMA_PORT" "8000")
+
+;; Ollama embedding server (for local embeddings)
+(setenv "OLLAMA_HOST" "http://localhost:11434")
+
+;; Add emacs-mcp to load path
+(add-to-list 'load-path "~/dotfiles/gitthings/emacs-mcp/elisp")
+(add-to-list 'load-path "~/dotfiles/gitthings/emacs-mcp/elisp/addons")
+
+;; Load emacs-mcp and desired addons
+(require 'emacs-mcp nil t)
+(require 'emacs-mcp-chroma nil t)
+(require 'emacs-mcp-magit nil t)
+
+;; Enable Chroma semantic search mode
+(when (featurep 'emacs-mcp-chroma)
+  (emacs-mcp-chroma-mode 1))

@@ -1,0 +1,22 @@
+#!/bin/bash
+# Apply display scaling settings to current session
+
+# Reload Xresources
+xrdb -merge ~/.Xresources
+echo "Xresources reloaded (Xft.dpi: $(xrdb -query | grep Xft.dpi | cut -f2))"
+
+# Source env vars for this shell and children
+source ~/.config/display-scale.env
+echo "Environment updated:"
+echo "  QT_SCALE_FACTOR=$QT_SCALE_FACTOR"
+echo "  QT_FONT_DPI=$QT_FONT_DPI"
+echo "  GDK_DPI_SCALE=$GDK_DPI_SCALE"
+
+# Restart xmobar
+killall xmobar 2>/dev/null
+xmonad --restart
+echo "Xmonad restarted"
+
+echo ""
+echo "NOTE: Running apps need to be restarted to pick up new scaling."
+echo "      Close and reopen apps like Carla, browsers, etc."

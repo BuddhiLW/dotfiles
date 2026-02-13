@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+sudo curl -L https://github.com/protojure/protoc-plugin/releases/latest/download/protoc-gen-clojure --output /usr/local/bin/protoc-gen-clojure
+sudo chmod +x /usr/local/bin/protoc-gen-clojure

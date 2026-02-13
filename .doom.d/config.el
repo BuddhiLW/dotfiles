@@ -1008,6 +1008,22 @@
        :desc "dartclojure converter"
        "x" #'dartclojure-convert))
 
+;; config.el
+;; Major mode for .cljel files
+(use-package! clojure-elisp-mode
+  :load-path "/home/lages/PP/clojure-elisp/resources/clojure-elisp/"
+  :mode "\\.cljel\\'")
+
+;; CIDER integration for ClojureElisp - provides eval keybindings
+;; C-c C-e  — eval last sexp
+;; C-c C-c  — eval defun at point
+;; C-c C-k  — compile/eval entire buffer
+(after! cider
+  (add-to-list 'load-path "/home/lages/PP/clojure-elisp/resources/clojure-elisp/")
+  (require 'cider-clojure-elisp)
+  ;; Auto-enable cider-cljel-mode in clojure-elisp-mode buffers
+  (add-hook 'clojure-elisp-mode-hook #'cider-cljel-mode))
+
 ;; Enable Clojure mode
 (use-package! clojure-mode
   :config
@@ -1021,6 +1037,123 @@
 
 (add-hook 'clojure-mode-hook 'cider-mode)
 (add-hook 'cider-mode-hook 'eldoc-mode) ;; Optional: for showing function arg info
+
+(use-package! web-server)
+
+;; Use HIVE_MCP_DIR env var (set in shell profile)
+(defvar hive-mcp-root (or (getenv "HIVE_MCP_DIR")
+                          (expand-file-name "gitthings/hive-mcp" (getenv "DOTFILES")))
+  "Root directory of hive-mcp installation.")
+
+(add-to-list 'load-path (concat hive-mcp-root "/elisp"))
+(add-to-list 'load-path (concat hive-mcp-root "/elisp/addons"))
+  
+;
+; Pre-configure before loading
+;; Don't start separate nREPL - MCP server now embeds it (commit 7123de0)
+;; This ensures bb-mcp hivemind calls go to the correct JVM with channel server
+(setq hive-mcp-cider-auto-start-nrepl nil)
+(setq hive-mcp-cider-auto-connect t)  ; Connect to MCP server's embedded nREPL
+(setq hive-mcp-cider-nrepl-port 7910)  ; Must match deps.edn :nrepl alias
+(setq hive-mcp-cider-project-dir hive-mcp-root)  ; Use hive-mcp project for nREPL
+(setq hive-mcp-addon-always-load '(cider org-kanban swarm projectile magit chroma docs))
+
+;; Org-kanban configuration
+(setq hive-mcp-kanban-org-file (concat hive-mcp-root "/kanban.org"))
+(setq hive-mcp-kanban-default-project "b70720e8-3a52-41ba-a115-964b81369bb5")
+
+;; Claude-code-ide configuration (for swarm sessions with MCP integration)
+;; Package loaded from straight.el (BuddhiLW/claude-code-ide.el, branch: main)
+(setq claude-code-ide-enable-mcp-server t)
+;; Workaround: empty tool list causes broken --allowedTools flag
+;; Set to nil to disable the flag entirely (Claude uses all tools)
+(setq claude-code-ide-mcp-allowed-tools nil)
+
+;; Swarm orchestration configuration
+(setq hive-mcp-swarm-presets-dir (concat hive-mcp-root "/presets"))
+(setq hive-mcp-swarm-terminal 'claude-code-ide)  ; Full MCP WebSocket integration
+(setq hive-mcp-swarm-max-slaves 30)    ; max concurrent lings
+(setq hive-mcp-swarm-max-depth 3)      ; recursion limit (master→child→grandchild→great-grandchild)
+(setq hive-mcp-swarm-prompt-mode 'human) ; human-in-the-loop for permission prompts
+
+;; Melpazoid integration for MELPA submission testing
+(setq hive-mcp-melpazoid-path (expand-file-name "gitthings/melpazoid" (getenv "DOTFILES")))
+
+;; Chroma vector database for semantic memory search
+(setq hive-mcp-chroma-auto-start t)        ; Auto-start Chroma container on init
+(setq hive-mcp-chroma-host "localhost")
+(setq hive-mcp-chroma-port 8000)
+(setq hive-mcp-chroma-embedding-provider 'ollama)
+(setq hive-mcp-chroma-ollama-model "nomic-embed-text")
+
+;; Disable old Unix socket channel (using WebSocket instead)
+(setq hive-mcp-channel-auto-connect nil)
+
+;; Load hive-mcp
+(require 'hive-mcp)
+(hive-mcp-mode 1)  ; Enable hive-mcp-mode for mcp_get_context and other context tools
+
+;; Load addons explicitly
+(require 'hive-mcp-addons)
+(require 'hive-mcp-transient)
+(require 'hive-mcp-cider nil t)
+
+;; Defer org-kanban until evil is loaded (uses evil-define-key)
+(after! evil
+  (require 'hive-mcp-org-kanban nil t))
+
+(require 'hive-mcp-swarm nil t)
+;; human in the loop: default to *lings* forwarding requests to *hive-mind* (then to you).
+(setq hive-mcp-swarm-prompt-mode 'human)
+
+(require 'hive-mcp-melpazoid nil t)
+(require 'hive-mcp-projectile nil t)
+(require 'hive-mcp-magit nil t)
+(require 'hive-mcp-chroma nil t)
+(require 'hive-mcp-docs nil t)
+
+;; Olympus grid view for swarm lings
+(require 'hive-mcp-olympus nil t)
+(hive-mcp-olympus-mode 1)  ; Enable global grid keybindings + notifications
+
+;; WebSocket channel for push-based hivemind events (replaces unreliable bencode channel)
+(require 'hive-mcp-channel-ws nil t)
+(setq hive-mcp-channel-ws-url "ws://localhost:9999")  ; Must match Clojure server port
+(setq hive-mcp-channel-ws-auto-connect t)             ; Connect after startup
+(setq hive-mcp-channel-ws-startup-delay 5.0)          ; Wait for MCP server to be ready
+
+;; Register handlers for hivemind push events
+(with-eval-after-load 'hive-mcp-channel-ws
+  ;; Notify on hivemind progress/completion events
+  (hive-mcp-channel-ws-on "hivemind-progress"
+    (lambda (msg)
+      (message "[Hivemind] %s: %s"
+               (cdr (assoc 'agent-id msg))
+               (cdr (assoc 'message (cdr (assoc 'data msg)))))))
+  (hive-mcp-channel-ws-on "hivemind-completed"
+    (lambda (msg)
+      (message "[Hivemind] %s completed: %s"
+               (cdr (assoc 'agent-id msg))
+               (cdr (assoc 'message (cdr (assoc 'data msg))))))))
+
+;; Auto-load addons when their packages are detected
+(hive-mcp-addons-auto-load)
+
+;; Keybinding for MCP transient menu (under SPC b m for "buddhi/mcp")
+(map! :leader
+      (:prefix-map ("b" . "buddhi")
+       (:prefix ("m" . "mcp")
+        :desc "MCP menu" "m" #'hive-mcp-transient-main
+        :desc "CIDER menu" "c" #'hive-mcp-cider-transient
+        :desc "Kanban menu" "k" #'hive-mcp-kanban-transient
+        :desc "Swarm menu" "s" #'hive-mcp-swarm-transient
+        :desc "Melpazoid menu" "z" #'hive-mcp-melpazoid-transient
+        :desc "Projectile menu" "p" #'hive-mcp-projectile-transient
+        :desc "Magit/Git menu" "g" #'hive-mcp-magit-transient
+        :desc "Chroma/Vector menu" "v" #'hive-mcp-chroma-transient
+        :desc "Docs menu" "d" #'hive-mcp-docs-transient
+        :desc "Olympus grid" "o" #'hive-olympus
+        :desc "Olympus dashboard" "O" #'hive-mcp-olympus-dashboard)))
 
 ;; if you are using the "pass" password manager
 ;; (setq chatgpt-shell-openai-key
@@ -1545,6 +1678,22 @@
 
 (use-package! elysium)
 
+(use-package! org-ai
+  :commands (org-ai-mode)
+  :init
+  (add-hook 'org-mode-hook #'org-ai-mode)
+  :config
+  (setq org-ai-default-chat-model "gpt-4o"))
+
+;; Load hive-mcp AI bridge and addons
+(when (locate-library "hive-mcp-ai-bridge")
+  (require 'hive-mcp-ai-bridge)
+
+  ;; gptel integration - inject memory context, store notable responses
+  (when (locate-library "hive-mcp-gptel")
+    (require 'hive-mcp-gptel)
+    (hive-mcp-gptel-mode 1)))
+
 (use-package aider
   :config
   ;; For latest claude sonnet model
@@ -1627,7 +1776,77 @@
   ;; Ask before killing Claude sessions
   (setq claude-code-confirm-kill t)
   ;; RET sends, Shift-RET for newlines (default)
-  (setq claude-code-newline-keybinding-style 'newline-on-shift-return))
+  (setq claude-code-newline-keybinding-style 'newline-on-shift-return)
+
+  ;; ============================================================
+  ;; Evil-compatible keybindings for seamless editing experience
+  ;; ============================================================
+
+  ;; Timer for jk escape sequence
+  (defvar claude-code--jk-timer nil)
+  (defvar claude-code--j-pressed nil)
+
+  (defun claude-code--handle-j ()
+    "Handle 'j' press for jk escape sequence."
+    (interactive)
+    (setq claude-code--j-pressed t)
+    ;; Send j to terminal
+    (claude-code--term-send-string claude-code-terminal-backend "j")
+    ;; Set timer to clear j-pressed flag
+    (when claude-code--jk-timer (cancel-timer claude-code--jk-timer))
+    (setq claude-code--jk-timer
+          (run-at-time 0.3 nil
+                       (lambda () (setq claude-code--j-pressed nil)))))
+
+  (defun claude-code--handle-k ()
+    "Handle 'k' press - toggle read-only if j was pressed recently."
+    (interactive)
+    (if claude-code--j-pressed
+        (progn
+          ;; Delete the 'j' we already sent
+          (claude-code--term-send-string claude-code-terminal-backend "\177") ; backspace
+          (setq claude-code--j-pressed nil)
+          (when claude-code--jk-timer (cancel-timer claude-code--jk-timer))
+          (claude-code-toggle-read-only-mode))
+      ;; Normal k press
+      (claude-code--term-send-string claude-code-terminal-backend "k")))
+
+  ;; Override keymap setup to add our Evil-friendly bindings
+  (defun claude-code--setup-evil-friendly-keymap ()
+    "Add Evil-friendly keybindings to claude-code buffer."
+    (when (derived-mode-p 'eat-mode)
+      (let ((map (current-local-map)))
+        ;; jk escape sequence
+        (define-key map (kbd "j") #'claude-code--handle-j)
+        (define-key map (kbd "k") #'claude-code--handle-k)
+        ;; C-z as alternative toggle (doesn't conflict with terminal)
+        (define-key map (kbd "C-z") #'claude-code-toggle-read-only-mode)
+        ;; Double-tap C-g for keyboard-quit (first one sends ESC)
+        (define-key map (kbd "C-c C-g") #'keyboard-quit))))
+
+  ;; Hook into claude buffer creation
+  (add-hook 'claude-code-mode-hook #'claude-code--setup-evil-friendly-keymap)
+
+  ;; When in read-only mode, make ESC return to interactive mode
+  (defun claude-code--evil-escape-handler ()
+    "Return to interactive mode when pressing ESC in read-only mode."
+    (interactive)
+    (when (and (claude-code--buffer-p (current-buffer))
+               (claude-code--term-in-read-only-p claude-code-terminal-backend))
+      (claude-code-exit-read-only-mode)))
+
+  ;; Add to evil-escape-functions for Doom integration
+  (after! evil
+    (add-hook 'evil-normal-state-entry-hook
+              (lambda ()
+                (when (and (claude-code--buffer-p (current-buffer))
+                           (boundp 'eat--semi-char-mode)
+                           (not eat--semi-char-mode)) ; in read-only/emacs mode
+                  ;; We're in read-only mode in a Claude buffer
+                  ;; ESC exits read-only mode
+                  (local-set-key [escape]
+                                 (lambda () (interactive)
+                                   (claude-code-exit-read-only-mode))))))))
 
 (server-force-delete)
 (server-start)

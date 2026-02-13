@@ -1,18 +1,50 @@
 #!/bin/bash
 
-# This is bound to Shift+PrintScreen by default, requires maim. It lets you
-# choose the kind of screenshot to take, including copying the image or even
-# highlighting an area to copy. scrotcucks on suicidewatch right now.
+# Screenshot picker using maim. Pauses picom during capture
+# so blur, rounded corners, and opacity don't appear in screenshots.
 
-# variables
 output="$(date '+%y%m%d-%H%M-%S').png"
 xclip_cmd="xclip -sel clip -t image/png"
 
-case "$(printf "a selected area\\ncurrent window\\nfull screen\\na selected area (copy)\\ncurrent window (copy)\\nfull screen (copy)" | dmenu -l 6 -i -p "Screenshot which area?")" in
-    "a selected area") maim -s pic-selected-"${output}" ;;
-    "current window") maim -q -d 0.2 -i "$(xdotool getactivewindow)" pic-window-"${output}" ;;
-    "full screen") maim -q -d 0.2 pic-full-"${output}" ;;
-    "a selected area (copy)") maim -s | ${xclip_cmd} ;;
-    "current window (copy)") maim -q -d 0.2 -i "$(xdotool getactivewindow)" | ${xclip_cmd} ;;
-    "full screen (copy)") maim -q -d 0.2 | ${xclip_cmd} ;;
+picom_pause()  { pkill -x picom; sleep 0.15; }
+picom_resume() { picom --config ~/.config/picom/picom.conf -b >/dev/null 2>&1; }
+
+take_selection() {
+    local geom
+    geom=$(slop -f '%g') || return 1
+    picom_pause
+    maim -g "$geom" "$@"
+    local rc=$?
+    picom_resume
+    return $rc
+}
+
+take_window() {
+    local wid
+    wid=$(xdotool getactivewindow)
+    picom_pause
+    maim -q -i "$wid" "$@"
+    local rc=$?
+    picom_resume
+    return $rc
+}
+
+take_fullscreen() {
+    picom_pause
+    sleep 0.1
+    maim -q "$@"
+    local rc=$?
+    picom_resume
+    return $rc
+}
+
+choice="$(printf "a selected area\ncurrent window\nfull screen\na selected area (copy)\ncurrent window (copy)\nfull screen (copy)" | dmenu -l 6 -i -p "Screenshot which area?")"
+
+case "$choice" in
+    "a selected area")       take_selection pic-selected-"${output}" ;;
+    "current window")        take_window pic-window-"${output}" ;;
+    "full screen")           take_fullscreen pic-full-"${output}" ;;
+    "a selected area (copy)") take_selection | ${xclip_cmd} ;;
+    "current window (copy)") take_window | ${xclip_cmd} ;;
+    "full screen (copy)")    take_fullscreen | ${xclip_cmd} ;;
 esac

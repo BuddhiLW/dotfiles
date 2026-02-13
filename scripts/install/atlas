@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+curl -sSf https://atlasgo.sh | sh

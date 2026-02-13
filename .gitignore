@@ -249,3 +249,5 @@ tmp
 talos/
 
 .config/xmonad/.stack-work/
+
+psi/

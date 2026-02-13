@@ -3,8 +3,20 @@
 LINKSC=("tmux/.tmux.conf" "vim/.vimrc")
 
 # Items at DOTFILES/<name> -> $HOME/<name>
-LINKSD=(".bashrc" ".vim" ".doom.d")
+LINKSD=(".bashrc" ".profile" ".vim" ".doom.d" ".Xresources")
 
 # Absolute destinations that get linked specially
 SPECIAL_DESTS=("$HOME/.xinitrc")
+
+# Config files that need directory-to-file linking
+# Format: "source:dest" relative to DOTFILES/.config and $HOME/.config
+CONFIG_FILES=(
+  "display-scale.env:display-scale.env"
+  "gtk-3.0/settings.ini:gtk-3.0/settings.ini"
+)
+
+# Scripts in .local/bin
+LOCAL_BIN_SCRIPTS=(
+  "apply-display-scale"
+)
 

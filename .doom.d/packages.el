@@ -103,9 +103,18 @@
 (package! org-present)
 
 (package! clojure-mode-extra-font-locking)
+(package! parseedn)  ; EDN parsing for hive-mcp
 
 ;; packages.el`
 (package! dartclojure :recipe (:host github :repo "burinc/dartclojure.el"))
+
+(package! claude-code-ide
+  :recipe (:host github :repo "BuddhiLW/claude-code-ide.el" :branch "main"))
+;; NOTE: Fork required for hive-mcp swarm integration.
+;; Adds --system-prompt file support for preset injection.
+;; Upstream: manzaltu/claude-code-ide.el (no preset file support)
+
+(package! web-server)  ; Required for claude-code-ide MCP server
 
 (package! neotree)
 
@@ -221,6 +230,8 @@
 
 (package! elysium)
 
+(package! org-ai)
+
 (package! aider)
 
 ;; Dependencies for claude-code.el
@@ -240,3 +251,5 @@
 (package! pdfgrep)
 
 (package! json-mode)
+
+(package! package-lint)

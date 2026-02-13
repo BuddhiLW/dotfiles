@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+
+echo '#!/usr/bin/env sh' > $HOME/.local/bin/kaocha
+echo 'lein kaocha "$@"' >> $HOME/.local/bin/kaocha
+chmod +x $HOME/.local/bin/kaocha
