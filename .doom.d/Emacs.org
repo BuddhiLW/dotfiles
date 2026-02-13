@@ -1927,6 +1927,22 @@ To create new loadable modules,
 (use-package! web-server)
 #+end_src
 
+*** hive-mcp AI Bridge
+Integration between hive-mcp memory/swarm and Emacs AI ecosystem.
+
+#+begin_src emacs-lisp
+;; Load hive-mcp AI bridge and addons
+(when (locate-library "hive-mcp-ai-bridge")
+  (require 'hive-mcp-ai-bridge)
+
+  ;; gptel integration - inject memory context, store notable responses
+  (when (locate-library "hive-mcp-gptel")
+    (require 'hive-mcp-gptel)
+    (hive-mcp-gptel-mode 1)))
+#+end_src
+
+
+
 *** Integration with Claude MCP for project memory, context, and workflows.
 
 #+begin_src emacs-lisp
