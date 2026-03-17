@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Backup GPG keys + pass store with ONE password prompt
+# Creates a single encrypted tarball in ~/backups/
+
+OUT_BASE="${HOME}/backups"
+timestamp="$(date -u +"%Y%m%dT%H%M%SZ")"
+OUT_DIR="${OUT_BASE}/gpg-pass-backup-${timestamp}"
+mkdir -p "${OUT_DIR}"
+
+TMPDIR="$(mktemp -d)"
+trap 'rm -rf "${TMPDIR}"' EXIT
+
+echo "[*] Exporting GPG data to temp dir..."
+
+# Exports
+gpg --export --armor > "${TMPDIR}/public-keys.asc"
+gpg --export-secret-keys --armor > "${TMPDIR}/secret-keys.asc"
+gpg --export-ownertrust > "${TMPDIR}/ownertrust.txt"
+
+# Optional directories
+if [[ -d "${HOME}/.gnupg" ]]; then
+  tar -C "${HOME}" --exclude=".gnupg/S.gpg-agent*" -cpf "${TMPDIR}/gnupg.tar" .gnupg
+fi
+
+if [[ -d "${HOME}/.password-store" ]]; then
+  tar -C "${HOME}" -cpf "${TMPDIR}/password-store.tar" .password-store
+fi
+
+# Create one tarball with everything
+ARCHIVE="${OUT_DIR}/backup-${timestamp}.tar"
+tar -C "${TMPDIR}" -cpf "${ARCHIVE}" .
+
+# Encrypt once
+echo "[*] Encrypting tarball (one passphrase)..."
+gpg -c "${ARCHIVE}"
+
+# Add checksum
+sha256sum "${ARCHIVE}.gpg" > "${OUT_DIR}/SHA256SUMS"
+
+rm -f "${ARCHIVE}"  # remove plaintext archive
+
+echo "✅ Backup complete -> ${OUT_DIR}"
+echo "File created: ${ARCHIVE}.gpg"
+

@@ -1,0 +1,16 @@
+#! /bin/sh
+
+# torcat: Start IceCat proxying through Tor
+profile=$HOME/.config/torcat
+
+if [ ! -f $profile/prefs.js ]; then
+    mkdir -p "$profile"
+    cat <<EOF > "$profile"/prefs.js
+user_pref("browser.startup.homepage", "https://check.torproject.org/");
+user_pref("network.proxy.socks", "localhost");
+user_pref("network.proxy.socks_port", 9050);
+user_pref("network.proxy.type", 1);
+EOF
+fi
+exec icecat --profile "$profile"
+

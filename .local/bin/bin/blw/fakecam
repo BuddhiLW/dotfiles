@@ -1,0 +1,12 @@
+#!/usr/bin/env python3
+import pyfakewebcam
+import cv2
+
+# Use the correct virtual webcam device
+cam = pyfakewebcam.FakeWebcam('/dev/video3', 640, 480)
+
+# Example: Set a dummy frame (solid black image)
+import numpy as np
+black_frame = np.zeros((480, 640, 3), dtype=np.uint8)
+cam.schedule_frame(black_frame)
+print("Fake webcam is now streaming black frames.")

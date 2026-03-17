@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+cd $DOTFILES/gitthings/LibreChat
+docker compose up -d

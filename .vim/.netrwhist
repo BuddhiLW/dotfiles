@@ -1,5 +1,6 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =0
+let g:netrw_dirhistcnt =1
+let g:netrw_dirhist_1='/home/leibniz/dotfiles/shiny-enigma'
 let g:netrw_dirhist_0='/home/lages/PP/hive/hive-mcp'
 let g:netrw_dirhist_9='/home/lages/.pomodoro'
 let g:netrw_dirhist_8='/home/lages/dotfiles/gitthings/emacs-mcp'
@@ -9,4 +10,3 @@ let g:netrw_dirhist_5='/home/lages/PP'
 let g:netrw_dirhist_4='/home/lages/PP/funeraria'
 let g:netrw_dirhist_3='/home/lages/PP/funeraria/dc'
 let g:netrw_dirhist_2='/home/lages/dotfiles/talos'
-let g:netrw_dirhist_1='/home/lages/dotfiles/scripts/install'

@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# Screenshot picker using maim. Pauses picom during capture
+# so blur, rounded corners, and opacity don't appear in screenshots.
+
+output="$(date '+%y%m%d-%H%M-%S').png"
+xclip_cmd="xclip -sel clip -t image/png"
+
+picom_pause()  { pkill -x picom; sleep 0.15; }
+picom_resume() { picom --config ~/.config/picom/picom.conf -b >/dev/null 2>&1; }
+
+take_selection() {
+    local geom
+    geom=$(slop -f '%g') || return 1
+    picom_pause
+    maim -g "$geom" "$@"
+    local rc=$?
+    picom_resume
+    return $rc
+}
+
+take_window() {
+    local wid
+    wid=$(xdotool getactivewindow)
+    picom_pause
+    maim -q -i "$wid" "$@"
+    local rc=$?
+    picom_resume
+    return $rc
+}
+
+take_fullscreen() {
+    picom_pause
+    sleep 0.1
+    maim -q "$@"
+    local rc=$?
+    picom_resume
+    return $rc
+}
+
+choice="$(printf "a selected area\ncurrent window\nfull screen\na selected area (copy)\ncurrent window (copy)\nfull screen (copy)" | dmenu -l 6 -i -p "Screenshot which area?")"
+
+case "$choice" in
+    "a selected area")       take_selection pic-selected-"${output}" ;;
+    "current window")        take_window pic-window-"${output}" ;;
+    "full screen")           take_fullscreen pic-full-"${output}" ;;
+    "a selected area (copy)") take_selection | ${xclip_cmd} ;;
+    "current window (copy)") take_window | ${xclip_cmd} ;;
+    "full screen (copy)")    take_fullscreen | ${xclip_cmd} ;;
+esac

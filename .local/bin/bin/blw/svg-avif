@@ -1,0 +1,27 @@
+#!/bin/bash
+
+INPUT_SVG="$1"
+OUTPUT_DIR="${2:-./avif-output}"
+WIDTHS=(480 720 1080)
+QUALITY=100
+
+command -v inkscape >/dev/null || { echo "❌ Requer inkscape"; exit 1; }
+command -v avifenc >/dev/null || { echo "❌ Requer avifenc"; exit 1; }
+
+mkdir -p "$OUTPUT_DIR"
+
+filename=$(basename "$INPUT_SVG")
+name="${filename%.*}"
+safe_name=$(echo "$name" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/_/g')
+
+for width in "${WIDTHS[@]}"; do
+  tmp_png="/tmp/${safe_name}_${width}.png"
+  out_file="$OUTPUT_DIR/${safe_name}_${width}.avif"
+
+  # Renderiza SVG para PNG com largura definida (alta qualidade)
+  inkscape "$INPUT_SVG" --export-type=png --export-width="$width" --export-background-opacity=0 --export-filename="$tmp_png"
+
+  # Converte PNG para AVIF
+  avifenc -q "$QUALITY" "$tmp_png" "$out_file" && echo "✅ $out_file" || echo "❌ Falhou: $out_file"
+  rm "$tmp_png"
+done

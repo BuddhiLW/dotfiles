@@ -106,7 +106,6 @@ export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 
 # export OPENAI_API_KEY="$(pass LLMs/OpenAI-keys)"
-export GOROOT="/usr/local/go"
 export LC_COLLATE=C
 export LESS_TERMCAP_mb="[35m" # magenta
 export LESS_TERMCAP_md="[33m" # yellow
@@ -183,7 +182,6 @@ pathprepend \
     "$DOOMBIN" \
     "$NATIVEFIER" \
     "$GHCUP" \
-    "$GOROOT" \
     "$SEARX_SETTINGS_PATH" \
     "/usr/local/go/bin" \
     "$HOME/programs/julia/bin/" \
@@ -401,7 +399,7 @@ export VISUAL="vim"
 ## export VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI mode
 export TERMINAL="st"
 #export BROWSER="qutebrowser"
-#export BROWSER="chromium"
+export BROWSER="chromium"
 #export CHROME_EXECUTABLE="chromium"
 
 # Clojure related
@@ -412,6 +410,8 @@ export CLJ_PLAYGROUND="$CLJ/cljs-reagent-template/"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CACHE_HOME="$HOME/.cache"
+export OPENROUTER_API_KEY=$(pass OpenRouter/opencode-key)
+export VENICE_API_KEY=$(pass show Venice/api-key)
 export XINITRC="${XDG_CONFIG_HOME:-$HOME/.config}/x11/xinitrc"
 export NOTMUCH_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/notmuch-config"
 export GTK2_RC_FILES="${XDG_CONFIG_HOME:-$HOME/.config}/gtk-2.0/gtkrc-2.0"
@@ -584,14 +584,14 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/lages/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$('/home/leibniz/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/home/lages/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/lages/anaconda3/etc/profile.d/conda.sh"
+    if [ -f "/home/leibniz/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/leibniz/anaconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/home/lages/anaconda3/bin:$PATH"
+        export PATH="/home/leibniz/anaconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
@@ -655,8 +655,14 @@ export GOSUMDB=sum.golang.org
 
 # hive-mcp-cli managed - START
 export HIVE_MCP_DIR="$HOME/PP/hive/hive-mcp"
+export HIVE_MCP_HOME="$HIVE_MCP_DIR"
 export BB_MCP_DIR="$HOME/PP/hive/bb-mcp"
 # hive-mcp-cli managed - END
+export CLEL_HOME="$HOME/PP/clojure-elisp"
 export QT_XCB_GL_INTEGRATION=xcb_glx
 export PATH="/home/lages/anaconda3/envs/hive/bin:$PATH"
-export GOROOT=/home/linuxbrew/.linuxbrew/Cellar/go/1.25.7_1/libexec
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# opencode
+export PATH=/home/leibniz/.opencode/bin:$PATH

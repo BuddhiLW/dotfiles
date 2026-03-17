@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+ln -sf $HOME/.config/facti/.eslintrc.js $PWD

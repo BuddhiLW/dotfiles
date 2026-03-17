@@ -1,0 +1,11 @@
+#!/usr/bin/bash
+
+# Path to the swagger.json file
+INPUT_FILE="$@"
+
+# Extract tags from swagger.json and save to a file
+jq '.paths[] | .[].tags[]' "$INPUT_FILE" | sort | uniq > /tmp/tags.txt
+
+# Open the temporary file in Vim
+vim /tmp/tags.txt
+

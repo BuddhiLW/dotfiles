@@ -1,0 +1,12 @@
+#!/usr/bin/bash
+
+Directory="$0"
+namereg="$1"
+stringreplace="$2"
+stringnew="$3"
+
+
+find $Directory -type f -name "$namereg" -exec sed -i "s,${stringreplace},${stringnew},
+g" {} \;
+
+

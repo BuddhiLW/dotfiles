@@ -216,6 +216,8 @@
 
 (package! citre)
 
+(package! dap-mode)
+
 ;; llama is required by magit-base (short lambda syntax library)
 (package! llama)
 (package! ellama)

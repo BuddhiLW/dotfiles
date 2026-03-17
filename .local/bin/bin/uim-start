@@ -1,0 +1,39 @@
+# #!/usr/bin/bash
+# PIDXIM=$(pgrep -lf uim | grep "uim-xim" | echo)
+# PIDFEP=$(pgrep -lf uim | grep "uim-fep" | echo)
+# 
+# if [ -n "$PIDXIM" ]; then
+#   echo "UIM-xim already running";
+# 
+#   if [ -n "$PIDFEP" ]; then
+#     echo "UIM-fep already running";
+#     exit;
+#   else
+#     uim-fep
+#     exit;
+#   fi
+# 
+# else 
+#   uim-xim&
+#   uim-fep
+#   exit;
+# fi;
+# 
+# 
+# script_name=$(basename -- "$-1")
+# pidxim=(`pgrep -f uim-xim`)
+# pid_count=${#pidxim[@]}
+# 
+# [[ -z $pidxim ]] && echo "uim-not running yet"
+# 
+# if [[  $pid_count -gt "0" ]];then
+#   echo "uim-xim running"
+#   uim-fep
+#   exit 0
+# else
+#   uim-xim& 
+#   uim-fep
+#   exit 0
+# fi
+# 
+# 

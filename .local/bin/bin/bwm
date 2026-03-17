@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+
+$HOME/.screenlayout/default.sh
+setbg $HOME/Pictures/Wallpaper/cypus.jpg
+
+kill -9 $(pidof picom)
+picom --experimental-backends &

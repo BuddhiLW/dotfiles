@@ -1,0 +1,14 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "hive": {
+      "type": "local",
+      "command": ["/home/leibniz/PP/hive/bb-mcp/start-bb-mcp.sh", "/home/leibniz/PP/hive/hive-mcp"],
+      "environment": {
+        "BB_MCP_NREPL_PORT": "7910",
+        "HIVE_MCP_DIR": "/home/leibniz/PP/hive/hive-mcp/hive-mcp"
+      },
+      "enabled": true
+    }
+  }
+}

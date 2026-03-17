@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# copy-artist.sh
+# Usage: copy-artist.sh "Artist Name" <source_dir> <dest_dir>
+
+set -euo pipefail
+
+if [ $# -ne 3 ]; then
+  echo "Usage: $0 \"Artist Name\" <source_dir> <dest_dir>" >&2
+  exit 1
+fi
+
+ARTIST="$1"
+SRC="$2"
+DEST="$3"
+
+mkdir -p "$DEST"
+
+# Find all files matching artist name (case-insensitive)
+mapfile -t matches < <(find "$SRC" -type f -iname "*$ARTIST*" 2>/dev/null)
+
+if [ ${#matches[@]} -eq 0 ]; then
+  echo "No files found for $ARTIST"
+  exit 1
+fi
+
+n=0
+for f in "${matches[@]}"; do
+  n=$((n+1))
+  base="$(basename "$f")"
+  printf -v prefixed "%02d - %s" "$n" "$base"
+  rsync -a --ignore-existing -- "$f" "$DEST/$prefixed"
+done
+
+echo "Copied $n files for artist \"$ARTIST\" into $DEST"
+#!/usr/bin/bash

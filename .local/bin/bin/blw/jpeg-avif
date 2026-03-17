@@ -1,0 +1,27 @@
+#!/usr/bin/bash
+
+INPUT_DIR="${1:-.}"
+OUTPUT_DIR="${2:-./avif-output}"
+WIDTHS=(480 720 1080)
+QUALITY=60
+
+command -v avifenc >/dev/null || { echo "❌ Requer avifenc (libavif)"; exit 1; }
+command -v convert >/dev/null || { echo "❌ Requer ImageMagick (convert)"; exit 1; }
+
+mkdir -p "$OUTPUT_DIR"
+
+find "$INPUT_DIR" -type f \( -iname "*.jpg" -o -iname "*.jpeg" \) | sort | while read -r file; do
+  filename=$(basename "$file")
+  name="${filename%.*}"
+  safe_name=$(echo "$name" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/_/g')
+
+  for width in "${WIDTHS[@]}"; do
+    resized="/tmp/${safe_name}_${width}.jpg"
+    out_file="$OUTPUT_DIR/${safe_name}_${width}.avif"
+
+    convert "$file" -resize "${width}" "$resized"
+    avifenc -q "$QUALITY" "$resized" "$out_file" && echo "✅ $out_file" || echo "❌ Falhou: $file → $out_file"
+    rm "$resized"
+  done
+done
+

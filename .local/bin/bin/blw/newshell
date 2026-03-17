@@ -1,0 +1,68 @@
+#!/bin/bash
+
+
+# colorscript random
+#figlet buddhilw
+
+# neofetch --colors 444 431 100 010 001 999 --color-blocks on --col_offset auto --ascii --ascii_colors $lolcat 
+
+#COMMANDS CREATED INSIDE /ETC/BASH.BASHRC FILE
+# USING ANSI COLORS
+# RED="\e[31m"
+# ORANGE="\e[33m"
+# BLUE="\e[94m"
+# GREEN="\e[92m"
+# STOP="\e[0m"
+
+
+# printf "${GREEN}"
+# printf "=================================\n"
+# printf "${ORANGE}"
+# figlet -f doom "Buddhi" |  sed '$ d' | sed '$ d'
+# printf "${BLUE}"
+# figlet -f small "LW" | sed '$ d'
+# printf "${GREEN}"
+# printf "=================================\n"
+# printf "${STOP}"
+
+# Awnsered by `choroba`
+# https://stackoverflow.com/questions/70438735/i-would-like-to-concatenate-two-figlet-outputs-with-different-colors?noredirect=1#70439024
+# RED="\e[40m"
+ORANGE="\e[37m" # 37 => white; 35 => pink/purple
+BLUE="\e[0m"
+GREEN="\e[31m" # 34 => cyan
+STOP="\e[0m"
+
+mapfile -t left  < <(figlet -f standard "Buddhi")
+mapfile -t right < <(figlet -f standard "LW")
+
+maxlength=0
+for line in "${left[@]}" ; do
+    if (( ${#line} > maxlength )) ; then
+        maxlength=${#line}
+    fi
+done
+
+printf "${GREEN}"
+printf "===================================\n" 
+
+for ((i=0; i<=${#left[@]}; ++i)) ; do
+    printf "${ORANGE}%-${maxlength}s ${GREEN}%s\n" "${left[i]}" "${right[i]}"
+done | sed "$ d" | sed "$ d"
+
+printf "${GREEN}"
+printf "=======================================\n"
+printf "${STOP}"
+
+fortune | lolcat -t
+
+# printf "$GREEN=================================\n"
+# { figlet Buddhi; echo 'EOF'; figlet LW; } | awk 'NF==1&&$1=="EOF" 
+#   	 	      	     	    	    	{noskip=1; next; } 
+# 						noskip==0 { f[++c]=$0; next; } 
+# 						{ printf "%s%s%s%s\n",
+# 						"'"${ORANGE}"'",
+# 						f[++k],
+# 						"'"${BLUE}"'",$0;}'
+# printf "$GREEN=================================\n"
+# tput sgr0

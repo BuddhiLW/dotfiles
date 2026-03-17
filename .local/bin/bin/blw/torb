@@ -1,0 +1,29 @@
+#!/bin/bash
+set -euo pipefail
+
+# ---------------------------------------------------------------------------
+# Where Tor Browser lives ─ change if you move it, or override with:  TORB=…
+# ---------------------------------------------------------------------------
+TORB="${TORB:-$HOME/dotfiles/gitthings/tor-browser}"
+
+START="$TORB/Browser/start-tor-browser"           # real launcher
+DESKTOP="$TORB/start-tor-browser.desktop"         # self-registering .desktop
+
+# 1   Sanity-check we really have Tor Browser
+if [[ ! -x "$START" ]]; then
+  echo "torb: can't find executable: $START" >&2
+  echo "Set TORB to the tor-browser directory and try again." >&2
+  exit 127
+fi
+
+# 2   (Re)register the desktop file **from inside** the Tor folder
+if [[ -f "$DESKTOP" ]]; then
+  chmod +x "$DESKTOP"                             # GNOME ignores non-exec files
+  (
+    cd "$TORB"
+    ./start-tor-browser.desktop --register-app --quiet || true
+  )
+fi
+
+# 3   Launch the browser, passing through any CLI args
+exec "$START" --detach "$@"

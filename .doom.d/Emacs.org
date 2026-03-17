@@ -1875,7 +1875,7 @@ To create new loadable modules,
 ;; config.el
 ;; Major mode for .cljel files
 (use-package! clojure-elisp-mode
-  :load-path "/home/lages/PP/clojure-elisp/resources/clojure-elisp/"
+  :load-path "~/PP/clojure-elisp/resources/clojure-elisp/"
   :mode "\\.cljel\\'")
 
 ;; CIDER integration for ClojureElisp - provides eval keybindings
@@ -1883,7 +1883,7 @@ To create new loadable modules,
 ;; C-c C-c  — eval defun at point
 ;; C-c C-k  — compile/eval entire buffer
 (after! cider
-  (add-to-list 'load-path "/home/lages/PP/clojure-elisp/resources/clojure-elisp/")
+  (add-to-list 'load-path "~/PP/clojure-elisp/resources/clojure-elisp/")
   (require 'cider-clojure-elisp)
   ;; Auto-enable cider-cljel-mode in clojure-elisp-mode buffers
   (add-hook 'clojure-elisp-mode-hook #'cider-cljel-mode))
@@ -2799,6 +2799,10 @@ sudo update-alternatives --config x-terminal-emulator
   :commands lsp)
 #+end_src
 * DAP (Debug Adapter Protocol)
+
+#+begin_src emacs-lisp :tangle ./packages.el
+(package! dap-mode)
+#+end_src
 
 #+begin_src emacs-lisp
 (require 'dap-mode)

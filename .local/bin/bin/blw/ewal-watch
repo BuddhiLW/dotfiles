@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+
+inotifywait -m -e close_write --format '%w%f' ~/.cache/wal/colors.json | while read file; do
+  emacsclient -e '(blw/reload-ewal-doom-one-theme)'
+done

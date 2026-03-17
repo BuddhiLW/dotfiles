@@ -252,3 +252,7 @@ talos/
 
 psi/
 CLAUDE.md
+vpn/
+.config/haproxy-k8s-lb/haproxy.cfg
+.config/freerdp/
+.local/bin/bin/blw/freqtrade*

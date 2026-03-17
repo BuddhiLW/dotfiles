@@ -51,17 +51,10 @@ Config { font = "FiraCode Nerd Font 16"
                     , Run Com "echo" ["<fn=2>\xf0f3</fn>"] "bell" 3600
                         -- Check for pacman updates (script found in .local/bin)
                     , Run Com ".local/bin/pacupdate" [] "pacupdate" 36000
-                    -- Echos a "battery" icon in front of the pacman updates.
-                    , Run Com "echo" ["<fn=2>\xf242</fn>"] "baticon" 60
+                    -- Battery
+                    , Run Com ".local/bin/larbs/statusbar/sb-battery" [] "battery" 10
                     -- Pomodoro
                     , Run Com ".local/bin/blw/sb-pomo" [] "pomodoro" 1
-                        -- Battery Alert
-                    , Run BatteryP ["BAT0"]
-                    ["-t", "<acstatus>"
-                    , "-L", "10", "-H", "80"
-                    , "-l", "red", "-h", "green"
-                    , "--", "-O", "Charging", "-o", "<left>%"
-                    ] 10
                         -- Time and date
                     , Run Date "%d/%m/%Y %Hh%Mm" "date" 50
                         -- Script that dynamically adjusts xmobar padding depending on number of trayer icons.
@@ -71,8 +64,5 @@ Config { font = "FiraCode Nerd Font 16"
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = " λ <fc=#666666>|</fc> %UnsafeStdinReader%}{<box type=Bottom width=1 mb=1 mr=10 color=AAAAAA><fc=#EAEEFA> %baticon% %battery%</fc></box> <box type=Right width=2 mb=1 mr=1 color=AAAAAA>  <fc=#EAEEFA>%pomodoro%</fc> </box>  <box type=Bottom width=1 mb=1 color=#ecbe7b><fc=#ecbe7b><action=`alacritty -e htop`>%cpu%</action></fc></box>  <box type=Bottom width=2 mb=1 color=#ff6c6b><fc=#ff6c6b><action=`alacritty -e htop`>%memory%</action></fc></box> <box type=Bottom width=2 mb=2 color=#a9a1e1><fc=#a9a1e1>%disku%</fc></box> <box type=Bottom width=2 mb=2 color=#46d9ff><fc=#46d9ff><action=`emacsclient -c -a 'emacs' --eval '(doom/window-maximize-buffer(dt/year-calendar))'`>%date%</action></fc></box> %trayerpad%"
+       , template = " λ <fc=#666666>|</fc> %UnsafeStdinReader%}{<box type=Bottom width=1 mb=1 mr=10 color=AAAAAA><fc=#EAEEFA>%battery%</fc></box> <box type=Right width=2 mb=1 mr=1 color=AAAAAA>  <fc=#EAEEFA>%pomodoro%</fc> </box>  <box type=Bottom width=1 mb=1 color=#ecbe7b><fc=#ecbe7b><action=`alacritty -e htop`>%cpu%</action></fc></box>  <box type=Bottom width=2 mb=1 color=#ff6c6b><fc=#ff6c6b><action=`alacritty -e htop`>%memory%</action></fc></box> <box type=Bottom width=2 mb=2 color=#a9a1e1><fc=#a9a1e1>%disku%</fc></box> <box type=Bottom width=2 mb=2 color=#46d9ff><fc=#46d9ff><action=`emacsclient -c -a 'emacs' --eval '(doom/window-maximize-buffer(dt/year-calendar))'`>%date%</action></fc></box>"
        }
-
--- Battery
--- , Run Com ".local/bin/larbs/statusbar/sb-battery" [] "bat-alert" 10

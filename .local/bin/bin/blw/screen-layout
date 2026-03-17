@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# Internal panel
+INT="eDP-1"
+INT_MODE="1920x1200"
+
+# External ultrawide you *usually* plug in
+EXT="HDMI-1-0"
+EXT_MODE="2560x1080"
+EXT_POS="1920x0"   # put it to the right of the laptop panel
+
+OUT=$(xrandr \
+        --output "$INT" --primary --mode "$INT_MODE" --pos 0x0 --rotate normal \
+        --output "$EXT" --mode "$EXT_MODE" --pos "$EXT_POS" --rotate normal \
+        --output DP-1 --off --output DP-2 --off --output DP-1-0 --off \
+        --output DP-1-1 --off --output DP-1-2 --off --verbose 2>&1)
+echo "$OUT"
+
+# Is the external monitor physically connected?
+if [ "$OUT" = "xrandr: cannot find mode 2560x1080" ]; then
+  echo "External monitor not connected"
+  xrandr \
+        --output "$INT" --primary --mode "$INT_MODE" --pos 0x0 --rotate normal \
+        --output "$EXT" --off \
+        --output DP-1 --off --output DP-2 --off --output DP-1-0 --off \
+        --output DP-1-1 --off --output DP-1-2 --off
+fi

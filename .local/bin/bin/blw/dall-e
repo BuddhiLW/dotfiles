@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+~/.local/py/dall-e.py "$@"

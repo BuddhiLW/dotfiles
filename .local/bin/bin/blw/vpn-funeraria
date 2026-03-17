@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+sudo openvpn --config "$HOME/dotfiles/shiny-enigma/vpn/client_pedro.ovpn"

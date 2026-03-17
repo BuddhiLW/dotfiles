@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+mpv --ytdl-format="bestvideo+bestaudio" "$@"

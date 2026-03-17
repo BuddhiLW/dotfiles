@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+
+# mpv av://v4l2:/dev/video0 --profile=low-latency --untimed
+# prime-run $()
+mpv av://v4l2:/dev/video0 --untimed --title="Buddhi's cam!" --profile=low-latency  --force-seekable=yes
+# --glsl-shaders=~/dotfiles/gitthings/mpv-prescalers/ravu-r4-rgb.hook 
+# --profile=webcam
+# --vf=format:colormatrix=ycgco:convert=yes --sws-allow-zimg --vf=vapoursynth=~~filters/mvtools.vpy:20:10 --vf=greyedge=difford=1:minknorm=5:sigma=2)

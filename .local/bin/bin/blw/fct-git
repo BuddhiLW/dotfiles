@@ -1,0 +1,6 @@
+#!/usr/bin/bash
+
+git config user.name "Pedro Gomes Branquinho"
+git config user.email "pedro.branquinho@facti.com.br"
+
+

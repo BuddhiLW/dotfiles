@@ -1,0 +1,8 @@
+#!/usr/bin/bash
+
+for dir in $(find "$1" -type d); do
+  if [ $(du -s "$dir" | awk '{print $1}') -lt $((1024 * 1024)) ]; then
+    rsync -av "$dir" "$2"
+  fi
+done
+

@@ -1,0 +1,32 @@
+#!/usr/bin/env bb
+
+; :bbin/start
+;
+; {:coords
+;  {:git/url "https://github.com/hive-agi/bb-depsolve.git",
+;   :git/tag "v0.3.3",
+;   :git/sha "56bf34ea689084183e5b3793cfd9033345c23194"},
+;  :lib io.github.hive-agi/bb-depsolve}
+;
+; :bbin/end
+
+(require '[babashka.process :as process]
+         '[babashka.fs :as fs]
+         '[clojure.string :as str])
+
+(def script-root "/home/leibniz/PP/hive/bb-depsolve")
+(def script-lib 'io.github.hive-agi/bb-depsolve)
+(def script-coords {:local/root "/home/leibniz/PP/hive/bb-depsolve"})
+(def script-main-opts ["-m" "bb-depsolve.cli"])
+
+(def tmp-edn
+  (doto (fs/file (fs/temp-dir) (str (gensym "bbin")))
+    (spit (str "{:deps {" script-lib script-coords "}}"))
+    (fs/delete-on-exit)))
+
+(def base-command
+  (vec (concat ["bb" "--deps-root" script-root "--config" (str tmp-edn)]
+               script-main-opts
+               ["--"])))
+
+(process/exec (into base-command *command-line-args*))

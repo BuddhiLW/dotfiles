@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+DOCS="${DOCUMENTATION:-$HOME/.config/documentation/xmonad-bindings-tables.pdf}"
+evince "$DOCS"

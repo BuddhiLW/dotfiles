@@ -1,0 +1,9 @@
+#!/usr/bin/bash
+
+cd $HOME/PP/hive/hive-mcp/
+
+DEPS=$(cat local.deps.edn)
+echo " ---- DEPS ---- \n"
+echo "$DEPS"
+
+clj -Sdeps "$(cat local.deps.edn)" -M:dev:nrepl

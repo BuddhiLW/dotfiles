@@ -1,0 +1,174 @@
+#!/usr/bin/env bash
+# copy-from-playlist
+# Copies best-matching files from SRC into DEST as "NN - <original-filename>".
+
+set -Eeuo pipefail
+
+# ---------- logging ----------
+log() { printf '[%(%F %T)T] %s\n' -1 "$*" >&2; }
+trap 'log "ERR at line $LINENO: $BASH_COMMAND"' ERR
+
+# ---------- args ----------
+if [ $# -ne 3 ]; then
+  echo "Usage: $0 <playlist.txt|filelist> <source_dir|filelist> <dest_dir>" >&2
+  exit 1
+fi
+LIST="$1"; SRC="$2"; DEST="$3"
+
+log "LIST=$LIST"
+log "SRC=$SRC"
+log "DEST=$DEST"
+
+# ---------- setup ----------
+mkdir -p "$DEST"
+MATCHED="$DEST/matched.log"
+UNMATCHED="$DEST/unmatched.log"
+AMBIG="$DEST/ambiguous.log"
+: >"$MATCHED"; : >"$UNMATCHED"; : >"$AMBIG"
+
+# ---------- helpers ----------
+normalize() {
+  # Lowercase, strip numbering, comments, "(?)"
+  sed -E '
+    s/^[[:space:]]*[0-9]+[.)-]?[[:space:]]*//;
+    s/^[[:space:]]*#.*$//;
+    s/\(\?\)//g;
+  ' <<<"$1" | tr '[:upper:]' '[:lower:]'
+}
+
+tokens_from() {
+  # Alnum tokens >=2 chars after dropping () and "feat ..."
+  local line="$1" loose
+  loose="$(sed -E 's/\([^)]*\)//g; s/\bfeat\.?\b.*//g; s/[;&:@/|]/ /g; s/[-–—]/ /g; s/,+/ /g; s/[[:space:]]+/ /g; s/^[[:space:]]*//; s/[[:space:]]*$//' <<<"$line")"
+  awk '{for(i=1;i<=NF;i++){t=$i;gsub(/[^[:alnum:]]/,"",t); if(length(t)>=2) print t;}}' <<<"$loose"
+}
+
+predicate_for_tokens() {
+  # AND of up to 3 longest tokens
+  local toks=("$@")
+  mapfile -t top < <(printf "%s\n" "${toks[@]}" | awk '{print length,$0}' | sort -nr | head -n3 | cut -d" " -f2-)
+  [ ${#top[@]} -eq 0 ] && return 1
+  printf ' -type f '
+  local t
+  for t in "${top[@]}"; do
+    printf ' -iname *%s* ' "$t"
+  done
+}
+
+copy_one() {
+  # Prefix with NN - , keep original basename
+  local src="$1" idx="$2"
+  local base destfile
+  base="$(basename "$src")"
+  printf -v destfile "%02d - %s" "$idx" "$base"
+  log "COPY: [$idx] $src  ->  $DEST/$destfile"
+  rsync -a --ignore-existing -- "$src" "$DEST/$destfile"
+}
+
+# ---------- preflight ----------
+if [ ! -e "$LIST" ]; then log "Playlist not found: $LIST"; exit 1; fi
+if [ ! -d "$SRC" ] && [ ! -f "$SRC" ]; then log "Source not found (dir or filelist): $SRC"; exit 1; fi
+
+# ---------- filelist mode ----------
+if [ -f "$SRC" ]; then
+  log "MODE: filelist (copy exact paths listed in $SRC)"
+  n=0
+  while IFS= read -r p || [ -n "$p" ]; do
+    [[ -z "${p// }" ]] && continue
+    [[ "$p" =~ ^[[:space:]]*# ]] && continue
+    n=$((n+1))
+    p_expanded=$(eval echo "$p")
+    if [ -f "$p_expanded" ]; then
+      copy_one "$p_expanded" "$n"
+      echo "$p_expanded" >>"$MATCHED"
+    else
+      log "MISS(filelist): $p"
+      echo "$p" >>"$UNMATCHED"
+    fi
+  done < <(tr -d '\r' < "$SRC")
+  log "Filelist mode complete."
+  exit 0
+fi
+
+# ---------- search mode ----------
+if [ ! -d "$SRC" ]; then
+  log "ERROR: SRC must be a directory in search mode, but is not: $SRC"
+  exit 1
+fi
+log "MODE: search (recursively find matches under $SRC)"
+
+n=0
+while IFS= read -r raw || [ -n "$raw" ]; do
+  norm="$(normalize "$raw")"
+  [[ -z "${norm// }" ]] && continue
+  n=$((n+1))
+  log "----"
+  log "LINE $n RAW:  $raw"
+  log "LINE $n NORM: $norm"
+
+  mapfile -t toks < <(tokens_from "$norm")
+  if [ ${#toks[@]} -eq 0 ]; then
+    log "LINE $n TOKENS: (none)"
+    echo "MISS: $raw" | tee -a "$UNMATCHED" >/dev/null
+    continue
+  fi
+  log "LINE $n TOKENS: ${toks[*]}"
+
+  # strict pass (AND of top 3)
+  pred="$(predicate_for_tokens "${toks[@]}" || true)"
+  log "LINE $n PRED: find \"$SRC\" $pred"
+  mapfile -t hits < <(eval "find \"$SRC\" $pred 2>/dev/null" || true)
+
+  # fallback: try longest then 2nd longest token
+  if [ ${#hits[@]} -eq 0 ]; then
+    mapfile -t top2 < <(printf "%s\n" "${toks[@]}" | awk '{print length,$0}' | sort -nr | head -n2 | cut -d" " -f2-)
+    log "LINE $n FALLBACK TOKENS: ${top2[*]}"
+    for t in "${top2[@]}"; do
+      mapfile -t hits < <(find "$SRC" -type f -iname "*$t*" 2>/dev/null || true)
+      [ ${#hits[@]} -gt 0 ] && break
+    done
+  fi
+
+  log "LINE $n HITS: ${#hits[@]}"
+  if [ ${#hits[@]} -eq 0 ]; then
+    log "LINE $n MISS"
+    echo "MISS: $raw" | tee -a "$UNMATCHED" >/dev/null
+    continue
+  fi
+
+  # score by token overlap in basename
+  best_idx=-1; best_score=-1
+  declare -a scores=()
+  for i in "${!hits[@]}"; do
+    name="$(basename "${hits[$i]}" | tr '[:upper:]' '[:lower:]')"
+    s=0
+    for t in "${toks[@]}"; do [[ "$name" == *"$t"* ]] && s=$((s+1)); done
+    scores[$i]=$s
+    if [ $s -gt $best_score ]; then best_score=$s; best_idx=$i; fi
+  done
+  chosen="${hits[$best_idx]}"
+  log "LINE $n BEST: score=$best_score -> $chosen"
+
+  # ambiguity log
+  same_top=()
+  for i in "${!hits[@]}"; do
+    [ "${scores[$i]}" -eq "$best_score" ] && same_top+=("${hits[$i]}")
+  done
+  if [ ${#same_top[@]} -gt 1 ]; then
+    {
+      echo "AMBIGUOUS: $raw"
+      for h in "${same_top[@]}"; do
+        echo "  $h  [score=$best_score]"
+      done
+      echo
+    } >>"$AMBIG"
+    log "LINE $n AMBIG: ${#same_top[@]} candidates (logged)"
+  fi
+
+  copy_one "$chosen" "$n"
+  echo "OK: $raw -> $chosen" | tee -a "$MATCHED" >/dev/null
+
+done < <(tr -d '\r' < "$LIST")
+
+log "DONE. Logs: $MATCHED | $UNMATCHED | $AMBIG"
+

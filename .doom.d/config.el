@@ -1011,7 +1011,7 @@
 ;; config.el
 ;; Major mode for .cljel files
 (use-package! clojure-elisp-mode
-  :load-path "/home/lages/PP/clojure-elisp/resources/clojure-elisp/"
+  :load-path "~/PP/clojure-elisp/resources/clojure-elisp/"
   :mode "\\.cljel\\'")
 
 ;; CIDER integration for ClojureElisp - provides eval keybindings
@@ -1019,7 +1019,7 @@
 ;; C-c C-c  — eval defun at point
 ;; C-c C-k  — compile/eval entire buffer
 (after! cider
-  (add-to-list 'load-path "/home/lages/PP/clojure-elisp/resources/clojure-elisp/")
+  (add-to-list 'load-path "~/PP/clojure-elisp/resources/clojure-elisp/")
   (require 'cider-clojure-elisp)
   ;; Auto-enable cider-cljel-mode in clojure-elisp-mode buffers
   (add-hook 'clojure-elisp-mode-hook #'cider-cljel-mode))
@@ -1039,6 +1039,15 @@
 (add-hook 'cider-mode-hook 'eldoc-mode) ;; Optional: for showing function arg info
 
 (use-package! web-server)
+
+;; Load hive-mcp AI bridge and addons
+(when (locate-library "hive-mcp-ai-bridge")
+  (require 'hive-mcp-ai-bridge)
+
+  ;; gptel integration - inject memory context, store notable responses
+  (when (locate-library "hive-mcp-gptel")
+    (require 'hive-mcp-gptel)
+    (hive-mcp-gptel-mode 1)))
 
 ;; Use HIVE_MCP_DIR env var (set in shell profile)
 (defvar hive-mcp-root (or (getenv "HIVE_MCP_DIR")

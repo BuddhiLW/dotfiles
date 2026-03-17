@@ -1,0 +1,28 @@
+#!/usr/bin/bash
+
+# Define the file to store the state
+STATE_FILE="$HOME/.config/.audio_profile_state"
+
+# Check if the state file exists, if not create it with the default state
+if [ ! -f "$STATE_FILE" ]; then
+    echo "a2dp-sink" > "$STATE_FILE"
+fi
+
+# Read the current state
+state=$(cat "$STATE_FILE")
+
+# Get the CARD_INDEX for the Bluetooth device
+CARD_INDEX=$(pactl list short cards | grep -i "bluez" | cut -f1)
+
+# Switch the state
+if [ "$state" == "a2dp-sink" ]; then
+    new_state="headset-head-unit"
+else
+    new_state="a2dp-sink"
+fi
+
+# Apply the new state
+pactl set-card-profile "$CARD_INDEX" "$new_state"
+
+# Save the new state to the file
+echo "$new_state" > "$STATE_FILE"
