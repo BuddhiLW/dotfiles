@@ -1,0 +1,18 @@
+#!/usr/bin/bash
+
+
+cd $GITTHINGS
+
+curl -L https://downloads.getmonero.org/gui/source | tar -xjf -
+
+cd monero-gui
+docker build --tag monero:build-env-linux --build-arg THREADS=4 --file Dockerfile.linux .
+
+docker run --rm -it -v $(PWD):/monero-gui -w /monero-gui monero:build-env-linux sh -c 'make release-static -j4'
+
+mv ./monero-gui/build-release/bin/* ~/.local/bin/
+
+rm ./monero-gui-source-*.tar.*
+
+
+

@@ -1054,13 +1054,23 @@
                           (expand-file-name "gitthings/hive-mcp" (getenv "DOTFILES")))
   "Root directory of hive-mcp installation.")
 
-(add-to-list 'load-path (concat hive-mcp-root "/elisp"))
-(add-to-list 'load-path (concat hive-mcp-root "/elisp/addons"))
+(defvar hive-emacs-root (or (getenv "HIVE_EMACS_DIR")
+                            (expand-file-name "hive-emacs" (getenv "HIVE_DIR")))
+  "Root directory of hive-emacs (compiled elisp source).")
+
+;; Load compiled cljel output from build output directory.
+;; build.sh compiles .cljel → .el into elisp/ (flat, named by provide symbol).
+(add-to-list 'load-path (concat hive-emacs-root "/elisp"))
+
+;; CLJEL runtime must load before ANY compiled .cljel file — Emacs
+;; eager macro expansion evaluates macro bodies before (require) runs.
+(require 'clojure-elisp-runtime)
   
 ;
 ; Pre-configure before loading
 ;; Don't start separate nREPL - MCP server now embeds it (commit 7123de0)
 ;; This ensures bb-mcp hivemind calls go to the correct JVM with channel server
+(setq hive-mcp-swarm-terminal-backend 'vterm)  ; claude-code-ide backend has macro expansion issues
 (setq hive-mcp-cider-auto-start-nrepl nil)
 (setq hive-mcp-cider-auto-connect t)  ; Connect to MCP server's embedded nREPL
 (setq hive-mcp-cider-nrepl-port 7910)  ; Must match deps.edn :nrepl alias

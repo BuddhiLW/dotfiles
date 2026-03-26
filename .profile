@@ -18,3 +18,4 @@ export QT_XCB_GL_INTEGRATION=xcb_glx
 
 # Display scaling (Qt/GTK)
 [ -f "$HOME/.config/display-scale.env" ] && . "$HOME/.config/display-scale.env"
+. "/home/leibniz/.local/share/cargo/env"

@@ -4,8 +4,8 @@
 ;
 ; {:coords
 ;  {:git/url "https://github.com/hive-agi/bb-depsolve.git",
-;   :git/tag "v0.3.3",
-;   :git/sha "56bf34ea689084183e5b3793cfd9033345c23194"},
+;   :git/tag "v0.3.4",
+;   :git/sha "afc00e683a12b55f66d4adf0923c450abdc2cef6"},
 ;  :lib io.github.hive-agi/bb-depsolve}
 ;
 ; :bbin/end
@@ -14,9 +14,9 @@
          '[babashka.fs :as fs]
          '[clojure.string :as str])
 
-(def script-root "/home/leibniz/PP/hive/bb-depsolve")
+(def script-root "/home/leibniz/.gitlibs/libs/io.github.hive-agi/bb-depsolve/afc00e683a12b55f66d4adf0923c450abdc2cef6")
 (def script-lib 'io.github.hive-agi/bb-depsolve)
-(def script-coords {:local/root "/home/leibniz/PP/hive/bb-depsolve"})
+(def script-coords {:git/url "https://github.com/hive-agi/bb-depsolve.git", :git/tag "v0.3.4", :git/sha "afc00e683a12b55f66d4adf0923c450abdc2cef6"})
 (def script-main-opts ["-m" "bb-depsolve.cli"])
 
 (def tmp-edn

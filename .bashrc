@@ -35,7 +35,7 @@ export ELM_B="$CS_LANG_B/Elm"
 export PP="$HOME/PP" #Programming Projects
 export CS_LANG_B="$CS_B/Languages"
 export GUIX_PROFILE="/home/$USER/.guix-profile" # Environmental variable for GUIX
-export OPENROUTER_API_KEY="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"
+export OPENROUTER_API_KEY="$(pass openrouter/keys/hive-mcp)"
 
 export DOTFILES="$HOME/dotfiles"
 # export EMACS_MCP_DIR="$DOTFILES/gitthings/hive-mcp"
@@ -654,9 +654,11 @@ export GOPROXY=https://proxy.golang.org,direct
 export GOSUMDB=sum.golang.org
 
 # hive-mcp-cli managed - START
-export HIVE_MCP_DIR="$HOME/PP/hive/hive-mcp"
+export HIVE_DIR="$HOME/PP/hive"
+export HIVE_MCP_DIR="$HIVE_DIR/hive-mcp"
 export HIVE_MCP_HOME="$HIVE_MCP_DIR"
-export BB_MCP_DIR="$HOME/PP/hive/bb-mcp"
+export BB_MCP_DIR="$HIVE_DIR/bb-mcp"
+export HIVE_EMACS_DIR="$HIVE_DIR/hive-emacs"
 # hive-mcp-cli managed - END
 export CLEL_HOME="$HOME/PP/clojure-elisp"
 export QT_XCB_GL_INTEGRATION=xcb_glx
@@ -666,3 +668,4 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # opencode
 export PATH=/home/leibniz/.opencode/bin:$PATH
+. "/home/leibniz/.local/share/cargo/env"

@@ -1,0 +1,1 @@
+/home/leibniz/.local/share/pipx/venvs/checkov/bin/checkov.cmd

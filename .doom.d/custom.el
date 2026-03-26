@@ -8,7 +8,7 @@
  '(elfeed-feeds
    '("https://lists.riseupneky36dttqbzckcq752yw25txbnrhpguip63dk7yr3a33akbid.onion/www/rss/latest_arc/rega"
      "https://lists.riseupneky36dttqbzckcq752yw25txbnrhpguip63dk7yr3a33akbid.onion/www/rss/active_lists") t)
- '(package-selected-packages '(claude-code web-server))
+ '(package-selected-packages '(claude-code edn web-server))
  '(safe-local-variable-directories
    '("/home/lages/PP/hive/hive-mcp/" "/home/lages/.doom.d/" "~/.emacs.d/")))
 (custom-set-faces
