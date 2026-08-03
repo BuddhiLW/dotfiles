@@ -1,3 +1,10 @@
+(setq package-install-upgrade-built-in t)
+
+(unless (fboundp 'set-local)
+  (defun set-local (variable value)
+    "Make VARIABLE buffer local and set it to VALUE."
+    (set (make-local-variable variable) value)))
+
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
 ;; Here are some additional functions/macros that could help you configure Doom:
@@ -613,6 +620,13 @@
 (when (memq window-system '(mac ns))
   (exec-path-from-shell-initialize))
 
+(let ((clojure-cli-bin "/home/linuxbrew/.linuxbrew/bin"))
+  (when (file-executable-p (expand-file-name "clojure" clojure-cli-bin))
+    (add-to-list 'exec-path clojure-cli-bin)
+    (unless (member clojure-cli-bin
+                    (split-string (getenv "PATH") path-separator t))
+      (setenv "PATH" (concat clojure-cli-bin path-separator (getenv "PATH"))))))
+
 ;; (add-hook 'web-mode-hook 'lsp-defered)
 
 ;; (use-package! slime
@@ -1049,13 +1063,18 @@
     (require 'hive-mcp-gptel)
     (hive-mcp-gptel-mode 1)))
 
-;; Use HIVE_MCP_DIR env var (set in shell profile)
+;; Hive checkout roots. Env vars come from the shell profile, which a
+;; desktop-launched Emacs does NOT inherit — every default must stand alone.
+(defvar hive-dir (or (getenv "HIVE_DIR")
+                     (expand-file-name "PP/hive" "~"))
+  "Root directory holding the hive ecosystem checkouts.")
+
 (defvar hive-mcp-root (or (getenv "HIVE_MCP_DIR")
-                          (expand-file-name "gitthings/hive-mcp" (getenv "DOTFILES")))
+                          (expand-file-name "hive-mcp" hive-dir))
   "Root directory of hive-mcp installation.")
 
 (defvar hive-emacs-root (or (getenv "HIVE_EMACS_DIR")
-                            (expand-file-name "hive-emacs" (getenv "HIVE_DIR")))
+                            (expand-file-name "hive-emacs" hive-dir))
   "Root directory of hive-emacs (compiled elisp source).")
 
 ;; Load compiled cljel output from build output directory.
@@ -1174,6 +1193,42 @@
         :desc "Olympus grid" "o" #'hive-olympus
         :desc "Olympus dashboard" "O" #'hive-mcp-olympus-dashboard)))
 
+;; Root of the compiled cljel output — mirrors hive-emacs loading pattern.
+(defvar hive-hagent-root (or (getenv "HIVE_HAGENT_DIR")
+                             (expand-file-name "hive-emacs-hagent" hive-dir))
+  "Root directory of hive-emacs-hagent (compiled elisp source).")
+
+(add-to-list 'load-path (concat hive-hagent-root "/elisp"))
+
+;; clojure-elisp-runtime is already loaded by hive-emacs above; guard anyway.
+(unless (featurep 'clojure-elisp-runtime)
+  (require 'clojure-elisp-runtime nil t))
+
+;; Load the entry point — pulls in log, backend, core, openclaude adapter,
+;; and olympus integration (auto-advises core lifecycle fns).
+(require 'hive-hagent nil t)
+
+;; Default backend for new sessions.  Override per-project via
+;; `hive-hagent-switch-backend' or by let-binding `hive-hagent-default-backend'.
+(setq hive-hagent-default-backend 'openclaude)
+
+;; Terminal emulator used to host the CLI TUI (vterm or eat).
+(setq hive-hagent-terminal-backend 'vterm)
+
+;; Keybindings — native define-key pattern (same shape hive-mcp uses).
+;; The package exports `hive-hagent-command-map' with h/s/r/i/q/b/l entries.
+;; Set the prefix and enable the minor mode; no Doom `map!' coupling needed.
+(setq hive-hagent-keymap-prefix (kbd "C-c h"))
+(with-eval-after-load 'hive-hagent
+  (hive-hagent-mode 1))
+
+;; Optional Doom-leader alias: SPC b h opens the hagent chat directly.
+;; Remove if you prefer the C-c h prefix alone.
+(with-eval-after-load 'hive-hagent
+  (map! :leader
+        (:prefix-map ("b" . "buddhi")
+         :desc "hagent chat" "h" #'hive-hagent)))
+
 ;; if you are using the "pass" password manager
 ;; (setq chatgpt-shell-openai-key
 ;;         (nth 0 (process-lines "pass" "show" "AI/open")))
@@ -1237,6 +1292,33 @@
         ;; indent-bars-highlight-current-depth '(:background "red10")
         ;; indent-bars-color-by-depth '(:regexp "outline-\\([0-9]+\\)" :blend 0.5)
         indent-bars-highlight-current-depth '(:face default :blend 0.9)))
+
+(defun blw/indent-bars-ts-initial-fontify ()
+  "Force initial tree-sitter fontification in indent-bars -ts buffers."
+  (when (and (bound-and-true-p indent-bars-mode)
+             (fboundp 'treesit-parser-list)
+             (treesit-parser-list)
+             (eq font-lock-fontify-buffer-function
+                 'indent-bars-ts--fontify-buffer)
+             (fboundp 'treesit-font-lock-fontify-region))
+    (with-silent-modifications
+      (put-text-property (point-min) (point-max)
+                         'indent-bars-font-lock-pending t))
+    (treesit-font-lock-fontify-region (point-min) (point-max) nil)
+    (when (and (bound-and-true-p rainbow-delimiters-mode)
+               (fboundp 'rainbow-delimiters--propertize))
+      (save-excursion
+        (goto-char (point-min))
+        (rainbow-delimiters--propertize (point-max))))))
+
+(add-hook 'indent-bars-mode-hook
+          (lambda ()
+            (run-at-time 0 nil
+                         (lambda (buf)
+                           (when (buffer-live-p buf)
+                             (with-current-buffer buf
+                               (blw/indent-bars-ts-initial-fontify))))
+                         (current-buffer))))
 
 ;; EXWM init function
 (load! "./blw-func/exwm-init.el")
@@ -1772,100 +1854,28 @@
         (insert "no-show-model-warnings: true\n")
         (insert "architect: true\n")))))
 
-;; Keybindings (set up immediately, autoload handles lazy loading)
+;; Keybindings — only commands that exist in current upstream API.
+;; Removed: claude-code (renamed to claude-code-run), claude-code-continue,
+;; claude-code-resume, claude-code-transient, claude-code-fix-error-at-point
+;; (all dropped when the package was simplified to vterm-only).
 (map! :leader
       (:prefix-map ("b" . "buddhi")
        (:prefix ("ai" . "LLM/AI")
-        :desc "Claude Code" "C" #'claude-code
-        :desc "Claude Continue" "x" #'claude-code-continue
-        :desc "Claude Resume" "R" #'claude-code-resume
-        :desc "Claude Menu" "M" #'claude-code-transient
-        :desc "Send Region to Claude" "S" #'claude-code-send-region
-        :desc "Fix Error with Claude" "F" #'claude-code-fix-error-at-point)))
+        :desc "Claude Run"           "C" #'claude-code-run
+        :desc "Claude Switch Buffer" "x" #'claude-code-switch-to-buffer
+        :desc "Claude Close"         "K" #'claude-code-close
+        :desc "Claude Quit"          "Q" #'claude-code-quit
+        :desc "Send Region"          "S" #'claude-code-send-region
+        :desc "Compact Conversation" "T" #'claude-code-compact)))
 
-;; Global keybinding for quick access
-(global-set-key (kbd "C-c C") #'claude-code-transient)
+;; Global quick-access: open prompt file
+(global-set-key (kbd "C-c C") #'claude-code-open-prompt-file)
 
-;; Configure claude-code after it loads
-(after! claude-code
-  ;; Use eat as the terminal backend (default, more modern)
-  (setq claude-code-terminal-backend 'eat)
-  ;; Enable notifications when Claude needs attention
-  (setq claude-code-enable-notifications t)
-  ;; Ask before killing Claude sessions
-  (setq claude-code-confirm-kill t)
-  ;; RET sends, Shift-RET for newlines (default)
-  (setq claude-code-newline-keybinding-style 'newline-on-shift-return)
-
-  ;; ============================================================
-  ;; Evil-compatible keybindings for seamless editing experience
-  ;; ============================================================
-
-  ;; Timer for jk escape sequence
-  (defvar claude-code--jk-timer nil)
-  (defvar claude-code--j-pressed nil)
-
-  (defun claude-code--handle-j ()
-    "Handle 'j' press for jk escape sequence."
-    (interactive)
-    (setq claude-code--j-pressed t)
-    ;; Send j to terminal
-    (claude-code--term-send-string claude-code-terminal-backend "j")
-    ;; Set timer to clear j-pressed flag
-    (when claude-code--jk-timer (cancel-timer claude-code--jk-timer))
-    (setq claude-code--jk-timer
-          (run-at-time 0.3 nil
-                       (lambda () (setq claude-code--j-pressed nil)))))
-
-  (defun claude-code--handle-k ()
-    "Handle 'k' press - toggle read-only if j was pressed recently."
-    (interactive)
-    (if claude-code--j-pressed
-        (progn
-          ;; Delete the 'j' we already sent
-          (claude-code--term-send-string claude-code-terminal-backend "\177") ; backspace
-          (setq claude-code--j-pressed nil)
-          (when claude-code--jk-timer (cancel-timer claude-code--jk-timer))
-          (claude-code-toggle-read-only-mode))
-      ;; Normal k press
-      (claude-code--term-send-string claude-code-terminal-backend "k")))
-
-  ;; Override keymap setup to add our Evil-friendly bindings
-  (defun claude-code--setup-evil-friendly-keymap ()
-    "Add Evil-friendly keybindings to claude-code buffer."
-    (when (derived-mode-p 'eat-mode)
-      (let ((map (current-local-map)))
-        ;; jk escape sequence
-        (define-key map (kbd "j") #'claude-code--handle-j)
-        (define-key map (kbd "k") #'claude-code--handle-k)
-        ;; C-z as alternative toggle (doesn't conflict with terminal)
-        (define-key map (kbd "C-z") #'claude-code-toggle-read-only-mode)
-        ;; Double-tap C-g for keyboard-quit (first one sends ESC)
-        (define-key map (kbd "C-c C-g") #'keyboard-quit))))
-
-  ;; Hook into claude buffer creation
-  (add-hook 'claude-code-mode-hook #'claude-code--setup-evil-friendly-keymap)
-
-  ;; When in read-only mode, make ESC return to interactive mode
-  (defun claude-code--evil-escape-handler ()
-    "Return to interactive mode when pressing ESC in read-only mode."
-    (interactive)
-    (when (and (claude-code--buffer-p (current-buffer))
-               (claude-code--term-in-read-only-p claude-code-terminal-backend))
-      (claude-code-exit-read-only-mode)))
-
-  ;; Add to evil-escape-functions for Doom integration
-  (after! evil
-    (add-hook 'evil-normal-state-entry-hook
-              (lambda ()
-                (when (and (claude-code--buffer-p (current-buffer))
-                           (boundp 'eat--semi-char-mode)
-                           (not eat--semi-char-mode)) ; in read-only/emacs mode
-                  ;; We're in read-only mode in a Claude buffer
-                  ;; ESC exits read-only mode
-                  (local-set-key [escape]
-                                 (lambda () (interactive)
-                                   (claude-code-exit-read-only-mode))))))))
+;; Make claude-code vterm buffers start in evil emacs-state so RET / typing
+;; goes straight to the terminal without needing to switch state.
+(after! evil
+  (when (boundp 'evil-emacs-state-modes)
+    (add-to-list 'evil-emacs-state-modes 'claude-code-vterm-mode)))
 
 (server-force-delete)
 (server-start)
