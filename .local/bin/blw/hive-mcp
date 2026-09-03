@@ -250,8 +250,93 @@ DEPS=$(cat local.deps.edn)
 echo " ---- DEPS ---- \n"
 echo "$DEPS"
 
+# --- Coordinator-death legibility (kanban TEST-JVM-SUM, 2026-09-03) ---
+#
+# 21 hard kills in 8 days left NO evidence but a 0-byte JFR, and that is not a
+# coincidence: `dumponexit` cannot run when the JVM is SIGKILLed, so the one
+# artefact that would say why is exactly the one the OOM killer prevents.
+#
+# `exec` is what made that unavoidable. It REPLACES this shell with the JVM, so
+# nothing survives the JVM to write a line about it. Running the JVM as a CHILD
+# and waiting costs one dormant bash process and buys an exit record.
+#
+# The RSS at the kill cannot be read after the kill: /proc/<pid> is gone by
+# then. So a sampler writes the last-known RSS and peak to a file every
+# HIVE_DEATHLOG_INTERVAL seconds and the record reports that LAST SAMPLE, which
+# is up to one interval stale and is labelled as such. Host MemAvailable and
+# the count of other JVMs are read at exit, a moment or two late, and are
+# likewise labelled rather than presented as the values at the instant of death.
+# That staleness is the point of the card: the unbounded quantity is the SUM of
+# concurrent JVMs beside the coordinator, and nothing was observing it at all.
+#
+# Disable: HIVE_DEATHLOG=0, which restores the plain exec.
+
 # $JFR_OPT is intentionally unquoted: it is a single word (no spaces) when set,
 # and expands to nothing when leak recording is disabled.
 # $MEM_OPTS is likewise unquoted, but for the opposite reason: it is TWO words and
 # must word-split into two separate -J args.
-exec $EXCLUDE clj $JFR_OPT $MEM_OPTS -Sdeps "$(cat local.deps.edn)" -M:dev:nrepl
+
+if [ "${HIVE_DEATHLOG:-1}" != "1" ]; then
+  exec $EXCLUDE clj $JFR_OPT $MEM_OPTS -Sdeps "$DEPS" -M:dev:nrepl
+fi
+
+DEATHLOG="${HIVE_DEATHLOG_FILE:-$HOME/.local/state/hive/coordinator-deaths.log}"
+mkdir -p "$(dirname "$DEATHLOG")"
+SAMPLE="$(mktemp -t hive-coord-sample.XXXXXX)"
+start_epoch=$(date +%s)
+
+$EXCLUDE clj $JFR_OPT $MEM_OPTS -Sdeps "$DEPS" -M:dev:nrepl &
+coord_pid=$!
+
+# Forward a stop to the JVM: without `exec` this shell is now the signal
+# target, and a coordinator that ignored SIGTERM would be a worse bug than
+# the one being fixed.
+trap 'kill -TERM "$coord_pid" 2>/dev/null' TERM INT
+
+(
+  while kill -0 "$coord_pid" 2>/dev/null; do
+    if [ -r "/proc/$coord_pid/status" ]; then
+      avail=$(awk '/MemAvailable/{print int($2/1024)}' /proc/meminfo)
+      # VmHWM is the PEAK resident size, which is the number a leak
+      # investigation wants and which no post-mortem can recover.
+      awk -v avail="$avail" \
+          '/^VmRSS:/{rss=int($2/1024)} /^VmHWM:/{hwm=int($2/1024)}
+           END{printf "%d %d %d\n", rss, hwm, avail}' \
+          "/proc/$coord_pid/status" >"$SAMPLE.tmp" 2>/dev/null &&
+        mv "$SAMPLE.tmp" "$SAMPLE"
+    fi
+    sleep "${HIVE_DEATHLOG_INTERVAL:-10}"
+  done
+) &
+sampler_pid=$!
+
+wait "$coord_pid"; rc=$?
+kill "$sampler_pid" 2>/dev/null
+wait "$sampler_pid" 2>/dev/null
+
+last_rss=0; last_hwm=0; last_avail=0
+[ -s "$SAMPLE" ] && read -r last_rss last_hwm last_avail <"$SAMPLE"
+rm -f "$SAMPLE" "$SAMPLE.tmp"
+
+# 128+n is a SIGNALLED exit, and 137 (SIGKILL) is the OOM killer's signature.
+# Naming it in the record is what turns an anonymous kill into data.
+if [ "$rc" -gt 128 ]; then
+  sig=$((rc - 128))
+  how="signal=$sig$( [ "$sig" = 9 ] && echo ' (SIGKILL, probably the OOM killer)' )"
+else
+  how="exit=$rc"
+fi
+
+jfr_size=0
+[ -n "${JFR_FILE:-}" ] && [ -f "$JFR_FILE" ] && jfr_size=$(stat -c %s "$JFR_FILE" 2>/dev/null || echo 0)
+
+printf '%s coordinator-exit %s uptime_s=%d last_rss_mb=%d peak_rss_mb=%d last_avail_mb=%d avail_now_mb=%d jvms_now=%d jfr_bytes=%d jfr=%s sample_age_s<=%d\n' \
+  "$(date -Is)" "$how" "$(( $(date +%s) - start_epoch ))" \
+  "$last_rss" "$last_hwm" "$last_avail" \
+  "$(awk '/MemAvailable/{print int($2/1024)}' /proc/meminfo)" \
+  "$(pgrep -c java 2>/dev/null || echo 0)" \
+  "$jfr_size" "${JFR_FILE:-none}" \
+  "${HIVE_DEATHLOG_INTERVAL:-10}" \
+  | tee -a "$DEATHLOG" >&2
+
+exit "$rc"
