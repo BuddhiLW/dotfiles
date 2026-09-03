@@ -293,16 +293,46 @@ coord_pid=$!
 # the one being fixed.
 trap 'kill -TERM "$coord_pid" 2>/dev/null' TERM INT
 
+# `$!` is NOT the JVM. The launch chain is
+#
+#     this shell  ->  clj  ->  rlwrap  ->  clojure  ->  exec java
+#
+# so `$coord_pid` is the head of it and sampling that reads rlwrap's ~1 MB
+# instead of the coordinator's gigabytes. Measured: against a real JVM growing
+# a 1.6 GB heap this reported last_rss_mb=1, which is worse than no number at
+# all because it looks like one. Walk down to the java process instead.
+#
+# Waiting still happens on $coord_pid: rlwrap propagates the JVM's status, and
+# that is the process this shell actually owns.
+jvm_descendant() {
+  local pids="$1" depth=0 next p
+  while [ -n "$pids" ] && [ "$depth" -lt 8 ]; do
+    next=""
+    for p in $pids; do
+      if [ "$(cat "/proc/$p/comm" 2>/dev/null)" = "java" ]; then
+        printf '%s' "$p"; return 0
+      fi
+      next="$next $(pgrep -P "$p" 2>/dev/null | tr '\n' ' ')"
+    done
+    pids="$next"; depth=$((depth + 1))
+  done
+  return 1
+}
+
 (
+  jvm=""
   while kill -0 "$coord_pid" 2>/dev/null; do
-    if [ -r "/proc/$coord_pid/status" ]; then
+    # Re-resolve until found: the JVM appears a moment after the wrapper, and
+    # a sampler that gave up on the first miss would sample nothing all run.
+    [ -z "$jvm" ] || [ ! -r "/proc/$jvm/status" ] && jvm=$(jvm_descendant "$coord_pid")
+    if [ -n "$jvm" ] && [ -r "/proc/$jvm/status" ]; then
       avail=$(awk '/MemAvailable/{print int($2/1024)}' /proc/meminfo)
       # VmHWM is the PEAK resident size, which is the number a leak
       # investigation wants and which no post-mortem can recover.
       awk -v avail="$avail" \
           '/^VmRSS:/{rss=int($2/1024)} /^VmHWM:/{hwm=int($2/1024)}
            END{printf "%d %d %d\n", rss, hwm, avail}' \
-          "/proc/$coord_pid/status" >"$SAMPLE.tmp" 2>/dev/null &&
+          "/proc/$jvm/status" >"$SAMPLE.tmp" 2>/dev/null &&
         mv "$SAMPLE.tmp" "$SAMPLE"
     fi
     sleep "${HIVE_DEATHLOG_INTERVAL:-10}"
