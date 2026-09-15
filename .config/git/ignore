@@ -1,3 +1,19 @@
 *~
 
 **/.claude/settings.local.json
+
+**/.openclaude/settings.local.json
+
+
+# hive-mcp embedding cache (often a symlink)
+**/.fastembed_cache
+
+# clj-kondo lint-metrics scratch output
+kondo-sweep.tsv
+
+# caches de ferramenta — nunca versionados, aparecem em todo repo do ecossistema
+.clj-kondo/.cache/
+.lsp/.cache/
+.cpcache/
+.shadow-cljs/
+__pycache__/

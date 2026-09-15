@@ -95,8 +95,6 @@
 
 .local/src/ble.sh
 
-gitthings/lutris
-gitthings/st
 .local/src/st
 .vim/pack/bundle/start/vim-snippets
 
@@ -105,23 +103,16 @@ gitthings/st
 
 .config/ibus/
 gitthings/
-gitthings/st
 
 .config/MongoDB Compass
 .config/Code
 .local/state/*
 
-.config/github-copilot/hosts.json
 .config/google-chrome
 
 .config/torcat
-.config/xmonad/.stack-work/*
-.config/xmonad/.stack-work/
 **/Cache/*
-.config/**/Cache
-.config/Nibbler/Cache
 .config/Nibbler
-.config/xmonad/.stack-work
 .config/android/
 .config/autostart/
 .config/Android Open Source Project/
@@ -131,11 +122,9 @@ gitthings/st
 .config/evans/
 .config/tree-sitter/
 .config/cmus/
-.config/kitty.app/
-.local/kitty.app/
 .config/systemd/
 .config/balenaEtcher/
-**/kitty.app/**
+kitty.app/
 .local/py/
 .config/nomic.ai
 
@@ -143,21 +132,13 @@ Notes/
 cv/
 keg/
 build/
-scripts/.stack-work/*
-scripts/.stack-work/
-**.stack-work**
+.stack-work/
 
 .azure
-.azure/*
 
 .config/Docker Desktop
-.config/devcert/certificate-authority/private-key.key
 
-.config/github-copilot/*
-.config/github-copilot/
 .config/github-copilot
-github-copilot/
-.config/xmonad/.stack-work/stack.sqlite3
 .config/xmonad/stack.yaml.lock
 .local/lib/python3.12/
 .config/nyxt/
@@ -167,11 +148,9 @@ github-copilot/
 .config/Cursor/
 .config/uv/
 .local/lib/
-.config/Docker\ Desktop/
 .config/devcert
 .config/create-next-app-nodejs
 .config/cni
-.config/containers
 .config/containers
 .config/chromium
 .config/balena-etcher
@@ -197,15 +176,12 @@ github-copilot/
 .config/gtk-4.0/
 .local/bin/squashfs-root/
 .xprofile
-.config/github-copilot
 .config/google-chromium
 .config/monitors.xml
 .config/xmonad/stack.yaml
 .config/xmonad/xmonad
 .config/xmonad/xmonad-contrib
-.xprofile
 .config/torbrowser
-.config/torcat
 .config/tremc
 
 .config/TexasSolver/
@@ -220,16 +196,12 @@ __debug*
 .authinfo
 
 .config/systemd/user/docker.service
-.local/bin/cursor.appimage
 
 /tmp/
 /ssh/
-ssh
-tmp
 
 .config/Stationv2
 .config/Station
-.config/Mullvad\ VPN
 .config/Mullvad VPN/
 .config/kleopatrarc
 .local/bin/.cursor_version
@@ -248,7 +220,6 @@ tmp
 .local/bin/cursor.appimage.zs-old
 talos/
 
-.config/xmonad/.stack-work/
 
 psi/
 CLAUDE.md
@@ -256,3 +227,6 @@ vpn/
 .config/haproxy-k8s-lb/haproxy.cfg
 .config/freerdp/
 .local/bin/bin/blw/freqtrade*
+
+# Stripe CLI writes a live-mode API key here; it must never be committed.
+.config/stripe/
