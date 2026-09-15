@@ -230,3 +230,6 @@ vpn/
 
 # Stripe CLI writes a live-mode API key here; it must never be committed.
 .config/stripe/
+
+# pass(1) store — a plaintext PAT once leaked from here into public history.
+.password-store/
