@@ -117,18 +117,30 @@ set incfilter true         # `filter` estreita a lista a cada tecla
 
 # lista de candidatos, uma so definicao para todos os comandos abaixo
 
-# ---- Ctrl-P: pular para arquivo ou pasta, fuzzy ----
+# Os listadores. fd ja emite caminho relativo limpo, sem "./"; o fallback
+# find precisa do sed.
+#
+# ATENCAO ao gitignore: o fd OBEDECE .gitignore por padrao, e isso esconde
+# justamente o que costuma interessar achar num repo -- PDF derivado,
+# target/, build/. O contrato desta casa e o exemplo: contrato-modelo.pdf
+# esta no .gitignore de proposito (PDF e derivado, nao se comita) e por
+# isso nao aparece na busca normal. Alt-I recarrega incluindo ignorados.
+
 cmd fzf_jump ${{
     set +e
     if command -v fdfind >/dev/null 2>&1; then
-        list="fdfind --hidden --follow --exclude .git"
+        L="fdfind --hidden --follow --exclude .git"
+        LA="fdfind --hidden --follow --no-ignore-vcs --exclude .git"
     else
-        list="find . -mindepth 1 -not -path */.git/*"
+        L="find . -mindepth 1 -not -path */.git/* -printf %P\n"
+        LA="$L"
     fi
-    res=$($list 2>/dev/null | sed 's|^\./||' | fzf \
+    PV='if [ -d {} ]; then ls -A --color=always -- {}; else bat --color=always --style=numbers --line-range=:300 -- {} 2>/dev/null || head -300 -- {}; fi'
+    res=$($L 2>/dev/null | fzf \
         --reverse --height=100% --prompt='jump> ' \
-        --preview 'if [ -d {} ]; then ls -A --color=always -- {}; else bat --color=always --style=numbers --line-range=:300 -- {} 2>/dev/null || head -300 -- {}; fi' \
-        --preview-window=right:60%)
+        --header 'Alt-I inclui o que o .gitignore esconde (PDF, target/, build/)' \
+        --bind "alt-i:change-prompt(jump +ignorados> )+reload($LA 2>/dev/null)" \
+        --preview "$PV" --preview-window=right:60%)
     [ -z "$res" ] && exit 0
     esc=$(printf '%s' "$res" | sed 's/\\/\\\\/g; s/"/\\"/g')
     if [ -d "$res" ]; then
@@ -139,16 +151,19 @@ cmd fzf_jump ${{
 }}
 map <c-p> fzf_jump
 
-# ---- Ctrl-T: entrar numa pasta, fuzzy ----
 cmd fzf_cd ${{
     set +e
     if command -v fdfind >/dev/null 2>&1; then
-        list="fdfind --type d --hidden --follow --exclude .git"
+        L="fdfind --type d --hidden --follow --exclude .git"
+        LA="fdfind --type d --hidden --follow --no-ignore-vcs --exclude .git"
     else
-        list="find . -mindepth 1 -type d -not -path */.git/*"
+        L="find . -mindepth 1 -type d -not -path */.git/* -printf %P\n"
+        LA="$L"
     fi
-    res=$($list 2>/dev/null | sed 's|^\./||' | fzf \
+    res=$($L 2>/dev/null | fzf \
         --reverse --height=100% --prompt='cd> ' \
+        --header 'Alt-I inclui pastas ignoradas pelo git' \
+        --bind "alt-i:change-prompt(cd +ignorados> )+reload($LA 2>/dev/null)" \
         --preview 'ls -A --color=always -- {}' --preview-window=right:60%)
     [ -z "$res" ] && exit 0
     esc=$(printf '%s' "$res" | sed 's/\\/\\\\/g; s/"/\\"/g')
@@ -156,16 +171,24 @@ cmd fzf_cd ${{
 }}
 map <c-t> fzf_cd
 
-# ---- Ctrl-G: procurar DENTRO dos arquivos, ao vivo ----
-# fzf nao filtra nada aqui: cada tecla re-roda o ripgrep. Quem faz o
-# casamento e o rg, entao vale regex, nao fuzzy. Enter leva o cursor
-# ate o arquivo; a linha vai no preview.
+# ---- Ctrl-G: procurar DENTRO dos arquivos ----
+# DOIS MODOS, Ctrl-F alterna. A primeira versao so tinha o modo rg, e
+# digitar "contrato pdf" nele dava 0/0: o rg procura a frase LITERAL dentro
+# dos arquivos, e nenhuma linha tem essa frase. Quem digita duas palavras
+# soltas quer fuzzy, nao regex.
+#
+#   rg>     cada tecla re-roda o ripgrep. Regex; espaco e espaco literal.
+#   fuzzy>  congela o resultado e o fzf filtra por subsequencia sobre
+#           arquivo:linha:texto. Ctrl-R volta para o rg.
 cmd fzf_grep ${{
     set +e
     RG="rg --column --line-number --no-heading --color=always --smart-case --hidden --glob=!.git"
     res=$(FZF_DEFAULT_COMMAND="$RG -- '' 2>/dev/null" fzf \
         --ansi --disabled --reverse --height=100% --prompt='rg> ' \
+        --header 'Ctrl-F filtra fuzzy o resultado | Ctrl-R volta ao ripgrep' \
         --bind "change:reload:$RG -- {q} 2>/dev/null || true" \
+        --bind "ctrl-f:unbind(change,ctrl-f)+change-prompt(fuzzy> )+enable-search+clear-query+rebind(ctrl-r)" \
+        --bind "ctrl-r:unbind(ctrl-r)+change-prompt(rg> )+disable-search+reload($RG -- {q} 2>/dev/null || true)+rebind(change,ctrl-f)" \
         --delimiter=: \
         --preview 'bat --color=always --style=numbers --highlight-line {2} -- {1} 2>/dev/null || head -300 -- {1}' \
         --preview-window='right:60%:+{2}/2')
@@ -177,18 +200,22 @@ cmd fzf_grep ${{
 }}
 map <c-g> fzf_grep
 
-# ---- Alt-F: escolher varios de uma vez (Tab marca) ----
-# Cai na selecao normal do lf, a mesma do Space, entao copy/cut/delete
-# funcionam em cima do que voce marcou aqui. Mesmo truque do `reselect`.
+# ---- Alt-F: marcar varios (Tab) e cair na selecao normal do lf ----
+# Mesmo truque de `toggle` que o `reselect` ja usava, entao copy/cut/delete
+# funcionam em cima do que se marcou aqui.
 cmd fzf_select ${{
     set +e
     if command -v fdfind >/dev/null 2>&1; then
-        list="fdfind --hidden --follow --exclude .git"
+        L="fdfind --hidden --follow --exclude .git"
+        LA="fdfind --hidden --follow --no-ignore-vcs --exclude .git"
     else
-        list="find . -mindepth 1 -not -path */.git/*"
+        L="find . -mindepth 1 -not -path */.git/* -printf %P\n"
+        LA="$L"
     fi
-    res=$($list 2>/dev/null | sed 's|^\./||' | fzf \
+    res=$($L 2>/dev/null | fzf \
         --reverse --height=100% --multi --prompt='select (Tab)> ' \
+        --header 'Tab marca | Alt-I inclui ignorados pelo git' \
+        --bind "alt-i:change-prompt(select +ignorados> )+reload($LA 2>/dev/null)" \
         --preview 'if [ -d {} ]; then ls -A --color=always -- {}; else bat --color=always --style=numbers --line-range=:300 -- {} 2>/dev/null || head -300 -- {}; fi' \
         --preview-window=right:60%)
     [ -z "$res" ] && exit 0
