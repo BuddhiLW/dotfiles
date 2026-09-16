@@ -1,0 +1,83 @@
+#!/bin/sh
+# lf previewer. Called with: $1=file  $2=width  $3=height  $4=x  $5=y
+# Exit 1 tells lf NOT to cache the output (needed for image redraws).
+
+file="$1"; w="$2"; h="$3"; x="$4"; y="$5"
+
+# True if the host terminal speaks the kitty graphics protocol.
+kitty_gfx() {
+    command -v kitten >/dev/null 2>&1 || return 1
+    [ -n "$KITTY_WINDOW_ID" ] && return 0
+    case "$TERM" in *kitty*) return 0 ;; esac
+    return 1
+}
+
+image() {
+    if kitty_gfx; then
+        # transfer-mode stream, not memory: shared-memory transfer does not
+        # survive the tmux passthrough wrapper.
+        kitten icat --silent --stdin no --transfer-mode stream \
+            --place "${w}x${h}@${x}x${y}" "$1" < /dev/null > /dev/tty
+        exit 1
+    fi
+    if command -v chafa >/dev/null 2>&1; then
+        chafa --animate=off -f symbols -s "${w}x${h}" "$1"
+        exit 1
+    fi
+    file -Lb "$1"
+    exit 0
+}
+
+batorcat() {
+    if command -v bat >/dev/null 2>&1; then
+        bat --color=always --style=plain --paging=never \
+            --terminal-width "$w" "$1"
+    elif command -v batcat >/dev/null 2>&1; then
+        batcat --color=always --style=plain --paging=never \
+            --terminal-width "$w" "$1"
+    else
+        cat "$1"
+    fi
+}
+
+case "$(printf '%s' "$file" | tr '[:upper:]' '[:lower:]')" in
+    *.png|*.jpg|*.jpeg|*.gif|*.bmp|*.webp|*.ico|*.tiff|*.avif)
+        image "$file" ;;
+    *.svg)
+        # rasterize SVG if a converter exists, else fall through to text
+        if command -v rsvg-convert >/dev/null 2>&1; then
+            tmp="$(mktemp --suffix=.png)"
+            rsvg-convert "$file" -o "$tmp" 2>/dev/null && image "$tmp"
+        fi ;;
+esac
+
+# Non-image files
+case "$(file --mime-type -Lb "$file")" in
+    text/* | application/json | application/javascript | application/xml | \
+    application/x-shellscript | application/x-yaml | inode/x-empty)
+        batorcat "$file" ;;
+    application/pdf)
+        if command -v pdftotext >/dev/null 2>&1; then
+            pdftotext -l 10 -nopgbrk -q "$file" - | fmt -w "$w"
+        else
+            echo "PDF — install poppler-utils for text preview"
+        fi ;;
+    application/gzip | application/x-tar | application/zip | application/x-7z-compressed)
+        echo "-- archive: $file --"; echo
+        case "$file" in
+            *.tar.gz|*.tgz) tar tzf "$file" 2>/dev/null | head -100 ;;
+            *.tar) tar tf "$file" 2>/dev/null | head -100 ;;
+            *.zip) unzip -l "$file" 2>/dev/null | head -100 ;;
+            *.7z) 7z l "$file" 2>/dev/null | head -100 ;;
+            *) ;;
+        esac ;;
+    audio/* | video/*)
+        if command -v mediainfo >/dev/null 2>&1; then
+            mediainfo "$file"
+        else
+            file -Lb "$file"
+        fi ;;
+    *)
+        file -Lb "$file" ;;
+esac
+exit 0

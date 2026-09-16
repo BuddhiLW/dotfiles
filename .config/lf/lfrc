@@ -1,0 +1,206 @@
+# ~/.config/lf/lfrc
+
+# ---- shell ----
+set shell sh
+set shellopts '-eu'
+set ifs "\n"
+
+# ---- preview / coding panel ----
+set previewer ~/.config/lf/preview
+set cleaner   ~/.config/lf/cleaner
+set preview true
+set drawbox true          # draw a border around the preview panel
+set ratios 1:2:3          # give the preview panel the most width
+
+# ---- ui ----
+set icons true
+set hidden true           # show dotfiles (toggle with 'zh')
+set ignorecase true
+set scrolloff 8
+set info size
+set cursorpreviewfmt "\033[7;2m"
+set period 1              # refresh preview/stat once a second
+set promptfmt "\033[34;1m%d\033[0m\033[1m%f\033[0m"
+
+# ---- opener ----
+cmd open &{{
+    # $1 = mime type, $2 = path. zathura for PDF, evince for every other
+    # document format, xdg-open only if neither viewer is installed.
+    open_doc() {
+        if [ "$1" = "application/pdf" ] && command -v zathura >/dev/null 2>&1; then
+            zathura "$2" >/dev/null 2>&1 &
+        elif command -v evince >/dev/null 2>&1; then
+            evince "$2" >/dev/null 2>&1 &
+        else
+            xdg-open "$2" >/dev/null 2>&1 &
+        fi
+    }
+    mime=$(file --mime-type -Lb "$f")
+    case "$mime" in
+        text/*|application/json|application/javascript|application/xml)
+            lf -remote "send $id \$$EDITOR \$fx" ;;
+        application/pdf|application/postscript|application/x-dvi|application/epub+zip|application/oxps|application/vnd.ms-xpsdocument|application/vnd.comicbook*|application/x-cb[rz]|image/vnd.djvu*)
+            open_doc "$mime" "$f" ;;
+        image/*|video/*|audio/*)
+            xdg-open "$f" >/dev/null 2>&1 & ;;
+        *)
+            for f in $fx; do xdg-open "$f" >/dev/null 2>&1 & done ;;
+    esac
+}}
+
+# ---- handy maps ----
+map <enter> open
+map . set hidden!          # toggle hidden files
+map DD delete
+map <c-r> reload           # force reload + redraw preview
+
+# open $EDITOR on current file
+map e $$EDITOR "$f"
+
+# turn the copy/cut clipboard (blue) back into a Space-selection, then clear it
+cmd reselect &{{
+    clip="${XDG_DATA_HOME:-$HOME/.local/share}/lf/files"
+    [ -f "$clip" ] || exit 0
+    cmd="toggle"; first=1
+    while IFS= read -r line; do
+        [ "$first" = 1 ] && { first=0; continue; }   # skip the mode line (copy/move)
+        esc=$(printf '%s' "$line" | sed 's/\\/\\\\/g; s/"/\\"/g')
+        cmd="$cmd \"$esc\""
+    done < "$clip"
+    lf -remote "send $id $cmd"
+    lf -remote "send $id clear"
+}}
+map gr reselect
+
+# ---- delete / trash ----
+cmd trash %set -f; mv -t ~/.trash -- $fx
+cmd delete ${{
+    set -f
+    printf "%s\n" "$fx"
+    printf "delete? [y/N] "
+    read ans
+    [ "$ans" = "y" ] && rm -rf -- $fx
+}}
+map <delete> trash
+
+# ---- extract ----
+cmd extract ${{
+    set -f
+    case "$f" in
+        *.tar.bz|*.tar.bz2|*.tbz|*.tbz2) tar xjvf "$f";;
+        *.tar.gz|*.tgz)                  tar xzvf "$f";;
+        *.tar.xz|*.txz)                  tar xJvf "$f";;
+        *.tar)                           tar xvf  "$f";;
+        *.zip)                           unzip    "$f";;
+        *.rar)                           unrar x  "$f";;
+        *.7z)                            7z x     "$f";;
+    esac
+}}
+map <a-e> extract
+
+# ══════════════════════════════════════════════════════════════════════
+# fuzzy search
+#
+# Duas camadas. A nativa nao depende de nada: `filter` com incfilter
+# estreita a listagem enquanto voce digita (substring, nao fuzzy).
+# A camada fzf da o fuzzy de verdade, com subsequencia e preview.
+#
+# CUIDADO com `set shellopts '-eu'` la em cima: fzf sai com 130 quando
+# voce aperta Esc, e sob `-e` isso MATA o bloco antes do cleanup. Por
+# isso todo bloco abaixo comeca com `set +e`.
+#
+# fd aqui e `fdfind` (nome do pacote no Debian/Ubuntu); ha fallback para
+# `find` se nenhum dos dois existir.
+# ══════════════════════════════════════════════════════════════════════
+
+set incfilter true         # `filter` estreita a lista a cada tecla
+
+# lista de candidatos, uma so definicao para todos os comandos abaixo
+
+# ---- Ctrl-P: pular para arquivo ou pasta, fuzzy ----
+cmd fzf_jump ${{
+    set +e
+    if command -v fdfind >/dev/null 2>&1; then
+        list="fdfind --hidden --follow --exclude .git"
+    else
+        list="find . -mindepth 1 -not -path */.git/*"
+    fi
+    res=$($list 2>/dev/null | sed 's|^\./||' | fzf \
+        --reverse --height=100% --prompt='jump> ' \
+        --preview 'if [ -d {} ]; then ls -A --color=always -- {}; else bat --color=always --style=numbers --line-range=:300 -- {} 2>/dev/null || head -300 -- {}; fi' \
+        --preview-window=right:60%)
+    [ -z "$res" ] && exit 0
+    esc=$(printf '%s' "$res" | sed 's/\\/\\\\/g; s/"/\\"/g')
+    if [ -d "$res" ]; then
+        lf -remote "send $id cd \"$esc\""
+    else
+        lf -remote "send $id select \"$esc\""
+    fi
+}}
+map <c-p> fzf_jump
+
+# ---- Ctrl-T: entrar numa pasta, fuzzy ----
+cmd fzf_cd ${{
+    set +e
+    if command -v fdfind >/dev/null 2>&1; then
+        list="fdfind --type d --hidden --follow --exclude .git"
+    else
+        list="find . -mindepth 1 -type d -not -path */.git/*"
+    fi
+    res=$($list 2>/dev/null | sed 's|^\./||' | fzf \
+        --reverse --height=100% --prompt='cd> ' \
+        --preview 'ls -A --color=always -- {}' --preview-window=right:60%)
+    [ -z "$res" ] && exit 0
+    esc=$(printf '%s' "$res" | sed 's/\\/\\\\/g; s/"/\\"/g')
+    lf -remote "send $id cd \"$esc\""
+}}
+map <c-t> fzf_cd
+
+# ---- Ctrl-G: procurar DENTRO dos arquivos, ao vivo ----
+# fzf nao filtra nada aqui: cada tecla re-roda o ripgrep. Quem faz o
+# casamento e o rg, entao vale regex, nao fuzzy. Enter leva o cursor
+# ate o arquivo; a linha vai no preview.
+cmd fzf_grep ${{
+    set +e
+    RG="rg --column --line-number --no-heading --color=always --smart-case --hidden --glob=!.git"
+    res=$(FZF_DEFAULT_COMMAND="$RG -- '' 2>/dev/null" fzf \
+        --ansi --disabled --reverse --height=100% --prompt='rg> ' \
+        --bind "change:reload:$RG -- {q} 2>/dev/null || true" \
+        --delimiter=: \
+        --preview 'bat --color=always --style=numbers --highlight-line {2} -- {1} 2>/dev/null || head -300 -- {1}' \
+        --preview-window='right:60%:+{2}/2')
+    [ -z "$res" ] && exit 0
+    file=$(printf '%s' "$res" | cut -d: -f1)
+    [ -z "$file" ] && exit 0
+    esc=$(printf '%s' "$file" | sed 's/\\/\\\\/g; s/"/\\"/g')
+    lf -remote "send $id select \"$esc\""
+}}
+map <c-g> fzf_grep
+
+# ---- Alt-F: escolher varios de uma vez (Tab marca) ----
+# Cai na selecao normal do lf, a mesma do Space, entao copy/cut/delete
+# funcionam em cima do que voce marcou aqui. Mesmo truque do `reselect`.
+cmd fzf_select ${{
+    set +e
+    if command -v fdfind >/dev/null 2>&1; then
+        list="fdfind --hidden --follow --exclude .git"
+    else
+        list="find . -mindepth 1 -not -path */.git/*"
+    fi
+    res=$($list 2>/dev/null | sed 's|^\./||' | fzf \
+        --reverse --height=100% --multi --prompt='select (Tab)> ' \
+        --preview 'if [ -d {} ]; then ls -A --color=always -- {}; else bat --color=always --style=numbers --line-range=:300 -- {} 2>/dev/null || head -300 -- {}; fi' \
+        --preview-window=right:60%)
+    [ -z "$res" ] && exit 0
+    lf -remote "send $id unselect"
+    cmd="toggle"
+    while IFS= read -r line; do
+        [ -z "$line" ] && continue
+        esc=$(printf '%s' "$line" | sed 's/\\/\\\\/g; s/"/\\"/g')
+        cmd="$cmd \"$esc\""
+    done <<EOF
+$res
+EOF
+    lf -remote "send $id $cmd"
+}}
+map <a-f> fzf_select
