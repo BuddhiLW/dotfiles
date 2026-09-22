@@ -1,0 +1,33 @@
+# Make the DRI render node a schedulable resource on the AMD worker.
+#
+# Pairs with the in-cluster DaemonSet kube-system/generic-device-plugin, which
+# runs with:
+#     --domain=gpu.blw
+#     --device={"name":"dri","groups":[{"count":4,"paths":[{"path":"/dev/dri/renderD128"}]}]}
+#     nodeSelector: gpu.blw/dri=true
+#
+# That plugin was deployed but NO node ever carried the label, so it sat at
+# desired=0 and the RX 580 has been idle. This patch supplies the label from
+# the machine config rather than `kubectl label node`, so it survives a reset,
+# a reinstall and a config re-apply, and so the cluster does not drift from
+# the repo (the GITOPS-DRIFT class of problem).
+#
+# This is Stage 1 of docs/gpu-enablement.md.
+#
+# APPLY TO .136 (talos-21a-oep, the AMD worker) ONLY.
+#
+#   talosctl -n 192.168.100.136 --talosconfig base/talosconfig \
+#     patch machineconfig --patch @base/gpu-dri.patch.yaml
+#
+# It takes effect without a reboot: nodeLabels are reconciled by Talos against
+# the apiserver, and the DaemonSet schedules as soon as the label lands.
+#
+# DO NOT apply to .9 (talos-18t-abp). Measured 2026-09-21:
+# /dev/dri/by-path there resolves renderD128 to pci-0000:01:00.0, which is the
+# NVIDIA GA106 itself, not the Intel iGPU. Labelling that node would advertise
+# one physical GPU twice, once as nvidia.com/gpu and once as gpu.blw/dri, and
+# let two pods each believe they own it. The Intel UHD on that CPU does not
+# currently enumerate a second render node.
+machine:
+  nodeLabels:
+    gpu.blw/dri: "true"

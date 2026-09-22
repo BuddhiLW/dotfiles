@@ -1,0 +1,51 @@
+# Strategic-merge patch: raise the kubelet pod cap on the WORKERS from 200 to 250.
+#
+# WHY. There are only two schedulable nodes; the three control planes carry
+# NoSchedule. Measured 2026-09-21:
+#
+#     talos-21a-oep   180 running pods / 200 cap      20 slots left
+#     talos-18t-abp    84 running pods / 200 cap
+#
+# 21a is the node everything lands on, and the pod cap binds there long before
+# memory does. The scheduler enforces the pod cap and the request budget as two
+# INDEPENDENT gates, so headroom in one does not buy anything when the other is
+# full.
+#
+# WHY 250 AND NOT MORE. Cilium runs `ipam: kubernetes`, and kube-controller-manager
+# hands each node exactly one /24 out of --cluster-cidr=10.244.0.0/16:
+#
+#     talos-18t-abp   10.244.0.0/24
+#     talos-21a-oep   10.244.5.0/24
+#
+# A /24 is 254 usable addresses, and cilium_host consumes one as the node's
+# router IP. So ~253 is the HARD ceiling, and it is not raisable by editing this
+# file: it needs a wider per-node mask, which reshuffles every podCIDR. 250
+# leaves a small margin under that ceiling and is the largest round number that
+# does.
+#
+# APPLY TO BOTH WORKERS, ONE AT A TIME, verifying in between:
+#
+#   talosctl -n 192.168.100.9   --talosconfig base/talosconfig \
+#     patch machineconfig --patch @base/kubelet-max-pods.patch.yaml
+#   kubectl get node talos-18t-abp -o jsonpath='{.status.allocatable.pods}'   # want 250
+#
+#   talosctl -n 192.168.100.136 --talosconfig base/talosconfig \
+#     patch machineconfig --patch @base/kubelet-max-pods.patch.yaml
+#   kubectl get node talos-21a-oep -o jsonpath='{.status.allocatable.pods}'   # want 250
+#
+# It restarts the kubelet. Running pods are NOT evicted by a kubelet restart;
+# the node goes NotReady for a few seconds and comes back. Do 18t first because
+# it is the emptier node, so a surprise there costs less.
+#
+# DO NOT apply to the control planes. They sit at the Talos default of 110, they
+# are NoSchedule, and raising a cap nothing schedules against only widens the
+# blast radius of a mistake.
+#
+# NOT A ONE-OFF. base/worker.yaml and base/worker-gpu.yaml carry the same
+# maxPods value, so a node rebuilt from those configs comes up at 250 and does
+# not silently regress to 200. Changing the cap means changing all three, and
+# this file is the one that is git-tracked.
+machine:
+  kubelet:
+    extraConfig:
+      maxPods: 250

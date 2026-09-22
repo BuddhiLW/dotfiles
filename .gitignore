@@ -218,7 +218,28 @@ __debug*
 .config/rclone/
 .config/taffybar/
 .local/bin/cursor.appimage.zs-old
-talos/
+# talos/ holds machine secrets (talosconfig, kubeconfig, the generated machine
+# configs carrying the cluster token and CA keys), ~1 GiB of etcd snapshots and
+# a pile of photos. Ignore all of it, then WHITELIST the secret-free declarative
+# pieces, so the cluster's configuration is reviewable in git instead of living
+# only as imperative `talosctl patch` invocations that drift out of the repo.
+#
+# Before whitelisting anything new here, read it for secrets.
+# talos/base/tailscale.patch.yaml is deliberately NOT whitelisted: it carries a
+# TS_AUTHKEY. Nor are worker.yaml / worker-gpu.yaml / controlplane*.yaml, which
+# are generated and contain machine credentials.
+talos/*
+!talos/base/
+talos/base/*
+!talos/base/README.md
+!talos/base/kubelet-max-pods.patch.yaml
+!talos/base/gpu-dri.patch.yaml
+!talos/base/nvidia.patch.yaml
+!talos/base/etcd-lan-subnets.patch.yaml
+!talos/base/worker-nic-fix.patch.yaml
+!talos/base/haproxy-lb.patch.yaml
+!talos/kubeprism.patch
+!talos/install-disk-patch.yaml
 
 
 psi/

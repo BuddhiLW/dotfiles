@@ -1,0 +1,19 @@
+# Strategic-merge patch: rename-proof NIC + static IP for talos-no1-0gw (worker)
+#
+# Problem (kanban 20260731203417): base/worker.yaml declared `interface: enp2s0`
+# but the live NIC enumerated as enp6s0 after a rename → DHCP NAK loop,
+# NodeNotReady flaps. Second failure (2026-08-02): DHCP lease lottery moved the
+# node to .138 — static IP ends the lottery.
+machine:
+  network:
+    interfaces:
+      - deviceSelector:
+          hardwareAddr: "08:bf:b8:00:47:5f"
+        addresses:
+          - 192.168.100.136/24
+        routes:
+          - network: 0.0.0.0/0
+            gateway: 192.168.100.1
+        dhcp: false
+    nameservers:
+      - 192.168.100.1

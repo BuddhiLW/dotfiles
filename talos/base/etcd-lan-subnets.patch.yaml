@@ -1,0 +1,10 @@
+# Strategic-merge patch: move etcd peer/raft traffic off Tailscale CGNAT
+# (100.64.0.0/10) onto the L2-adjacent LAN (192.168.100.0/24).
+# Apply per-CP, follower first:
+#   talosctl -e <cp-lan-ip> -n <cp-lan-ip> patch mc --patch @base/etcd-lan-subnets.patch.yaml
+cluster:
+  etcd:
+    advertisedSubnets:
+      - 192.168.100.0/24
+    listenSubnets:
+      - 192.168.100.0/24

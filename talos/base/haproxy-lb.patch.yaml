@@ -1,0 +1,83 @@
+# HAProxy Load Balancer for Kubernetes API
+# Apply to worker node: talos-no1-0gw (100.64.173.122)
+# Provides HA endpoint at 100.64.173.122:6443
+
+machine:
+  files:
+    - content: |
+        global
+          log stdout format raw local0
+          maxconn 1024
+
+        defaults
+          log global
+          mode tcp
+          timeout connect 5s
+          timeout client 30s
+          timeout server 30s
+          retries 3
+
+        frontend kubernetes_api
+          bind *:6443
+          default_backend kubernetes_control_planes
+
+        backend kubernetes_control_planes
+          option tcp-check
+          balance roundrobin
+          server cp1 100.70.96.29:6443 check inter 5s fall 3 rise 2
+          server cp2 100.64.113.35:6443 check inter 5s fall 3 rise 2
+          server cp3 100.76.13.120:6443 check inter 5s fall 3 rise 2
+
+        frontend stats
+          bind *:8404
+          mode http
+          stats enable
+          stats uri /stats
+          stats refresh 10s
+      path: /var/etc/haproxy/haproxy.cfg
+      permissions: 0644
+
+  pods:
+    - apiVersion: v1
+      kind: Pod
+      metadata:
+        name: haproxy-k8s-lb
+        namespace: kube-system
+      spec:
+        hostNetwork: true
+        containers:
+          - name: haproxy
+            image: haproxy:2.9-alpine
+            args:
+              - -f
+              - /usr/local/etc/haproxy/haproxy.cfg
+            ports:
+              - containerPort: 6443
+                hostPort: 6443
+                protocol: TCP
+              - containerPort: 8404
+                hostPort: 8404
+                protocol: TCP
+            volumeMounts:
+              - name: haproxy-config
+                mountPath: /usr/local/etc/haproxy/haproxy.cfg
+                subPath: haproxy.cfg
+                readOnly: true
+            livenessProbe:
+              tcpSocket:
+                port: 6443
+              initialDelaySeconds: 10
+              periodSeconds: 10
+            resources:
+              requests:
+                cpu: 50m
+                memory: 64Mi
+              limits:
+                cpu: 200m
+                memory: 128Mi
+        volumes:
+          - name: haproxy-config
+            hostPath:
+              path: /var/etc/haproxy
+              type: Directory
+        restartPolicy: Always
