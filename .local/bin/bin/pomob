@@ -1,3 +1,0 @@
-#!/usr/bin/bash
-
-pomodoro break "$@" > /tmp/pomodoro-break &

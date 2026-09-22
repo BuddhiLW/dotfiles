@@ -1,32 +1,116 @@
 #!/bin/bash
 
 # Screenshot picker using maim.
+#
+# Usage: maimpick [CHOICE [DELAY]]
+#   No CHOICE: pick one with dmenu. Delayed choices ask for DELAY unless given,
+#   e.g. maimpick "current window (delayed)" 5
+# Delayed modes finish dmenu and area selection before the countdown; open the
+# dropdown/picker during the countdown.
+# Files go to $MAIMPICK_DIR (default ~/Pictures/Screenshots).
 
-output="$(date '+%y%m%d-%H%M-%S').png"
-xclip_cmd="xclip -sel clip -t image/png"
+dir="${MAIMPICK_DIR:-$HOME/Pictures/Screenshots}"
+mkdir -p "$dir"
+stamp="$(date '+%y%m%d-%H%M-%S')"
 
-take_selection() {
-    maim -s "$@"
+notify() {
+    command -v notify-send >/dev/null && notify-send -a maimpick "$@"
 }
 
-take_window() {
+# maim 5.7 -i takes only a decimal id; xprop prints hex.
+active_window() {
     local wid
-    wid=$(xdotool getactivewindow 2>/dev/null ||
-          xprop -root _NET_ACTIVE_WINDOW | awk -F'# ' '{print $2}')
-    maim -q -i "$wid" "$@"
+    wid=$(xprop -root _NET_ACTIVE_WINDOW | awk -F'# ' '{print $2}' | cut -d, -f1)
+    echo $((wid))
 }
 
-take_fullscreen() {
-    maim -q "$@"
+# Absolute WxH+X+Y of the active window, for root capture incl. popups over it.
+active_geometry() {
+    xwininfo -id "$(active_window)" | awk '
+        /Absolute upper-left X/ {x = $NF}
+        /Absolute upper-left Y/ {y = $NF}
+        /Width:/                {w = $NF}
+        /Height:/               {h = $NF}
+        END                     {printf "%sx%s+%s+%s\n", w, h, x, y}'
 }
 
-choice="$(printf "a selected area\ncurrent window\nfull screen\na selected area (copy)\ncurrent window (copy)\nfull screen (copy)" | dmenu -l 6 -i -p "Screenshot which area?")"
+# Warn before a delayed shot; expire before the shutter so the popup is not
+# in the picture.
+countdown() {
+    [ "$delay" -gt 1 ] && notify -t $(( (delay - 1) * 1000 )) "Screenshot in ${delay}s" "$1"
+}
 
+# capture NAME SAVE COPY MAIM-ARGS...
+capture() {
+    local name=$1 save=$2 copy=$3 file
+    shift 3
+    if [ "$save" = yes ]; then
+        file="$dir/pic-$name-$stamp.png"
+    else
+        file="$(mktemp --suffix=.png)"
+    fi
+
+    if ! maim -q "$@" "$file" || [ ! -s "$file" ]; then
+        rm -f "$file"
+        notify "Screenshot cancelled or failed"
+        return 1
+    fi
+
+    [ "$copy" = yes ] && xclip -sel clip -t image/png -i "$file"
+
+    if [ "$save" = yes ]; then
+        notify -i "$file" "Screenshot saved" "$file"
+    else
+        rm -f "$file"
+        notify "Screenshot copied to clipboard"
+    fi
+}
+
+choices="a selected area
+current window
+full screen
+a selected area (copy)
+current window (copy)
+full screen (copy)
+a selected area (delayed)
+current window (delayed)
+full screen (delayed)"
+
+choice="${1:-$(printf '%s\n' "$choices" | dmenu -l 9 -i -p "Screenshot which area?")}"
+[ -n "$choice" ] || exit 0
+
+delay="${2:-}"
 case "$choice" in
-    "a selected area")       take_selection pic-selected-"${output}" ;;
-    "current window")        take_window pic-window-"${output}" ;;
-    "full screen")           take_fullscreen pic-full-"${output}" ;;
-    "a selected area (copy)") take_selection | ${xclip_cmd} ;;
-    "current window (copy)") take_window | ${xclip_cmd} ;;
-    "full screen (copy)")    take_fullscreen | ${xclip_cmd} ;;
+    *"(delayed)")
+        [ -n "$delay" ] || delay="$(printf '3\n5\n10\n' | dmenu -i -p "Delay (seconds)?")"
+        [ -n "$delay" ] || exit 0
+        if ! [[ "$delay" =~ ^[0-9]+$ ]]; then
+            notify "Invalid delay: '$delay'"
+            exit 1
+        fi
+        ;;
+esac
+
+# Delayed shots are saved and copied to the clipboard.
+case "$choice" in
+    "a selected area")        capture selected yes no -s ;;
+    "current window")         capture window yes no -i "$(active_window)" ;;
+    "full screen")            capture full yes no ;;
+    "a selected area (copy)") capture selected no yes -s ;;
+    "current window (copy)")  capture window no yes -i "$(active_window)" ;;
+    "full screen (copy)")     capture full no yes ;;
+    "a selected area (delayed)")
+        # maim selects first, then counts down with no grab held.
+        countdown "Select the area, then open the picker"
+        capture selected yes yes -s -d "$delay" ;;
+    "current window (delayed)")
+        countdown "Open the picker now"
+        sleep "$delay"
+        capture window yes yes -g "$(active_geometry)" ;;
+    "full screen (delayed)")
+        countdown "Open the picker now"
+        capture full yes yes -d "$delay" ;;
+    *)
+        notify "Unknown choice: $choice"
+        exit 1 ;;
 esac

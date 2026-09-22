@@ -12,11 +12,11 @@
    -- trayer
    -- 'dtos-local-bin' (from dtos-core-repo)
 
-Config { font = "FiraCode Nerd Font 22"
+Config { font = "FiraCode Nerd Font 15"
         , additionalFonts = [
-        "xft:FontAwesome:pixelsize=16:antialias=true:hinting=true"
-        , "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:hinting=true"
-        , "xft:Mononoki:pixelsize=16:antialias=true:hinting=true"
+        "xft:FontAwesome:pixelsize=11:antialias=true:hinting=true"
+        , "xft:Ubuntu:weight=bold:pixelsize=11:antialias=true:hinting=true"
+        , "xft:Mononoki:pixelsize=11:antialias=true:hinting=true"
         ]
        , bgColor      = "#000000"
        , fgColor      = "#FA0A0A"
@@ -26,7 +26,9 @@ Config { font = "FiraCode Nerd Font 22"
        --   an integer for the minimum pixel height for xmobar, so 24 would force a height of at least 24 pixels.
        --   NOTE: The height should be the same as the trayer (system tray) height.
        -- , position       = BottomSize C 95 70
-       , position = Static { xpos = 2700 , ypos = 1550, width = 2200, height = 40 }
+       -- HDMI-1-0 ultrawide (2560x1080): fonts/height scaled from notebook config by 1080/1600.
+       , position = BottomSize C 86 27
+       -- , position = Static { xpos = 140 , ypos = 1046, width = 2200, height = 27 }
        -- , position     = BottomSize C 95 50
        -- , border       = FullB
        , borderColor =  "#FFFFFF"

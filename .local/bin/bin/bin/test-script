@@ -1,7 +1,0 @@
-#!/bin/bash
-
-# Description: <add description>
-
-set -euo pipefail
-
-# Your code here

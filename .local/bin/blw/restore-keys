@@ -1,0 +1,13 @@
+#!/usr/bin/bash
+
+# SSH
+cp /mnt/ssh-keys/id_* /mnt/ssh-keys/config ~/.ssh/
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/id_*
+chmod 644 ~/.ssh/*.pub ~/.ssh/config
+
+  # GPG
+gpg --import /mnt/ssh-keys/gpg-secret-keys.asc
+gpg --import /mnt/ssh-keys/gpg-public-keys.asc
+gpg --import-ownertrust /mnt/ssh-keys/gpg-ownertrust.txt
+

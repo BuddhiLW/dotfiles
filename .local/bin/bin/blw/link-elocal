@@ -1,3 +1,0 @@
-#!/usr/bin/bash
-
-ln -sf $HOME/dotfiles/.config/facti/.dir-local.el $PWD

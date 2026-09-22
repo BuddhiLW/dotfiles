@@ -1,3 +1,6 @@
 #!/usr/bin/bash
 
+sudo apt-get install -y libatomic1
 curl -fsSL https://get.pnpm.io/install.sh | sh -
+
+

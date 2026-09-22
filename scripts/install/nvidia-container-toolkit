@@ -1,0 +1,40 @@
+#!/usr/bin/bash
+# GPU passthrough for the ROOTLESS docker daemon (scripts/install/docker-ce-rootless):
+# lets `runtime: nvidia` / `--gpus` containers see /dev/nvidia*, e.g. the
+# speaches -cuda ASR in vtranslate-app/dc/compose.gpu-asr.yml.
+#
+# From NVIDIA's dedicated container-toolkit repo. The CUDA repo also publishes
+# nvidia-container-toolkit, but NOT libnvidia-container-tools, so installing
+# from it alone fails with "Depends: libnvidia-container-tools ... not
+# installable". cuda-keyring pins every package of the CUDA repo at 600, which
+# would keep choosing its (older, incomplete) copy, so the container packages
+# are pinned to the dedicated repo at 700.
+#
+# Rootless needs two things the rootful guide skips: the runtime registered in
+# the USER daemon.json, and no-cgroups=true, since a rootless daemon cannot
+# create device cgroups. Restarting the user daemon stops running containers.
+set -euo pipefail
+
+# Armored .asc, which apt (>= 1.4) reads as-is: no `gpg --dearmor`, since gpg
+# may exist only under a user prefix (linuxbrew) that sudo's PATH never sees.
+KEYRING=/usr/share/keyrings/nvidia-container-toolkit-keyring.asc
+REPO=https://nvidia.github.io/libnvidia-container
+
+curl -fsSL "$REPO/gpgkey" | sudo tee "$KEYRING" >/dev/null
+curl -fsSL "$REPO/stable/deb/nvidia-container-toolkit.list" \
+  | sed "s#deb https://#deb [signed-by=$KEYRING] https://#" \
+  | sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list >/dev/null
+sudo tee /etc/apt/preferences.d/nvidia-container-toolkit-pin-700 >/dev/null <<'EOF'
+Package: nvidia-container-toolkit nvidia-container-toolkit-base libnvidia-container-tools libnvidia-container1
+Pin: origin nvidia.github.io
+Pin-Priority: 700
+EOF
+
+sudo apt-get update
+sudo apt-get install -y nvidia-container-toolkit
+
+nvidia-ctk runtime configure --runtime=docker --config="$HOME/.config/docker/daemon.json"
+sudo nvidia-ctk config --set nvidia-container-cli.no-cgroups --in-place
+systemctl --user restart docker
+
+docker run --rm --runtime=nvidia --gpus all ubuntu nvidia-smi --query-gpu=name,driver_version --format=csv,noheader

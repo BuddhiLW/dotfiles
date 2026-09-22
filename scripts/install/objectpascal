@@ -1,0 +1,49 @@
+#!/usr/bin/bash
+#
+# ObjectPascal toolchain: Free Pascal (FPC) + Lazarus IDE, via fpcupdeluxe.
+# Self-contained under $HOME, no root for the compiler itself (only apt deps need sudo).
+# Cross-compiles native Linux x86_64 AND Windows win64/win32 .exe -- no Wine or
+# Windows box needed to BUILD (only to run/test the .exe).
+#
+# fpcupdeluxe = FOSS installer/manager: https://github.com/LongDirtyAnimAlf/fpcupdeluxe
+
+IDIR="$HOME/fpcup"          # FPC + Lazarus install tree
+BINDIR="$HOME/fpcupdeluxe"  # fpcupdeluxe manager binary (MUST be a different path than IDIR)
+DEL="$BINDIR/fpcupdeluxe"
+
+# 1. Build/link deps. Exact list fpcupdeluxe checks for (GTK2 widgetset).
+sudo apt-get update
+sudo apt-get install -y \
+  build-essential make binutils git gdb wget \
+  libx11-dev libgtk2.0-dev libcairo2-dev libpango1.0-dev libxtst-dev \
+  libgdk-pixbuf2.0-dev libatk1.0-dev libghc-x11-dev zlib1g-dev
+
+# 2. Fetch latest fpcupdeluxe release binary (x86_64 linux).
+mkdir -p "$BINDIR"
+URL=$(wget -qO- https://api.github.com/repos/LongDirtyAnimAlf/fpcupdeluxe/releases/latest \
+  | grep -o 'https://[^"]*fpcupdeluxe-x86_64-linux[^"]*' | head -1)
+echo "Downloading $URL"
+wget -q --show-progress -O "$DEL" "$URL"
+chmod +x "$DEL"
+
+# 3. Native FPC (stable, 3.2.2) + Lazarus. Headless. ~15-40 min compile.
+#    NOTE: --installdir MUST differ from $DEL's path, else fpcsrc/ mkdir dies
+#    with "Not a directory" (it treats the binary file as a folder).
+mkdir -p "$IDIR"
+"$DEL" --installdir="$IDIR" --noconfirm
+
+# 4. Windows cross-compilers (build .exe from Linux). Re-uses the native tree.
+#    Comment out either line if you don't need that target.
+"$DEL" --installdir="$IDIR" --cputarget=x86_64 --ostarget=win64 --noconfirm  # 64-bit
+"$DEL" --installdir="$IDIR" --cputarget=i386   --ostarget=win32 --noconfirm  # 32-bit
+
+# 5. PATH + usage.
+echo
+echo "Done. Add to your shell rc:"
+echo "  export PATH=\$PATH:$IDIR/fpc/bin/x86_64-linux"
+echo
+echo "Build a project:"
+echo "  lazbuild Foo.lpi                          # native Linux x86_64"
+echo "  lazbuild --os=win64 --cpu=x86_64 Foo.lpi  # Windows 64-bit .exe"
+echo "  lazbuild --os=win32 --cpu=i386   Foo.lpi  # Windows 32-bit .exe"
+echo "IDE: $IDIR/lazarus/startlazarus"

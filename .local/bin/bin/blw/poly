@@ -1,9 +1,0 @@
-#!/bin/sh
-
-ARGS=""
-while [ "$1" != "" ] ; do
- ARGS="$ARGS $1"
- shift
-done
-
-exec "/usr/bin/java" $JVM_OPTS "-jar" "$HOME/.local/bin/blw/polylith/poly-0.2.17-alpha.jar" $ARGS

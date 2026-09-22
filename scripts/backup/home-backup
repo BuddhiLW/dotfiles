@@ -1,0 +1,215 @@
+#!/usr/bin/env bash
+# Parallel, resumable, interrupt-safe mirror of the NON-reinstallable part of
+# $HOME onto the backup drive (allow-list in ./lib: BULK_SKIP_TOP, BULK_EXTRA_DOT).
+#
+#   home-backup [run] [DEST]   foreground, live progress; Ctrl-C stops cleanly
+#   home-backup bg    [DEST]   detached: survives closing the terminal
+#   home-backup status [DEST]  progress of a running or finished backup
+#   home-backup stop  [DEST]   stop a running backup (resume later with run/bg)
+#
+#   JOBS=6        parallel rsync streams (default 4)
+#   RETRIES=3     retries per unit on transient errors (default 2)
+#   FRESH=1       re-check units an earlier run already finished
+#   RSYNC_EXTRA="--bwlimit=50m"   extra rsync flags for every unit
+#   INCLUDE_SECRETS=1  also copy the secret stores (default: they live on the
+#                 encrypted pendrive, not on this unencrypted disk)
+#
+# DEST defaults to $BULK_ROOT/home-data: one mirror, updated in place.
+#
+# Work is split into units: each second-level directory ($HOME/a/b) is one
+# rsync job and each directory's loose files are another, so a big tree like
+# ~/PP spreads over every stream. Finished units are recorded in DEST/.state;
+# an interrupted run resumes where it stopped. Rebuildable junk (node_modules,
+# caches, trash, docker layers, ...) is skipped: BULK_EXCLUDES in ./lib.
+set -Eeuo pipefail
+
+DOTFILES="${DOTFILES:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+source "$DOTFILES/scripts/backup/lib"
+SELF="$DOTFILES/scripts/backup/home-backup"
+
+cmd=run
+case "${1:-}" in run|bg|status|stop) cmd=$1; shift ;; -h|--help) sed -n '2,24p' "$SELF"; exit 0 ;; esac
+
+mountpoint -q "$BULK_ROOT" || die "$BULK_ROOT is not mounted: sudo mount /dev/sda1 $BULK_ROOT && sudo chown $USER: $BULK_ROOT"
+case "$(findmnt -no FSTYPE --target "$BULK_ROOT")" in
+  exfat|vfat|msdos|ntfs|ntfs3|fuseblk) die "$BULK_ROOT is not a unix filesystem; format it ext4 first" ;;
+esac
+[ -w "$BULK_ROOT" ] || die "$BULK_ROOT is not writable: sudo chown $USER: $BULK_ROOT"
+
+DEST="${1:-$BULK_ROOT/home-data}"
+STATE="$DEST/.state"
+JOBS="${JOBS:-4}"; RETRIES="${RETRIES:-2}"
+mkdir -p "$DEST/home" "$STATE/logs"
+
+running_pid() { local p; p=$(cat "$STATE/pid" 2>/dev/null) || return 1; kill -0 "$p" 2>/dev/null && echo "$p"; }
+
+case "$cmd" in
+  status)
+    cnt() { wc -l 2>/dev/null < "$STATE/$1" || echo 0; }
+    total=$(cnt units)
+    if p=$(running_pid); then log "running (pid $p) -> $DEST"; else log "not running -> $DEST"; fi
+    log "$(cnt 'done')/$total units done, $(cnt failed) failed, $(cnt partial) partial"
+    [ -s "$STATE/abort" ] && warn "last run aborted: $(cat "$STATE/abort")"
+    [ -f "$STATE/progress" ] && log "$(cat "$STATE/progress")"
+    log "drive: $(df -h --output=used,avail "$BULK_ROOT" | tail -1 | awk '{print $1" used, "$2" free"}')"
+    exit 0 ;;
+  stop)
+    p=$(running_pid) || die "no backup running for $DEST"
+    kill -TERM "$p"; log "stop sent to $p; re-run to resume"; exit 0 ;;
+  bg)
+    running_pid >/dev/null && die "already running (home-backup status)"
+    setsid nohup "$SELF" run "$DEST" >> "$STATE/run.log" 2>&1 < /dev/null &
+    log "started in background -> $DEST"
+    log "watch: home-backup status   |   tail -f $STATE/run.log   |   stop: home-backup stop"
+    exit 0 ;;
+esac
+
+# ---- run ----------------------------------------------------------------------
+
+# Keep the machine awake for the duration.
+if [ -z "${HB_INHIBITED:-}" ] && command -v systemd-inhibit >/dev/null \
+   && systemd-inhibit --what=sleep:idle --who=home-backup --why=probe true 2>/dev/null; then
+  HB_INHIBITED=1 exec systemd-inhibit --what=sleep:idle --who=home-backup \
+    --why="backing up $HOME" "$SELF" run "$DEST"
+fi
+
+exec 9>"$STATE/lock"
+flock -n 9 || die "another home-backup is already writing to $DEST"
+echo $$ > "$STATE/pid"
+[ "${FRESH:-0}" = 1 ] && rm -f "$STATE/done" "$STATE/partial"
+touch "$STATE/done" "$STATE/partial"
+: > "$STATE/failed"; rm -f "$STATE/abort"
+
+# -- excludes: junk, secrets, and anything mounted under $HOME that is not
+#    part of the home dataset (FUSE/portal mounts, the backup drive itself).
+EXCL="$STATE/excludes"
+printf '%s\n' "${BULK_EXCLUDES[@]}" .gvfs > "$EXCL"
+[ "${INCLUDE_SECRETS:-0}" = 1 ] || printf '%s\n' "${SECRET_PATHS[@]}" .password-store >> "$EXCL"
+home_src=$(findmnt -no SOURCE --target "$HOME")
+while read -r tgt src; do
+  [ "$src" = "$home_src" ] && continue
+  [[ "$tgt" == "$HOME"/* ]] || continue
+  [ "$(findmnt -no FSTYPE --target "$tgt")" = zfs ] && continue   # child dataset: keep
+  printf '/%s\n' "${tgt#"$HOME"/}" >> "$EXCL"
+done < <(findmnt -rn -o TARGET,SOURCE)
+bulk_rel=; [[ "$(realpath "$BULK_ROOT")" == "$HOME"/* ]] && bulk_rel=$(realpath --relative-to="$HOME" "$BULK_ROOT")
+mapfile -t skip_names < <(grep -v '[/*]' "$EXCL")
+skipped() { local n; for n in "${skip_names[@]}"; do [ "$1" = "$n" ] && return 0; done; return 1; }
+in_list() { local x=$1 n; shift; for n in "$@"; do [ "$x" = "$n" ] && return 0; done; return 1; }
+keep_top() {  # allow-list: non-dot dirs not in BULK_SKIP_TOP, plus BULK_EXTRA_DOT
+  local t=$1
+  [ "$t" = "$bulk_rel" ] && return 1
+  if [[ "$t" == .* ]]; then in_list "$t" "${BULK_EXTRA_DOT[@]}"; return; fi
+  ! in_list "$t" "${BULK_SKIP_TOP[@]}"
+}
+
+# -- units: "S<TAB>dir" = a dir's own entries (no recursion), "R<TAB>dir" = subtree
+cd "$HOME"
+# Top-level dirs we don't keep must not even appear as empty dirs.
+tops=()
+while IFS= read -r -d '' top; do
+  if keep_top "$top"; then tops+=("$top"); else printf '/%s/\n' "$top" >> "$EXCL"; fi
+done < <(find . -mindepth 1 -maxdepth 1 -type d -printf '%P\0' | sort -z)
+# Build caches that announce themselves (cargo target/, ...): skip the whole dir.
+log "scanning kept trees for CACHEDIR.TAG build caches"
+find "${tops[@]}" \( -name node_modules -o -name .git \) -prune -o -name CACHEDIR.TAG -type f -printf '/%h/\n' 2>/dev/null >> "$EXCL" || true
+log "$(grep -c . "$EXCL") exclude rules; keeping ${#tops[@]} top-level dirs: ${tops[*]}"
+UNITS="$STATE/units"; : > "$UNITS"
+add() { [[ "$2" == *$'\n'* || "$2" == *$'\t'* ]] && { warn "skipping odd name: ${2@Q}"; return; }; printf '%s\t%s\n' "$1" "$2" >> "$UNITS"; }
+add S .
+for top in "${tops[@]}"; do
+  skipped "$top" && continue
+  add S "$top"
+  while IFS= read -r -d '' sub; do
+    skipped "${sub##*/}" || add R "$sub"
+  done < <(find "$top" -mindepth 1 -maxdepth 1 -type d -print0 2>/dev/null)
+done
+
+TODO="$STATE/todo"
+grep -vxFf "$STATE/done" "$UNITS" > "$TODO" || true
+total=$(wc -l < "$UNITS"); todo=$(wc -l < "$TODO")
+log "$HOME -> $DEST"
+log "$total units, $todo to do, $JOBS streams, low io/cpu priority"
+[ "$todo" -eq 0 ] && { log "nothing to do (FRESH=1 to re-check everything)"; exit 0; }
+
+# -- worker (runs in xargs children)
+unit() {
+  local u=$1 kind=${1%%$'\t'*} path=${1#*$'\t'} src rc attempt
+  [ -e "$STATE/abort" ] && return 0
+  # -a would imply -r; S copies subdirs as empty entries (their R units fill them).
+  local flags=(-lptgo -HAX --relative --partial-dir=.rsync-partial --exclude-from="$EXCL")
+  # shellcheck disable=SC2206  # word-splitting RSYNC_EXTRA is the point
+  [ -n "${RSYNC_EXTRA:-}" ] && flags+=($RSYNC_EXTRA)
+  if [ "$kind" = S ]; then flags+=(--dirs); src="./$path/"; else flags+=(--recursive); src="./$path"; fi
+  local log="$STATE/logs/$(printf '%s' "$path" | tr '/ ' '__').log"
+  for (( attempt = 0; attempt <= RETRIES; attempt++ )); do
+    # Never write into the empty mountpoint on the NVMe if the drive dropped.
+    mountpoint -q "$BULK_ROOT" || { echo "backup drive disappeared" > "$STATE/abort"; return 0; }
+    rc=0
+    ionice -c2 -n7 nice -n10 rsync "${flags[@]}" "$src" "$DEST/home/" > "$log" 2>&1 || rc=$?
+    if grep -q 'No space left on device' "$log"; then echo "backup drive is full" > "$STATE/abort"; return 0; fi
+    case $rc in
+      0|24) rm -f "$log"; printf '%s\n' "$u" >> "$STATE/done"; return 0 ;;  # 24: files vanished mid-copy
+      23)   printf '%s\n' "$u" >> "$STATE/partial"                          # unreadable files: retrying won't help
+            printf '%s\n' "$u" >> "$STATE/done"; return 0 ;;
+      20)   return 0 ;;                                                     # we were signalled
+    esac
+    sleep $(( 5 * (attempt + 1) ))
+  done
+  printf '%s\trc=%s\n' "$u" "$rc" >> "$STATE/failed"
+}
+export -f unit
+export DEST STATE EXCL BULK_ROOT RETRIES RSYNC_EXTRA
+
+# -- progress
+used() { df -B1 --output=used "$BULK_ROOT" | tail -1 | tr -d ' '; }
+start_used=$(used); t0=$(date +%s)
+progress() {
+  local tick=5 d f w s line; [ -t 1 ] || tick=60
+  while sleep "$tick"; do
+    d=$(wc -l < "$STATE/done"); f=$(wc -l < "$STATE/failed")
+    w=$(( $(used) - start_used )); s=$(( $(date +%s) - t0 ))
+    line=$(printf '[%d/%d units] %s written, %s/s, %d failed, %s elapsed' "$d" "$total" \
+      "$(numfmt --to=iec "$w")" "$(numfmt --to=iec $(( w / (s > 0 ? s : 1) )))" "$f" \
+      "$(date -u -d @"$s" +%H:%M:%S)")
+    printf '%s\n' "$line" > "$STATE/progress"
+    if [ -t 1 ]; then printf '\r  %s  ' "$line"; else printf '%s  %s\n' "$(date +%T)" "$line"; fi
+  done
+}
+
+# Job control gives xargs (and every rsync under it) its own process group,
+# so one signal to that group stops the whole tree.
+stop_all() {
+  trap - INT TERM HUP
+  [ -n "${XPID:-}" ] && kill -TERM -- -"$XPID" 2>/dev/null || true
+  [ -n "${PROG:-}" ] && kill -- -"$PROG" 2>/dev/null || true
+  wait 2>/dev/null || true
+  printf '\n'; rm -f "$STATE/pid"
+  warn "stopped: $(wc -l < "$STATE/done")/$total units done; run again to resume"
+  exit 130
+}
+trap stop_all INT TERM HUP
+
+tr '\n' '\0' < "$TODO" > "$TODO.0"
+set -m
+progress 9>&- & PROG=$!
+xargs -0 -a "$TODO.0" -P "$JOBS" -I{} bash -c 'unit "$1"' _ {} & XPID=$!
+set +m
+
+wait "$XPID" || true
+kill -- -"$PROG" 2>/dev/null || true; wait "$PROG" 2>/dev/null || true
+trap - INT TERM HUP
+printf '\n'; rm -f "$STATE/pid"
+sync -f "$DEST"
+
+[ -s "$STATE/abort" ] && die "ABORTED: $(cat "$STATE/abort"). Fix it, then run again to resume."
+
+done_n=$(wc -l < "$STATE/done"); nfail=$(wc -l < "$STATE/failed"); npart=$(wc -l < "$STATE/partial")
+log "finished in $(date -u -d @$(( $(date +%s) - t0 )) +%H:%M:%S): $done_n/$total units," \
+    "$(df -h --output=avail "$BULK_ROOT" | tail -1 | tr -d ' ') free on drive"
+[ "$npart" -gt 0 ] && warn "$npart unit(s) skipped some unreadable (root-owned) files; logs in $STATE/logs"
+if [ "$nfail" -gt 0 ]; then
+  warn "$nfail unit(s) failed after $RETRIES retries:"; cut -f2- "$STATE/failed" | sed 's/^/   /' >&2
+  die "logs in $STATE/logs; run again to retry just these"
+fi
+log "all units OK"

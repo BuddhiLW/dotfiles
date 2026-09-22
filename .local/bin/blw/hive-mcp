@@ -1,6 +1,40 @@
 #!/usr/bin/bash
 
-cd $HOME/PP/hive/hive-mcp/
+cd "$HOME/PP/hive/hive-mcp/" || exit 1
+
+# Merge explicitly selected host overlays; paths are relative to each file.
+compose_deps() {
+  bb -e '
+    (require (quote [clojure.edn :as edn])
+             (quote [clojure.java.io :as io]))
+    (let [read-overlay
+          (fn [path]
+            (let [file (.getCanonicalFile (io/file path))
+                  data (edn/read-string (slurp file))
+                  base (.getParentFile file)]
+              (when-not (and (map? data) (map? (:deps data)))
+                (throw (ex-info "Expected an overlay map with :deps" {:file path})))
+              (update data :deps
+                (fn [deps]
+                  (into {} (map (fn [[lib coord]]
+                                  [lib (if-let [root (:local/root coord)]
+                                         (assoc coord :local/root
+                                           (.getCanonicalPath
+                                             (let [f (io/file root)]
+                                               (if (.isAbsolute f) f (io/file base root)))))
+                                         coord)])) deps)))))
+          root (read-overlay (first *command-line-args*))
+          hosts (map read-overlay (rest *command-line-args*))
+          host-deps (apply merge (map :deps hosts))]
+      (prn (update root :deps #(merge host-deps %))))
+  ' local.deps.edn ../hive-ingestor/local.deps.edn
+}
+
+DEPS=$(compose_deps) || exit 1
+if [[ "${1:-}" == "--print-deps" ]]; then
+  printf '%s\n' "$DEPS"
+  exit 0
+fi
 
 # --- Milvus via Tailscale subnet router (tag:hive, ACL-controlled) ---
 # Reached via the k8s ClusterIP over the hive-subnet-router tailnet peer
@@ -169,29 +203,6 @@ if [ -n "$HIVE_MANIFOLD_WAIT_POOL_MAX" ]; then
 fi
 export JAVA_OPTS
 
-# --- Heap-leak forensics: JFR OldObjectSample from a COLD boot (HEAP-DOMINATOR) ---
-# The coordinator leaks a static ~10 GB set (~70M datalevin datalog tuples + 37M
-# datalevin.bits.Retrieved) whose retainer is invisible to every in-process scan,
-# and MAT is impossible (the leak re-inflates to ~85% RAM before MAT can load a
-# dump). JFR's jdk.OldObjectSample is the MAT-substitute: it samples allocations
-# that SURVIVE GC and, at dump with path-to-gc-roots=true, emits each with its
-# allocation stack AND its reference chain to a GC root — which names the retainer.
-# It only captures allocations made AFTER it starts, so it MUST begin at boot;
-# wiring it here (not in the shared deps.edn :dev/:nrepl alias) keeps it on the
-# live coordinator only. Event set: hive-mcp/leak.jfc (old-object + throttled
-# alloc + GC; minimal overhead). Each boot writes its own timestamped .jfr.
-#
-# Read the holder once it has re-leaked to several GB:
-#   pid=$(pgrep -f hive-mcp.server.core)
-#   jcmd "$pid" JFR.dump name=hive-leak path-to-gc-roots=true filename=/tmp/leak.jfr
-#   jfr print --events jdk.OldObjectSample /tmp/leak.jfr    # reference chains = the retainer
-# Disable for a run:  HIVE_JFR_LEAK=0 hive-mcp
-JFR_OPT=""
-if [ "${HIVE_JFR_LEAK:-1}" = "1" ]; then
-  JFR_FILE="${HIVE_JFR_FILE:-$HOME/hive-leak-$(date +%Y%m%d-%H%M%S).jfr}"
-  JFR_OPT="-J-XX:StartFlightRecording=name=hive-leak,settings=$HOME/PP/hive/hive-mcp/leak.jfc,path-to-gc-roots=true,maxsize=300m,maxage=12h,dumponexit=true,filename=$JFR_FILE"
-  echo "hive-mcp: JFR leak recording ACTIVE -> $JFR_FILE  (HIVE_JFR_LEAK=0 to disable)"
-fi
 
 # --- Async warm-boot: ansatz mathlib REPL (non-blocking, RAM-gated) ---
 # (init! "mathlib") takes ~13 min and is OOM-prone; boot it in the BACKGROUND
@@ -216,157 +227,17 @@ if [ "${HIVE_ANSATZ_MATHLIB:-1}" = "1" ] \
   fi
 fi
 
-# --- RSS containment: metaspace cap + soft-ref aging (measured 2026-08-07) ---
-# Lives HERE, not in the shared deps.edn :dev/:nrepl alias, for the same reason
-# JFR does: those aliases are also used by ephemeral dev REPLs, which neither
-# need these caps nor should die from them. Coordinator-only.
-# Full profile + reproduction: hive memory 20260807162003-4113279d and
-# 20260807164931-62a9b05e.
-#
-# MaxMetaspaceSize was UNLIMITED while metaspace sat at 512 MB used / 664 MB
-# committed across ~100k classes for 2,580 loaded namespaces — nothing bounded it.
-# DANGER: deps.edn already sets -XX:+ExitOnOutOfMemoryError, so a Metaspace OOM
-# EXITS the coordinator. This cap must keep real headroom over peak; 1g is ~2x the
-# observed steady state. Do NOT tighten toward the observed 664 MB without first
-# re-measuring under full addon load.
-#
-# SoftRefLRUPolicyMSPerMB: clojure.lang.DynamicClassLoader.classCache held 100,146
-# SoftReferences with ZERO cleared — the default 1000 ms/MB against ~4.9 GB free
-# heap means ~80 MINUTES of soft-ref survival, so orphaned eval'd classes never
-# aged out. 50 => ~4 min. Reclaims dead code only: classes of LIVE namespaces stay
-# strongly reachable through their Vars and are unaffected.
-#
-# Both are a slow-bleed cap at REST. Under load the gigabytes are elsewhere — G1
-# committed-heap ratchet (kanban 20260807164934-17a01dd6) and the datahike datom
-# working set (kanban 20260702170120-316f65b2). Do not expect these to fix a spike.
-# Disable for a run:  HIVE_MEM_CAPS=0 hive-mcp
-MEM_OPTS=""
-if [ "${HIVE_MEM_CAPS:-1}" = "1" ]; then
-  MEM_OPTS="-J-XX:MaxMetaspaceSize=1g -J-XX:SoftRefLRUPolicyMSPerMB=50"
-  echo "hive-mcp: memory caps ACTIVE -> $MEM_OPTS  (HIVE_MEM_CAPS=0 to disable)"
-fi
+# --- Heap sizing for THIS machine (62 GB RAM) ---
+# hive-mcp's :dev/:nrepl aliases cap the heap at -Xmx6g / SoftMaxHeapSize=4g,
+# sized for a 32 GB desktop. On 2026-09-13 the coordinator ran at 5.86 of 6 GB
+# with 185 full GCs and ~10% of wall time in GC while serving several agent
+# sessions, and every tool call took minutes. The ceiling is a machine fact,
+# so it lives here, not in the shared deps.edn. -J flags land after the
+# alias :jvm-opts in the java command line and the JVM honours the LAST -Xmx.
+HIVE_MCP_XMX="${HIVE_MCP_XMX:-16g}"
+HIVE_MCP_SOFT_MAX_HEAP="${HIVE_MCP_SOFT_MAX_HEAP:-12g}"
+HIVE_MCP_XMS="${HIVE_MCP_XMS:-4g}"
 
-DEPS=$(cat local.deps.edn)
-echo " ---- DEPS ---- \n"
-echo "$DEPS"
-
-# --- Coordinator-death legibility (kanban TEST-JVM-SUM, 2026-09-03) ---
-#
-# 21 hard kills in 8 days left NO evidence but a 0-byte JFR, and that is not a
-# coincidence: `dumponexit` cannot run when the JVM is SIGKILLed, so the one
-# artefact that would say why is exactly the one the OOM killer prevents.
-#
-# `exec` is what made that unavoidable. It REPLACES this shell with the JVM, so
-# nothing survives the JVM to write a line about it. Running the JVM as a CHILD
-# and waiting costs one dormant bash process and buys an exit record.
-#
-# The RSS at the kill cannot be read after the kill: /proc/<pid> is gone by
-# then. So a sampler writes the last-known RSS and peak to a file every
-# HIVE_DEATHLOG_INTERVAL seconds and the record reports that LAST SAMPLE, which
-# is up to one interval stale and is labelled as such. Host MemAvailable and
-# the count of other JVMs are read at exit, a moment or two late, and are
-# likewise labelled rather than presented as the values at the instant of death.
-# That staleness is the point of the card: the unbounded quantity is the SUM of
-# concurrent JVMs beside the coordinator, and nothing was observing it at all.
-#
-# Disable: HIVE_DEATHLOG=0, which restores the plain exec.
-
-# $JFR_OPT is intentionally unquoted: it is a single word (no spaces) when set,
-# and expands to nothing when leak recording is disabled.
-# $MEM_OPTS is likewise unquoted, but for the opposite reason: it is TWO words and
-# must word-split into two separate -J args.
-
-if [ "${HIVE_DEATHLOG:-1}" != "1" ]; then
-  exec $EXCLUDE clj $JFR_OPT $MEM_OPTS -Sdeps "$DEPS" -M:dev:nrepl
-fi
-
-DEATHLOG="${HIVE_DEATHLOG_FILE:-$HOME/.local/state/hive/coordinator-deaths.log}"
-mkdir -p "$(dirname "$DEATHLOG")"
-SAMPLE="$(mktemp -t hive-coord-sample.XXXXXX)"
-start_epoch=$(date +%s)
-
-$EXCLUDE clj $JFR_OPT $MEM_OPTS -Sdeps "$DEPS" -M:dev:nrepl &
-coord_pid=$!
-
-# Forward a stop to the JVM: without `exec` this shell is now the signal
-# target, and a coordinator that ignored SIGTERM would be a worse bug than
-# the one being fixed.
-trap 'kill -TERM "$coord_pid" 2>/dev/null' TERM INT
-
-# `$!` is NOT the JVM. The launch chain is
-#
-#     this shell  ->  clj  ->  rlwrap  ->  clojure  ->  exec java
-#
-# so `$coord_pid` is the head of it and sampling that reads rlwrap's ~1 MB
-# instead of the coordinator's gigabytes. Measured: against a real JVM growing
-# a 1.6 GB heap this reported last_rss_mb=1, which is worse than no number at
-# all because it looks like one. Walk down to the java process instead.
-#
-# Waiting still happens on $coord_pid: rlwrap propagates the JVM's status, and
-# that is the process this shell actually owns.
-jvm_descendant() {
-  local pids="$1" depth=0 next p
-  while [ -n "$pids" ] && [ "$depth" -lt 8 ]; do
-    next=""
-    for p in $pids; do
-      if [ "$(cat "/proc/$p/comm" 2>/dev/null)" = "java" ]; then
-        printf '%s' "$p"; return 0
-      fi
-      next="$next $(pgrep -P "$p" 2>/dev/null | tr '\n' ' ')"
-    done
-    pids="$next"; depth=$((depth + 1))
-  done
-  return 1
-}
-
-(
-  jvm=""
-  while kill -0 "$coord_pid" 2>/dev/null; do
-    # Re-resolve until found: the JVM appears a moment after the wrapper, and
-    # a sampler that gave up on the first miss would sample nothing all run.
-    [ -z "$jvm" ] || [ ! -r "/proc/$jvm/status" ] && jvm=$(jvm_descendant "$coord_pid")
-    if [ -n "$jvm" ] && [ -r "/proc/$jvm/status" ]; then
-      avail=$(awk '/MemAvailable/{print int($2/1024)}' /proc/meminfo)
-      # VmHWM is the PEAK resident size, which is the number a leak
-      # investigation wants and which no post-mortem can recover.
-      awk -v avail="$avail" \
-          '/^VmRSS:/{rss=int($2/1024)} /^VmHWM:/{hwm=int($2/1024)}
-           END{printf "%d %d %d\n", rss, hwm, avail}' \
-          "/proc/$jvm/status" >"$SAMPLE.tmp" 2>/dev/null &&
-        mv "$SAMPLE.tmp" "$SAMPLE"
-    fi
-    sleep "${HIVE_DEATHLOG_INTERVAL:-10}"
-  done
-) &
-sampler_pid=$!
-
-wait "$coord_pid"; rc=$?
-kill "$sampler_pid" 2>/dev/null
-wait "$sampler_pid" 2>/dev/null
-
-last_rss=0; last_hwm=0; last_avail=0
-[ -s "$SAMPLE" ] && read -r last_rss last_hwm last_avail <"$SAMPLE"
-rm -f "$SAMPLE" "$SAMPLE.tmp"
-
-# 128+n is a SIGNALLED exit, and 137 (SIGKILL) is the OOM killer's signature.
-# Naming it in the record is what turns an anonymous kill into data.
-if [ "$rc" -gt 128 ]; then
-  sig=$((rc - 128))
-  how="signal=$sig$( [ "$sig" = 9 ] && echo ' (SIGKILL, probably the OOM killer)' )"
-else
-  how="exit=$rc"
-fi
-
-jfr_size=0
-[ -n "${JFR_FILE:-}" ] && [ -f "$JFR_FILE" ] && jfr_size=$(stat -c %s "$JFR_FILE" 2>/dev/null || echo 0)
-
-printf '%s coordinator-exit %s uptime_s=%d last_rss_mb=%d peak_rss_mb=%d last_avail_mb=%d avail_now_mb=%d jvms_now=%d jfr_bytes=%d jfr=%s sample_age_s<=%d\n' \
-  "$(date -Is)" "$how" "$(( $(date +%s) - start_epoch ))" \
-  "$last_rss" "$last_hwm" "$last_avail" \
-  "$(awk '/MemAvailable/{print int($2/1024)}' /proc/meminfo)" \
-  "$(pgrep -c java 2>/dev/null || echo 0)" \
-  "$jfr_size" "${JFR_FILE:-none}" \
-  "${HIVE_DEATHLOG_INTERVAL:-10}" \
-  | tee -a "$DEATHLOG" >&2
-
-exit "$rc"
+exec $EXCLUDE clj -J-Xmx"$HIVE_MCP_XMX" -J-Xms"$HIVE_MCP_XMS" \
+  -J-XX:SoftMaxHeapSize="$HIVE_MCP_SOFT_MAX_HEAP" \
+  -Sdeps "$DEPS" -M:dev:nrepl

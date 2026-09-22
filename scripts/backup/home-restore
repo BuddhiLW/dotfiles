@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Restore a home-backup into $HOME.
+#   home-restore [SRC]      SRC defaults to the newest $BULK_ROOT/home-backup-*
+#   FORCE=1 home-restore    overwrite files that already exist (default: keep them)
+#   JOBS=4 home-restore     parallel extract streams
+set -Eeuo pipefail
+
+DOTFILES="${DOTFILES:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+source "$DOTFILES/scripts/backup/lib"
+
+SRC="${1:-$BULK_ROOT/home-data}"
+[ -d "$SRC" ] || die "no home-backup found under $BULK_ROOT"
+JOBS="${JOBS:-2}"
+log "restoring $SRC -> $HOME"
+
+if compgen -G "$SRC/*.tar.zst" >/dev/null; then
+  command -v zstd >/dev/null || sudo apt-get install -y zstd
+  keep=--skip-old-files; [ "${FORCE:-0}" = 1 ] && keep=--overwrite
+  export keep
+  find "$SRC" -maxdepth 1 -name '*.tar.zst' -print0 \
+    | xargs -0 -P "$JOBS" -I{} bash -c \
+        'zstd -dc "$1" | tar -C "$HOME" -xpf - $keep && echo "done $(basename "$1")"' _ {}
+elif [ -d "$SRC/home" ]; then
+  keep=--ignore-existing; [ "${FORCE:-0}" = 1 ] && keep=
+  rsync -aHAX $keep --info=progress2 "$SRC/home/" "$HOME/"
+else
+  die "$SRC has neither archives nor a home/ mirror"
+fi
+log "done"

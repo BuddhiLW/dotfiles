@@ -553,7 +553,6 @@ myKeys c =
   ^++^ subKeys "BLW keys"
   [ ("M-p t t",   addName "Random Lazywallpaper"    $ spawn "random-lazywal")
   , ("M-p r",     addName "Lauch Rofi 2"            $ spawn "rofi -show run")
-  , ("M-p M-p",   addName "Take a screenshot"       $ spawn "notify-send 'hello!'")
   , ("M-p t e x", addName "Latex OCR"               $ spawn "pix2tex_gui")]
 
   ^++^ subKeys "Switch to workspace"
@@ -750,8 +749,9 @@ main = do
   -- let newPath = homePath ++ fromMaybe "" currentPath
   -- setEnv "PATH" newPath
   -- Launching three instances of xmobar on their monitors.
+  -- Screen 0 = eDP-1 (notebook 2560x1600), screen 1 = HDMI-1-0 (ultrawide 2560x1080)
   xmproc0 <- spawnPipe ("xmobar -x 0 $HOME/.config/xmobar/doom-one-xmobarrc-notebook")
-  xmproc1 <- spawnPipe ("xmobar -x 1 $HOME/.config/xmobar/doom-one-xmobarrc-notebook")
+  xmproc1 <- spawnPipe ("xmobar -x 1 $HOME/.config/xmobar/doom-one-xmobarrc-duo-screen")
   -- xmproc2 <- spawnPipe ("xmobar -x 2 $HOME/.config/xmobar/" ++ colorScheme ++ "-xmobarrc")
   -- the xmonad, ya know...what the WM is named after!
   xmonad

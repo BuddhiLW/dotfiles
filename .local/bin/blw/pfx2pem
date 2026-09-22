@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+# Extract an ICP-Brasil A1 pfx into PEM parts.
+# The private key is written ENCRYPTED (PKCS#8, AES-256-CBC); the plaintext key
+# never touches the disk, it is piped between the two openssl processes.
+# Both passphrases are consumed at exec time from `pass`, over file descriptors:
+# never as an argv element (argv is world-readable via /proc), never printed.
+set -euo pipefail
+
+PFX="${1:?usage: pfx2pem.sh <file.pfx> [outdir] [pfx-pass-entry] [key-pass-entry]}"
+OUT="${2:-$(dirname "$PFX")}"
+IN_ENTRY="${3:-Serpro/pin}"       # opens the .pfx
+KEY_ENTRY="${4:-Serpro/pem-pass}" # locks the emitted key.pem
+
+umask 077
+mkdir -p "$OUT"
+
+# openssl reading the pfx, password on fd 3
+p12() { openssl pkcs12 -legacy -in "$PFX" -passin fd:3 "$@" 3<<<"$(pass "$IN_ENTRY")"; }
+# passphrase for the emitted key, on fd 4 (kept off the pipeline's stdin)
+keypass() { printf '%s' "$(pass "$KEY_ENTRY")"; }
+
+# 1. both secrets must resolve before anything is written
+if ! p12 -noout >/dev/null 2>&1; then
+  echo "FAIL: '$IN_ENTRY' does not open $PFX" >&2
+  exit 1
+fi
+if [ -z "$(keypass)" ]; then
+  echo "FAIL: '$KEY_ENTRY' is empty or unreadable" >&2
+  exit 1
+fi
+
+# 2. public material
+p12 -clcerts -nokeys -out "$OUT/cert.pem"
+p12 -cacerts -nokeys -out "$OUT/chain.pem"
+
+# 3. private key: decrypted from the pfx and re-encrypted in one pipeline,
+#    so it is never a plaintext file
+p12 -nocerts -nodes \
+  | openssl pkey -aes-256-cbc -passout fd:4 -out "$OUT/key.pem" 4< <(keypass)
+
+# strip openssl's bag-attribute preamble so the files are plain PEM
+for f in cert.pem chain.pem; do
+  awk '/^-----BEGIN/{p=1} p' "$OUT/$f" > "$OUT/.$f.tmp" && mv "$OUT/.$f.tmp" "$OUT/$f"
+done
+
+# 4. bundles. full.pem carries the ENCRYPTED key, so it still needs the passphrase.
+cat "$OUT/cert.pem" "$OUT/key.pem"   > "$OUT/full.pem"
+cat "$OUT/cert.pem" "$OUT/chain.pem" > "$OUT/fullchain.pem"
+
+chmod 600 "$OUT"/{cert,chain,key,full,fullchain}.pem
+
+echo "wrote:"
+for f in cert.pem chain.pem key.pem full.pem fullchain.pem; do
+  printf '  %-14s %6s bytes\n' "$f" "$(stat -c%s "$OUT/$f")"
+done
+
+echo
+echo "key encryption:"
+head -1 "$OUT/key.pem"
+openssl asn1parse -in "$OUT/key.pem" 2>/dev/null \
+  | grep -oE 'aes-256-cbc|AES-256-CBC|PBKDF2|hmacWithSHA256' | sort -u | sed 's/^/  /'
+
+echo
+echo "cert subject/validity:"
+openssl x509 -in "$OUT/cert.pem" -noout -subject -issuer -dates -serial
+
+echo
+echo "checks:"
+openssl verify -CAfile "$OUT/chain.pem" "$OUT/cert.pem" | sed 's/^/  /'
+a=$(openssl x509 -in "$OUT/cert.pem" -noout -pubkey | openssl sha256 | awk '{print $NF}')
+b=$(openssl pkey -in "$OUT/key.pem" -passin fd:4 -pubout 4< <(keypass) \
+      | openssl sha256 | awk '{print $NF}')
+[ "$a" = "$b" ] && echo "  key/cert pair: OK" || { echo "  key/cert pair: MISMATCH" >&2; exit 1; }
+echo "  key is locked: $(openssl pkey -in "$OUT/key.pem" -noout -passin pass:'' 2>/dev/null \
+      && echo 'NO - opens with empty passphrase' || echo 'yes')"

@@ -1,18 +1,105 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Android SDK for Flutter, headless: command-line tools, one emulator image,
+# one AVD, and flutter's pointer at it. No Android Studio.
+#
+#   0  everything in place (rerun-safe: each step checks before it acts)
+#   1  a step failed; its output is above
+#
+# Honours ANDROID_HOME / ANDROID_AVD_HOME from the shell (.bashrc sets both).
+# Override anything through the environment, e.g. ANDROID_PLATFORM=36 ./android
+set -euo pipefail
 
-## Dependencies
-sudo apt-get install libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1 libbz2-1.0:i386
+ANDROID_HOME="${ANDROID_HOME:-$HOME/Android/Sdk}"
+ANDROID_HOME="${ANDROID_HOME%/}"
+# "Command line tools only" build id from https://developer.android.com/studio
+CMDLINE_TOOLS_BUILD="${CMDLINE_TOOLS_BUILD:-15859902}"
+# Latest platform and build-tools the SDK publishes (sdkmanager --list).
+# Since API 36 the platform carries a minor version (36.1, 37.0, 37.2) and
+# the emulator image may lag the platform, so the two are pinned apart.
+PLATFORM="${ANDROID_PLATFORM:-37.2}"
+BUILD_TOOLS="${ANDROID_BUILD_TOOLS:-37.0.0}"
+IMAGE_API="${ANDROID_IMAGE_API:-37.0}"
+IMAGE="system-images;android-${IMAGE_API};google_apis;x86_64"
+AVD_NAME="${AVD_NAME:-pixel_api${IMAGE_API%%.*}}"
+AVD_DEVICE="${AVD_DEVICE:-pixel_7}"
 
-## Where you would like to install the Android Stufio
-cd $DOTFILES/gitthings/
+# sdkmanager wants a JDK 17+. Prefer the distro's LTS over a newer brew java
+# the SDK tools were not tested against.
+for j in /usr/lib/jvm/java-21-openjdk-amd64 /usr/lib/jvm/java-17-openjdk-amd64; do
+  if [ -x "$j/bin/java" ]; then export JAVA_HOME="$j"; break; fi
+done
+export ANDROID_HOME ANDROID_SDK_ROOT="$ANDROID_HOME"
+export PATH="${JAVA_HOME:+$JAVA_HOME/bin:}$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator:$PATH"
 
-wget https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2024.3.1.13/android-studio-2024.3.1.13-linux.tar.gz
-tar -xf android-studio-2024.3.1.13-linux.tar.gz
+step() { printf '\n== %s\n' "$*"; }
 
-# android-studio-2024.2.1.9-linux.tar.gz
+step "system packages"
+pkgs=(unzip libpulse0 libgl1 libnss3 libxcursor1 libxdamage1 libxrandr2 libxcomposite1 libxi6)
+missing=()
+for p in "${pkgs[@]}"; do dpkg -s "$p" >/dev/null 2>&1 || missing+=("$p"); done
+if ((${#missing[@]})); then
+  if sudo -n true 2>/dev/null; then
+    sudo apt-get install -y "${missing[@]}"
+  else
+    echo "needs sudo; run first:  sudo apt-get install -y ${missing[*]}"
+    exit 1
+  fi
+else
+  echo "all present"
+fi
 
-cd android-studio/bin/
-bash studio.sh
+step "kvm"
+if [ -r /dev/kvm ] && [ -w /dev/kvm ]; then
+  echo "/dev/kvm is readable and writable"
+else
+  echo "no access to /dev/kvm: sudo usermod -aG kvm $USER, then log in again (emulator will be slow until then)"
+fi
 
-sudo apt install google-android-emulator-installer
-# sudo apt-get install android-studio
+step "cmdline-tools -> $ANDROID_HOME/cmdline-tools/latest"
+if [ -x "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" ]; then
+  echo "present"
+else
+  mkdir -p "$ANDROID_HOME/cmdline-tools"
+  zip="/tmp/commandlinetools-linux-${CMDLINE_TOOLS_BUILD}_latest.zip"
+  [ -f "$zip" ] || curl -fL -o "$zip" \
+    "https://dl.google.com/android/repository/commandlinetools-linux-${CMDLINE_TOOLS_BUILD}_latest.zip"
+  tmp="$(mktemp -d)"
+  unzip -q "$zip" -d "$tmp"
+  mv "$tmp/cmdline-tools" "$ANDROID_HOME/cmdline-tools/latest"
+  rm -rf "$tmp"
+fi
+java -version 2>&1 | head -1
+
+step "licenses"
+# `yes` dies of SIGPIPE when sdkmanager stops reading; under pipefail that
+# 141 would abort the script, so the writer's exit is neutralised.
+(yes || true) | sdkmanager --licenses >/dev/null
+
+step "packages"
+sdkmanager --install "platform-tools" "platforms;android-${PLATFORM}" \
+  "build-tools;${BUILD_TOOLS}" "emulator" "$IMAGE"
+
+step "avd $AVD_NAME ($AVD_DEVICE, $IMAGE)"
+if avdmanager list avd 2>/dev/null | grep -q "Name: $AVD_NAME"; then
+  echo "present"
+else
+  echo no | avdmanager create avd -n "$AVD_NAME" -k "$IMAGE" -d "$AVD_DEVICE"
+fi
+
+step "flutter"
+if command -v flutter >/dev/null 2>&1; then
+  flutter config --android-sdk "$ANDROID_HOME" >/dev/null
+  (yes || true) | flutter doctor --android-licenses >/dev/null 2>&1 || true
+  flutter doctor 2>&1 | grep -A4 "Android toolchain"
+else
+  echo "flutter not on PATH; later: flutter config --android-sdk $ANDROID_HOME"
+fi
+
+step "done"
+cat <<EOF
+shell rc needs (skip what is already there):
+  export ANDROID_HOME=$ANDROID_HOME
+  export PATH=\$ANDROID_HOME/platform-tools:\$ANDROID_HOME/emulator:\$ANDROID_HOME/cmdline-tools/latest/bin:\$PATH
+start the emulator:   emulator -avd $AVD_NAME &
+then, in the app:     flutter devices && clj -M:cljd flutter
+EOF

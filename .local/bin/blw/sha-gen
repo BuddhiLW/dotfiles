@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+head -c8 /dev/urandom | xxd -p

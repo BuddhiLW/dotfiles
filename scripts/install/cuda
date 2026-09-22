@@ -1,12 +1,36 @@
 #!/usr/bin/bash
+# CUDA toolkit from NVIDIA's apt repo; the GPU driver stays on Ubuntu's track.
+#
+#   scripts/install/cuda             latest toolkit (cuda-toolkit meta, e.g. 13.4)
+#   CUDNN=1 scripts/install/cuda     plus cuDNN 9 for CUDA 13
+#
+# Not the `cuda` metapackage: it also pulls `cuda-drivers`, which swaps Ubuntu's
+# nvidia-driver-*-open for NVIDIA's own build. Update the driver with
+# `sudo ubuntu-drivers install` / apt upgrade instead. Any CUDA 13.x toolkit
+# runs on a driver >= 580 (minor-version compatibility).
+#
+# Idempotent: rerun to upgrade. nvcc lands in /usr/local/cuda/bin, which
+# .config/shell/profile puts on PATH.
+set -euo pipefail
 
-cd $DOTFILES
-wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
-sudo dpkg -i cuda-keyring_1.1-1_all.deb
+. /etc/os-release
+REPO="ubuntu${VERSION_ID//./}"   # ubuntu2404
+ARCH=x86_64
+KEYRING=cuda-keyring_1.1-1_all.deb
+LIST=/etc/apt/sources.list.d/cuda-${REPO}-${ARCH}.list
+
+# The repo list is a conffile of cuda-keyring: once deleted, a plain reinstall
+# does not bring it back and apt silently stops seeing NVIDIA's packages.
+if ! dpkg -s cuda-keyring >/dev/null 2>&1 || [ ! -f "$LIST" ]; then
+  tmp=$(mktemp -d)
+  trap 'rm -rf "$tmp"' EXIT
+  wget -q -O "$tmp/$KEYRING" "https://developer.download.nvidia.com/compute/cuda/repos/$REPO/$ARCH/$KEYRING"
+  sudo dpkg -i --force-confmiss "$tmp/$KEYRING"
+fi
+
 sudo apt-get update
-sudo apt-get -y install cuda-toolkit-13-1
-sudo apt-get install -y cuda-drivers
-sudo apt-get install -y cudnn9-cuda-13
-sudo apt-get -y install cudnn9-jit-cuda-13
-#sudo apt-get install -y nvidia-driver-570-open
-#sudo apt-get install -y cuda-drivers-fabricmanager-570
+sudo apt-get install -y cuda-toolkit
+if [ "${CUDNN:-0}" = 1 ]; then sudo apt-get install -y cudnn9-cuda-13; fi
+
+/usr/local/cuda/bin/nvcc --version | tail -1
+nvidia-smi --query-gpu=name,driver_version --format=csv,noheader

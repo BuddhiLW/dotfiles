@@ -8,6 +8,9 @@
 # Adds `~/.local/bin` to $PATH
 export PATH="$PATH:${$(find ~/.local/bin -type d -printf %p:)%%:}"
 
+# CUDA toolkit (scripts/install/cuda)
+[ -d /usr/local/cuda/bin ] && export PATH="$PATH:/usr/local/cuda/bin"
+
 unsetopt PROMPT_SP
 
 # Default programs:

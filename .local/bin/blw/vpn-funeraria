@@ -1,3 +1,52 @@
 #!/usr/bin/bash
+# Funeraria corporate OpenVPN.
+# When Mullvad is up, run excluded from it: at route-delay+5s OpenVPN installs
+# a /32 bypass route to the server via the physical iface, and Mullvad's
+# killswitch EPERMs that path ("write UDPv4: Operation not permitted").
+#
+# Usage:
+#   vpn-funeraria          # tear down any prior instance, then start exactly one
+#   vpn-funeraria stop     # tear down the tunnel and exit
+set -uo pipefail
 
-sudo openvpn --config "$HOME/dotfiles/shiny-enigma/vpn/client_pedro.ovpn"
+CONFIG="$HOME/dotfiles/shiny-enigma/vpn/client_pedro.ovpn"
+AUTH="$HOME/dotfiles/shiny-enigma/vpn/auth.txt"
+# Unique to THIS tunnel — never matches Mullvad/AirVPN/Tailscale/etc.
+MATCH="client_pedro.ovpn"
+
+# Kill every process belonging to this tunnel (openvpn + the
+# sudo/mullvad-exclude privilege chain), specific to OUR config only.
+# Repeated manual launches stack same-cert clients: the server then churns the
+# session (tun IP keeps changing, RX stays 0, MCP can't reach 192.168.2.1:8181).
+teardown() {
+    pgrep -f "$MATCH" >/dev/null 2>&1 || return 0
+    echo "vpn-funeraria: terminating existing instance(s):" >&2
+    pgrep -af "$MATCH" | grep -v "$$" >&2 || true
+    sudo pkill -TERM -f "$MATCH" 2>/dev/null || true
+    for _ in 1 2 3 4 5; do
+        pgrep -f "$MATCH" >/dev/null 2>&1 || break
+        sleep 1
+    done
+    sudo pkill -KILL -f "$MATCH" 2>/dev/null || true
+    # Let the server release the old session before reconnecting on the same cert.
+    sleep 1
+}
+
+if [[ "${1:-}" == "stop" || "${1:-}" == "down" ]]; then
+    teardown
+    echo "vpn-funeraria: stopped." >&2
+    exit 0
+fi
+
+# --- Single-instance: never stack clients. ---
+teardown
+
+# Silence openvpn's "file is group or others accessible" warning + protect creds.
+[[ -f "$AUTH" ]] && chmod 600 "$AUTH" 2>/dev/null || true
+
+# --- Launch exactly one client. ---
+if command -v mullvad-exclude >/dev/null 2>&1 \
+    && mullvad status 2>/dev/null | grep -qi connected; then
+    exec sudo mullvad-exclude openvpn --config "$CONFIG"
+fi
+exec sudo openvpn --config "$CONFIG"

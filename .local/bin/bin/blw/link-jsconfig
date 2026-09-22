@@ -1,3 +1,0 @@
-#!/usr/bin/bash
-
-ln -sf $DOTFILES/.config/facti/jsconfig.json $PWD

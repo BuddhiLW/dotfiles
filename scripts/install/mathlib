@@ -1,0 +1,84 @@
+#!/usr/bin/bash
+# Install the full Mathlib store for ansatz (verified-Clojure Lean4 kernel).
+#
+# Produces a PSS filestore of ~648k Mathlib declarations that `(a/init! "mathlib")`
+# loads. Idempotent: re-running skips whatever is already present.
+#
+# Fixes two things the stock ansatz scripts/setup-mathlib.sh assumes on a fresh box:
+#   1. bootstraps elan (the Lean toolchain manager) if it is missing
+#   2. pins mathlib4 to lean4export's EXACT Lean version and runs `lake exe cache get`
+#      (without the matched tag the export cannot read the oleans; without the cache
+#       mathlib builds from source = hours)
+#
+# Disk: ~15-30GB (Lean toolchain + mathlib4 tree + oleans + NDJSON + PSS store).
+#
+# Config (env overrides, all optional):
+#   ANSATZ_DIR    ansatz project checkout   (default: ~/PP/hive/clones-ref/ansatz)
+#   STORE_DIR     PSS store output dir      (default: ~/.local/share/ansatz/stores/mathlib)
+#   LEAN_VERSION  toolchain tag to pin      (default: read from lean4export/lean-toolchain)
+#
+# Usage:
+#   scripts/install/mathlib
+#   STORE_DIR=/var/tmp/ansatz-mathlib scripts/install/mathlib   # stash the store elsewhere
+
+set -euo pipefail
+
+ANSATZ_DIR="${ANSATZ_DIR:-$HOME/PP/hive/clones-ref/ansatz}"
+STORE_DIR="${STORE_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/ansatz/stores/mathlib}"
+# lean4export + mathlib4 are cloned NEXT TO ansatz — the location setup-mathlib.sh expects.
+WORK_DIR="$(dirname "$ANSATZ_DIR")"
+
+log(){ printf '\n\033[1;34m>>> %s\033[0m\n' "$*"; }
+die(){ printf '\033[1;31m!!! %s\033[0m\n' "$*" >&2; exit 1; }
+
+[ -d "$ANSATZ_DIR" ]                          || die "ANSATZ_DIR not found: $ANSATZ_DIR (set ANSATZ_DIR=...)"
+[ -x "$ANSATZ_DIR/scripts/setup-mathlib.sh" ] || die "ansatz setup-mathlib.sh missing under $ANSATZ_DIR"
+
+# --- 1. elan (Lean toolchain manager) ---
+if ! command -v elan >/dev/null 2>&1 && [ ! -x "$HOME/.elan/bin/elan" ]; then
+  log "installing elan (Lean toolchain manager)"
+  curl -sSfL https://elan.lean-lang.org/elan-init.sh | sh -s -- -y --default-toolchain none
+fi
+export PATH="$HOME/.elan/bin:$PATH"
+command -v lake >/dev/null || die "lake shim missing after elan install"
+
+# --- 2. clone lean4export, derive the Lean version it pins ---
+cd "$WORK_DIR"
+if [ ! -d lean4export ]; then
+  log "cloning lean4export"
+  git clone --depth 1 https://github.com/leanprover/lean4export.git
+fi
+LEAN_VERSION="${LEAN_VERSION:-$(sed 's#.*:##' lean4export/lean-toolchain)}"   # e.g. v4.32.0-rc1
+log "target Lean toolchain: $LEAN_VERSION"
+
+# --- 3. clone mathlib4 at the MATCHING tag (so the export can read its oleans) ---
+if [ ! -d mathlib4 ]; then
+  git ls-remote --tags https://github.com/leanprover-community/mathlib4.git "refs/tags/$LEAN_VERSION" \
+    | grep -q . || die "mathlib4 has no tag $LEAN_VERSION — pin a shared one via LEAN_VERSION=..."
+  log "cloning mathlib4 @ $LEAN_VERSION (shallow)"
+  git clone --depth 1 --branch "$LEAN_VERSION" https://github.com/leanprover-community/mathlib4.git
+fi
+[ "$(sed 's#.*:##' mathlib4/lean-toolchain)" = "$LEAN_VERSION" ] \
+  || die "mathlib4 toolchain $(cat mathlib4/lean-toolchain) != lean4export's $LEAN_VERSION"
+
+# --- 4. prebuilt oleans (skip the multi-hour from-source build) ---
+log "lake exe cache get (prebuilt Mathlib oleans)"
+( cd mathlib4 && lake exe cache get )
+
+# --- 5. build lean4export against the matched toolchain ---
+log "building lean4export"
+( cd lean4export && lake build )
+[ -x "$WORK_DIR/lean4export/.lake/build/bin/lean4export" ] || die "lean4export build failed"
+
+# --- 6. export -> instances -> import -> attrs via ansatz's maintained pipeline ---
+log "ansatz setup-mathlib.sh: export Mathlib + import into $STORE_DIR"
+( cd "$ANSATZ_DIR" && ./scripts/setup-mathlib.sh "$STORE_DIR" )
+
+log "DONE — store: $STORE_DIR ($(du -sh "$STORE_DIR" 2>/dev/null | cut -f1))"
+cat <<EOF
+
+Use it from Clojure:
+  (require '[ansatz.core :as a])
+  (a/init! "mathlib")      ;; resolves $STORE_DIR
+
+EOF

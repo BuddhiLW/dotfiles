@@ -1,3 +1,4 @@
+export PATH="/home/leibniz/.local/bin:$PATH"
 # BuddhiLW's setup
 # ~/.bashrc
 #
@@ -35,7 +36,7 @@ export ELM_B="$CS_LANG_B/Elm"
 export PP="$HOME/PP" #Programming Projects
 export CS_LANG_B="$CS_B/Languages"
 export GUIX_PROFILE="/home/$USER/.guix-profile" # Environmental variable for GUIX
-export OPENROUTER_API_KEY="$(pass openrouter/keys/hive-mcp)"
+export OPENROUTER_API_KEY="$(pass show openrouter/keys/hive-mcp)"
 
 export DOTFILES="$HOME/dotfiles"
 # export EMACS_MCP_DIR="$DOTFILES/gitthings/hive-mcp"
@@ -410,8 +411,20 @@ export CLJ_PLAYGROUND="$CLJ/cljs-reagent-template/"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CACHE_HOME="$HOME/.cache"
-export OPENROUTER_API_KEY=$(pass OpenRouter/opencode-key)
-export VENICE_API_KEY=$(pass show Venice/api-key)
+# Export a pass-backed secret ONLY when pass actually returned one. A bare
+# `export VAR=$(pass ...)` still exports VAR="" when the agent is locked or
+# the entry moved, and an exported-empty var outranks an env_file in docker
+# compose interpolation -- so dc/.env is silently shadowed by nothing.
+_export_from_pass() {
+  local var="$1" entry="$2" value
+  if value=$(pass show "$entry" 2>/dev/null) && [ -n "$value" ]; then
+    export "$var=$value"
+  else
+    unset "$var"
+  fi
+}
+_export_from_pass OPENROUTER_API_KEY OpenRouter/opencode-key
+_export_from_pass VENICE_API_KEY Venice/key
 export XINITRC="${XDG_CONFIG_HOME:-$HOME/.config}/x11/xinitrc"
 export NOTMUCH_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/notmuch-config"
 export GTK2_RC_FILES="${XDG_CONFIG_HOME:-$HOME/.config}/gtk-2.0/gtkrc-2.0"
@@ -607,10 +620,10 @@ export PATH="$PATH:$HOME/.local/bin/blw"
 
 . "$HOME/.deno/env"
 # pnpm
-export PNPM_HOME="$HOME/.local/share/pnpm"
+export PNPM_HOME="/home/leibniz/.local/share/pnpm"
 case ":$PATH:" in
-  *":$PNPM_HOME:"*) ;;
-  *) export PATH="$PNPM_HOME:$PATH" ;;
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
 esac
 # pnpm end
 #
@@ -669,3 +682,68 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 # opencode
 export PATH=/home/leibniz/.opencode/bin:$PATH
 . "/home/leibniz/.local/share/cargo/env"
+
+# agent-code: Venice (OpenAI-compatible)
+agent() {
+  AGENT_CODE_API_BASE_URL="https://api.venice.ai/api/v1" \
+  AGENT_CODE_API_KEY="$(pass Venice/api-key)" \
+  command agent --provider openai
+}
+
+# >>> juliaup initialize >>>
+
+# !! Contents within this block are managed by juliaup !!
+
+case ":$PATH:" in
+    *:/home/leibniz/.juliaup/bin:*)
+        ;;
+
+    *)
+        export PATH=/home/leibniz/.juliaup/bin${PATH:+:${PATH}}
+        ;;
+esac
+# Tab completion for juliaup and julia channel selection
+[ -f "/home/leibniz/.julia/juliaup/completions/bash.sh" ] && source "/home/leibniz/.julia/juliaup/completions/bash.sh"
+
+# <<< juliaup initialize <<<
+
+# --- hive: gitea CLI repo creation behind Cloudflare Access ---
+# gitea-repo <name> [private(true|false, default true)]
+# Mints a short-lived CF Access JWT via cloudflared (run once:
+#   cloudflared access login https://gitea.hive-mcp.com) and auths
+# Gitea with the gitea-actions PAT from pass. CF Access stays enforced.
+gitea-repo() {
+  local jwt; jwt=$(cloudflared access token --app=https://gitea.hive-mcp.com 2>/dev/null) \
+    || { echo "CF Access: run 'cloudflared access login https://gitea.hive-mcp.com'" >&2; return 1; }
+  [ -n "$jwt" ] || { echo "CF Access: empty token; run 'cloudflared access login https://gitea.hive-mcp.com'" >&2; return 1; }
+  curl -s -X POST https://gitea.hive-mcp.com/api/v1/user/repos \
+    -H "cf-access-token: $jwt" \
+    -H "Authorization: token $(pass show gitea/gitea.hive-mcp.com/token/gitea-actions | head -1)" \
+    -H 'Content-Type: application/json' \
+    -d "{\"name\":\"$1\",\"private\":${2:-true}}"
+}
+# --- end hive gitea ---
+
+# >>> agent-code name guard >>>
+# Ensures `agent` runs agent-code even if another command claims the name.
+# Managed by the agent-code installer. Delete this block to opt out.
+case ":$PATH:" in
+    *":/usr/local/bin:"*) ;;
+    *) export PATH="/usr/local/bin:$PATH" ;;
+esac
+alias agent='/usr/local/bin/agent'
+# <<< agent-code name guard <<<
+
+# kimi-code
+export PATH="/home/leibniz/.kimi-code/bin:$PATH"
+
+# Added by codebase-memory-mcp install
+
+# AsyncAPI CLI Autocomplete
+
+ASYNCAPI_AC_BASH_SETUP_PATH=/home/leibniz/.cache/@asyncapi/cli/autocomplete/bash_setup && test -f $ASYNCAPI_AC_BASH_SETUP_PATH && source $ASYNCAPI_AC_BASH_SETUP_PATH; # asyncapi autocomplete setup
+
+
+
+# Resend CLI
+export PATH="$HOME/.resend/bin:$PATH"

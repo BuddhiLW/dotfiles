@@ -1,0 +1,200 @@
+#!/usr/bin/bash
+
+cd $HOME/PP/hive/hive-mcp/
+
+# --- Milvus via Tailscale subnet router (tag:hive, ACL-controlled) ---
+# Reached via the k8s ClusterIP over the hive-subnet-router tailnet peer
+# advertising 10.96.0.0/12 (see k8s-agi/base/tailscale-operator/subnet-router.yaml).
+# The ClusterIP is pinned in contexts/home-lab/milvus/service.yaml so it
+# is stable across redeploys.
+#
+# MILVUS_HOSTS is a space-separated fallback list tried in order. The
+# wait_for_milvus loop below picks the first reachable one and exports
+# it as MILVUS_HOST. Internal retry (3 attempts, 2 s backoff) lives in
+# hive-milvus/store.clj; this loop only gates the nREPL start so we
+# don't launch into a dead endpoint.
+MILVUS_HOSTS="${MILVUS_HOSTS:-10.104.172.142}"
+export MILVUS_PORT=19530
+export MILVUS_TRANSPORT="${MILVUS_TRANSPORT:-http}"
+MILVUS_WAIT_TIMEOUT="${MILVUS_WAIT_TIMEOUT:-120}"  # seconds total budget
+TAILSCALE_WAIT_TIMEOUT="${TAILSCALE_WAIT_TIMEOUT:-30}"  # seconds total budget
+
+# Tailscale subnet routing is handled by vpn-kis ip-rule priority 5058
+# (`ip rule add to 10.96.0.0/12 lookup 52`), which fires BEFORE Mullvad's
+# fwmark rule at 5210. RFC1918 traffic to tailnet-advertised CIDRs exits
+# tailscale0, not the Mullvad tunnel. No process-level split-tunnel needed.
+# All clearnet (LLM APIs, etc.) stays inside the Mullvad tunnel — no leak.
+# Verify with: ip route get 10.104.172.142    (must show 'dev tailscale0')
+# If the priority-5058 rules are missing, re-run vpn-kis with tailscale in
+# the providers list to install /etc/systemd/system/vpn-killswitch-tailscale-routes.service.
+EXCLUDE=""
+
+# Pre-flight: ensure tailscaled is Running AND the hive subnet route
+# (10.96.0.0/12 advertised by hive-subnet-router) is installed in the
+# routing table. Without this, fresh boots race against tailscaled
+# coming up and the Milvus ClusterIP is unreachable on first try.
+#
+# Self-heals via sudo: starts tailscaled if inactive, runs
+# `tailscale up --accept-routes` if BackendState != Running OR the
+# subnet route is missing. Requires NOPASSWD sudo for systemctl/tailscale
+# or an interactive terminal for the password prompt.
+milvus_reachable() {
+  local host
+  for host in $MILVUS_HOSTS; do
+    if timeout 2 $EXCLUDE bash -c "</dev/tcp/$host/$MILVUS_PORT" 2>/dev/null; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+tailscale_ready() {
+  tailscale status --peers=false --json 2>/dev/null \
+    | grep -q '"BackendState":"Running"' \
+    && ip route show 2>/dev/null | grep -q '10\.96\.0\.0/12'
+}
+
+wait_for_tailscale() {
+  # Short-circuit: if Milvus is already reachable (tailscale, Eddie VPN,
+  # or any other route), skip the tailscale preflight and its sudo prompts.
+  # The subnet-route check is only load-bearing when Milvus itself is unreachable.
+  if milvus_reachable; then
+    echo "hive-mcp: Milvus already reachable — skipping tailscale preflight"
+    return 0
+  fi
+
+  if tailscale_ready; then
+    echo "hive-mcp: tailscale already ready"
+    return 0
+  fi
+
+  if ! systemctl is-active --quiet tailscaled; then
+    echo "hive-mcp: tailscaled inactive — starting via sudo"
+    sudo systemctl start tailscaled
+  fi
+
+  if ! tailscale_ready; then
+    echo "hive-mcp: bringing tailscale up with --accept-routes via sudo"
+    sudo tailscale up --accept-routes --accept-dns=false
+  fi
+
+  local start=$SECONDS
+  while (( SECONDS - start < TAILSCALE_WAIT_TIMEOUT )); do
+    if tailscale_ready || milvus_reachable; then
+      echo "hive-mcp: tailscale/Milvus ready (${SECONDS}s in)"
+      return 0
+    fi
+    sleep 1
+  done
+  echo "hive-mcp: WARNING tailscale not ready after ${TAILSCALE_WAIT_TIMEOUT}s — Milvus probe will likely fail" >&2
+  return 1
+}
+wait_for_tailscale
+
+# Pre-flight: wait until Milvus is reachable on at least one host in
+# MILVUS_HOSTS (space-separated, in priority order), using exponential
+# backoff with a cap. Starts fast (first try after 1 s), doubles up to
+# 30 s between attempts, gives up after MILVUS_WAIT_TIMEOUT seconds.
+# On total failure we still start nREPL — hive-milvus/store.clj has its
+# own background healing loop (start-reconnect-loop!) that takes over.
+wait_for_milvus() {
+  local start=$SECONDS
+  local delay=1
+  local attempt=1
+  while (( SECONDS - start < MILVUS_WAIT_TIMEOUT )); do
+    for host in $MILVUS_HOSTS; do
+      if timeout 3 $EXCLUDE bash -c "</dev/tcp/$host/$MILVUS_PORT" 2>/dev/null; then
+        export MILVUS_HOST="$host"
+        echo "hive-mcp: Milvus reachable at $host:$MILVUS_PORT (attempt $attempt, ${SECONDS}s in)"
+        return 0
+      fi
+    done
+    echo "hive-mcp: Milvus unreachable on [$MILVUS_HOSTS] (attempt $attempt), retrying in ${delay}s" >&2
+    sleep "$delay"
+    attempt=$(( attempt + 1 ))
+    delay=$(( delay * 2 ))
+    (( delay > 30 )) && delay=30
+  done
+  export MILVUS_HOST="${MILVUS_HOST:-${MILVUS_HOSTS%% *}}"
+  echo "hive-mcp: WARNING no Milvus host in [$MILVUS_HOSTS] reachable after ${MILVUS_WAIT_TIMEOUT}s; starting with $MILVUS_HOST anyway (background healing loop will take over)" >&2
+  return 1
+}
+wait_for_milvus
+
+export MILVUS_USER=root
+export MILVUS_PASSWORD="$(pass show milvus/root-password)"
+export MILVUS_TOKEN="root:$(pass show milvus/root-password)"
+# HTTP transport: ~14% faster p50 on get-entry, tighter tails on query-entries,
+# avoids gVisor idle-flow pruning class entirely (REST is stateless).
+# Benchmark 2026-04-17: HTTP beat gRPC p50 on 3/4 ops (get/query/search).
+export MILVUS_TRANSPORT=http
+
+# --- Ollama via Cloudflare tunnel (Tailscale exposure pending) ---
+if ! bash -c 'echo >/dev/tcp/localhost/11434' 2>/dev/null; then
+  cloudflared access tcp --hostname ollama.hive-mcp.com --url localhost:11434 &
+  BG_PIDS="$BG_PIDS $!"
+fi
+
+if [ -n "$BG_PIDS" ]; then
+  trap "kill $BG_PIDS 2>/dev/null" EXIT
+  sleep 1
+fi
+
+export OLLAMA_HOST=http://localhost:11434
+
+# --- ENGINE-L0.5 — bounded manifold wait-pool (OOM cascade defense) ---
+# Cap the JVM-wide manifold.executor/wait-pool so a retry storm can't grow
+# it without bound. Without this, the dirigiste-backed pool defaults to
+# Integer/MAX_VALUE and was a contributor to the 2026-05-11 13.5 GB heap
+# death. Two override paths (env wins; sys-prop is the fallback for
+# tooling that can't set env). Leave both unset to use the app default
+# of max(64, 4×CPU).
+#
+# Operator knobs:
+#   HIVE_MANIFOLD_WAIT_POOL_MAX=N       env (this script forwards verbatim)
+#   -Dhive.manifold.wait-pool-max=N      sys-prop (passed via JAVA_OPTS below)
+#
+# BUGFIX 2026-08-07: this block used to export JVM_OPTS, which the Clojure CLI
+# DOES NOT READ — the sys-prop half of this defense was silently dead. Verified:
+#   JVM_OPTS="-Dhive.probe.canary=yes" clojure -M -e '(System/getProperty "hive.probe.canary")'
+#   => nil
+# The `clojure` launcher expands $JAVA_OPTS (not $JVM_OPTS) into its final exec.
+# The env half (HIVE_MANIFOLD_WAIT_POOL_MAX, read directly by the app) always worked;
+# only the documented "sys-prop fallback for tooling that can't set env" was broken.
+HIVE_MANIFOLD_WAIT_POOL_MAX="${HIVE_MANIFOLD_WAIT_POOL_MAX:-}"
+export HIVE_MANIFOLD_WAIT_POOL_MAX
+if [ -n "$HIVE_MANIFOLD_WAIT_POOL_MAX" ]; then
+  JAVA_OPTS="${JAVA_OPTS:-} -Dhive.manifold.wait-pool-max=$HIVE_MANIFOLD_WAIT_POOL_MAX"
+  echo "hive-mcp: manifold wait-pool capped at $HIVE_MANIFOLD_WAIT_POOL_MAX threads"
+fi
+export JAVA_OPTS
+
+
+# --- Async warm-boot: ansatz mathlib REPL (non-blocking, RAM-gated) ---
+# (init! "mathlib") takes ~13 min and is OOM-prone; boot it in the BACKGROUND
+# so a warm REPL is ready without a blocking mid-session init. nREPL comes up
+# immediately on :$ANSATZ_MATHLIB_PORT; the store index build runs in a future.
+# Survives the exec below (separate process) and persists across hive-mcp
+# restarts (port-reuse guard re-uses a live one, re-boots a dead one).
+# Disable: HIVE_ANSATZ_MATHLIB=0. Floor: ANSATZ_MATHLIB_MIN_FREE_MB (default 12 GB).
+ANSATZ_MATHLIB_PORT="${ANSATZ_MATHLIB_PORT:-7899}"; export ANSATZ_MATHLIB_PORT
+if [ "${HIVE_ANSATZ_MATHLIB:-1}" = "1" ] \
+   && [ -d "$HOME/.local/share/ansatz/stores/mathlib" ] \
+   && [ -d "$HOME/PP/hive/clones-ref/ansatz/classes" ] \
+   && ! ss -tln 2>/dev/null | grep -q ":${ANSATZ_MATHLIB_PORT} "; then
+  ansatz_free_mb=$(awk '/MemAvailable/{print int($2/1024)}' /proc/meminfo)
+  if (( ansatz_free_mb >= ${ANSATZ_MATHLIB_MIN_FREE_MB:-12000} )); then
+    echo "hive-mcp: async-booting ansatz mathlib REPL on :$ANSATZ_MATHLIB_PORT (${ansatz_free_mb}MB free) -> $HOME/ansatz-mathlib-boot.log"
+    ( cd "$HOME/PP/hive/clones-ref/ansatz" && exec clj -M:mathlib-nrepl ) \
+      >"$HOME/ansatz-mathlib-boot.log" 2>&1 &
+    echo "hive-mcp: ansatz mathlib boot pid $!"
+  else
+    echo "hive-mcp: SKIP ansatz mathlib boot — ${ansatz_free_mb}MB free < ${ANSATZ_MATHLIB_MIN_FREE_MB:-12000}MB floor" >&2
+  fi
+fi
+
+DEPS=$(cat local.deps.edn)
+echo " ---- DEPS ---- \n"
+echo "$DEPS"
+
+exec $EXCLUDE clj -Sdeps "$DEPS" -M:dev:nrepl

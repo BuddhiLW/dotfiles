@@ -1,0 +1,87 @@
+#!/usr/bin/env bash
+# hive-clj — launch `clojure` only when this box has headroom for the heap asked for.
+#
+# Per-process -Xmx is necessary and NOT sufficient: the unbounded quantity is the
+# SUM of concurrent JVMs beside the resident coordinator, and nothing in the
+# toolchain observes it. Four coordinator OOM-kills are on record. See kanban
+# 20260829135646-572da364 and hive memory 20260824155312-0efb1b64.
+#
+# Usage:  hive-clj -J-Xmx2g -M:test -n some.ns
+#         hive-clj -M:test:no-runner script.clj
+#
+# Env:
+#   HIVE_CLJ_MARGIN_MB   headroom required beyond -Xmx (default 1536)
+#   HIVE_CLJ_DEFAULT_MB  heap injected when the caller names none (default 2048)
+#   HIVE_CLJ_FORCE=1     report and launch anyway
+#
+# Exits 70 when it refuses, so a refusal is distinguishable from a test failure.
+
+set -euo pipefail
+
+MARGIN_MB="${HIVE_CLJ_MARGIN_MB:-1536}"
+DEFAULT_MB="${HIVE_CLJ_DEFAULT_MB:-2048}"
+
+meminfo_mb() { awk -v k="$1:" '$1 == k {print int($2/1024)}' /proc/meminfo; }
+
+avail_mb=$(meminfo_mb MemAvailable)
+swap_total=$(meminfo_mb SwapTotal)
+swap_free=$(meminfo_mb SwapFree)
+
+# -Xmx as megabytes, from the first -J-Xmx the caller passed.
+xmx_mb=""
+for arg in "$@"; do
+  case "$arg" in
+    -J-Xmx*)
+      spec="${arg#-J-Xmx}"
+      num="${spec%[gGmMkK]}"
+      case "$spec" in
+        *[gG]) xmx_mb=$(( num * 1024 )) ;;
+        *[mM]) xmx_mb=$num ;;
+        *[kK]) xmx_mb=$(( num / 1024 )) ;;
+        *)     xmx_mb=$(( num / 1048576 )) ;;
+      esac
+      break
+      ;;
+  esac
+done
+
+args=("$@")
+if [ -z "$xmx_mb" ]; then
+  # An unbounded heap is the case that actually killed the coordinator: the
+  # hive-shape suite reached 6.8 GB with no -Xmx. Never launch one silently.
+  xmx_mb="$DEFAULT_MB"
+  args=("-J-Xmx${DEFAULT_MB}m" "$@")
+  echo "hive-clj: no -J-Xmx given; injecting -J-Xmx${DEFAULT_MB}m" >&2
+fi
+
+need_mb=$(( xmx_mb + MARGIN_MB ))
+
+resident_jvms() {
+  ps -eo rss,etime,args --sort=-rss \
+    | awk 'NR>1 && $0 ~ /java/ && $0 !~ /awk/ {printf "    %6.1f GB  %-12s %.70s\n", $1/1048576, $2, $3}' \
+    | head -6
+}
+
+if [ "$avail_mb" -lt "$need_mb" ]; then
+  {
+    echo "hive-clj: REFUSING to launch — not enough headroom."
+    echo "    heap asked for : ${xmx_mb} MB"
+    echo "    margin         : ${MARGIN_MB} MB"
+    echo "    required       : ${need_mb} MB"
+    echo "    available      : ${avail_mb} MB"
+    echo "  JVMs already resident:"
+    resident_jvms
+    echo "  Wait for one to exit, lower -J-Xmx, or set HIVE_CLJ_FORCE=1 to override."
+  } >&2
+  [ "${HIVE_CLJ_FORCE:-}" = "1" ] || exit 70
+  echo "hive-clj: HIVE_CLJ_FORCE=1 — launching anyway" >&2
+fi
+
+# Swap exhaustion does not fail the headroom test but is the condition under
+# which a bounded JVM still thrashes and its neighbours still get killed.
+if [ "$swap_total" -gt 0 ] && [ "$swap_free" -lt 256 ]; then
+  echo "hive-clj: WARNING — swap is exhausted (${swap_free}/${swap_total} MB free);" \
+       "expect thrashing and be ready to kill this run." >&2
+fi
+
+exec clojure "${args[@]}"

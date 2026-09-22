@@ -28,7 +28,8 @@
 (package! impatient-mode)
 (package! celestial-mode-line)
 
-(package! sqlformat)
+;; Upstream renamed default branch master -> main
+(package! sqlformat :recipe (:host github :repo "purcell/sqlformat" :branch "main"))
 
 ;; (package! emacsql-mysql)
 ;; (package! ob-sql-mode)
@@ -104,6 +105,9 @@
 
 (package! clojure-mode-extra-font-locking)
 (package! parseedn)  ; EDN parsing for hive-mcp
+;; Track latest CIDER (unpinned from Doom's pinned commit), so
+;; `doom sync -u` / `doom upgrade` always pulls the newest release.
+(unpin! cider)
 
 ;; packages.el`
 (package! dartclojure :recipe (:host github :repo "burinc/dartclojure.el"))
@@ -238,12 +242,13 @@
 
 ;; Dependencies for claude-code.el
 (package! inheritenv)
-(package! eat)
 
-;; Claude Code from local clone (has newer functions)
+;; Claude Code from local clone (tracking upstream)
 (package! claude-code
   :recipe (:local-repo "claude-code.el"
            :files ("*.el")))
+
+(package! eca :recipe (:host github :repo "editor-code-assistant/eca-emacs" :files ("*.el")))
 
 (package! nov)
 
@@ -254,4 +259,5 @@
 
 (package! json-mode)
 
-(package! package-lint)
+;; Upstream renamed default branch master -> main
+(package! package-lint :recipe (:host github :repo "purcell/package-lint" :branch "main"))

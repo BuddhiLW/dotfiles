@@ -1,4 +1,4 @@
 #!/usr/bin/bash
 
 brew install overarch
-sudo apt-get install plantuml graphviz graphviz-doc
+brew install plantuml graphviz

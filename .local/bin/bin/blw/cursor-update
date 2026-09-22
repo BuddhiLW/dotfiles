@@ -1,3 +1,0 @@
-#!/usr/bin/bash
-
-curl -fsSL https://raw.githubusercontent.com/watzon/cursor-linux-installer/main/install.sh | bash -s -- latest

@@ -1,9 +1,17 @@
 #!/usr/bin/bash
-export DOTFILES=$(pwd)
-DOTFILES=$(pwd)
+export DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+if [ "${RESTORE:-0}" = 1 ]; then
+  bash "$DOTFILES/scripts/backup/secrets-restore" || exit 1
+  bash "$DOTFILES/scripts/backup/home-restore" || exit 1
+fi
 
 ln -sf $DOTFILES/.bashrc $HOME/.bashrc
-rm -rf $DOTFILES/gitthings
+if compgen -G "$DOTFILES/gitthings/*/build/*/bin/monero-storage" >/dev/null; then
+  echo "keeping $DOTFILES/gitthings: it holds monero-storage (wallets)"
+else
+  rm -rf "$DOTFILES/gitthings"
+fi
 SC="$DOTFILES/scripts/"
 cd $SC
 bash ./setup/bk-dots
@@ -19,6 +27,15 @@ fc-cache -vf
 # Install the window manager
 bash ./setup/xmonad
 bash ./install/xmonad
+
+if [ "${RESTORE:-0}" = 1 ]; then
+  bash "$DOTFILES/scripts/backup/docker-volumes" restore || echo "!! docker volume restore failed; re-run it later"
+  mkdir -p "$HOME/.config/systemd/user"
+  for u in "$DOTFILES"/talos/base/systemd/*; do ln -sfn "$u" "$HOME/.config/systemd/user/${u##*/}"; done
+  systemctl --user daemon-reload
+  systemctl --user enable --now haproxy-k8s-lb.service haproxy-k8s-lb-healthcheck.timer \
+    || echo "!! haproxy-k8s-lb did not start; check: systemctl --user status haproxy-k8s-lb"
+fi
 
 echo "Congrats. If everything went well, you have the newest Buddhi WM installed."
 echo "New step, you can logout from your current Ubuntu session, and chose XMonad,"

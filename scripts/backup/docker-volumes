@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+# Back up / restore docker (rootless) named volumes, consistently.
+#
+#   docker-volumes backup     DOCKER_VOLUMES_SECRET -> pendrive, DOCKER_VOLUMES_BULK -> HDD
+#   docker-volumes restore    recreate the volumes from those archives (never overwrites
+#                             a volume that already has data unless FORCE=1)
+#   docker-volumes backup VOL...   just these volumes (destination picked by list)
+#
+# Volume files belong to remapped uids, so they are read through a throwaway
+# container, never directly. Containers using a volume are paused while it is
+# archived (stopped and restarted if pause is unavailable), and resumed even on
+# Ctrl-C. Archives are written to .part and renamed when complete.
+set -Eeuo pipefail
+
+DOTFILES="${DOTFILES:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
+source "$DOTFILES/scripts/backup/lib"
+
+cmd="${1:-}"; shift || true
+[[ "$cmd" == backup || "$cmd" == restore ]] || die "usage: docker-volumes backup|restore [VOLUME...]"
+command -v docker >/dev/null || die "docker not found"
+docker info >/dev/null 2>&1 || die "docker daemon not reachable"
+command -v zstd >/dev/null || die "zstd not found (sudo apt install zstd)"
+
+# A local image with tar; pulls busybox only if nothing suitable is present.
+IMG=
+for i in alpine busybox haproxy:2.9-alpine alpine/socat; do
+  docker image inspect "$i" >/dev/null 2>&1 && { IMG=$i; break; }
+done
+[ -n "$IMG" ] || { docker pull -q busybox >/dev/null; IMG=busybox; }
+
+dest_for() {  # volume -> directory its archive lives in
+  if in_list "$1" "${DOCKER_VOLUMES_SECRET[@]}"; then
+    mountpoint -q "$SECRETS_ROOT" || die "$SECRETS_ROOT not mounted (needed for $1)"
+    echo "$SECRETS_ROOT/docker-volumes"
+  else
+    mountpoint -q "$BULK_ROOT" || die "$BULK_ROOT not mounted (needed for $1)"
+    echo "$BULK_ROOT/docker-volumes"
+  fi
+}
+in_list() { local x=$1 n; shift; for n in "$@"; do [ "$x" = "$n" ] && return 0; done; return 1; }
+
+vols=("$@")
+[ "${#vols[@]}" -gt 0 ] || vols=("${DOCKER_VOLUMES_SECRET[@]}" "${DOCKER_VOLUMES_BULK[@]}")
+
+paused=(); stopped=()
+resume() {
+  local c
+  for c in "${paused[@]}";  do docker unpause "$c" >/dev/null 2>&1 && log "resumed $c"; done
+  for c in "${stopped[@]}"; do docker start   "$c" >/dev/null 2>&1 && log "restarted $c"; done
+  paused=(); stopped=()
+}
+trap resume EXIT INT TERM
+
+backup_one() {
+  local v=$1 dir out c
+  docker volume inspect "$v" >/dev/null 2>&1 || { warn "no such volume: $v (skipped)"; return 0; }
+  dir=$(dest_for "$v"); mkdir -p "$dir"; chmod 700 "$dir"
+  out="$dir/$v.tar.zst"
+  # Freeze writers so the archive is a consistent point-in-time copy.
+  for c in $(docker ps -q --filter "volume=$v"); do
+    local name; name=$(docker inspect -f '{{.Name}}' "$c"); name=${name#/}
+    if docker pause "$c" >/dev/null 2>&1; then paused+=("$c"); log "paused $name"
+    else docker stop -t 30 "$c" >/dev/null; stopped+=("$c"); log "stopped $name (pause unsupported)"; fi
+  done
+  # Container config (env may hold passwords): always onto the encrypted pendrive.
+  local cfg="$SECRETS_ROOT/docker-volumes"
+  if mountpoint -q "$SECRETS_ROOT"; then
+    mkdir -p "$cfg"; chmod 700 "$cfg"
+    docker ps -a -q --filter "volume=$v" | xargs -r docker inspect > "$cfg/$v.containers.json" 2>/dev/null || true
+  fi
+  log "archiving $v -> $out"
+  docker run --rm --network none --user 0:0 -v "$v":/v:ro --entrypoint tar "$IMG" -C /v -cf - . \
+    | zstd -q -T0 -3 -o "$out.part" -f
+  mv -f "$out.part" "$out"
+  resume
+  (cd "$dir" && sha256sum "$v.tar.zst" > "$v.tar.zst.sha256")
+  log "done $v ($(du -h "$out" | cut -f1))"
+}
+
+restore_one() {
+  local v=$1 dir f n
+  if in_list "$v" "${DOCKER_VOLUMES_SECRET[@]}"; then dir="$SECRETS_ROOT/docker-volumes"; else dir="$BULK_ROOT/docker-volumes"; fi
+  f="$dir/$v.tar.zst"
+  [ -f "$f" ] || { warn "no archive for $v in $dir (skipped)"; return 0; }
+  (cd "$dir" && sha256sum --quiet -c "$v.tar.zst.sha256") || die "$f is corrupt (checksum mismatch)"
+  docker volume create "$v" >/dev/null
+  n=$(docker run --rm --user 0:0 -v "$v":/v --entrypoint sh "$IMG" -c 'ls -A /v | wc -l')
+  if [ "$n" -gt 0 ] && [ "${FORCE:-0}" != 1 ]; then
+    warn "$v already has data; left alone (FORCE=1 to overwrite)"; return 0
+  fi
+  log "restoring $v"
+  zstd -dc "$f" | docker run --rm -i --network none --user 0:0 -v "$v":/v --entrypoint tar "$IMG" -C /v -xf -
+  log "restored $v"
+}
+
+for v in "${vols[@]}"; do "${cmd}_one" "$v"; done
+log "all done"

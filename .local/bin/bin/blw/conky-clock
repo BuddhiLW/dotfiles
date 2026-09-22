@@ -1,5 +1,0 @@
-#!/usr/bin/bash
-
-clock="$HOME/dotfiles/gitthings/now-clocking/"
-cd "$clock"
-bash ./start.sh

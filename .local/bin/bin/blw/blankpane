@@ -1,3 +1,0 @@
-#!/usr/bin/bash
-
-watch -n 1 "echo $(date +'%H:%M:%S') && echo 'Streaming Terminal 🌐'"

@@ -1,0 +1,40 @@
+#!/usr/bin/bash
+#
+# lf terminal file manager + everything the preview panel needs.
+# Config lives in ~/.config/lf/ (lfrc, preview, cleaner).
+
+set -e
+
+# --- lf itself (build from source, static, stripped) ---
+CGO_ENABLED=0 go install -trimpath -ldflags="-s -w" github.com/gokcehan/lf@latest
+
+# --- preview / panel dependencies ---
+sudo apt-get update -qq
+sudo apt-get install -y \
+    bat \
+    poppler-utils \
+    mediainfo \
+    librsvg2-bin \
+    chafa \
+    unzip \
+    p7zip-full \
+    xdg-utils \
+    file
+
+# On Debian/Ubuntu the 'bat' binary is installed as 'batcat' to avoid a name
+# clash. The lf preview script checks for both 'bat' and 'batcat', so no symlink
+# is required. Uncomment to expose it as 'bat' on your PATH if you prefer:
+# mkdir -p ~/.local/bin && ln -sf "$(command -v batcat)" ~/.local/bin/bat
+
+echo
+echo "lf installed. Package roles:"
+echo "  bat / batcat  -> syntax-highlighted code preview"
+echo "  poppler-utils -> PDF text preview (pdftotext)"
+echo "  mediainfo     -> audio/video metadata preview"
+echo "  librsvg2-bin  -> SVG image preview (rsvg-convert)"
+echo "  chafa         -> image fallback for non-kitty terminals"
+echo "  p7zip / unzip -> archive listing + extract"
+echo "  xdg-utils     -> 'open' command (xdg-open)"
+echo
+echo "Image preview uses kitty's graphics protocol (kitten icat) when run"
+echo "inside kitty. Config: ~/.config/lf/{lfrc,preview,cleaner}"

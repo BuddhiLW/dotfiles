@@ -1,0 +1,7 @@
+#!/usr/bin/bash
+
+sudo ufw disable
+sudo iptables -F; sudo iptables -P OUTPUT ACCEPT; sudo iptables -P INPUT ACCEPT
+sudo ipset destroy vpn_endpoints 2>/dev/null
+echo nameserver 1.1.1.1 | sudo tee /etc/resolv.conf
+sudo systemctl restart NetworkManager systemd-resolved

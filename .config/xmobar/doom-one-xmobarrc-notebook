@@ -26,7 +26,9 @@ Config { font = "FiraCode Nerd Font 22"
        --   an integer for the minimum pixel height for xmobar, so 24 would force a height of at least 24 pixels.
        --   NOTE: The height should be the same as the trayer (system tray) height.
        -- , position       = BottomSize C 95 70
-       , position = Static { xpos = 140 , ypos = 1550, width = 2200, height = 40 }
+       -- Screen-relative (works with `xmobar -x N` on any layout), ~86% width like the old Static.
+       , position = BottomSize C 86 40
+       -- , position = Static { xpos = 140 , ypos = 1550, width = 2200, height = 40 }
        -- , position     = BottomSize C 95 50
        -- , border       = FullB
        , borderColor =  "#FFFFFF"

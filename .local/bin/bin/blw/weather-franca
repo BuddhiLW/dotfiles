@@ -1,3 +1,0 @@
-#!/usr/bin/bash
-
-exec curl -L https://wttr.in/franca-sao-paulo

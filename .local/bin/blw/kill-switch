@@ -1,0 +1,56 @@
+#!/usr/bin/bash
+# VPN Kill Switch - AirVPN (Eddie) + Mullvad
+# Run with: sudo bash vpn-killswitch.sh
+
+
+IFACE="wlp47s0f0"  # Your physical WiFi interface
+
+# Flush and reset
+iptables -F
+iptables -X
+iptables -t nat -F
+iptables -t nat -X
+iptables -t mangle -F
+iptables -t mangle -X
+
+# everything
+iptables -P INPUT DROP
+iptables -P FORWARD DROP
+iptables -P OUTPUT DROP
+
+# --- LOOPBACK ---
+iptables -A INPUT -i lo -j ACCEPT
+iptables -A OUTPUT -o lo -j ACCEPT
+
+# --- ESTABLISHED/RELATED ---
+iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+iptables -A OUTPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
+# --- VPN INTERFACES (allow all traffic on VPN tunnels) ---
+# AirVPN Eddie
+iptables -A INPUT -i Eddie -j ACCEPT
+iptables -A OUTPUT -o Eddie -j ACCEPT
+# Mullvad (matches mullvad-se, mullvad-us, mullvad-nyc, etc.)
+iptables -A INPUT -i mullvad+ -j ACCEPT
+iptables -A OUTPUT -o mullvad+ -j ACCEPT
+
+# --- DNS (required for VPN server hostname resolution) ---
+iptables -A OUTPUT -p udp --dport 53 -j ACCEPT
+iptables -A OUTPUT -p tcp --dport 53 -j ACCEPT
+
+# --- VPN SERVER CONNECTIONS (on physical interface) ---
+# Allow outbound to VPN servers on common VPN ports
+iptables -A OUTPUT -o $IFACE -p udp --dport 51820 -j ACCEPT   # WireGuard
+iptables -A OUTPUT -o $IFACE -p udp --dport 1194 -j ACCEPT    # OpenVPN UDP
+iptables -A OUTPUT -o $IFACE -p tcp --dport 443 -j ACCEPT     # OpenVPN/WG over TCP
+iptables -A OUTPUT -o $IFACE -p udp --dport 443 -j ACCEPT     # WG over UDP 443
+
+# --- ICMP (optional, useful for debugging) ---
+iptables -A OUTPUT -p icmp --icmp-type echo-request -j ACCEPT
+iptables -A INPUT -p icmp --icmp-type echo-reply -j ACCEPT
+
+# --- LOG DROPPED PACKETS (optional, remove if noisy) ---
+iptables -A INPUT -m limit --limit 5/min -j LOG --log-prefix "IPTables-Dropped-Input: " --log-level 4
+iptables -A OUTPUT -m limit --limit 5/min -j LOG --log-prefix "IPTables-Dropped-Output: " --log-level 4
+
+echo "VPN kill switch active. Only Eddie and Mullvad traffic allowed."

@@ -1,223 +1,123 @@
-.local/share
-.emacs.d
-.config/BdTranslateClient
-.config/BraveSoftware
-.config/Cadence
-.config/Crow Translate
-.config/Electron
-.config/FBReader.ORG Limited
-.config/GIMP
-.config/GREYC
-.config/Kvantum
-.config/Microsoft
-.config/Microsoft Teams - Preview
-.config/Netflix
-.config/Postman
-.config/QtProject.conf
-.config/Thunar
-.config/Trolltech.conf
-.config/Unknown Organization
-.config/VirtualBox
-.config/brittany
-.config/calibre
-.config/cef_user_data
-.config/clojure
-.config/configstore
-.config/conky
-.config/dconf
+# Allow-list: everything is ignored unless re-included below.
+# Rule of thumb: only what `bash main.sh` needs to build the rice.
 
-.config/discord
-.config/doom-bk
-.config/falkTX
-.config/fish
-.config/fontconfig
-.config/galculator
-.config/gcloud
-.config/gconf
-.config/gh
-.config/glib-2.0
-.config/gmic
-.config/gtk-2.0
-.config/gtk-3.0
-.config/htop
-.config/jgit
-.config/kconf_updaterc
-.config/kdeglobals
-.config/kdenlive-layoutsrc
-.config/kdenliverc
-.config/knfsshare
-.config/koreader
+/*
 
-.config/libreoffice
-.config/livebuds
-.config/lutris
-.config/main
-.config/matplotlib
-.config/menus
-.config/mimeapps.list
-.config/nano
-.config/ngrok
-.config/nitrogen
-.config/nomacs
-.config/notmuch-config
-.config/obs-studio
-.config/paru
-.config/pavucontrol.ini
-.config/planetscale
-.config/polybar
+# --- repo + bootstrap -------------------------------------------------------
+!/.gitignore
+!/.gitmodules
+!/README.org
+!/main.sh
+!/scripts/
+/scripts/**/*.ttf*
+/scripts/**/*.deb
 
-.config/pulse
-.config/qt5ct
-.config/qutebrowser
-.config/rncbc.org
-.config/scdl
-.config/teams
-.config/teams-for-linux
-.config/telegram-cli
-.config/termite
-.config/translateLocally
-.config/transmission
-.config/transmission-daemon
-.config/variety
-.config/volumeicon
-.config/whatsapp-for-linux
-.config/xfce4
+# --- shell / X / editors ------------------------------------------------------
+!/.bashrc
+!/.bash_profile
+!/.profile
+!/.Xresources
+!/.globalrc
+!/.wgetrc
+!/.nvidia-settings-rc
+!/.emacs-profiles.el
+!/.doom.d/
+!/doom/
+!/.vim/
+!/vim/
 
-.config/yad.conf
-.config/yay
-.config/youtube-viewer
-.config/zoomus.conf
+# --- own projects / notes kept in this repo -----------------------------------
+!/arara.yaml
+!/blw/
+/blw/**/st
+!/guix/
+!/low-level/
+!/pomo/
+!/progprinciples/
+!/chanelio/
+!/deps/
+!/shiny-enigma/
 
-.local/dot
+# --- cluster: public manifests only (secrets are ignored further down) --------
+!/talos/
 
-# .config/xmonad/xmonad-contrib
-# .config/xmonad/xmonad
+# --- submodules (source only; build output stays ignored) ---------------------
+!/gitthings/
+/gitthings/*
+!/gitthings/ble.sh
+!/gitthings/st
 
-.local/src/ble.sh
+# --- ~/.config: rice only ------------------------------------------------------
+!/.config/
+/.config/*
+!/.config/xmonad/
+!/.config/xmobar/
+!/.config/picom/
+!/.config/dunst/
+!/.config/rofi/
+!/.config/eww/
+!/.config/tint2/
+!/.config/alacritty.toml
+!/.config/kitty/
+!/.config/tmux/
+!/.config/wal/
+!/.config/lazywal/
+!/.config/lf/
+!/.config/yazi/
+!/.config/X11/
+!/.config/fonts/
+!/.config/shell/
+!/.config/git/
+!/.config/vim/
+!/.config/coc/
+!/.config/neofetch/
+!/.config/display-scale.env
+!/.config/user-dirs.dirs
+!/.config/user-dirs.locale
+!/.config/topgrade.toml
+!/.config/crow-translate/
+!/.config/lynx/
+!/.config/gdb/
+!/.config/ghc/
 
-.local/src/st
-.vim/pack/bundle/start/vim-snippets
+# --- ~/.local: own scripts only (no binaries, no pipx/conda shims) -------------
+!/.local/
+/.local/*
+!/.local/bin/
+/.local/bin/*
+!/.local/bin/apply-display-scale
+!/.local/bin/bwm
+!/.local/bin/cmt-dir
+!/.local/bin/dmenuselect
+!/.local/bin/gshot-copy
+!/.local/bin/larbs
+!/.local/bin/pomob
+!/.local/bin/remaps
+!/.local/bin/rob-scripts
+!/.local/bin/blw/
+/.local/bin/blw/cadence
+/.local/bin/blw/lazywal
+/.local/bin/blw/mcp-shell
+/.local/bin/blw/st
+!/.local/bin/setbg
+!/.local/bin/uim-start
+!/.local/bin/zprint
 
-.local/bin/stack
-.local/bin/xmonad
-
-.config/ibus/
-gitthings/
-
-.config/MongoDB Compass
-.config/Code
-.local/state/*
-
-.config/google-chrome
-
-.config/torcat
-**/Cache/*
-.config/Nibbler
-.config/android/
-.config/autostart/
-.config/Android Open Source Project/
-.config/Google/
-.config/go/
-.config/eas-cli-nodejs/
-.config/evans/
-.config/tree-sitter/
-.config/cmus/
-.config/systemd/
-.config/balenaEtcher/
-kitty.app/
-.local/py/
-.config/nomic.ai
-
-Notes/
-cv/
-keg/
-build/
-.stack-work/
-
-.azure
-
-.config/Docker Desktop
-
-.config/github-copilot
-.config/xmonad/stack.yaml.lock
-.local/lib/python3.12/
-.config/nyxt/
-.config/Element/
-.config/vlc/
-
-.config/Cursor/
-.config/uv/
-.local/lib/
-.config/devcert
-.config/create-next-app-nodejs
-.config/cni
-.config/containers
-.config/chromium
-.config/balena-etcher
-.config/autojack
-.config/audacity
-.config/anjuta
-.config/MuseScore
-.config/RaySession
-.config/Clementine
-.config/DisplayCAL
-.config/Kid3
-.config/nextjs-nodejs
-.config/qalculate
-.config/qastools
-.config/sonic-visualiser
-.config/tiling-assistant
-
-
-.config/.gtkrc
-.config/Xresources
-.config/alacritty.yml
-.config/chromium-flags.conf
-.config/gtk-4.0/
-.local/bin/squashfs-root/
-.xprofile
-.config/google-chromium
-.config/monitors.xml
-.config/xmonad/stack.yaml
+# --- inside allowed dirs --------------------------------------------------------
 .config/xmonad/xmonad
 .config/xmonad/xmonad-contrib
-.config/torbrowser
-.config/tremc
-
-.config/TexasSolver/
-.config/wandb/
-
-.vscode
-dotfiles-tree
-
+.config/xmonad/stack.yaml
+.config/xmonad/stack.yaml.lock
+.vim/pack/bundle/start/vim-snippets
+build/
+.stack-work/
+**/Cache/*
 __debug*
-
-.local/bin/tailwindcss
-.authinfo
-
-.config/systemd/user/docker.service
-
-/tmp/
-/ssh/
-
-.config/Stationv2
-.config/Station
-.config/Mullvad VPN/
-.config/kleopatrarc
-.local/bin/.cursor_version
-.config/totem/state.ini
 *.appimage
 .aider*
+.vscode
+CLAUDE.md
 
-.config/Claude*
-.config/Ferdium/
-.config/ardour8/
-.config/argocd/
-.config/eddie/
-.config/helm/
-.config/rclone/
-.config/taffybar/
-.local/bin/cursor.appimage.zs-old
 # talos/ holds machine secrets (talosconfig, kubeconfig, the generated machine
 # configs carrying the cluster token and CA keys), ~1 GiB of etcd snapshots and
 # a pile of photos. Ignore all of it, then WHITELIST the secret-free declarative
@@ -253,16 +153,32 @@ talos/docs/*
 !talos/docs/*.md
 talos/docs/*.bak-*
 
-
-psi/
-CLAUDE.md
-vpn/
-.config/haproxy-k8s-lb/haproxy.cfg
-.config/freerdp/
-.local/bin/bin/blw/freqtrade*
-
-# Stripe CLI writes a live-mode API key here; it must never be committed.
-.config/stripe/
-
-# pass(1) store — a plaintext PAT once leaked from here into public history.
+# --- never, even inside allowed dirs (last, so nothing re-includes these) -----
+*.log
+*.log.gz
+*.bak
+*.bak-*
+*.old
+.env
+.env.*
+*.pem
+*.key
+*.keys
+*.kdbx
+*.gpg
+*token*
+*secret*
+*credential*
+kubeconfig*
+talosconfig*
+.claude/
+settings.local.json
 .password-store/
+.authinfo*
+*.jar
+.netrwhist
+
+# backup tooling: names contain "secret" but the scripts hold none (gitleaks-checked)
+!/scripts/backup/secrets-backup
+!/scripts/backup/secrets-verify
+!/scripts/backup/secrets-restore

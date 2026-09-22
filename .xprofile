@@ -1,3 +1,0 @@
-export PATH=$PATH:$HOME/.local/bin/
-export PATH=$PATH:$HOME/.local/bin/blw/
-export PATH=$PATH:$HOME/.conda/bin/

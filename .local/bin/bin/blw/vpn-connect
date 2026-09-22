@@ -1,3 +1,0 @@
-#!/usr/bin/bash
-
- nmcli connection up mullvad_rs_all --ask
