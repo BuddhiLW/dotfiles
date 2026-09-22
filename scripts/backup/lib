@@ -91,7 +91,7 @@ SECRET_FIND_NAMES=('.env' '.env.*' '*.pem' '*.key' '*.p12' '*.pfx' '*.kdbx'
 # go to the pendrive; the rest is reinstallable). Loose top-level files are kept.
 BULK_SKIP_TOP=(
   "VirtualBox VMs" anaconda3 miniconda3 Android snap go sdk fpcup fpcupdeluxe
-  quicklisp nuclei-templates ref-projects test-lf mount mount_hd2 mount_sda1
+  quicklisp nuclei-templates ref-projects test-lf mount mount_hd2 mount_sda1 bin
 )
 # Extra dot-dirs to include anyway (e.g. .claude .emacs.d).
 BULK_EXTRA_DOT=()

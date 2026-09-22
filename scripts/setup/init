@@ -1,7 +1,10 @@
 #!/usr/bin/bash
 
 link() {
-  ln -sf $DOTFILES/$1 $HOME
+  local src="$DOTFILES/$1" dest="$HOME/$1"
+  [ "$(readlink -f "$dest")" = "$(readlink -f "$src")" ] && return 0
+  [ -e "$dest" ] || [ -L "$dest" ] && mv -v "$dest" "$dest.bak.$(date +%Y%m%d-%H%M%S)"
+  ln -svfT "$src" "$dest"
 }
 
 link ".config"

@@ -29,6 +29,12 @@ bash ./setup/xmonad
 bash ./install/xmonad
 
 if [ "${RESTORE:-0}" = 1 ]; then
+  if ! systemctl --user cat docker.service >/dev/null 2>&1; then
+    bash "$DOTFILES/scripts/install/docker"
+    bash "$DOTFILES/scripts/install/docker-ce-rootless"
+  fi
+  command -v kubectl >/dev/null || bash "$DOTFILES/scripts/install/kubectl"
+  command -v talosctl >/dev/null || bash "$DOTFILES/scripts/install/talosctl"
   bash "$DOTFILES/scripts/backup/docker-volumes" restore || echo "!! docker volume restore failed; re-run it later"
   mkdir -p "$HOME/.config/systemd/user"
   for u in "$DOTFILES"/talos/base/systemd/*; do ln -sfn "$u" "$HOME/.config/systemd/user/${u##*/}"; done
