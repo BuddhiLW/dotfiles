@@ -1,0 +1,7 @@
+[Unit]
+Description=Probe blw kubectl LB and restart it if HAProxy is unresponsive
+After=haproxy-k8s-lb.service
+
+[Service]
+Type=oneshot
+ExecStart=%h/dotfiles/talos/base/haproxy-lb-healthcheck.sh

@@ -240,6 +240,18 @@ talos/base/*
 !talos/base/haproxy-lb.patch.yaml
 !talos/kubeprism.patch
 !talos/install-disk-patch.yaml
+!talos/notes.md
+!talos/adding-gpu-worker.md
+!talos/base/haproxy-lb.cfg
+!talos/base/haproxy-lb-healthcheck.sh
+!talos/base/systemd/
+talos/base/systemd/*
+!talos/base/systemd/*.service
+!talos/base/systemd/*.timer
+!talos/docs/
+talos/docs/*
+!talos/docs/*.md
+talos/docs/*.bak-*
 
 
 psi/

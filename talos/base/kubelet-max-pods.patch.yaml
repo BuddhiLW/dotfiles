@@ -45,6 +45,16 @@
 # maxPods value, so a node rebuilt from those configs comes up at 250 and does
 # not silently regress to 200. Changing the cap means changing all three, and
 # this file is the one that is git-tracked.
+#
+# BUT DO NOT APPLY THOSE TWO FILES AS THEY STAND. Audited 2026-09-21, they carry
+# three defects that predate this change and have nothing to do with maxPods:
+#   - base/worker.yaml names a SUPERSEDED control-plane schematic carrying
+#     nut-client, which would reproduce the 2026-08-07 reboot loop on a worker.
+#   - both name `install.disk: /dev/sda`, and on the GPU node that is a 5 GB
+#     Longhorn iSCSI VIRTUAL-DISK, so applying it installs the OS onto a live PV.
+#   - base/worker.yaml still has `wipe: true` armed from a one-off conversion.
+# See kanban 20260921210946-0da10f64. Fix those before any apply-config; a
+# `patch machineconfig` like the one above does not touch them and is safe.
 machine:
   kubelet:
     extraConfig:

@@ -1,0 +1,24 @@
+[Unit]
+Description=blw kube-apiserver HAProxy LB (127.0.0.1:16443)
+Documentation=file:///home/leibniz/dotfiles/talos/CLAUDE.md
+After=docker.service
+Requires=docker.service
+# Never give up: docker's own --restart=always exhausts its backoff and stops
+# retrying, which is how the LB stayed down for hours on 2026-08-13.
+StartLimitIntervalSec=0
+
+[Service]
+Restart=always
+RestartSec=5s
+TimeoutStartSec=0
+# Clears a leftover runc/containerd state for this name ("container with given
+# ID already exists", exit 128) before every start attempt.
+ExecStartPre=-/usr/bin/docker rm -f haproxy-k8s-lb
+ExecStart=/usr/bin/docker run --rm --name haproxy-k8s-lb \
+  --network host \
+  -v %h/dotfiles/talos/base/haproxy-lb.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro \
+  haproxy:2.9-alpine
+ExecStop=/usr/bin/docker stop -t 10 haproxy-k8s-lb
+
+[Install]
+WantedBy=default.target
