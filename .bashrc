@@ -1,4 +1,4 @@
-export PATH="/home/leibniz/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 # BuddhiLW's setup
 # ~/.bashrc
 #
@@ -562,7 +562,7 @@ complete -C arara arara
 #export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
 #export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/fontconfig.pc
 
-# . "/home/lw/.local/share/cargo/env"
+# . "$HOME/.local/share/cargo/env"
 
 # Automatically added by the Guix install script.
 #if [ -n "$GUIX_ENVIRONMENT" ]; then
@@ -582,10 +582,10 @@ complete -C arara arara
 
 
 # The next line updates PATH for the Google Cloud SDK.
-# if [ -f '/home/lw/google-cloud-sdk/path.bash.inc' ]; then . '/home/lw/google-cloud-sdk/path.bash.inc'; fi
+# if [ -f "$HOME/google-cloud-sdk/path.bash.inc" ]; then . "$HOME/google-cloud-sdk/path.bash.inc"; fi
 
 # The next line enables shell command completion for gcloud.
-# if [ -f '/home/lw/google-cloud-sdk/completion.bash.inc' ]; then . '/home/lw/google-cloud-sdk/completion.bash.inc'; fi
+# if [ -f "$HOME/google-cloud-sdk/completion.bash.inc" ]; then . "$HOME/google-cloud-sdk/completion.bash.inc"; fi
 
 complete -C go go
 complete -C lazywal lazywal
@@ -597,14 +597,14 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/leibniz/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$("$HOME/anaconda3/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/home/leibniz/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/leibniz/anaconda3/etc/profile.d/conda.sh"
+    if [ -f "$HOME/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "$HOME/anaconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/home/leibniz/anaconda3/bin:$PATH"
+        export PATH="$HOME/anaconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
@@ -620,7 +620,7 @@ export PATH="$PATH:$HOME/.local/bin/blw"
 
 . "$HOME/.deno/env"
 # pnpm
-export PNPM_HOME="/home/leibniz/.local/share/pnpm"
+export PNPM_HOME="$HOME/.local/share/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME/bin:"*) ;;
   *) export PATH="$PNPM_HOME/bin:$PATH" ;;
@@ -643,24 +643,24 @@ newshell
 [[ ${BLE_VERSION-} ]] && ble-attach
 . "$HOME/.local/share/cargo/env"
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-. "/home/ramanujan/.local/share/cargo/env"
+. "$HOME/.local/share/cargo/env"
 export PATH="$HOME/.local/bin:$PATH"
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/home/ramanujan/google-cloud-sdk/path.bash.inc' ]; then . '/home/ramanujan/google-cloud-sdk/path.bash.inc'; fi
+if [ -f "$HOME/google-cloud-sdk/path.bash.inc" ]; then . "$HOME/google-cloud-sdk/path.bash.inc"; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/home/ramanujan/google-cloud-sdk/completion.bash.inc' ]; then . '/home/ramanujan/google-cloud-sdk/completion.bash.inc'; fi
+if [ -f "$HOME/google-cloud-sdk/completion.bash.inc" ]; then . "$HOME/google-cloud-sdk/completion.bash.inc"; fi
 
 export FLYCTL_INSTALL="$HOME/.fly"
 export PATH="$FLYCTL_INSTALL/bin:$PATH"
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-. "/home/lages/.local/share/cargo/env"
+. "$HOME/.local/share/cargo/env"
 
 export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-. "/home/lages/.deno/env"
+. "$HOME/.deno/env"
 
 # Go module proxy configuration
 export GOPROXY=https://proxy.golang.org,direct
@@ -675,13 +675,13 @@ export HIVE_EMACS_DIR="$HIVE_DIR/hive-emacs"
 # hive-mcp-cli managed - END
 export CLEL_HOME="$HOME/PP/clojure-elisp"
 export QT_XCB_GL_INTEGRATION=xcb_glx
-export PATH="/home/lages/anaconda3/envs/hive/bin:$PATH"
+export PATH="$HOME/anaconda3/envs/hive/bin:$PATH"
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # opencode
-export PATH=/home/leibniz/.opencode/bin:$PATH
-. "/home/leibniz/.local/share/cargo/env"
+export PATH=$HOME/.opencode/bin:$PATH
+. "$HOME/.local/share/cargo/env"
 
 # agent-code: Venice (OpenAI-compatible)
 agent() {
@@ -695,15 +695,15 @@ agent() {
 # !! Contents within this block are managed by juliaup !!
 
 case ":$PATH:" in
-    *:/home/leibniz/.juliaup/bin:*)
+    *:$HOME/.juliaup/bin:*)
         ;;
 
     *)
-        export PATH=/home/leibniz/.juliaup/bin${PATH:+:${PATH}}
+        export PATH=$HOME/.juliaup/bin${PATH:+:${PATH}}
         ;;
 esac
 # Tab completion for juliaup and julia channel selection
-[ -f "/home/leibniz/.julia/juliaup/completions/bash.sh" ] && source "/home/leibniz/.julia/juliaup/completions/bash.sh"
+[ -f "$HOME/.julia/juliaup/completions/bash.sh" ] && source "$HOME/.julia/juliaup/completions/bash.sh"
 
 # <<< juliaup initialize <<<
 
@@ -735,13 +735,13 @@ alias agent='/usr/local/bin/agent'
 # <<< agent-code name guard <<<
 
 # kimi-code
-export PATH="/home/leibniz/.kimi-code/bin:$PATH"
+export PATH="$HOME/.kimi-code/bin:$PATH"
 
 # Added by codebase-memory-mcp install
 
 # AsyncAPI CLI Autocomplete
 
-ASYNCAPI_AC_BASH_SETUP_PATH=/home/leibniz/.cache/@asyncapi/cli/autocomplete/bash_setup && test -f $ASYNCAPI_AC_BASH_SETUP_PATH && source $ASYNCAPI_AC_BASH_SETUP_PATH; # asyncapi autocomplete setup
+ASYNCAPI_AC_BASH_SETUP_PATH=$HOME/.cache/@asyncapi/cli/autocomplete/bash_setup && test -f $ASYNCAPI_AC_BASH_SETUP_PATH && source $ASYNCAPI_AC_BASH_SETUP_PATH; # asyncapi autocomplete setup
 
 
 

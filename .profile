@@ -1,4 +1,4 @@
-export PATH="/home/leibniz/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 #!/usr/bin/env sh
 
 if [ -n "$BASH_VERSION" ]; then
@@ -19,18 +19,18 @@ export QT_XCB_GL_INTEGRATION=xcb_glx
 
 # Display scaling (Qt/GTK)
 [ -f "$HOME/.config/display-scale.env" ] && . "$HOME/.config/display-scale.env"
-. "/home/leibniz/.local/share/cargo/env"
+. "$HOME/.local/share/cargo/env"
 
 # >>> juliaup initialize >>>
 
 # !! Contents within this block are managed by juliaup !!
 
 case ":$PATH:" in
-    *:/home/leibniz/.juliaup/bin:*)
+    *:$HOME/.juliaup/bin:*)
         ;;
 
     *)
-        export PATH=/home/leibniz/.juliaup/bin${PATH:+:${PATH}}
+        export PATH=$HOME/.juliaup/bin${PATH:+:${PATH}}
         ;;
 esac
 

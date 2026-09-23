@@ -3,7 +3,7 @@
 # volumes, k8s access. Self-contained: run it before anything else exists.
 #
 #   plug in the LUKS pendrive and the 1TB "Expansion" HDD, then either
-#     bash /media/$USER/Expansion/home-data/home/dotfiles/scripts/bootstrap
+#     bash ~/dotfiles/scripts/bootstrap        (if dotfiles are already cloned)
 #   or
 #     curl -fsSL https://raw.githubusercontent.com/BuddhiLW/dotfiles/ubuntu-xmonad/scripts/bootstrap | bash
 #

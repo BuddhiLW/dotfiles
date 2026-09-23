@@ -1,6 +1,6 @@
 [Unit]
 Description=blw kube-apiserver HAProxy LB (127.0.0.1:16443)
-Documentation=file:///home/leibniz/dotfiles/talos/CLAUDE.md
+Documentation=file://%h/dotfiles/talos/CLAUDE.md
 After=docker.service
 Requires=docker.service
 # Never give up: docker's own --restart=always exhausts its backoff and stops

@@ -1,2 +1,0 @@
-$ stack build --silent --stack-yaml /home/buddhilw/dotfiles/.config/xmonad/stack.yaml
-$ stack ghc --stack-yaml /home/buddhilw/dotfiles/.config/xmonad/stack.yaml -- --make xmonad.hs -i -ilib -fforce-recomp -main-is main -v0 -outputdir /home/buddhilw/.xmonad/build-x86_64-linux -o /home/buddhilw/.xmonad/xmonad-x86_64-linux
