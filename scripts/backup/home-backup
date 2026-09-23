@@ -10,7 +10,9 @@
 #   JOBS=6        parallel rsync streams (default 4)
 #   RETRIES=3     retries per unit on transient errors (default 2)
 #   FRESH=1       re-check units an earlier run already finished
-#   RSYNC_EXTRA="--bwlimit=50m"   extra rsync flags for every unit
+#   RSYNC_EXTRA="--bwlimit=50m"   extra rsync flags for every unit (MODE=rsync)
+#   MODE=rsync    plain file mirror in DEST/home instead of the default
+#                 one-.tar.zst-per-unit in DEST/archives (much slower on a HDD)
 #   INCLUDE_SECRETS=1  also copy the secret stores (default: they live on the
 #                 encrypted pendrive, not on this unencrypted disk)
 #
@@ -112,7 +114,9 @@ while IFS= read -r -d '' top; do
 done < <(find . -mindepth 1 -maxdepth 1 -type d -printf '%P\0' | sort -z)
 # Build caches that announce themselves (cargo target/, ...): skip the whole dir.
 log "scanning kept trees for CACHEDIR.TAG build caches"
-find "${tops[@]}" \( -name node_modules -o -name .git \) -prune -o -name CACHEDIR.TAG -type f -printf '/%h/\n' 2>/dev/null >> "$EXCL" || true
+# Never descend into anything already excluded by name (.zig-cache, clones-ref, ...).
+prune=(-name .git); for n in "${skip_names[@]}"; do prune+=(-o -name "$n"); done
+find "${tops[@]}" \( "${prune[@]}" \) -prune -o -name CACHEDIR.TAG -type f -printf '/%h/\n' 2>/dev/null >> "$EXCL" || true
 log "$(grep -c . "$EXCL") exclude rules; keeping ${#tops[@]} top-level dirs: ${tops[*]}"
 UNITS="$STATE/units"; : > "$UNITS"
 add() { [[ "$2" == *$'\n'* || "$2" == *$'\t'* ]] && { warn "skipping odd name: ${2@Q}"; return; }; printf '%s\t%s\n' "$1" "$2" >> "$UNITS"; }
@@ -132,8 +136,48 @@ log "$HOME -> $DEST"
 log "$total units, $todo to do, $JOBS streams, low io/cpu priority"
 [ "$todo" -eq 0 ] && { log "nothing to do (FRESH=1 to re-check everything)"; exit 0; }
 
+# tar needs the rsync-style excludes split: anchored ("/x/y/") vs. anywhere.
+TEXA="$STATE/tar-excl-anchored"; TEXU="$STATE/tar-excl-anywhere"
+sed -n 's#^/\(.*\)#\1#p' "$EXCL" | sed 's#/$##' > "$TEXA"
+grep -v '^/' "$EXCL" | sed 's#/$##' > "$TEXU"
+MODE="${MODE:-tar}"; mkdir -p "$DEST/archives"
+
+# tar mode: one sequential .tar.zst per unit. A spinning disk writes a stream
+# ~10x faster than it creates hundreds of thousands of small files.
+unit_tar() {
+  local u=$1 kind=${1%%$'\t'*} path=${1#*$'\t'} rc
+  [ -e "$STATE/abort" ] && return 0
+  mountpoint -q "$BULK_ROOT" || { echo "backup drive disappeared" > "$STATE/abort"; return 0; }
+  local name; name=$(printf '%s' "$kind-$path" | tr '/ ' '__')
+  local out="$DEST/archives/$name.tar.zst" log="$STATE/logs/$name.log"
+  local tflags=(-C "$HOME" --exclude-caches-all --no-anchored --exclude-from="$TEXU"
+                --anchored --exclude-from="$TEXA" --no-anchored)
+  set +e
+  if [ "$kind" = S ]; then
+    { [ "$path" = . ] || printf '%s\0' "$path"
+      if [ "$path" = . ]; then find . -mindepth 1 -maxdepth 1 ! -type d -printf '%P\0'
+      else find "$path" -mindepth 1 -maxdepth 1 ! -type d -print0; fi
+    } 2>/dev/null | ionice -c2 -n7 nice -n10 tar "${tflags[@]}" --null --no-recursion -T - -cf - 2>"$log" \
+      | zstd -q -T0 -3 -o "$out.part" -f 2>>"$log"
+  else
+    ionice -c2 -n7 nice -n10 tar "${tflags[@]}" -cf - -- "$path" 2>"$log" \
+      | zstd -q -T0 -3 -o "$out.part" -f 2>>"$log"
+  fi
+  rc=("${PIPESTATUS[@]}"); set -e
+  local trc=${rc[-2]} zrc=${rc[-1]}
+  grep -q 'No space left on device' "$log" && { echo "backup drive is full" > "$STATE/abort"; return 0; }
+  # tar 1 = "file changed as we read it": expected on a live system.
+  if [ "$trc" -le 1 ] && [ "$zrc" = 0 ]; then
+    mv -f "$out.part" "$out"; [ "$trc" = 0 ] && rm -f "$log"
+    printf '%s\n' "$u" >> "$STATE/done"
+  else
+    printf '%s\trc=tar:%s,zstd:%s\n' "$u" "$trc" "$zrc" >> "$STATE/failed"
+  fi
+}
+
 # -- worker (runs in xargs children)
 unit() {
+  [ "$MODE" = tar ] && { unit_tar "$@"; return; }
   local u=$1 kind=${1%%$'\t'*} path=${1#*$'\t'} src rc attempt
   [ -e "$STATE/abort" ] && return 0
   # -a would imply -r; S copies subdirs as empty entries (their R units fill them).
@@ -158,8 +202,8 @@ unit() {
   done
   printf '%s\trc=%s\n' "$u" "$rc" >> "$STATE/failed"
 }
-export -f unit
-export DEST STATE EXCL BULK_ROOT RETRIES RSYNC_EXTRA
+export -f unit unit_tar
+export DEST STATE EXCL BULK_ROOT RETRIES RSYNC_EXTRA MODE TEXA TEXU
 
 # -- progress
 used() { df -B1 --output=used "$BULK_ROOT" | tail -1 | tr -d ' '; }
@@ -168,7 +212,7 @@ progress() {
   local tick=5 d f w s line; [ -t 1 ] || tick=60
   while sleep "$tick"; do
     d=$(wc -l < "$STATE/done"); f=$(wc -l < "$STATE/failed")
-    w=$(( $(used) - start_used )); s=$(( $(date +%s) - t0 ))
+    w=$(( $(used) - start_used )); (( w < 0 )) && w=0; s=$(( $(date +%s) - t0 ))
     line=$(printf '[%d/%d units] %s written, %s/s, %d failed, %s elapsed' "$d" "$total" \
       "$(numfmt --to=iec "$w")" "$(numfmt --to=iec $(( w / (s > 0 ? s : 1) )))" "$f" \
       "$(date -u -d @"$s" +%H:%M:%S)")

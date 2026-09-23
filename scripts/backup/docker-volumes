@@ -68,13 +68,31 @@ backup_one() {
     mkdir -p "$cfg"; chmod 700 "$cfg"
     docker ps -a -q --filter "volume=$v" | xargs -r docker inspect > "$cfg/$v.containers.json" 2>/dev/null || true
   fi
-  log "archiving $v -> $out"
-  docker run --rm --network none --user 0:0 -v "$v":/v:ro --entrypoint tar "$IMG" -C /v -cf - . \
-    | zstd -q -T0 -3 -o "$out.part" -f
-  mv -f "$out.part" "$out"
+  # Entry count while frozen: the archive must contain exactly this many.
+  local want got rc
+  want=$(docker run --rm --network none --user 0:0 -v "$v":/v:ro --entrypoint sh "$IMG" \
+         -c 'cd /v && find . ! -name . | wc -l')
+  log "archiving $v ($want entries) -> $out"
+  docker rm -f "dv-archive-$v" >/dev/null 2>&1 || true
+  set +e
+  docker run --rm --name "dv-archive-$v" --label backup=docker-volumes --network none --user 0:0 \
+    -v "$v":/v:ro --entrypoint tar "$IMG" -C /v -cf - . | zstd -q -T0 -3 -o "$out.part" -f
+  rc=("${PIPESTATUS[@]}")
+  set -e
   resume
+  if [ "${rc[0]}" != 0 ] || [ "${rc[1]}" != 0 ]; then
+    warn "FAILED $v: tar exit ${rc[0]}, zstd exit ${rc[1]} (137 = killed); partial kept as $out.part"
+    failed+=("$v"); return 0
+  fi
+  log "verifying $v"
+  got=$(zstd -dc "$out.part" | tar -tf - 2>/dev/null | grep -cvxE '\./?') || true
+  if [ "$got" != "$want" ]; then
+    warn "FAILED $v: archive has $got entries, volume has $want; partial kept as $out.part"
+    failed+=("$v"); return 0
+  fi
+  mv -f "$out.part" "$out"
   (cd "$dir" && sha256sum "$v.tar.zst" > "$v.tar.zst.sha256")
-  log "done $v ($(du -h "$out" | cut -f1))"
+  log "done $v ($(du -h "$out" | cut -f1), $got entries verified)"
 }
 
 restore_one() {
@@ -93,5 +111,7 @@ restore_one() {
   log "restored $v"
 }
 
+failed=()
 for v in "${vols[@]}"; do "${cmd}_one" "$v"; done
+[ "${#failed[@]}" -eq 0 ] || die "failed: ${failed[*]} (re-run: docker-volumes $cmd ${failed[*]})"
 log "all done"

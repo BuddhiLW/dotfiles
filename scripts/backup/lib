@@ -110,6 +110,11 @@ BULK_EXCLUDES=(
   .local/share/pipx/venvs anaconda3/pkgs
   dotfiles/.local/share/docker dotfiles/.local/share/containers dotfiles/.local/share/pnpm
   dotfiles/.local/share/Steam dotfiles/.local/share/virtualenvs dotfiles/gitthings
+  .zig-cache zig-cache zig-out clones-ref .codanna
+  hive-mcp/data/action-log
+  '.local/share/hive-mcp/datalevin*'
+  '.local/share/hive-mcp/datahike'
+  '.local/share/hive-mcp/datahike.pre-gc-bak-*'
 )
 
 log()  { printf '\033[1;34m==>\033[0m %s\n' "$*"; }
