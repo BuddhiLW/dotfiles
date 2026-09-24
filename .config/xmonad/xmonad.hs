@@ -68,8 +68,8 @@ import XMonad.Util.EZConfig (additionalKeysP, mkNamedKeymap)
 import XMonad.Util.Hacks (windowedFullscreenFixEventHook, javaHack, trayerAboveXmobarEventHook, trayAbovePanelEventHook, trayerPaddingXmobarEventHook, trayPaddingXmobarEventHook, trayPaddingEventHook)
 import XMonad.Util.NamedActions
 import XMonad.Util.NamedScratchpad
-import XMonad.Layout.IndependentScreens (countScreens)
 import XMonad.Util.Run (runProcessWithInput, safeSpawn, spawnPipe)
+import Control.Exception (SomeException, try)
 import XMonad.Util.SpawnOnce
 
    -- ColorScheme module (SET ONLY ONE!)
@@ -555,7 +555,9 @@ myKeys c =
   , ("M-S-<Return>", addName "Run prompt"      $ sequence_ [spawn (mySoundPlayer ++ dmenuSound), spawn "~/.local/bin/dm-run"])
 
   , ("M-S-b", addName "Toggle bar show/hide"   $ spawn "dbus-send --session --dest=org.Xmobar.Control --type=method_call --print-reply '/org/Xmobar/Control' org.Xmobar.Control.SendSignal \"string:Toggle -1\"" >> (broadcastMessage $ ToggleStruts) >> refresh)
-  , ("M-d", addName "BLW's Xmonad Documented"  $ spawn "blw-docs")]
+  , ("M-d", addName "BLW's Xmonad Documented"  $ spawn "blw-docs")
+    -- Escape hatch: a wedged compositor looks like a frozen desktop.
+  , ("M-C-S-c", addName "Toggle compositor (picom)" $ spawn "pkill -x picom || picom")]
 
   ^++^ subKeys "BLW keys"
   [ ("M-p t t",   addName "Random Lazywallpaper"    $ spawn "random-lazywal")
@@ -755,19 +757,19 @@ main = do
   -- let homePath = homeDir ++ "/.local/bin/blw:" ++ homeDir ++ "/go/bin/:" ++ homeDir ++ ".conda/bin/"
   -- let newPath = homePath ++ fromMaybe "" currentPath
   -- setEnv "PATH" newPath
-  -- Detect monitors first (xrandr, waits for it) so a plugged-in second screen
-  -- is laid out and counted before the bars start. M-S-r re-runs all of this.
-  -- One xmobar per screen: screen 0 = notebook panel, screen 1 = external.
-  -- (xmobar -x N on a missing screen falls back to 0 and stacks a second bar.)
-  _ <- runProcessWithInput "sh" ["-c", "$HOME/.local/bin/blw/screen-layout"] ""
-  nScreens <- countScreens
-  xmprocs <- mapM spawnPipe $ take nScreens
-    [ "xmobar -x 0 $HOME/.config/xmobar/doom-one-xmobarrc-notebook"
-    , "xmobar -x 1 $HOME/.config/xmobar/doom-one-xmobarrc-duo-screen"
-    ]
-  -- xmproc2 <- spawnPipe ("xmobar -x 2 $HOME/.config/xmobar/" ++ colorScheme ++ "-xmobarrc")
+  -- Lay out monitors before xmonad starts, so the bars land on the right
+  -- screens. This is the only step that blocks the WM, so it is time-boxed
+  -- (a hung xrandr gets killed after 5s) and any failure is ignored: worst
+  -- case the screens keep whatever layout X picked. M-S-r re-runs it.
+  _ <- try (runProcessWithInput "timeout" ["5", "sh", "-c", "$HOME/.local/bin/blw/screen-layout"] "")
+         :: IO (Either SomeException String)
   -- the xmonad, ya know...what the WM is named after!
   xmonad
+    -- One xmobar per screen, managed by xmonad: started on login, killed and
+    -- respawned on restart and whenever screens change. The bars read their
+    -- text from a root-window property instead of a pipe, so a hung or dead
+    -- xmobar can never block xmonad (a full pipe used to freeze the WM).
+    $ dynamicSBs myStatusBar
     -- added $ pagerHints from taffybar
     $ addDescrKeys' ((mod4Mask, xK_F1), showKeybindings) myKeys $ ewmh $ docks $ pagerHints $ def
     { manageHook         = myManageHook <+> manageDocks
@@ -781,10 +783,21 @@ main = do
     , normalBorderColor  = myNormColor
     , focusedBorderColor = myFocusColor
     , focusFollowsMouse  = myMouseFocus
-    , logHook = dynamicLogWithPP $  filterOutWsPP [scratchpadWorkspaceTag] $ xmobarPP
-        { ppOutput = \x -> mapM_ (`hPutStrLn` x) xmprocs   -- one xmobar per monitor
-                        -- >> hPutStrLn xmproc2 x   -- xmobar on monitor 3
-        , ppCurrent = xmobarColor color06 "" . wrap
+    }
+
+-- Screen 0 is the notebook panel (bigger font), every other screen gets the
+-- external-monitor bar. All bars show the same text, read by xmobar's
+-- UnsafeXMonadLog from the _XMONAD_LOG root-window property.
+myStatusBar :: ScreenId -> X StatusBarConfig
+myStatusBar (S n) = pure $ statusBarPropTo "_XMONAD_LOG" cmd (pure myXmobarPP)
+  where
+    rc | n == 0    = "doom-one-xmobarrc-notebook"
+       | otherwise = "doom-one-xmobarrc-duo-screen"
+    cmd = "xmobar -x " ++ show n ++ " $HOME/.config/xmobar/" ++ rc
+
+myXmobarPP :: PP
+myXmobarPP = filterOutWsPP [scratchpadWorkspaceTag] $ xmobarPP
+        { ppCurrent = xmobarColor color06 "" . wrap
                       ("<box type=Bottom width=2 mb=2 color=" ++ color06 ++ ">") "</box>"
           -- Visible but not current workspace
         , ppVisible = xmobarColor color06 "" . clickable
@@ -804,4 +817,3 @@ main = do
           -- order of things in xmobar
         , ppOrder  = \(ws:l:t:ex) -> [ws,l]++ex++[t]
         }
-    }
