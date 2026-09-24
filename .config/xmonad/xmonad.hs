@@ -68,6 +68,7 @@ import XMonad.Util.EZConfig (additionalKeysP, mkNamedKeymap)
 import XMonad.Util.Hacks (windowedFullscreenFixEventHook, javaHack, trayerAboveXmobarEventHook, trayAbovePanelEventHook, trayerPaddingXmobarEventHook, trayPaddingXmobarEventHook, trayPaddingEventHook)
 import XMonad.Util.NamedActions
 import XMonad.Util.NamedScratchpad
+import XMonad.Layout.IndependentScreens (countScreens)
 import XMonad.Util.Run (runProcessWithInput, safeSpawn, spawnPipe)
 import XMonad.Util.SpawnOnce
 
@@ -158,10 +159,16 @@ myStartupHook = do
     spawnOnce (mySoundPlayer ++ startupSound)
     spawn "killall conky"   -- kill current conky on each restart
     spawn "killall trayer"  -- kill current trayer on each restart
+    -- System tray (nm-applet, pasystray, ...) in the gap right of the 86%-wide
+    -- xmobar; height matches the notebook bar.
+    spawn ("sleep 2 && trayer --edge bottom --align right --widthtype percent --width 7"
+        ++ " --heighttype pixel --height 40 --monitor primary --expand true"
+        ++ " --SetDockType true --SetPartialStrut true"
+        ++ " --transparent true --alpha 0 --tint 0x000000")
 
     spawnOnce "lxsession"
     spawnOnce "nm-applet"
-    spawnOnce "volumeicon"
+    spawnOnce "pasystray"
     spawnOnce "notify-log $HOME/.log/notify.log"
     spawn "/usr/bin/emacs --daemon" -- emacs daemon for the emacsclient
 
@@ -748,10 +755,16 @@ main = do
   -- let homePath = homeDir ++ "/.local/bin/blw:" ++ homeDir ++ "/go/bin/:" ++ homeDir ++ ".conda/bin/"
   -- let newPath = homePath ++ fromMaybe "" currentPath
   -- setEnv "PATH" newPath
-  -- Launching three instances of xmobar on their monitors.
-  -- Screen 0 = eDP-1 (notebook 2560x1600), screen 1 = HDMI-1-0 (ultrawide 2560x1080)
-  xmproc0 <- spawnPipe ("xmobar -x 0 $HOME/.config/xmobar/doom-one-xmobarrc-notebook")
-  xmproc1 <- spawnPipe ("xmobar -x 1 $HOME/.config/xmobar/doom-one-xmobarrc-duo-screen")
+  -- Detect monitors first (xrandr, waits for it) so a plugged-in second screen
+  -- is laid out and counted before the bars start. M-S-r re-runs all of this.
+  -- One xmobar per screen: screen 0 = notebook panel, screen 1 = external.
+  -- (xmobar -x N on a missing screen falls back to 0 and stacks a second bar.)
+  _ <- runProcessWithInput "sh" ["-c", "$HOME/.local/bin/blw/screen-layout"] ""
+  nScreens <- countScreens
+  xmprocs <- mapM spawnPipe $ take nScreens
+    [ "xmobar -x 0 $HOME/.config/xmobar/doom-one-xmobarrc-notebook"
+    , "xmobar -x 1 $HOME/.config/xmobar/doom-one-xmobarrc-duo-screen"
+    ]
   -- xmproc2 <- spawnPipe ("xmobar -x 2 $HOME/.config/xmobar/" ++ colorScheme ++ "-xmobarrc")
   -- the xmonad, ya know...what the WM is named after!
   xmonad
@@ -769,8 +782,7 @@ main = do
     , focusedBorderColor = myFocusColor
     , focusFollowsMouse  = myMouseFocus
     , logHook = dynamicLogWithPP $  filterOutWsPP [scratchpadWorkspaceTag] $ xmobarPP
-        { ppOutput = \x -> hPutStrLn xmproc0 x   -- xmobar on monitor 1
-                        >> hPutStrLn xmproc1 x   -- xmobar on monitor 2
+        { ppOutput = \x -> mapM_ (`hPutStrLn` x) xmprocs   -- one xmobar per monitor
                         -- >> hPutStrLn xmproc2 x   -- xmobar on monitor 3
         , ppCurrent = xmobarColor color06 "" . wrap
                       ("<box type=Bottom width=2 mb=2 color=" ++ color06 ++ ">") "</box>"

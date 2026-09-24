@@ -1,27 +1,25 @@
 #!/bin/sh
+# Lay out whatever is plugged in: the internal panel (eDP*/LVDS*) first and
+# primary, every other connected output to its right at its preferred mode,
+# everything disconnected off. Run by xmonad at startup and on M-S-r, so a
+# second screen gets its own xmobar without arandr.
 
-# Internal panel
-INT="eDP-1"
-INT_MODE="1920x1200"
+outputs=$(xrandr --query)
+connected=$(echo "$outputs" | awk '$2 == "connected" {print $1}')
+internal=$(echo "$connected" | grep -m1 -E '^(eDP|LVDS)')
+# No internal panel (lid closed / desktop): the first connected output leads.
+[ -n "$internal" ] || internal=$(echo "$connected" | head -n1)
+[ -n "$internal" ] || exit 0
 
-# External ultrawide you *usually* plug in
-EXT="HDMI-1-0"
-EXT_MODE="2560x1080"
-EXT_POS="1920x0"   # put it to the right of the laptop panel
+set -- --output "$internal" --primary --auto --pos 0x0 --rotate normal
+prev=$internal
+for o in $connected; do
+  [ "$o" = "$internal" ] && continue
+  set -- "$@" --output "$o" --auto --right-of "$prev" --rotate normal
+  prev=$o
+done
+for o in $(echo "$outputs" | awk '$2 == "disconnected" {print $1}'); do
+  set -- "$@" --output "$o" --off
+done
 
-OUT=$(xrandr \
-        --output "$INT" --primary --mode "$INT_MODE" --pos 0x0 --rotate normal \
-        --output "$EXT" --mode "$EXT_MODE" --pos "$EXT_POS" --rotate normal \
-        --output DP-1 --off --output DP-2 --off --output DP-1-0 --off \
-        --output DP-1-1 --off --output DP-1-2 --off --verbose 2>&1)
-echo "$OUT"
-
-# Is the external monitor physically connected?
-if [ "$OUT" = "xrandr: cannot find mode 2560x1080" ]; then
-  echo "External monitor not connected"
-  xrandr \
-        --output "$INT" --primary --mode "$INT_MODE" --pos 0x0 --rotate normal \
-        --output "$EXT" --off \
-        --output DP-1 --off --output DP-2 --off --output DP-1-0 --off \
-        --output DP-1-1 --off --output DP-1-2 --off
-fi
+xrandr "$@"
