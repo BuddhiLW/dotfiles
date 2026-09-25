@@ -1,0 +1,11 @@
+#!/usr/bin/bash
+
+# X ignores every keyboard and mouse without an input driver: xmonad starts,
+# xmobar draws, but no key, cursor or Ctrl-Alt-Fn works. xserver-xorg-core
+# alone (what the nvidia driver pulls in) does not ship one.
+sudo apt-get install -y xserver-xorg xserver-xorg-input-libinput
+
+if [ ! -e /usr/lib/xorg/modules/input/libinput_drv.so ]; then
+  echo "!! X has no libinput driver; an xmonad session will get no keyboard or mouse"
+  exit 1
+fi

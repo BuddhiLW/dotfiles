@@ -24,7 +24,8 @@ bash ./install/main
 # make newly installed fonts available
 fc-cache -vf
 
-# Install the window manager
+# Install the window manager (X input drivers first, or xmonad gets no keyboard/mouse)
+bash ./install/xorg
 bash ./setup/xmonad
 bash ./install/xmonad
 
