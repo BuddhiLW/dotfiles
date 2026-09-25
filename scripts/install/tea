@@ -1,0 +1,18 @@
+#!/usr/bin/bash
+# tea (Gitea CLI) into ~/.local/bin: checksum-verified release binary, no sudo.
+# Pin another release with TEA_VERSION=0.16.0.
+set -euo pipefail
+
+v="${TEA_VERSION:-0.16.0}"
+if command -v tea >/dev/null && tea --version 2>/dev/null | grep -q "$v"; then
+  echo "tea $v already installed"; exit 0
+fi
+
+tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
+bin="tea-$v-linux-amd64"
+url="https://dl.gitea.com/tea/$v/$bin"
+curl -fsSL -o "$tmp/$bin" "$url"
+(cd "$tmp" && curl -fsSL "$url.sha256" | sha256sum -c --quiet)
+mkdir -p "$HOME/.local/bin"
+install -m 0755 "$tmp/$bin" "$HOME/.local/bin/tea"
+"$HOME/.local/bin/tea" --version

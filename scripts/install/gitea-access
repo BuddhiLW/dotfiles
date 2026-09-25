@@ -1,0 +1,103 @@
+#!/usr/bin/bash
+# tea against a Gitea whose API sits behind Cloudflare Access.
+#
+# tea cannot send the cf-access-token header, so it talks to a local proxy
+# that adds it:
+#
+#   tea -> http://127.0.0.1:3081 (gitea-access-proxy.service)
+#       -> $GITEA_ACCESS_UPSTREAM + cf-access-token from `cloudflared access token`
+#
+# Tracked: ~/.local/bin/gitea-access-proxy and
+# ~/.config/systemd/user/gitea-access-proxy.service (via the ~/.local and
+# ~/.config links from setup/init). NOT tracked, because this repo is public:
+# which host, which token, which login. Those live in one pass entry (restored
+# first by RESTORE=1) as KEY=value lines, default entry infra/gitea-access:
+#
+#   GITEA_ACCESS_UPSTREAM=https://gitea.example.com
+#   GITEA_TOKEN_PASS_ENTRY=<pass entry holding a Gitea API token>
+#   TEA_LOGIN=<tea login name>
+#   TEA_SSH_HOST=<host in your git@...: remotes, so tea detects repos>
+#
+# This script copies it to ~/.config/gitea-access/env (0600, ignored by git),
+# which the unit reads. The tea token itself goes from pass straight into tea
+# and ends up in ~/.config/tea/config.yml, also ignored.
+#
+# Idempotent. Steps that need a person print a NEXT line instead of failing the
+# bootstrap: the pass entry, and the Access browser login
+# (`cloudflared access login <upstream> >/dev/null`). Re-run after either.
+set -euo pipefail
+
+DOTFILES="${DOTFILES:-$HOME/dotfiles}"
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG_ENTRY="${GITEA_ACCESS_PASS_ENTRY:-infra/gitea-access}"
+ENV_FILE="$HOME/.config/gitea-access/env"
+PROXY="http://127.0.0.1:3081"
+UNIT="gitea-access-proxy.service"
+
+for b in /home/linuxbrew/.linuxbrew/bin/brew "$HOME/.linuxbrew/bin/brew"; do
+  [ -x "$b" ] && eval "$("$b" shellenv)" && break
+done
+export PATH="$HOME/.local/bin:$PATH"
+
+next() { echo "NEXT: $*"; echo "      then re-run: bash $HERE/gitea-access"; exit 0; }
+
+command -v cloudflared >/dev/null || bash "$HERE/cloudflared"
+bash "$HERE/tea"
+
+# Private settings: pass -> env file. Only KEY=value lines are kept.
+pass ls "$CONFIG_ENTRY" >/dev/null 2>&1 \
+  || next "create the private settings: pass insert -m $CONFIG_ENTRY   (keys: see the header of $HERE/gitea-access)"
+mkdir -p "${ENV_FILE%/*}"
+( umask 077; pass show "$CONFIG_ENTRY" | grep -E '^[A-Z_][A-Z0-9_]*=' > "$ENV_FILE.tmp" )
+mv "$ENV_FILE.tmp" "$ENV_FILE"
+set -a; source "$ENV_FILE"; set +a
+: "${GITEA_ACCESS_UPSTREAM:?missing in pass $CONFIG_ENTRY}"
+: "${GITEA_TOKEN_PASS_ENTRY:?missing in pass $CONFIG_ENTRY}"
+TEA_LOGIN="${TEA_LOGIN:-gitea}"
+
+# The unit reaches ~/.config/systemd/user through the ~/.config link; link it
+# directly only when that link is not in place (running outside the rice).
+dest="$HOME/.config/systemd/user/$UNIT"
+if [ ! -e "$dest" ]; then
+  mkdir -p "${dest%/*}"
+  ln -sfn "$DOTFILES/.config/systemd/user/$UNIT" "$dest"
+fi
+systemctl --user daemon-reload
+systemctl --user enable "$UNIT" >/dev/null 2>&1
+systemctl --user restart "$UNIT"   # picks up a changed env file
+
+status=000
+for _ in $(seq 30); do
+  status=$(curl -s -m 5 -o /dev/null -w '%{http_code}' "$PROXY/api/v1/version" || true)
+  [ "$status" != 000 ] && break
+  sleep 1
+done
+case "$status" in
+  200) echo "proxy: $PROXY up, Access session OK" ;;
+  511) next "cloudflared access login $GITEA_ACCESS_UPSTREAM >/dev/null   # browser login; >/dev/null keeps the JWT off screen" ;;
+  *)   echo "!! proxy answered HTTP $status; see: journalctl --user -u ${UNIT%.service}" >&2; exit 1 ;;
+esac
+
+if ! tea login ls -o simple 2>/dev/null | awk '{print $1}' | grep -qx "$TEA_LOGIN"; then
+  pass ls "$GITEA_TOKEN_PASS_ENTRY" >/dev/null 2>&1 \
+    || next "the pass entry named by GITEA_TOKEN_PASS_ENTRY in $CONFIG_ENTRY does not exist"
+  GITEA_SERVER_TOKEN="$(pass show "$GITEA_TOKEN_PASS_ENTRY" | head -1)" \
+    tea login add --name "$TEA_LOGIN" --url "$PROXY" >/dev/null
+fi
+tea login default "$TEA_LOGIN" >/dev/null
+
+# tea matches a repo to a login by its remote's host, and the remotes are
+# git@<host>:..., not the proxy's 127.0.0.1. tea has no flag for it.
+if [ -n "${TEA_SSH_HOST:-}" ]; then
+  python3 - "$HOME/.config/tea/config.yml" "$TEA_LOGIN" "$TEA_SSH_HOST" <<'EOF'
+import re, sys
+path, login, host = sys.argv[1:]
+text = open(path).read()
+block = re.compile(r"(- name: %s\n(?:(?!\s*- name:).*\n)*?\s*ssh_host: ).*" % re.escape(login))
+new = block.sub(lambda m: m.group(1) + host, text, count=1)
+if new != text:
+    open(path, "w").write(new)
+EOF
+fi
+
+tea whoami >/dev/null && echo "tea: login '$TEA_LOGIN' ready (default)"

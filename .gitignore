@@ -79,6 +79,12 @@
 !/.config/lynx/
 !/.config/gdb/
 !/.config/ghc/
+# only the units this repo owns; the rest of systemd/user is machine state
+!/.config/systemd/
+/.config/systemd/*
+!/.config/systemd/user/
+/.config/systemd/user/*
+!/.config/systemd/user/gitea-access-proxy.service
 
 # --- ~/.local: own scripts only (no binaries, no pipx/conda shims) -------------
 !/.local/
@@ -102,6 +108,7 @@
 !/.local/bin/setbg
 !/.local/bin/uim-start
 !/.local/bin/zprint
+!/.local/bin/gitea-access-proxy
 
 # --- inside allowed dirs --------------------------------------------------------
 .config/xmonad/xmonad

@@ -43,6 +43,11 @@ if [ "${RESTORE:-0}" = 1 ]; then
     || echo "!! haproxy-k8s-lb did not start; check: systemctl --user status haproxy-k8s-lb"
 fi
 
+# tea through Cloudflare Access: local proxy unit + default tea login. Host and
+# token come from pass (infra/gitea-access), never from this public repo.
+# Prints a NEXT line when the pass entry or the browser login is still missing.
+bash "$DOTFILES/scripts/install/gitea-access" || echo "!! gitea-access failed; re-run scripts/install/gitea-access"
+
 echo "Congrats. If everything went well, you have the newest Buddhi WM installed."
 echo "New step, you can logout from your current Ubuntu session, and chose XMonad,"
 echo "instead of GNOME Window Manager. This choice is generally done at the login"

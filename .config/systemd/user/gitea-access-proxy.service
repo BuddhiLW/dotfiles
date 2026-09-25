@@ -1,0 +1,19 @@
+[Unit]
+Description=Local HTTP front for a Gitea behind Cloudflare Access (for tea)
+Documentation=file://%h/.local/bin/gitea-access-proxy
+After=network-online.target
+
+[Service]
+ExecStart=%h/.local/bin/gitea-access-proxy
+# cloudflared comes from linuxbrew (scripts/install/cloudflared); user units do
+# not inherit the login shell's PATH.
+Environment=PATH=%h/.local/bin:/home/linuxbrew/.linuxbrew/bin:/usr/local/bin:/usr/bin:/bin
+Environment=GITEA_ACCESS_LISTEN=127.0.0.1:3081
+# GITEA_ACCESS_UPSTREAM and friends: private, written from pass by
+# scripts/install/gitea-access. Not in this repo.
+EnvironmentFile=%h/.config/gitea-access/env
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=default.target
