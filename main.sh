@@ -7,6 +7,8 @@ if [ "${RESTORE:-0}" = 1 ]; then
 fi
 
 ln -sf $DOTFILES/.bashrc $HOME/.bashrc
+# X session env + keyboard (us intl, caps->escape); GDM sources it at login
+ln -sf $DOTFILES/.xprofile $HOME/.xprofile
 if compgen -G "$DOTFILES/gitthings/*/build/*/bin/monero-storage" >/dev/null; then
   echo "keeping $DOTFILES/gitthings: it holds monero-storage (wallets)"
 else

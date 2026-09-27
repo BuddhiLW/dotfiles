@@ -14,6 +14,7 @@
 
 # --- shell / X / editors ------------------------------------------------------
 !/.bashrc
+!/.xprofile
 !/.bash_profile
 !/.profile
 !/.Xresources
