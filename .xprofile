@@ -1,0 +1,12 @@
+export PATH=$PATH:$HOME/.local/bin/
+export PATH=$PATH:$HOME/.local/bin/blw/
+export PATH=$PATH:$HOME/.conda/bin/
+
+# keyboard: us intl (dead keys ~ ^ ' ` " directly), caps -> escape
+setxkbmap -layout us -variant intl -option -option caps:escape
+# kitty (GLFW) only talks to ibus when this is set
+export GLFW_IM_MODULE=ibus
+
+# load SSH keys from pass into the agent (prompts via gpg pinentry / zenity)
+systemctl --user import-environment DISPLAY XAUTHORITY
+systemctl --user start --no-block ssh-load.service
