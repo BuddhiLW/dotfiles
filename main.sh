@@ -28,20 +28,29 @@ fc-cache -vf
 bash ./setup/xmonad
 bash ./install/xmonad
 
+# Clojure tooling (bb, official CLI) -- no sudo, into ~/.local
+bash ./install/babashka
+bash ./install/clojure
+
+# Local embeddings for hive-mcp (qwen3-embedding:4b)
+bash ./install/ollama || echo "!! ollama setup failed; re-run scripts/install/ollama"
+
+# Containers: rootless docker for this user (hive-mcp services, k8s LB)
+bash ./install/docker
+bash ./install/docker-ce-rootless
+
+# Cluster access: kubectl -> 127.0.0.1:16443 LB -> CPs (LAN) or ClusterIP (tailnet).
+# Each script is idempotent; a failure here should not abort the rest.
+bash ./install/kubectl  || echo "!! kubectl install failed"
+bash ./install/talosctl || echo "!! talosctl install failed"
+bash ./install/tailscale || echo "!! tailscale not up; off-LAN kubectl needs it (prints a login URL)"
+
 if [ "${RESTORE:-0}" = 1 ]; then
-  if ! systemctl --user cat docker.service >/dev/null 2>&1; then
-    bash "$DOTFILES/scripts/install/docker"
-    bash "$DOTFILES/scripts/install/docker-ce-rootless"
-  fi
-  command -v kubectl >/dev/null || bash "$DOTFILES/scripts/install/kubectl"
-  command -v talosctl >/dev/null || bash "$DOTFILES/scripts/install/talosctl"
   bash "$DOTFILES/scripts/backup/docker-volumes" restore || echo "!! docker volume restore failed; re-run it later"
-  mkdir -p "$HOME/.config/systemd/user"
-  for u in "$DOTFILES"/talos/base/systemd/*; do ln -sfn "$u" "$HOME/.config/systemd/user/${u##*/}"; done
-  systemctl --user daemon-reload
-  systemctl --user enable --now haproxy-k8s-lb.service haproxy-k8s-lb-healthcheck.timer \
-    || echo "!! haproxy-k8s-lb did not start; check: systemctl --user status haproxy-k8s-lb"
 fi
+
+bash ./install/haproxy-k8s-lb \
+  || echo "!! haproxy-k8s-lb did not start; check: systemctl --user status haproxy-k8s-lb"
 
 # tea through Cloudflare Access: local proxy unit + default tea login. Host and
 # token come from pass (infra/gitea-access), never from this public repo.
