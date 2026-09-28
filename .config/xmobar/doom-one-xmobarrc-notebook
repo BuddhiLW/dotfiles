@@ -26,7 +26,7 @@ Config { font = "DepartureMono Nerd Font 22px"
        --   NOTE: The height should be the same as the trayer (system tray) height.
        -- , position       = BottomSize C 95 70
        -- Screen-relative (works with `xmobar -x N` on any layout), ~86% width like the old Static.
-       , position = BottomSize C 86 50
+       , position = BottomSize C 86 40
        -- , position = Static { xpos = 140 , ypos = 1550, width = 2200, height = 40 }
        -- , position     = BottomSize C 95 50
        -- , border       = FullB

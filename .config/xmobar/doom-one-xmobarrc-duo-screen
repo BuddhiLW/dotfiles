@@ -26,7 +26,7 @@ Config { font = "DepartureMono Nerd Font 22px"
        --   NOTE: The height should be the same as the trayer (system tray) height.
        -- , position       = BottomSize C 95 70
        -- HDMI-1-0 ultrawide (2560x1080): fonts/height scaled from notebook config by 1080/1600.
-       , position = BottomSize C 86 27
+       , position = BottomSize C 86 40
        -- , position = Static { xpos = 140 , ypos = 1046, width = 2200, height = 27 }
        -- , position     = BottomSize C 95 50
        -- , border       = FullB

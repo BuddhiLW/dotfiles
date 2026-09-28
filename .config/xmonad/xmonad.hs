@@ -163,7 +163,7 @@ myStartupHook = do
     -- System tray (nm-applet, pasystray, ...) in the gap right of the 86%-wide
     -- xmobar; height matches the notebook bar.
     spawn ("sleep 2 && trayer --edge bottom --align right --widthtype percent --width 7"
-        ++ " --heighttype pixel --height 50 --monitor primary --expand true"
+        ++ " --heighttype pixel --height 40 --monitor primary --expand true"
         ++ " --SetDockType true --SetPartialStrut true"
         ++ " --transparent true --alpha 0 --tint 0x000000")
 
