@@ -1,8 +1,7 @@
 #!/usr/bin/bash
 # Nerd Fonts used by xmobar/kitty. Only the families we use: the full
 # nerd-fonts repo is several GB. Add names from the release page as needed.
-# DepartureMono: xmobar + xmonad prompts/tabs (pixel font, crisp at 11px multiples).
-FONTS=(FiraCode Mononoki DepartureMono)
+FONTS=(FiraCode Mononoki)
 DEST="${XDG_DATA_HOME:-$HOME/.local/share}/fonts/NerdFonts"
 mkdir -p "$DEST"
 
@@ -16,7 +15,7 @@ for f in "${FONTS[@]}"; do
 done
 fc-cache -f "$DEST"
 
-# Monaspace (kitty): upstream variable fonts, 4MB against 300MB+ for the
+# Monaspace (kitty: Neon/Radon, xmobar/xmonad: Krypton): upstream variable fonts, 4MB against 300MB+ for the
 # nerd-patched set. kitty draws Nerd Font symbols on its own.
 MONASPACE_VERSION=v1.400
 MDEST="${XDG_DATA_HOME:-$HOME/.local/share}/fonts/Monaspace"
