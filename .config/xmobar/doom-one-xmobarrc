@@ -12,12 +12,12 @@
    -- trayer
    -- 'dtos-local-bin' (from dtos-core-repo)
 
-Config { font = "Monaspace Krypton Var Medium 19px"
+Config { font = "Monaspace Krypton Var Medium 23px"
         -- Krypton pairs with kitty's Neon (same Monaspace family). Icons in
         -- fn=2 come from FiraCode Nerd; pango falls back for any other glyph.
-        , additionalFonts = [ "Monaspace Krypton Var 19px"
-                            , "FiraCode Nerd Font Propo 20px"
-                            , "Monaspace Krypton Var Medium 19px"
+        , additionalFonts = [ "Monaspace Krypton Var 23px"
+                            , "FiraCode Nerd Font Propo 24px"
+                            , "Monaspace Krypton Var Medium 23px"
                             ]
        , bgColor      = "#000000"
        , fgColor      = "#FA0A0A"

@@ -103,7 +103,7 @@ import           XMonad.Hooks.TaffybarPagerHints (pagerHints)
 
 myFont :: String
 -- Monaspace Krypton to match xmobar (kitty uses Neon from the same family).
-myFont = "xft:Monaspace Krypton Var:style=Medium:pixelsize=20:antialias=true:hinting=true"
+myFont = "xft:Monaspace Krypton Var:style=Medium:pixelsize=24:antialias=true:hinting=true"
 
 myModMask :: KeyMask
 myModMask = mod4Mask 
