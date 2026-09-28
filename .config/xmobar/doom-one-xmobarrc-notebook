@@ -11,12 +11,12 @@
    -- trayer
    -- 'dtos-local-bin' (from dtos-core-repo)
 
-Config { font = "FiraCode Nerd Font 22"
-        , additionalFonts = [
-        "xft:FontAwesome:pixelsize=16:antialias=true:hinting=true"
-        , "xft:Ubuntu:weight=bold:pixelsize=16:antialias=true:hinting=true"
-        , "xft:Mononoki:pixelsize=16:antialias=true:hinting=true"
-        ]
+Config { font = "DepartureMono Nerd Font 22px"
+        -- fn=1 separator, fn=2 icons: same pixel family so nothing shifts baseline.
+        , additionalFonts = [ "DepartureMono Nerd Font 22px"
+                            , "DepartureMono Nerd Font Mono 22px"
+                            , "DepartureMono Nerd Font 22px"
+                            ]
        , bgColor      = "#000000"
        , fgColor      = "#FA0A0A"
        -- Position TopSize and BottomSize take 3 arguments:

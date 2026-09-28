@@ -1,7 +1,30 @@
 #!/usr/bin/bash
+# Nerd Fonts used by xmobar/kitty. Only the families we use: the full
+# nerd-fonts repo is several GB. Add names from the release page as needed.
+# DepartureMono: xmobar + xmonad prompts/tabs (pixel font, crisp at 11px multiples).
+FONTS=(FiraCode Mononoki DepartureMono)
+DEST="${XDG_DATA_HOME:-$HOME/.local/share}/fonts/NerdFonts"
+mkdir -p "$DEST"
 
-cd $DOTFILES/gitthings/
+for f in "${FONTS[@]}"; do
+  [ -d "$DEST/$f" ] && continue
+  tmp=$(mktemp -d)
+  curl -fsSL -o "$tmp/$f.zip" "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/$f.zip" \
+    && unzip -q -o "$tmp/$f.zip" -d "$DEST/$f" -x '*.md' \
+    || echo "!! could not install nerd font $f"
+  rm -rf "$tmp"
+done
+fc-cache -f "$DEST"
 
-git clone https://github.com/ryanoasis/nerd-fonts.git
-cd nerd-fonts
-./install.sh
+# Monaspace (kitty): upstream variable fonts, 4MB against 300MB+ for the
+# nerd-patched set. kitty draws Nerd Font symbols on its own.
+MONASPACE_VERSION=v1.400
+MDEST="${XDG_DATA_HOME:-$HOME/.local/share}/fonts/Monaspace"
+if [ ! -d "$MDEST" ]; then
+  tmp=$(mktemp -d)
+  curl -fsSL -o "$tmp/m.zip" "https://github.com/githubnext/monaspace/releases/download/$MONASPACE_VERSION/monaspace-variable-$MONASPACE_VERSION.zip" \
+    && mkdir -p "$MDEST" && unzip -q -o -j "$tmp/m.zip" '*.ttf' -d "$MDEST" \
+    || echo "!! could not install Monaspace"
+  rm -rf "$tmp"
+  fc-cache -f "$MDEST"
+fi

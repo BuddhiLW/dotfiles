@@ -102,7 +102,8 @@ import           XMonad.Hooks.TaffybarPagerHints (pagerHints)
 
 
 myFont :: String
-myFont = "xft:SauceCodePro Nerd Font Mono:size=12:regular:antialias=true:hinting=true"
+-- Departure Mono (pixel font) to match xmobar; pixelsize kept on its 11px grid.
+myFont = "xft:DepartureMono Nerd Font:pixelsize=22:antialias=true:hinting=true"
 
 myModMask :: KeyMask
 myModMask = mod4Mask 
@@ -450,7 +451,7 @@ myTabTheme = def { fontName            = myFont
 -- Theme for showWName which prints current workspace when you change workspaces.
 myShowWNameTheme :: SWNConfig
 myShowWNameTheme = def
-  { swn_font              = "xft:Unifont Upper:size=36:bold:antialias=true:hinting=true"
+  { swn_font              = "xft:DepartureMono Nerd Font:pixelsize=88:antialias=true:hinting=true"
   , swn_fade              = 1.2
   , swn_bgcolor           = "#1C1F24"
   , swn_color             = "#ffffff"
