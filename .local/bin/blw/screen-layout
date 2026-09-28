@@ -7,6 +7,22 @@
 outputs=$(xrandr --query)
 connected=$(echo "$outputs" | awk '$2 == "connected" {print $1}')
 internal=$(echo "$connected" | grep -m1 -E '^(eDP|LVDS)')
+# The NVIDIA driver names the panel DP-N, not eDP: find it by matching the
+# kernel's eDP connector EDID against xrandr's.
+if [ -z "$internal" ]; then
+  for f in /sys/class/drm/*-eDP-*/edid /sys/class/drm/*-LVDS-*/edid; do
+    [ -r "$f" ] || continue  # sysfs reports size 0, so not -s
+    edid=$(od -An -tx1 -v "$f" | tr -d ' \n' | head -c 64)
+    [ -n "$edid" ] || continue
+    internal=$(xrandr --prop | awk -v e="$edid" '
+      /^[A-Za-z]/ { o = $1 }
+      /EDID:/ { f = 1; next }
+      f && /^\t\t/ { gsub(/[ \t]/, ""); s[o] = s[o] $0; next }
+      { f = 0 }
+      END { for (k in s) if (substr(s[k], 1, 64) == e) { print k; exit } }')
+    [ -n "$internal" ] && break
+  done
+fi
 # No internal panel (lid closed / desktop): the first connected output leads.
 [ -n "$internal" ] || internal=$(echo "$connected" | head -n1)
 [ -n "$internal" ] || exit 0
