@@ -29,7 +29,7 @@ import qualified Data.Map as M
 import XMonad.Hooks.DynamicLog (dynamicLogWithPP, wrap, xmobarPP, xmobarColor, shorten, PP(..))
 import XMonad.Hooks.EwmhDesktops  -- for some fullscreen events, also for xcomposite in obs.
 import XMonad.Hooks.ManageDocks (avoidStruts, docks, manageDocks, ToggleStruts(..))
-import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat, doCenterFloat)
+import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat, doCenterFloat, doFocus)
 import XMonad.Hooks.ServerMode
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.StatusBar
@@ -493,13 +493,27 @@ myWorkspaceIndices = M.fromList $ zipWith (,) myWorkspaces [1..] -- (,) == \x y 
 clickable ws = "<action=xdotool key super+"++show i++">"++ws++"</action>"
     where i = fromJust $ M.lookup ws myWorkspaceIndices
 
+hiveCljsHeadedClass :: String
+hiveCljsHeadedClass = "hive-cljs-headed"
+
+-- _NET_ACTIVE_WINDOW requests normally focus the window, switching workspace.
+-- Test browsers ask for activation on launch and on every page.bringToFront;
+-- ignore theirs so a test run never pulls the view away from the terminal.
+myActivateHook :: ManageHook
+myActivateHook = do
+  c <- className
+  if c == hiveCljsHeadedClass then mempty else doFocus
+
 myManageHook :: XMonad.Query (Data.Monoid.Endo WindowSet)
 myManageHook = composeAll
   -- 'doFloat' forces a window to float.  Useful for dialog boxes and such.
   -- using 'doShift ( myWorkspaces !! 7)' sends program to workspace 8!
   -- I'm doing it this way because otherwise I would have to write out the full
   -- name of my workspaces and the names would be very long if using clickable workspaces.
-  [ className =? "confirm"         --> doFloat
+  -- Headed browsers launched by hive-cljs tests carry this WM_CLASS. They go to
+  -- workspace 5 without changing the view; listed first so its shift wins.
+  [ className =? hiveCljsHeadedClass --> doShift ( myWorkspaces !! 4 )
+  , className =? "confirm"         --> doFloat
   , className =? "file_progress"   --> doFloat
   , className =? "dialog"          --> doFloat
   , className =? "download"        --> doFloat
@@ -772,7 +786,7 @@ main = do
     -- xmobar can never block xmonad (a full pipe used to freeze the WM).
     $ dynamicSBs myStatusBar
     -- added $ pagerHints from taffybar
-    $ addDescrKeys' ((mod4Mask, xK_F1), showKeybindings) myKeys $ ewmh $ docks $ pagerHints $ def
+    $ addDescrKeys' ((mod4Mask, xK_F1), showKeybindings) myKeys $ setEwmhActivateHook myActivateHook $ ewmh $ docks $ pagerHints $ def
     { manageHook         = myManageHook <+> manageDocks
     , handleEventHook    = windowedFullscreenFixEventHook <> swallowEventHook (className =? "Alacritty"  <||> className =? "st-256color" <||> className =? "XTerm") (return True) <> trayerPaddingXmobarEventHook
     , modMask            = myModMask

@@ -1,25 +1,200 @@
 #!/bin/sh
-# Lay out whatever is plugged in: the internal panel (eDP*/LVDS*) first and
-# primary, every other connected output to its right at its preferred mode,
-# everything disconnected off. Run by xmonad at startup and on M-S-r, so a
-# second screen gets its own xmobar without arandr.
+# Lay out whatever is plugged in: the laptop panel first (x=0) and primary,
+# every other connected output to its right at its preferred mode, top
+# aligned, everything else off. Run by xmonad at startup (so on every M-S-r
+# restart too), so a second screen gets its own xmobar without arandr.
+#
+# Primary matters beyond the tray: Xinerama lists the primary output first,
+# so it becomes xmonad's screen 0, which gets the notebook xmobar.
+#
+# Finding the panel. Output NAMES are driver-specific: under the NVIDIA
+# driver (PRIME) the panel is "DP-2", not "eDP-1", so a name match alone
+# picks the wrong output. In order:
+#   1. EDID: the kernel's connected eDP/LVDS/DSI connector in /sys/class/drm
+#      carries the same EDID as one xrandr output; that output is the panel.
+#   2. Name: eDP*/LVDS*/DSI*.
+#   3. Size: the physically smallest connected output, if under ~17.7" (450mm
+#      diagonal). External monitors are bigger.
+#   4. None (lid closed, desktop): the first connected output leads.
+#
+# Sizes are explicit: each output gets its preferred mode (the "+" in
+# xrandr) and an absolute position computed from the widths, never
+# --auto/--right-of chains that depend on the order the driver lists outputs.
+#
+# Safe to run any time: when X already has this layout it does nothing (no
+# flicker, no screen-change storm on restart). Every xrandr call is
+# time-boxed, and a failure leaves X as it was.
+#
+# Usage: screen-layout [--dry-run] [--verbose]
+# Test hooks: SCREEN_LAYOUT_QUERY / SCREEN_LAYOUT_VERBOSE name files holding
+# `xrandr --query` / `xrandr --verbose` output, SCREEN_LAYOUT_DRM replaces
+# /sys/class/drm. A QUERY fixture implies --dry-run.
 
-outputs=$(xrandr --query)
-connected=$(echo "$outputs" | awk '$2 == "connected" {print $1}')
-internal=$(echo "$connected" | grep -m1 -E '^(eDP|LVDS)')
-# No internal panel (lid closed / desktop): the first connected output leads.
-[ -n "$internal" ] || internal=$(echo "$connected" | head -n1)
-[ -n "$internal" ] || exit 0
-
-set -- --output "$internal" --primary --auto --pos 0x0 --rotate normal
-prev=$internal
-for o in $connected; do
-  [ "$o" = "$internal" ] && continue
-  set -- "$@" --output "$o" --auto --right-of "$prev" --rotate normal
-  prev=$o
+dry=0 talk=0
+for a in "$@"; do
+  case $a in
+    --dry-run) dry=1 ;;
+    --verbose) talk=1 ;;
+    *) echo "usage: screen-layout [--dry-run] [--verbose]" >&2; exit 2 ;;
+  esac
 done
-for o in $(echo "$outputs" | awk '$2 == "disconnected" {print $1}'); do
+
+drm=${SCREEN_LAYOUT_DRM:-/sys/class/drm}
+log=${XDG_CACHE_HOME:-$HOME/.cache}/screen-layout.log
+say() { [ $talk = 1 ] && echo "$*" >&2; return 0; }
+note() {
+  say "$*"
+  [ -n "$SCREEN_LAYOUT_QUERY" ] && return 0
+  mkdir -p "${log%/*}" 2>/dev/null && echo "$(date '+%F %T') $*" >> "$log" 2>/dev/null
+  return 0
+}
+xr() { timeout 4 xrandr "$@"; }
+
+if [ -n "$SCREEN_LAYOUT_QUERY" ]; then
+  query=$(cat "$SCREEN_LAYOUT_QUERY") || exit 1
+  dry=1
+else
+  query=$(xr --query) || { note "xrandr --query failed; leaving X as is"; exit 0; }
+fi
+
+# One row per output:  name status primary geom mm_w mm_h mode rate
+#   geom  current WxH+X+Y, or "-" when off
+#   mode  the preferred ("+") mode, else the first listed (xrandr lists the
+#         largest first), else "-" (no modes: cannot be driven)
+#   rate  the rate carrying the "+", else "-"
+table=$(echo "$query" | awk '
+  function flush() {
+    if (name == "") return
+    if (pm == "") pm = (first == "") ? "-" : first
+    print name, status, prim, geom, mmw, mmh, pm, (pr == "" ? "-" : pr)
+  }
+  /^[^ \t]/ {
+    flush(); name = ""
+    if ($1 == "Screen") next
+    name = $1; status = $2; prim = 0; geom = "-"; mmw = 0; mmh = 0
+    pm = ""; pr = ""; first = ""
+    for (i = 3; i <= NF; i++) {
+      if ($i == "primary") prim = 1
+      else if ($i ~ /^[0-9]+x[0-9]+\+[0-9]+\+[0-9]+$/) geom = $i
+      else if ($i ~ /^[0-9]+mm$/ && $(i+1) == "x" && $(i+2) ~ /^[0-9]+mm$/) {
+        mmw = $i + 0; mmh = $(i+2) + 0
+      }
+    }
+    next
+  }
+  /^[ \t]+[0-9]+x[0-9]+/ {
+    if (name == "") next
+    if (first == "") first = $1
+    if (pm == "")
+      for (i = 2; i <= NF; i++)
+        if ($i ~ /\+/) { pm = $1; r = $i; gsub(/[*+]/, "", r); pr = r; break }
+    next
+  }
+  END { flush() }')
+
+field() { echo "$table" | awk -v n="$1" -v f="$2" '$1 == n { print $f; exit }'; }
+
+# Usable = connected AND has a mode to drive it at.
+usable=$(echo "$table" | awk '$2 == "connected" && $7 != "-" { print $1 }')
+[ -n "$usable" ] || { note "no usable connected output; leaving X as is"; exit 0; }
+
+# --- 1. EDID match against the kernel's internal connector -----------------
+panel=""
+kernel_edids=""
+for c in "$drm"/card*-eDP-* "$drm"/card*-LVDS-* "$drm"/card*-DSI-*; do
+  [ -r "$c/status" ] || continue
+  [ "$(cat "$c/status" 2>/dev/null)" = connected ] || continue
+  e=$(od -An -tx1 -v "$c/edid" 2>/dev/null | tr -d ' \n')
+  [ -n "$e" ] && kernel_edids="$kernel_edids $e"
+done
+if [ -n "$kernel_edids" ]; then
+  if [ -n "$SCREEN_LAYOUT_VERBOSE" ]; then
+    verbose=$(cat "$SCREEN_LAYOUT_VERBOSE")
+  elif [ -n "$SCREEN_LAYOUT_QUERY" ]; then
+    verbose=""
+  else
+    verbose=$(xr --verbose) || verbose=""
+  fi
+  edids=$(echo "$verbose" | awk '
+    /^[^ \t]/ { o = $1; f = 0; next }
+    /^[ \t]+EDID:/ { f = 1; next }
+    f && /^[ \t]+[0-9a-fA-F]+$/ { e[o] = e[o] tolower($1); next }
+    { f = 0 }
+    END { for (k in e) print k, e[k] }')
+  for ke in $kernel_edids; do
+    m=$(echo "$edids" | awk -v e="$ke" '$2 == e { print $1; exit }')
+    if [ -n "$m" ] && echo "$usable" | grep -qx "$m"; then panel=$m; break; fi
+  done
+  [ -n "$panel" ] && say "panel by EDID: $panel"
+fi
+
+# --- 2. name ---------------------------------------------------------------
+if [ -z "$panel" ]; then
+  panel=$(echo "$usable" | grep -m1 -E '^(eDP|LVDS|DSI)')
+  [ -n "$panel" ] && say "panel by name: $panel"
+fi
+
+# --- 3. physically smallest, if laptop-sized -------------------------------
+if [ -z "$panel" ]; then
+  panel=$(echo "$table" | awk '
+    $2 == "connected" && $7 != "-" && $5 > 0 && $6 > 0 {
+      d = sqrt($5 * $5 + $6 * $6)
+      if (d < 450 && (best == "" || d < bd)) { best = $1; bd = d }
+    }
+    END { if (best != "") print best }')
+  [ -n "$panel" ] && say "panel by size: $panel"
+fi
+
+# --- 4. no panel: first connected leads -----------------------------------
+lead=${panel:-$(echo "$usable" | head -n1)}
+[ -n "$panel" ] || say "no panel found; $lead leads"
+
+# Lead first, then the rest by name: the same layout whatever order the
+# driver lists outputs in.
+order="$lead $(echo "$usable" | grep -vx "$lead" | sort | tr '\n' ' ')"
+
+# --- desired layout, and whether X already has it -------------------------
+set --
+x=0 same=1
+for o in $order; do
+  mode=$(field "$o" 7) rate=$(field "$o" 8)
+  [ "$(field "$o" 4)" = "$mode+$x+0" ] || same=0
+  if [ "$o" = "$lead" ]; then
+    [ "$(field "$o" 3)" = 1 ] || same=0
+    set -- "$@" --output "$o" --primary
+  else
+    set -- "$@" --output "$o"
+  fi
+  set -- "$@" --mode "$mode" --pos "${x}x0" --rotate normal
+  [ "$rate" = "-" ] || set -- "$@" --rate "$rate"
+  x=$((x + ${mode%%x*}))
+done
+# Everything else goes off; only a lit one means the layout differs.
+for o in $(echo "$table" | awk '{ print $1 }'); do
+  case " $order " in *" $o "*) continue ;; esac
+  [ "$(field "$o" 4)" = "-" ] || same=0
   set -- "$@" --output "$o" --off
 done
 
-xrandr "$@"
+if [ $same = 1 ]; then
+  say "layout already current; nothing to do"
+  [ $dry = 1 ] && echo "unchanged"
+  exit 0
+fi
+
+if [ $dry = 1 ]; then
+  echo "xrandr $*"
+  exit 0
+fi
+
+if xr "$@"; then
+  note "applied: xrandr $*"
+else
+  # A rate the driver refuses should not cost the whole layout: retry and let
+  # the driver pick rates before giving up.
+  # shellcheck disable=SC2046
+  set -- $(echo "$*" | sed 's/ --rate [^ ]*//g')
+  if xr "$@"; then note "applied without rates: xrandr $*"
+  else note "xrandr refused: xrandr $*; leaving X as is"; fi
+fi
+exit 0
