@@ -234,9 +234,12 @@ fi
 # sessions, and every tool call took minutes. The ceiling is a machine fact,
 # so it lives here, not in the shared deps.edn. -J flags land after the
 # alias :jvm-opts in the java command line and the JVM honours the LAST -Xmx.
-HIVE_MCP_XMX="${HIVE_MCP_XMX:-16g}"
-HIVE_MCP_SOFT_MAX_HEAP="${HIVE_MCP_SOFT_MAX_HEAP:-12g}"
-HIVE_MCP_XMS="${HIVE_MCP_XMS:-4g}"
+# 2026-09-30: at -Xmx16g G1 committed 15.8 GB and ignored SoftMaxHeapSize, so
+# RSS reached 19.3 GB with swap full. 10g leaves headroom over the ~9 GB live set.
+HIVE_MCP_XMX="${HIVE_MCP_XMX:-10g}"
+HIVE_MCP_SOFT_MAX_HEAP="${HIVE_MCP_SOFT_MAX_HEAP:-8g}"
+HIVE_MCP_XMS="${HIVE_MCP_XMS:-2g}"
+export MALLOC_ARENA_MAX="${MALLOC_ARENA_MAX:-4}"
 
 exec $EXCLUDE clj -J-Xmx"$HIVE_MCP_XMX" -J-Xms"$HIVE_MCP_XMS" \
   -J-XX:SoftMaxHeapSize="$HIVE_MCP_SOFT_MAX_HEAP" \
