@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+# hive-clj-test — stub-clojure regression test for hive-clj exit codes.
+#
+# Puts a stub `clojure` first on PATH so no real JVM is ever started (matters
+# when swap is exhausted on the box). Covers:
+#   a. impossible headroom (HIVE_CLJ_MARGIN_MB=99999999)            -> 70
+#   b. stub exits 3 with an OOM line                                -> 3
+#   c. stub prints "Ran 0 tests containing 0 assertions." exits 0   -> non-zero (78)
+#   d. stub prints "Ran 5 tests ... 0 failures, 0 errors." exits 0  -> 0
+#
+# Case c is expected to FAIL against the pre-fix script (it currently
+# returns 0). Cases a and b are regression pins, not proof of the fix.
+
+set -uo pipefail
+
+here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+HIVE_CLJ="${HIVE_CLJ_UNDER_TEST:-$here/hive-clj}"
+
+stub_dir=""
+cleanup() { [ -n "$stub_dir" ] && rm -rf "$stub_dir"; }
+trap cleanup EXIT
+
+make_stub() {
+  # make_stub <exit-code> <stdout-line...>
+  local code="$1"; shift
+  stub_dir=$(mktemp -d)
+  cat > "$stub_dir/clojure" <<EOF
+#!/usr/bin/env bash
+$(for line in "$@"; do printf 'echo %q\n' "$line"; done)
+exit $code
+EOF
+  chmod +x "$stub_dir/clojure"
+}
+
+pass=0
+fail=0
+
+check() {
+  local name="$1" expected="$2" actual="$3"
+  if [ "$actual" = "$expected" ]; then
+    echo "PASS: $name (exit $actual)"
+    pass=$((pass + 1))
+  else
+    echo "FAIL: $name — expected exit $expected, got $actual"
+    fail=$((fail + 1))
+  fi
+}
+
+run_with_stub() {
+  PATH="$stub_dir:$PATH" "$HIVE_CLJ" "$@"
+}
+
+# a. impossible headroom -> 70
+make_stub 0 "should never run"
+HIVE_CLJ_MARGIN_MB=99999999 run_with_stub -J-Xmx256m -M:test >/tmp/hive-clj-test-a.log 2>&1
+rc=$?
+check "refusal on impossible headroom" 70 "$rc"
+rm -rf "$stub_dir"
+
+# b. OOM stub exits 3
+make_stub 3 "Terminating due to java.lang.OutOfMemoryError"
+run_with_stub -J-Xmx256m -M:test >/tmp/hive-clj-test-b.log 2>&1
+rc=$?
+check "OOM stub exit passthrough" 3 "$rc"
+rm -rf "$stub_dir"
+
+# c. zero tests, exit 0 from child -> must become non-zero (78)
+make_stub 0 "Ran 0 tests containing 0 assertions."
+run_with_stub -J-Xmx256m -M:test >/tmp/hive-clj-test-c.log 2>&1
+rc=$?
+check "zero-test run refused" 78 "$rc"
+rm -rf "$stub_dir"
+
+# d. real test pass -> 0
+make_stub 0 "Ran 5 tests containing 9 assertions. 0 failures, 0 errors."
+run_with_stub -J-Xmx256m -M:test >/tmp/hive-clj-test-d.log 2>&1
+rc=$?
+check "non-vacuous passing run stays 0" 0 "$rc"
+rm -rf "$stub_dir"
+
+echo "---"
+echo "pass=$pass fail=$fail"
+[ "$fail" -eq 0 ]

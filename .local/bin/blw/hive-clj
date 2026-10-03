@@ -14,7 +14,14 @@
 #   HIVE_CLJ_DEFAULT_MB  heap injected when the caller names none (default 2048)
 #   HIVE_CLJ_FORCE=1     report and launch anyway
 #
-# Exits 70 when it refuses, so a refusal is distinguishable from a test failure.
+#   HIVE_CLJ_VACUOUS_EXIT  exit code for a zero-test run (default 78)
+#
+# Exit codes:
+#   70  refused to launch: not enough headroom (HIVE_CLJ_FORCE=1 overrides)
+#   78  the clojure.test runner reported "Ran 0 tests": a vacuous pass is
+#       not a pass; a script/-X invocation with no test-summary line is
+#       untouched and keeps the child's own exit code
+#   *   otherwise the child process's own exit status, unchanged
 
 set -euo pipefail
 
@@ -84,4 +91,31 @@ if [ "$swap_total" -gt 0 ] && [ "$swap_free" -lt 256 ]; then
        "expect thrashing and be ready to kill this run." >&2
 fi
 
-exec clojure "${args[@]}"
+vacuous_exit="${HIVE_CLJ_VACUOUS_EXIT:-78}"
+
+log=$(mktemp)
+trap 'rm -f "$log"' EXIT
+
+set +e
+clojure "${args[@]}" 2>&1 | tee "$log"
+rc=${PIPESTATUS[0]}
+set -e
+
+if [ "$rc" -ne 0 ]; then
+  exit "$rc"
+fi
+
+# A clojure.test summary line with zero tests ran is a vacuous pass, not a
+# pass: HIVE_CLJ_MARGIN_MB's own sibling problem is a test suite that never
+# loaded. A log with no summary line at all is a non-test invocation (plain
+# script, -X, a REPL) and stays untouched at rc 0.
+summary=$(grep -E '^Ran [0-9]+ tests? containing [0-9]+ assertions?\.' "$log" | tail -1)
+if [ -n "$summary" ]; then
+  tests=$(printf '%s\n' "$summary" | sed -E 's/^Ran ([0-9]+) tests?.*/\1/')
+  if [ "${tests:-0}" -eq 0 ]; then
+    echo "hive-clj: zero tests ran, refusing to report success" >&2
+    exit "$vacuous_exit"
+  fi
+fi
+
+exit 0
