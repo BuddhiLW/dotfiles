@@ -22,6 +22,21 @@
 #       not a pass; a script/-X invocation with no test-summary line is
 #       untouched and keeps the child's own exit code
 #   *   otherwise the child process's own exit status, unchanged
+#
+# The zero-test check matches only the clojure.test/cognitect-runner summary
+# line ("Ran N tests containing M assertions."). A kaocha summary ("N tests,
+# M assertions, 0 failures") is not recognised and is always treated as a
+# non-test (untouched) run.
+#
+# stdout and stderr are kept separate throughout: the child's stdout is
+# teed to a log and to our own stdout, its stderr is teed to a second log
+# and to our own stderr. A caller piping/redirecting one stream never sees
+# the other folded in.
+#
+# The child runs as a background job so a signal to this wrapper's PID can
+# be forwarded to it before we wait; TERM/INT/HUP all forward, so killing
+# the wrapper (not just Ctrl-C to the whole foreground process group) also
+# kills the JVM instead of orphaning it under PID 1.
 
 set -euo pipefail
 
@@ -93,23 +108,49 @@ fi
 
 vacuous_exit="${HIVE_CLJ_VACUOUS_EXIT:-78}"
 
-log=$(mktemp)
-trap 'rm -f "$log"' EXIT
+log_dir=$(mktemp -d)
+trap 'rm -rf "$log_dir"' EXIT
+out_log="$log_dir/stdout.log"
+err_log="$log_dir/stderr.log"
+out_fifo="$log_dir/stdout.fifo"
+err_fifo="$log_dir/stderr.fifo"
+mkfifo "$out_fifo" "$err_fifo"
+
+# Each stream gets its own tee, reading from its own fifo, so stdout and
+# stderr never mix. The child runs as a background job so a signal to
+# THIS process can be forwarded to it before we wait on it; we then also
+# wait on the two tee jobs so the log files are fully flushed before we
+# grep them below (wait on the child alone races the tee's own write).
+tee "$out_log" < "$out_fifo" &
+tee_out=$!
+tee "$err_log" < "$err_fifo" >&2 &
+tee_err=$!
+
+clojure "${args[@]}" > "$out_fifo" 2> "$err_fifo" &
+child=$!
+
+forward() {
+  kill -TERM "$child" 2>/dev/null || true
+}
+trap forward TERM INT HUP
 
 set +e
-clojure "${args[@]}" 2>&1 | tee "$log"
-rc=${PIPESTATUS[0]}
+wait "$child"
+rc=$?
+wait "$tee_out" "$tee_err"
 set -e
+
+trap - TERM INT HUP
 
 if [ "$rc" -ne 0 ]; then
   exit "$rc"
 fi
 
 # A clojure.test summary line with zero tests ran is a vacuous pass, not a
-# pass: HIVE_CLJ_MARGIN_MB's own sibling problem is a test suite that never
-# loaded. A log with no summary line at all is a non-test invocation (plain
-# script, -X, a REPL) and stays untouched at rc 0.
-summary=$(grep -E '^Ran [0-9]+ tests? containing [0-9]+ assertions?\.' "$log" | tail -1)
+# pass. A log with no summary line at all is a non-test invocation (plain
+# script, -X, a REPL) and stays untouched at rc 0: `|| true` keeps a grep
+# miss (rc 1) from tripping `set -e` under pipefail.
+summary=$(grep -E '^Ran [0-9]+ tests? containing [0-9]+ assertions?\.' "$out_log" | tail -1 || true)
 if [ -n "$summary" ]; then
   tests=$(printf '%s\n' "$summary" | sed -E 's/^Ran ([0-9]+) tests?.*/\1/')
   if [ "${tests:-0}" -eq 0 ]; then
