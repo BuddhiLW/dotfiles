@@ -56,10 +56,17 @@ capture() {
         return 1
     fi
 
-    [ "$copy" = yes ] && xclip -sel clip -t image/png -i "$file"
+    # Saved shots put their path on the clipboard, unless the image is going
+    # there; then the path goes to the primary selection instead.
+    if [ "$copy" = yes ]; then
+        xclip -sel clip -t image/png -i "$file"
+        [ "$save" = yes ] && printf '%s' "$file" | xclip -sel primary
+    elif [ "$save" = yes ]; then
+        printf '%s' "$file" | xclip -sel clip
+    fi
 
     if [ "$save" = yes ]; then
-        notify -i "$file" "Screenshot saved" "$file"
+        notify -i "$file" "Screenshot saved, path copied" "$file"
     else
         rm -f "$file"
         notify "Screenshot copied to clipboard"
