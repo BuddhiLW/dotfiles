@@ -1,5 +1,26 @@
 #!/usr/bin/bash
+# Record the laptop panel (eDP) only, wherever it sits in the X screen.
+#
+# The panel is found by screen-layout --panel (EDID, then name, then size):
+# under the NVIDIA driver it is "DP-2", not "eDP-1". Its current geometry
+# (WxH+X+Y) comes from xrandr, so the recording follows the layout instead of
+# a hardcoded size at 0,0, which captured whatever output was leftmost.
 
 DATE=$(date +%Y-%m-%d-%H-%M-%S)
+here=$(dirname "$(readlink -f "$0")")
 
-ffmpeg -f x11grab -video_size 2560x1600 -framerate 30 -i $DISPLAY -c:v libx264 -preset ultrafast -c:a aac "screen-capture-$DATE.mp4"
+panel=$("$here/screen-layout" --panel)
+[ -n "$panel" ] || { echo "screen-capture: no laptop panel found" >&2; exit 1; }
+
+geom=$(xrandr --query | awk -v o="$panel" '
+  $1 == o { for (i = 3; i <= NF; i++) if ($i ~ /^[0-9]+x[0-9]+\+[0-9]+\+[0-9]+$/) { print $i; exit } }')
+[ -n "$geom" ] || { echo "screen-capture: panel $panel is off" >&2; exit 1; }
+
+size=${geom%%+*}
+off=${geom#*+}
+x=${off%%+*}
+y=${off#*+}
+
+echo "screen-capture: recording $panel ($geom)" >&2
+exec ffmpeg -f x11grab -video_size "$size" -framerate 30 -i "$DISPLAY+$x,$y" \
+  -c:v libx264 -preset ultrafast -pix_fmt yuv420p "screen-capture-$DATE.mp4"

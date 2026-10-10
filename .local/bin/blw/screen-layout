@@ -25,17 +25,20 @@
 # flicker, no screen-change storm on restart). Every xrandr call is
 # time-boxed, and a failure leaves X as it was.
 #
-# Usage: screen-layout [--dry-run] [--verbose]
+# Usage: screen-layout [--dry-run] [--verbose] [--panel]
+#   --panel  print the panel's output name (empty if none) and exit, changing
+#            nothing; screen-capture uses it to record only the laptop screen.
 # Test hooks: SCREEN_LAYOUT_QUERY / SCREEN_LAYOUT_VERBOSE name files holding
 # `xrandr --query` / `xrandr --verbose` output, SCREEN_LAYOUT_DRM replaces
 # /sys/class/drm. A QUERY fixture implies --dry-run.
 
-dry=0 talk=0
+dry=0 talk=0 only_panel=0
 for a in "$@"; do
   case $a in
     --dry-run) dry=1 ;;
     --verbose) talk=1 ;;
-    *) echo "usage: screen-layout [--dry-run] [--verbose]" >&2; exit 2 ;;
+    --panel) only_panel=1 ;;
+    *) echo "usage: screen-layout [--dry-run] [--verbose] [--panel]" >&2; exit 2 ;;
   esac
 done
 
@@ -143,6 +146,11 @@ if [ -z "$panel" ]; then
     }
     END { if (best != "") print best }')
   [ -n "$panel" ] && say "panel by size: $panel"
+fi
+
+if [ $only_panel = 1 ]; then
+  echo "$panel"
+  exit 0
 fi
 
 # --- 4. no panel: first connected leads -----------------------------------
