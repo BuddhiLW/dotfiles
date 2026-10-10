@@ -1,10 +1,75 @@
 #!/usr/bin/bash
+# Record a screen with the default PulseAudio source.
+#
+# Usage: screen-capture-with-audio [CHOICE]
+#   No CHOICE: pick one with dmenu, like maimpick. The laptop panel is listed
+#   first, so Enter records it. CHOICE skips the prompt:
+#     panel   the laptop panel (screen-layout --panel; "DP-2" under NVIDIA)
+#     all     the whole X screen, every output
+#     OUTPUT  an xrandr output name, e.g. HDMI-0
+#
+# Geometry (WxH+X+Y) comes from xrandr, so the recording follows the layout
+# instead of a hardcoded size at 0,0, which captured whatever output was
+# leftmost.
 
 DATE=$(date +%Y-%m-%d-%H-%M-%S)
+here=$(dirname "$(readlink -f "$0")")
 
-/usr/bin/ffmpeg -f x11grab -video_size 2560x1600 -framerate 30 -i "$DISPLAY" \
+notify() {
+    command -v notify-send >/dev/null && notify-send -a screen-capture "$@"
+}
+die() {
+    echo "screen-capture-with-audio: $*" >&2
+    notify "Screen capture failed" "$*"
+    exit 1
+}
+
+query=$(xrandr --query) || die "xrandr --query failed"
+
+# Lines "NAME WxH+X+Y" for every connected output that is on.
+outputs=$(awk '$2 == "connected" {
+    for (i = 3; i <= NF; i++) if ($i ~ /^[0-9]+x[0-9]+\+[0-9]+\+[0-9]+$/) { print $1, $i; break } }' <<<"$query")
+panel=$("$here/screen-layout" --panel)
+
+geometry_of() { awk -v o="$1" '$1 == o { print $2 }' <<<"$outputs"; }
+
+if [ -n "$1" ]; then
+    choice=$1
+else
+    menu=$(
+        [ -n "$panel" ] && echo "laptop panel ($panel)"
+        awk -v p="$panel" '$1 != p { print $1 " (" $2 ")" }' <<<"$outputs"
+        echo "all screens"
+    )
+    choice=$(printf '%s\n' "$menu" | dmenu -l 9 -i -p "Record which screen?")
+    [ -n "$choice" ] || exit 0
+fi
+
+case "$choice" in
+    panel|"laptop panel"*)
+        [ -n "$panel" ] || die "no laptop panel found"
+        name=$panel ;;
+    all|"all screens")
+        name=all ;;
+    *)
+        name=${choice%% *} ;;
+esac
+
+if [ "$name" = all ]; then
+    geom=$(awk '/^Screen [0-9]+:/ { for (i = 1; i <= NF; i++) if ($i == "current") {
+        sub(/,/, "", $(i+3)); print $(i+1) "x" $(i+3) "+0+0"; exit } }' <<<"$query")
+else
+    geom=$(geometry_of "$name")
+fi
+[ -n "$geom" ] || die "output $name is not connected or is off"
+
+size=${geom%%+*}
+off=${geom#*+}
+x=${off%%+*}
+y=${off#*+}
+
+echo "screen-capture-with-audio: recording $name ($geom)" >&2
+exec /usr/bin/ffmpeg -f x11grab -video_size "$size" -framerate 30 -i "$DISPLAY+$x,$y" \
     -f pulse -i default \
-    -c:v libx264 -preset ultrafast -c:a aac \
+    -c:v libx264 -preset ultrafast -pix_fmt yuv420p -c:a aac \
     "screen-capture-$DATE.mp4"
-
-
