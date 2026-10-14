@@ -158,6 +158,9 @@ windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace
 -- Update your startupHook to use the new function
 myStartupHook :: X ()
 myStartupHook = do
+    -- A restart (M-S-r) resumes the saved windowset, screen positions and
+    -- all, so a layout screen-layout just changed would be ignored.
+    rescreen
     spawnOnce (mySoundPlayer ++ startupSound)
     spawn "killall conky"   -- kill current conky on each restart
     spawn "killall trayer"  -- kill current trayer on each restart
