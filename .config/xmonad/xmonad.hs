@@ -30,6 +30,7 @@ import XMonad.Hooks.DynamicLog (dynamicLogWithPP, wrap, xmobarPP, xmobarColor, s
 import XMonad.Hooks.EwmhDesktops  -- for some fullscreen events, also for xcomposite in obs.
 import XMonad.Hooks.ManageDocks (avoidStruts, docks, manageDocks, ToggleStruts(..))
 import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat, doCenterFloat, doFocus)
+import XMonad.Hooks.Rescreen (addRandrChangeHook)
 import XMonad.Hooks.ServerMode
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.StatusBar
@@ -789,6 +790,7 @@ main = do
     -- text from a root-window property instead of a pipe, so a hung or dead
     -- xmobar can never block xmonad (a full pipe used to freeze the WM).
     $ dynamicSBs myStatusBar
+    $ addRandrChangeHook myRandrChangeHook
     -- added $ pagerHints from taffybar
     $ addDescrKeys' ((mod4Mask, xK_F1), showKeybindings) myKeys $ setEwmhActivateHook myActivateHook $ ewmh $ docks $ pagerHints $ def
     { manageHook         = myManageHook <+> manageDocks
@@ -803,6 +805,20 @@ main = do
     , focusedBorderColor = myFocusColor
     , focusFollowsMouse  = myMouseFocus
     }
+
+-- xmonad re-reads the screens only when the root window changes size.
+-- Rearranging monitors inside the same bounding box (screen-pick, M-<F8>:
+-- 7040x1600 either way) does not, so windows stayed laid out for the old
+-- positions: cut off at the top, a gap above the bar. Re-read them on every
+-- other RandR change too, and respawn the bars when the screens really moved.
+myRandrChangeHook :: X ()
+myRandrChangeHook = do
+  old <- screenRects
+  rescreen
+  new <- screenRects
+  when (old /= new) $ killAllStatusBars >> startAllStatusBars
+  where
+    screenRects = gets (map (screenRect . W.screenDetail) . W.screens . windowset)
 
 -- Screen 0 is the notebook panel (bigger font), every other screen gets the
 -- external-monitor bar. All bars show the same text, read by xmobar's
