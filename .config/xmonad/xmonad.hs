@@ -653,6 +653,10 @@ myKeys c =
   [ ("M-.", addName "Switch focus to next monitor" $ nextScreen)
   , ("M-,", addName "Switch focus to prev monitor" $ prevScreen)
   -- , ("M-S-d", addName "Detect and setup monitors" $ setupMonitors)
+    -- dmenu asks left/middle/right, saves it to ~/.config/screen-layout.conf
+    -- and applies it. No restart needed: xmonad picks up the xrandr change
+    -- and respawns the bars itself.
+  , ("M-<F8>", addName "Pick monitor order (screen-pick)" $ spawn "$HOME/.local/bin/blw/screen-pick")
   ]
 
   -- Switch layouts

@@ -1,8 +1,15 @@
 #!/bin/sh
-# Lay out whatever is plugged in: the laptop panel first (x=0) and primary,
-# every other connected output to its right at its preferred mode, top
-# aligned, everything else off. Run by xmonad at startup (so on every M-S-r
-# restart too), so a second screen gets its own xmobar without arandr.
+# Lay out whatever is plugged in: the laptop panel primary, every connected
+# output side by side at its preferred mode, everything else off. Run by
+# xmonad at startup (so on every M-S-r restart too), so a second screen gets
+# its own xmobar without arandr.
+#
+# Left-to-right order and vertical alignment come from
+# ~/.config/screen-layout.conf (SCREEN_LAYOUT_CONF overrides the path):
+#   order = HDMI-0 panel DP-0    # xrandr names; "panel" = the laptop screen
+#   align = center               # top (default) | center | bottom
+# Without it: the panel first (x=0), the rest to its right by name, top
+# aligned. Outputs the order does not name follow the ones it does.
 #
 # Primary matters beyond the tray: Xinerama lists the primary output first,
 # so it becomes xmonad's screen 0, which gets the notebook xmobar.
@@ -43,6 +50,7 @@ for a in "$@"; do
 done
 
 drm=${SCREEN_LAYOUT_DRM:-/sys/class/drm}
+conf=${SCREEN_LAYOUT_CONF:-${XDG_CONFIG_HOME:-$HOME/.config}/screen-layout.conf}
 log=${XDG_CACHE_HOME:-$HOME/.cache}/screen-layout.log
 say() { [ $talk = 1 ] && echo "$*" >&2; return 0; }
 note() {
@@ -157,23 +165,58 @@ fi
 lead=${panel:-$(echo "$usable" | head -n1)}
 [ -n "$panel" ] || say "no panel found; $lead leads"
 
-# Lead first, then the rest by name: the same layout whatever order the
-# driver lists outputs in.
-order="$lead $(echo "$usable" | grep -vx "$lead" | sort | tr '\n' ' ')"
+# --- order and alignment ----------------------------------------------------
+# Left to right: the outputs the config names, in its order ("panel" is the
+# laptop screen, whatever its name), then the lead, then the rest by name:
+# the same layout whatever order the driver lists outputs in. Names that are
+# not connected are skipped, so one config serves docked and undocked.
+conf_get() {
+  [ -r "$conf" ] || return 0
+  sed -n "s/^[ \t]*$1[ \t]*=[ \t]*//p" "$conf" | sed 's/[ \t]*#.*//' | tail -n1
+}
+want=$(conf_get order) align=$(conf_get align)
+case $align in
+  top|center|bottom) ;;
+  "") align=top ;;
+  *) note "unknown align '$align' in $conf; using top"; align=top ;;
+esac
+
+order=""
+for o in $want $lead $(echo "$usable" | sort); do
+  [ "$o" = panel ] && o=$panel
+  [ -n "$o" ] || continue
+  echo "$usable" | grep -qx "$o" || continue
+  case " $order " in *" $o "*) continue ;; esac
+  order="$order $o"
+done
+say "order:$order, align: $align"
+
+# Tallest mode, to align the shorter screens against.
+tall=0
+for o in $order; do
+  h=$(field "$o" 7); h=${h#*x}; h=${h%%[!0-9]*}
+  [ "$h" -gt "$tall" ] && tall=$h
+done
 
 # --- desired layout, and whether X already has it -------------------------
 set --
 x=0 same=1
 for o in $order; do
   mode=$(field "$o" 7) rate=$(field "$o" 8)
-  [ "$(field "$o" 4)" = "$mode+$x+0" ] || same=0
+  h=${mode#*x}; h=${h%%[!0-9]*}
+  case $align in
+    top) y=0 ;;
+    center) y=$(( (tall - h) / 2 )) ;;
+    bottom) y=$((tall - h)) ;;
+  esac
+  [ "$(field "$o" 4)" = "$mode+$x+$y" ] || same=0
   if [ "$o" = "$lead" ]; then
     [ "$(field "$o" 3)" = 1 ] || same=0
     set -- "$@" --output "$o" --primary
   else
     set -- "$@" --output "$o"
   fi
-  set -- "$@" --mode "$mode" --pos "${x}x0" --rotate normal
+  set -- "$@" --mode "$mode" --pos "${x}x${y}" --rotate normal
   [ "$rate" = "-" ] || set -- "$@" --rate "$rate"
   x=$((x + ${mode%%x*}))
 done
