@@ -10,3 +10,6 @@ export GLFW_IM_MODULE=ibus
 # load SSH keys from pass into the agent (prompts via gpg pinentry / zenity)
 systemctl --user import-environment DISPLAY XAUTHORITY
 systemctl --user start --no-block ssh-load.service
+
+# mouse pointer speed (M-C-= / M-C-- to change), saved in ~/.config/pointer-speed
+pointer-speed apply 2>/dev/null &

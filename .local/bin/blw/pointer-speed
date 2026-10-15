@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+# pointer-speed: step mouse pointer speed up/down (bound to M-C-= / M-C-- in xmonad).
+#
+#   pointer-speed up|down     step by 0.1 and apply
+#   pointer-speed set <v>     set an explicit level
+#   pointer-speed reset       back to 0 (libinput default)
+#   pointer-speed apply       re-apply the saved level (login, mouse reconnect)
+#   pointer-speed get         print the saved level
+#
+# Level runs from -1 to 3. From -1..1 it is libinput's "Accel Speed".
+# Above 1 libinput is maxed out, so the extra is a linear multiplier on the
+# pointer via the Coordinate Transformation Matrix (e.g. 1.5 = 1.5x travel).
+# Touchpads are left alone.
+set -euo pipefail
+
+STATE="${XDG_CONFIG_HOME:-$HOME/.config}/pointer-speed"
+STEP=0.1 MIN=-1 MAX=3
+
+die() { notify-send -u critical "pointer-speed" "$1" 2>/dev/null; echo "pointer-speed: $1" >&2; exit 1; }
+command -v xinput >/dev/null || die "xinput not installed, run: sudo apt install xinput"
+
+saved() { [[ -r $STATE ]] && cat "$STATE" || echo 0; }
+clamp() { awk -v v="$1" -v lo="$MIN" -v hi="$MAX" 'BEGIN{ if (v<lo) v=lo; if (v>hi) v=hi; printf "%.2f", v }'; }
+
+# ids of slave pointers that use libinput and are not touchpads
+mice() {
+  local id props
+  for id in $(xinput list --short | awk '/slave +pointer/ { if (match($0, /id=[0-9]+/)) print substr($0, RSTART+3, RLENGTH-3) }'); do
+    props=$(xinput list-props "$id" 2>/dev/null) || continue
+    grep -q 'libinput Accel Speed (' <<<"$props" || continue
+    grep -q 'libinput Tapping Enabled (' <<<"$props" && continue
+    echo "$id"
+  done
+}
+
+apply() {
+  local level=$1 accel scale id
+  accel=$(awk -v v="$level" 'BEGIN{ printf "%.2f", (v>1 ? 1 : v) }')
+  scale=$(awk -v v="$level" 'BEGIN{ printf "%.2f", (v>1 ? v : 1) }')
+  for id in $(mice); do
+    xinput set-prop "$id" "libinput Accel Speed" "$accel"
+    xinput set-prop "$id" "Coordinate Transformation Matrix" "$scale" 0 0 0 "$scale" 0 0 0 1
+  done
+}
+
+notify() {
+  local level=$1 pct
+  pct=$(awk -v v="$level" -v lo="$MIN" -v hi="$MAX" 'BEGIN{ printf "%d", (v-lo)/(hi-lo)*100 }')
+  if command -v dunstify >/dev/null; then
+    dunstify -a pointer-speed -r 91190 -t 1200 -h "int:value:$pct" "Pointer speed" "$level" 2>/dev/null || true
+  else
+    notify-send -t 1200 "Pointer speed" "$level" 2>/dev/null || true
+  fi
+}
+
+cur=$(saved)
+case "${1:-get}" in
+  up)    new=$(clamp "$(awk -v a="$cur" -v s="$STEP" 'BEGIN{print a+s}')") ;;
+  down)  new=$(clamp "$(awk -v a="$cur" -v s="$STEP" 'BEGIN{print a-s}')") ;;
+  set)   new=$(clamp "${2:?usage: pointer-speed set <level>}") ;;
+  reset) new=$(clamp 0) ;;
+  apply) apply "$cur"; exit 0 ;;
+  get)   echo "$cur"; exit 0 ;;
+  *)     sed -n '2,15p' "$0" | sed 's/^# \{0,1\}//'; exit 2 ;;
+esac
+
+mkdir -p "$(dirname "$STATE")"
+echo "$new" >"$STATE"
+apply "$new"
+notify "$new"

@@ -30,6 +30,7 @@ import XMonad.Hooks.DynamicLog (dynamicLogWithPP, wrap, xmobarPP, xmobarColor, s
 import XMonad.Hooks.EwmhDesktops  -- for some fullscreen events, also for xcomposite in obs.
 import XMonad.Hooks.ManageDocks (avoidStruts, docks, manageDocks, ToggleStruts(..))
 import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat, doCenterFloat, doFocus)
+import XMonad.Hooks.Rescreen (addRandrChangeHook)
 import XMonad.Hooks.ServerMode
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.StatusBar
@@ -157,6 +158,9 @@ windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace
 -- Update your startupHook to use the new function
 myStartupHook :: X ()
 myStartupHook = do
+    -- A restart (M-S-r) resumes the saved windowset, screen positions and
+    -- all, so a layout screen-layout just changed would be ignored.
+    rescreen
     spawnOnce (mySoundPlayer ++ startupSound)
     spawn "killall conky"   -- kill current conky on each restart
     spawn "killall trayer"  -- kill current trayer on each restart
@@ -653,6 +657,10 @@ myKeys c =
   [ ("M-.", addName "Switch focus to next monitor" $ nextScreen)
   , ("M-,", addName "Switch focus to prev monitor" $ prevScreen)
   -- , ("M-S-d", addName "Detect and setup monitors" $ setupMonitors)
+    -- dmenu asks left/middle/right, saves it to ~/.config/screen-layout.conf
+    -- and applies it. No restart needed: xmonad picks up the xrandr change
+    -- and respawns the bars itself.
+  , ("M-<F8>", addName "Pick monitor order (screen-pick)" $ spawn "$HOME/.local/bin/blw/screen-pick")
   ]
 
   -- Switch layouts
@@ -685,7 +693,9 @@ myKeys c =
   [ ("M-S-<Up>", addName "Increase clients in master pane"   $ sendMessage (IncMasterN 1))
   , ("M-S-<Down>", addName "Decrease clients in master pane" $ sendMessage (IncMasterN (-1)))
   , ("M-=", addName "Increase max # of windows for layout"   $ increaseLimit)
-  , ("M--", addName "Decrease max # of windows for layout"   $ decreaseLimit)]
+  , ("M--", addName "Decrease max # of windows for layout"   $ decreaseLimit)
+  , ("M-C-=", addName "Increase pointer speed"               $ spawn "pointer-speed up")
+  , ("M-C--", addName "Decrease pointer speed"               $ spawn "pointer-speed down")]
 
   -- Sublayouts
   -- This is used to push windows to tabbed sublayouts, or pull them out of it.
@@ -785,8 +795,9 @@ main = do
     -- text from a root-window property instead of a pipe, so a hung or dead
     -- xmobar can never block xmonad (a full pipe used to freeze the WM).
     $ dynamicSBs myStatusBar
+    $ addRandrChangeHook myRandrChangeHook
     -- added $ pagerHints from taffybar
-    $ addDescrKeys' ((mod4Mask, xK_F1), showKeybindings) myKeys $ setEwmhActivateHook myActivateHook $ ewmh $ docks $ pagerHints $ def
+    $ addDescrKeys' ((mod4Mask, xK_F1), showKeybindings) myKeys $ setEwmhActivateHook myActivateHook $ ewmhFullscreen $ ewmh $ docks $ pagerHints $ def
     { manageHook         = myManageHook <+> manageDocks
     , handleEventHook    = windowedFullscreenFixEventHook <> swallowEventHook (className =? "Alacritty"  <||> className =? "st-256color" <||> className =? "XTerm") (return True) <> trayerPaddingXmobarEventHook
     , modMask            = myModMask
@@ -799,6 +810,20 @@ main = do
     , focusedBorderColor = myFocusColor
     , focusFollowsMouse  = myMouseFocus
     }
+
+-- xmonad re-reads the screens only when the root window changes size.
+-- Rearranging monitors inside the same bounding box (screen-pick, M-<F8>:
+-- 7040x1600 either way) does not, so windows stayed laid out for the old
+-- positions: cut off at the top, a gap above the bar. Re-read them on every
+-- other RandR change too, and respawn the bars when the screens really moved.
+myRandrChangeHook :: X ()
+myRandrChangeHook = do
+  old <- screenRects
+  rescreen
+  new <- screenRects
+  when (old /= new) $ killAllStatusBars >> startAllStatusBars
+  where
+    screenRects = gets (map (screenRect . W.screenDetail) . W.screens . windowset)
 
 -- Screen 0 is the notebook panel (bigger font), every other screen gets the
 -- external-monitor bar. All bars show the same text, read by xmobar's

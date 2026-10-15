@@ -1,0 +1,93 @@
+#!/bin/sh
+# Pick the screens' left-to-right order with dmenu, like maimpick: "Left
+# screen?", "Middle screen?", ... (the last one left needs no question). The
+# order goes to ~/.config/screen-layout.conf and screen-layout applies it, so
+# M-S-r and the next login keep it. Bound to M-<F8> in xmonad.
+#
+# Usage: screen-pick [--dry-run]
+#   --dry-run  print the xrandr call for the picked order; change nothing.
+# Test hooks: SCREEN_PICK_MENU replaces "dmenu -l 9 -i -p" (gets the prompt
+# as its last argument, rows on stdin); SCREEN_LAYOUT_CONF as in screen-layout.
+
+dry=0
+case $1 in
+  --dry-run) dry=1 ;;
+  "") ;;
+  *) echo "usage: screen-pick [--dry-run]" >&2; exit 2 ;;
+esac
+
+conf=${SCREEN_LAYOUT_CONF:-${XDG_CONFIG_HOME:-$HOME/.config}/screen-layout.conf}
+layout=$(dirname "$0")/screen-layout
+menu=${SCREEN_PICK_MENU:-dmenu -l 9 -i -p}
+notify() { command -v notify-send >/dev/null && notify-send -a screen-pick "$@"; return 0; }
+
+panel=$("$layout" --panel)
+
+# One row per connected output: name, preferred mode, diagonal, "laptop".
+rows=$(timeout 4 xrandr --query | awk -v panel="$panel" '
+  function flush() {
+    if (name == "") return
+    d = (mmw > 0) ? sprintf("%.0f\"", sqrt(mmw * mmw + mmh * mmh) / 25.4) : ""
+    printf "%-8s %-10s %4s%s\n", name, (pm != "" ? pm : first), d, (name == panel ? "  laptop" : "")
+  }
+  /^[^ \t]/ {
+    flush(); name = ""
+    if ($2 != "connected") next
+    name = $1; mmw = 0; mmh = 0; pm = ""; first = ""
+    for (i = 3; i <= NF; i++)
+      if ($i ~ /^[0-9]+mm$/ && $(i+1) == "x") { mmw = $i + 0; mmh = $(i+2) + 0 }
+    next
+  }
+  name != "" && /^[ \t]+[0-9]+x[0-9]+/ {
+    if (first == "") first = $1
+    if (pm == "" && $0 ~ /\+/) pm = $1
+  }
+  END { flush() }')
+[ -n "$rows" ] || { notify "screen-pick: no connected screen"; exit 1; }
+
+count=$(echo "$rows" | grep -c .)
+place() {
+  case $count:$1 in
+    2:1) echo Left ;; 2:2) echo Right ;;
+    3:1) echo Left ;; 3:2) echo Middle ;; 3:3) echo Right ;;
+    *) echo "Screen $1 of $count (from the left)" ;;
+  esac
+}
+
+order="" i=1 left=$rows
+while [ -n "$left" ]; do
+  if [ "$(echo "$left" | grep -c .)" = 1 ]; then
+    pick=$left
+  else
+    pick=$(echo "$left" | $menu "$(place $i) screen?") || exit 0
+  fi
+  name=${pick%% *}
+  echo "$left" | grep -q "^$name " || { notify "screen-pick: unknown screen '$name'"; exit 1; }
+  # Save the laptop as "panel", so the order survives a driver renaming it.
+  if [ "$name" = "$panel" ]; then order="$order panel"; else order="$order $name"; fi
+  left=$(echo "$left" | grep -v "^$name ")
+  i=$((i + 1))
+done
+order=${order# }
+
+# Rewrite just the order line, keeping the rest (align, comments). Written in
+# place, not moved over, so a hardlinked conf stays linked.
+tmp=$(mktemp) || exit 1
+trap 'rm -f "$tmp"' EXIT
+if [ -r "$conf" ] && grep -q '^[ \t]*order[ \t]*=' "$conf"; then
+  sed "s/^[ \t]*order[ \t]*=.*/order = $order/" "$conf" > "$tmp"
+else
+  { [ -r "$conf" ] && cat "$conf"; echo "order = $order"; } > "$tmp"
+fi
+
+if [ $dry = 1 ]; then
+  echo "order = $order"
+  SCREEN_LAYOUT_CONF=$tmp "$layout" --dry-run
+  exit 0
+fi
+
+if ! { mkdir -p "${conf%/*}" && cat "$tmp" > "$conf"; }; then
+  notify "screen-pick: cannot write $conf"; exit 1
+fi
+"$layout"
+notify "Screens, left to right" "$order"
