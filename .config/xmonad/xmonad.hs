@@ -531,6 +531,8 @@ myManageHook = composeAll
   , className =? "splash"          --> doFloat
   , className =? "toolbar"         --> doFloat
   , className =? "Yad"             --> doCenterFloat
+  -- hive guard permission dialogs (hive-notify :dialog backend): float top-right, beside dunst.
+  , title =? "hive ask"            --> customFloating (W.RationalRect 0.69 0.03 0.30 0.22)
   , title =? "Oracle VM VirtualBox Manager"  --> doFloat
   , title =? "Mozilla Firefox"     --> doShift ( myWorkspaces !! 1 )
   , className =? "Brave-browser"   --> doShift ( myWorkspaces !! 1 )
