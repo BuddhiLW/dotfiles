@@ -1024,16 +1024,16 @@
 
 ;; config.el
 ;; Major mode for .cljel files
-(use-package! clojure-elisp-mode
-  :load-path "~/PP/clojure-elisp/resources/clojure-elisp/"
-  :mode "\\.cljel\\'")
+;; Appended, not prepended: the runtime clel comes from MELPA, and the
+;; checkout's clel.el must not shadow it.
+(add-to-list 'load-path "~/PP/clojure-elisp/resources/clojure-elisp/" t)
+(use-package! clojure-elisp-mode :mode "\\.cljel\\'")
 
 ;; CIDER integration for ClojureElisp - provides eval keybindings
 ;; C-c C-e  — eval last sexp
 ;; C-c C-c  — eval defun at point
 ;; C-c C-k  — compile/eval entire buffer
 (after! cider
-  (add-to-list 'load-path "~/PP/clojure-elisp/resources/clojure-elisp/")
   (require 'cider-clojure-elisp)
   ;; Auto-enable cider-cljel-mode in clojure-elisp-mode buffers
   (add-hook 'clojure-elisp-mode-hook #'cider-cljel-mode))
@@ -1425,6 +1425,7 @@
 ;;     (add-hook (intern (concat (symbol-name mode) "-hook")) #'lsp-deferred)))
 
 (load! "./blw-func/ewal.el")
+(load! "./blw-func/tod.el")
 
 ;; defines blw/run-yazi
 (load! "./blw-func/yazi.el")

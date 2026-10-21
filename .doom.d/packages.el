@@ -21,6 +21,12 @@
 
 (package! ewal-doom-themes)
 (package! doom-themes)
+
+;; tod: themes that follow the sun, the moon and the planetary hours.
+;; Its runtime, clel, is built with MELPA's own recipe.
+(package! clel :recipe (:host github :repo "BuddhiLW/clojure-elisp"
+                        :files ("resources/clojure-elisp/clel.el")))
+(package! tod :recipe (:host github :repo "BuddhiLW/tod" :files ("tod*.el")))
 (package! doom-modeline-now-playing)
 (package! doom-modeline)
 
