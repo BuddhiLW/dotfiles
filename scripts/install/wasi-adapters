@@ -1,0 +1,28 @@
+#!/usr/bin/bash
+# WASI preview1 -> preview2 adapters from the wasmtime release, used by
+#   wasm-tools component new core.wasm --adapt wasi_snapshot_preview1=<adapter>
+# Installs into ~/.local/share/wasi-adapters/ (override WASI_ADAPTERS_DIR).
+# Version: WASMTIME_VERSION (default: latest release). Idempotent: skips files present.
+set -euo pipefail
+
+dir="${WASI_ADAPTERS_DIR:-$HOME/.local/share/wasi-adapters}"
+mkdir -p "$dir"
+
+version="${WASMTIME_VERSION:-}"
+if [ -z "$version" ]; then
+  version="$(curl -fsSL -o /dev/null -w '%{url_effective}' https://github.com/bytecodealliance/wasmtime/releases/latest)"
+  version="${version##*/}"
+fi
+
+for kind in reactor command proxy; do
+  file="wasi_snapshot_preview1.${kind}.wasm"
+  if [ -s "$dir/$file" ]; then
+    echo "present: $dir/$file"
+    continue
+  fi
+  curl -fsSL -o "$dir/$file.tmp" \
+    "https://github.com/bytecodealliance/wasmtime/releases/download/${version}/${file}"
+  mv "$dir/$file.tmp" "$dir/$file"
+  echo "installed: $dir/$file ($version)"
+done
+echo "$version" > "$dir/VERSION"
