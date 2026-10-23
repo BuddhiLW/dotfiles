@@ -1,0 +1,86 @@
+#!/usr/bin/bash
+# Install an Eclipse Temurin JDK from Adoptium into ~/.jdks, no sudo.
+#
+#   ./java           # newest feature release (27 as of 2026-10)
+#   ./java 25        # a specific feature version, e.g. the current LTS
+#   NO_LINK=1 ./java # install only, leave ~/.local/bin alone
+#
+# Each build lives under ~/.jdks/<release> (jdk-27.0.1+8, ...);
+# ~/.jdks/temurin-<N> points at the newest build of that feature version, and
+# ~/.jdks/current at the last one installed. Re-running picks up patch releases.
+# The JDK's bin/* is linked into ~/.local/bin, which shadows the apt
+# openjdk in /usr/bin as long as ~/.local/bin comes first on PATH.
+
+set -euo pipefail
+
+API=https://api.adoptium.net/v3
+JDKS="$HOME/.jdks"
+BIN="$HOME/.local/bin"
+
+case "$(uname -m)" in
+  x86_64|amd64)  ARCH=x64 ;;
+  aarch64|arm64) ARCH=aarch64 ;;
+  *) echo "unsupported arch: $(uname -m)" >&2; exit 1 ;;
+esac
+
+FEATURE="${1:-$(curl -fsSL "$API/info/available_releases" |
+  python3 -c 'import json,sys; print(json.load(sys.stdin)["most_recent_feature_release"])')}"
+
+# --- resolve the latest GA build of that feature version --------------------
+read -r RELEASE URL SHA < <(
+  curl -fsSL "$API/assets/latest/$FEATURE/hotspot?architecture=$ARCH&image_type=jdk&os=linux&vendor=eclipse" |
+  python3 -c "
+import json,sys
+a=json.load(sys.stdin)
+if not a:
+    sys.exit('no Temurin $FEATURE JDK for linux/$ARCH')
+p=a[0]['binary']['package']
+print(a[0]['release_name'], p['link'], p['checksum'])"
+)
+
+DEST="$JDKS/$RELEASE"
+if [ -x "$DEST/bin/java" ]; then
+  echo "Temurin $RELEASE already installed at $DEST"
+else
+  TMP="$(mktemp -d)"
+  trap 'rm -rf "$TMP"' EXIT
+
+  echo "downloading $URL"
+  curl -fL --progress-bar -o "$TMP/jdk.tar.gz" "$URL"
+
+  echo "verifying sha256"
+  echo "$SHA  $TMP/jdk.tar.gz" | sha256sum -c -
+
+  echo "extracting to $DEST"
+  mkdir -p "$DEST"
+  tar -xzf "$TMP/jdk.tar.gz" -C "$DEST" --strip-components=1
+fi
+
+# A pre-existing real temurin-<N> directory (hand-unpacked) is replaced by the link.
+ALIAS="$JDKS/temurin-$FEATURE"
+if [ -d "$ALIAS" ] && [ ! -L "$ALIAS" ]; then
+  echo "replacing hand-installed $ALIAS with a link to $RELEASE"
+  rm -rf "$ALIAS"
+fi
+ln -sfn "$RELEASE" "$ALIAS"
+ln -sfn "$RELEASE" "$JDKS/current"
+
+# --- link it onto PATH ------------------------------------------------------
+if [ -z "${NO_LINK:-}" ]; then
+  mkdir -p "$BIN"
+  for f in "$JDKS/current/bin/"*; do
+    ln -sfn "$f" "$BIN/$(basename "$f")"
+  done
+fi
+
+echo
+"$JDKS/current/bin/java" -version
+echo "installed: $DEST"
+echo "alias:     $ALIAS, $JDKS/current"
+[ -z "${NO_LINK:-}" ] && echo "linked:    $BIN/{java,javac,jshell,...}"
+echo "JAVA_HOME: export JAVA_HOME=\$HOME/.jdks/current"
+
+case ":$PATH:" in
+  *":$BIN:"*) ;;
+  *) echo "NOTE: $BIN is not on your PATH -- add it to your shell rc." ;;
+esac
