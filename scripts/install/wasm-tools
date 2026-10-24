@@ -1,0 +1,13 @@
+#!/usr/bin/bash
+# wasm-tools (bytecodealliance): component new/wit/validate for Wasm components.
+# Idempotent: does nothing when wasm-tools is already on PATH.
+set -euo pipefail
+
+if command -v wasm-tools >/dev/null 2>&1; then
+  echo "wasm-tools already installed: $(wasm-tools --version)"
+  exit 0
+fi
+
+command -v cargo >/dev/null 2>&1 || { echo "cargo not found: run scripts/install/rust first" >&2; exit 1; }
+cargo install --locked wasm-tools
+wasm-tools --version
