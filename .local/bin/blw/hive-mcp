@@ -75,6 +75,7 @@ EXCLUDE=""
 milvus_reachable() {
   local host
   for host in $MILVUS_HOSTS; do
+    # shellcheck disable=SC2086  # EXCLUDE is an optional command prefix
     if timeout 2 $EXCLUDE bash -c "</dev/tcp/$host/$MILVUS_PORT" 2>/dev/null; then
       return 0
     fi
@@ -137,6 +138,7 @@ wait_for_milvus() {
   local attempt=1
   while (( SECONDS - start < MILVUS_WAIT_TIMEOUT )); do
     for host in $MILVUS_HOSTS; do
+      # shellcheck disable=SC2086  # EXCLUDE is an optional command prefix
       if timeout 3 $EXCLUDE bash -c "</dev/tcp/$host/$MILVUS_PORT" 2>/dev/null; then
         export MILVUS_HOST="$host"
         echo "hive-mcp: Milvus reachable at $host:$MILVUS_PORT (attempt $attempt, ${SECONDS}s in)"
@@ -156,8 +158,9 @@ wait_for_milvus() {
 wait_for_milvus
 
 export MILVUS_USER=root
-export MILVUS_PASSWORD="$(pass show milvus/root-password)"
-export MILVUS_TOKEN="root:$(pass show milvus/root-password)"
+MILVUS_PASSWORD="$(pass show milvus/root-password)"
+export MILVUS_PASSWORD
+export MILVUS_TOKEN="root:$MILVUS_PASSWORD"
 # HTTP transport: ~14% faster p50 on get-entry, tighter tails on query-entries,
 # avoids gVisor idle-flow pruning class entirely (REST is stateless).
 # Benchmark 2026-04-17: HTTP beat gRPC p50 on 3/4 ops (get/query/search).
@@ -170,6 +173,7 @@ if ! bash -c 'echo >/dev/tcp/localhost/11434' 2>/dev/null; then
 fi
 
 if [ -n "$BG_PIDS" ]; then
+  # shellcheck disable=SC2064  # expand the pid list now
   trap "kill $BG_PIDS 2>/dev/null" EXIT
   sleep 1
 fi
@@ -241,6 +245,27 @@ HIVE_MCP_SOFT_MAX_HEAP="${HIVE_MCP_SOFT_MAX_HEAP:-8g}"
 HIVE_MCP_XMS="${HIVE_MCP_XMS:-2g}"
 export MALLOC_ARENA_MAX="${MALLOC_ARENA_MAX:-4}"
 
-exec $EXCLUDE clj -J-Xmx"$HIVE_MCP_XMX" -J-Xms"$HIVE_MCP_XMS" \
-  -J-XX:SoftMaxHeapSize="$HIVE_MCP_SOFT_MAX_HEAP" \
-  -Sdeps "$DEPS" -M:dev:nrepl
+# shellcheck disable=SC2206  # EXCLUDE is an optional command prefix, empty by default
+CMD=($EXCLUDE clj -J-Xmx"$HIVE_MCP_XMX" -J-Xms"$HIVE_MCP_XMS"
+     -J-XX:SoftMaxHeapSize="$HIVE_MCP_SOFT_MAX_HEAP"
+     -Sdeps "$DEPS" -M:dev:nrepl)
+
+# --- Supervision: restart the JVM after an OOM kill ---
+# A bare exec left nothing behind after a kernel OOM kill: every session got
+# "could not connect to localhost:7910" until a human ran /mcp. This reuses
+# hive-mcp's bin/oom-policy.sh (the same supervisor bin/hive-mcp runs):
+# restart on exit 137 (SIGKILL) or 3 (ExitOnOutOfMemoryError), at most
+# HIVE_MCP_MAX_RESTARTS (5) per HIVE_MCP_RESTART_WINDOW (600 s), stdin kept
+# attached, each launch in its own user scope with ManagedOOMPreference=avoid
+# (HIVE_MCP_OOMD_PREFERENCE, "off" = this cgroup). Any other exit code ends
+# the script with that code. HIVE_MCP_SUPERVISE=0 restores the bare exec.
+if [ "${HIVE_MCP_SUPERVISE:-1}" = "1" ] && [ -f bin/oom-policy.sh ]; then
+  # shellcheck source=/dev/null
+  source bin/oom-policy.sh
+  oom_adj_set "${HIVE_MCP_OOM_SCORE_ADJ:--500}"
+  OOM_MAX_RESTARTS="${HIVE_MCP_MAX_RESTARTS:-5}" \
+  OOM_RESTART_WINDOW="${HIVE_MCP_RESTART_WINDOW:-600}" \
+    oom_supervise hive-mcp "${HIVE_MCP_OOMD_PREFERENCE:-avoid}" "${CMD[@]}"
+  exit $?
+fi
+exec "${CMD[@]}"
