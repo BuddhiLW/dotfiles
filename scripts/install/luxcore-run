@@ -1,0 +1,130 @@
+#!/usr/bin/bash
+# Run what ./luxcore installed.
+#
+#   ./luxcore-run devices                 # the OpenCL and CUDA devices LuxCore sees
+#   ./luxcore-run render scene.cfg [args] # batch render through luxcoreconsole
+#   ./luxcore-run ui scene.cfg [args]     # interactive render through luxcoreui
+#   ./luxcore-run py scene.lxs [args]     # batch render through pyluxcore-console
+#   ./luxcore-run test [cpu|gpu]          # render a generated torus, default cpu
+#                                         # gpu (PATHOCL) timed out at 280 s on its
+#                                         # first run; cause not diagnosed yet
+#
+# `test` writes to ${LUXCORE_TEST_DIR:-$HOME/.cache/luxcore/test}/<engine>.png.
+
+set -euo pipefail
+
+ROOT="$HOME/.local/share/luxcore"
+PY="$ROOT/venv/bin/python"
+
+require_install() {
+  [ -x "$ROOT/current/bin/luxcoreconsole" ] && [ -x "$PY" ] ||
+    { echo "LuxCore is not installed: run ./luxcore first" >&2; exit 1; }
+}
+
+devices() {
+  "$PY" -c 'import pyluxcore as p; p.Init(); print(p.GetOpenCLDeviceDescs())' |
+    grep -E '\.(name|type) = '
+}
+
+smoke_test() {
+  local mode="${1:-cpu}" engine dir out
+  case "$mode" in
+    cpu) engine=PATHCPU ;;
+    gpu) engine=PATHOCL ;;
+    *) echo "usage: luxcore-run test [cpu|gpu]" >&2; exit 2 ;;
+  esac
+  dir="${LUXCORE_TEST_DIR:-$HOME/.cache/luxcore/test}"
+  out="$dir/$mode.png"
+  mkdir -p "$dir"
+  rm -f "$out"
+
+  "$PY" - "$dir/torus.ply" <<'PY'
+import math, sys
+nu, nv, R, r = 96, 48, 1.0, 0.35
+verts = []
+for i in range(nu):
+    for j in range(nv):
+        u, v = 2 * math.pi * i / nu, 2 * math.pi * j / nv
+        verts.append(((R + r * math.cos(v)) * math.cos(u),
+                      (R + r * math.cos(v)) * math.sin(u),
+                      r * math.sin(v) + r))
+faces = []
+for i in range(nu):
+    for j in range(nv):
+        a, b = i * nv + j, ((i + 1) % nu) * nv + j
+        c, d = ((i + 1) % nu) * nv + (j + 1) % nv, i * nv + (j + 1) % nv
+        faces += [(a, b, c), (a, c, d)]
+with open(sys.argv[1], "w") as f:
+    f.write(f"ply\nformat ascii 1.0\nelement vertex {len(verts)}\n"
+            "property float x\nproperty float y\nproperty float z\n"
+            f"element face {len(faces)}\nproperty list uchar uint vertex_indices\nend_header\n")
+    f.writelines(f"{x} {y} {z}\n" for x, y, z in verts)
+    f.writelines(f"3 {a} {b} {c}\n" for a, b, c in faces)
+PY
+
+  cat >"$dir/ground.ply" <<'PLY'
+ply
+format ascii 1.0
+element vertex 4
+property float x
+property float y
+property float z
+element face 2
+property list uchar uint vertex_indices
+end_header
+-20 -20 0
+20 -20 0
+20 20 0
+-20 20 0
+3 0 1 2
+3 0 2 3
+PLY
+
+  cat >"$dir/scene.scn" <<'SCN'
+scene.camera.lookat.orig = 2.6 -3.4 2.2
+scene.camera.lookat.target = 0 0 0.3
+scene.camera.fieldofview = 40
+scene.lights.sky.type = sky2
+scene.lights.sky.dir = 0.4 -0.3 0.8
+scene.lights.sun.type = sun
+scene.lights.sun.dir = 0.4 -0.3 0.8
+scene.materials.gold.type = metal2
+scene.materials.gold.preset = gold
+scene.materials.floor.type = matte
+scene.materials.floor.kd = 0.6 0.6 0.65
+scene.objects.torus.ply = torus.ply
+scene.objects.torus.material = gold
+scene.objects.ground.ply = ground.ply
+scene.objects.ground.material = floor
+SCN
+
+  cat >"$dir/render.cfg" <<CFG
+renderengine.type = $engine
+sampler.type = SOBOL
+batch.haltspp = 64
+film.width = 640
+film.height = 360
+film.imagepipeline.0.type = TONEMAP_AUTOLINEAR
+film.imagepipeline.1.type = GAMMA_CORRECTION
+film.imagepipeline.1.value = 2.2
+film.outputs.0.type = RGB_IMAGEPIPELINE
+film.outputs.0.filename = $mode.png
+scene.file = scene.scn
+CFG
+
+  (cd "$dir" && time "$ROOT/current/bin/luxcoreconsole" render.cfg)
+  [ -s "$out" ] || { echo "FAILED: no image at $out" >&2; exit 1; }
+  echo "rendered: $out"
+}
+
+command="${1:-}"
+[ $# -eq 0 ] || shift
+require_install
+case "$command" in
+  devices) devices ;;
+  render)  exec "$ROOT/current/bin/luxcoreconsole" "$@" ;;
+  ui)      exec "$ROOT/current/bin/luxcoreui" "$@" ;;
+  py)      exec "$ROOT/venv/bin/pyluxcore-console" "$@" ;;
+  test)    smoke_test "$@" ;;
+  *) echo "usage: luxcore-run devices | render <scene> | ui <scene> | py <scene> | test [cpu|gpu]" >&2; exit 2 ;;
+esac
