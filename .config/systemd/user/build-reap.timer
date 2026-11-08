@@ -1,0 +1,11 @@
+[Unit]
+Description=Reap idle Rust/Zig build output every 6 hours
+
+[Timer]
+OnBootSec=20min
+OnUnitActiveSec=6h
+Persistent=true
+RandomizedDelaySec=10min
+
+[Install]
+WantedBy=timers.target

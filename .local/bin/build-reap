@@ -1,0 +1,140 @@
+#!/usr/bin/env bash
+# build-reap: delete idle, regenerable build output (Rust target/, Zig caches).
+#
+# Build output is cache, not data: deleting it costs one cold rebuild.
+# A directory is reaped only when ALL hold:
+#   - it is real build output: a cargo target/ (CACHEDIR.TAG or .rustc_info.json),
+#     or .zig-cache/ zig-cache/ zig-out/ next to a build.zig;
+#   - nothing under it was written in the last --days days;
+#   - no build process (cargo, rustc, zig, rust-analyzer, ...) runs in or on
+#     its project;
+#   - it is at least --min-mb in size.
+# Dry run by default. Pass --apply to delete.
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+usage: build-reap [--apply] [--here] [--days N] [--min-mb M] [--go] [ROOT...]
+
+  --apply     delete (default: report only)
+  --here      reap the current directory now: ROOT=$PWD, --days 0
+  --days N    idle threshold in days (default 3; 1 when free disk < LOW_GB)
+  --min-mb M  skip output smaller than M MiB (default 50)
+  --go        also run `go clean -cache` when ~/.cache/go-build > 5 GiB
+  ROOT...     where to look (default: ~/PP ~/.claude/jobs ~/.claude/worktrees)
+
+env: BUILD_REAP_LOW_GB (default 60)
+EOF
+}
+
+apply=0 days="" min_mb=50 go=0 roots=()
+while (($#)); do
+  case "$1" in
+    --apply) apply=1 ;;
+    --here) roots+=("$PWD"); days=0 ;;
+    --days) days="$2"; shift ;;
+    --min-mb) min_mb="$2"; shift ;;
+    --go) go=1 ;;
+    -h|--help) usage; exit 0 ;;
+    -*) echo "build-reap: unknown flag $1" >&2; usage >&2; exit 2 ;;
+    *) roots+=("$(realpath -- "$1")") ;;
+  esac
+  shift
+done
+((${#roots[@]})) || roots=("$HOME/PP" "$HOME/.claude/jobs" "$HOME/.claude/worktrees")
+
+low_gb="${BUILD_REAP_LOW_GB:-60}"
+free_gb=$(df -BG --output=avail "$HOME" | tail -1 | tr -dc 0-9)
+if [[ -z "$days" ]]; then
+  if ((free_gb < low_gb)); then days=1; else days=3; fi
+fi
+
+exec 9>"${XDG_RUNTIME_DIR:-/tmp}/build-reap.lock"
+flock -n 9 || { echo "build-reap: another run holds the lock"; exit 0; }
+
+# Project roots that a live build process works in or names on its command line.
+build_procs='^(cargo|cargo-.*|rustc|rustdoc|clippy-driver|rust-analyzer|zig|zls|cc|c\+\+|ld|ld\.lld|lld|mold)$'
+busy=()
+for p in /proc/[0-9]*; do
+  { read -r comm <"$p/comm"; } 2>/dev/null || continue # process may have exited
+  [[ "$comm" =~ $build_procs ]] || continue
+  cwd=$(readlink "$p/cwd" 2>/dev/null) || cwd=""
+  cmd=$(tr '\0' ' ' <"$p/cmdline" 2>/dev/null) || cmd=""
+  tdir=$(tr '\0' '\n' <"$p/environ" 2>/dev/null | sed -n 's/^CARGO_TARGET_DIR=//p') || tdir=""
+  busy+=("$cwd" "$cmd" "$tdir")
+done
+
+is_busy() { # $@ = paths; true when a build process works in or names one of them
+  local s path
+  for path in "$@"; do
+    for s in "${busy[@]}"; do
+      [[ -n "$s" && "$s" == *"$path"* ]] && return 0
+    done
+  done
+  return 1
+}
+
+# A cargo target dir has any name (CARGO_TARGET_DIR=foo-target), so it is
+# recognised by the files cargo writes at its root, never by name.
+is_cargo_target() {
+  [[ -f "$1/.rustc_info.json" ]] ||
+    grep -qs 'created by cargo' "$1/CACHEDIR.TAG"
+}
+
+is_build_output() { # $1 = candidate dir
+  local d="$1" parent name
+  parent=$(dirname -- "$d") name=$(basename -- "$d")
+  case "$name" in
+    .zig-cache|zig-cache) return 0 ;;
+    zig-out) [[ -f "$parent/build.zig" ]] ;;
+    *) is_cargo_target "$d" ;;
+  esac
+}
+
+recently_written() { # $1 = dir; true when anything under it is newer than $days
+  ((days == 0)) && return 1
+  [[ -n "$(find "$1" -xdev -newermt "-$days days" -print -quit 2>/dev/null)" ]]
+}
+
+reaped=0 kept=0 freed=0
+while IFS= read -r -d '' d; do
+  is_build_output "$d" || continue
+  project=$(dirname -- "$d")
+  kb=$(du -sk --one-file-system -- "$d" 2>/dev/null | cut -f1) || continue
+  mb=$((kb / 1024))
+  ((mb >= min_mb)) || continue
+  if is_busy "$d" "$project"; then
+    printf 'KEEP  %7d MiB  %s  (build running)\n' "$mb" "$d"; kept=$((kept + 1)); continue
+  fi
+  if recently_written "$d"; then
+    printf 'KEEP  %7d MiB  %s  (written in last %sd)\n' "$mb" "$d" "$days"; kept=$((kept + 1)); continue
+  fi
+  if ((apply)); then
+    rm -rf --one-file-system -- "$d"
+    printf 'REAP  %7d MiB  %s\n' "$mb" "$d"
+  else
+    printf 'WOULD %7d MiB  %s\n' "$mb" "$d"
+  fi
+  reaped=$((reaped + 1)) freed=$((freed + mb))
+done < <(
+  # Zig caches by name; cargo targets by the .rustc_info.json at their root.
+  find "${roots[@]}" -xdev \
+       \( -name .git -o -name node_modules \) -prune -o \
+       -type d \( -name .zig-cache -o -name zig-cache -o -name zig-out \) -print0 -prune -o \
+       -type f -name .rustc_info.json -printf '%h\0' 2>/dev/null |
+    sort -zu)
+
+if ((go)) && command -v go >/dev/null; then
+  gocache=$(go env GOCACHE 2>/dev/null || true)
+  if [[ -d "$gocache" ]]; then
+    go_mb=$(( $(du -sk -- "$gocache" | cut -f1) / 1024 ))
+    if ((go_mb > 5120)) && ! pgrep -x go >/dev/null; then
+      if ((apply)); then go clean -cache; echo "REAP  $(printf '%7d' "$go_mb") MiB  $gocache (go clean -cache)"
+      else echo "WOULD $(printf '%7d' "$go_mb") MiB  $gocache (go clean -cache)"; fi
+      freed=$((freed + go_mb))
+    fi
+  fi
+fi
+
+verb=$([[ $apply == 1 ]] && echo freed || echo reclaimable)
+echo "build-reap: $reaped dirs, $((freed / 1024)) GiB $verb, $kept kept; idle threshold ${days}d; free disk was ${free_gb}G"

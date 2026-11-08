@@ -1,0 +1,11 @@
+[Unit]
+Description=Reap idle Rust/Zig build output (build-reap)
+Documentation=file://%h/.local/bin/build-reap
+
+[Service]
+Type=oneshot
+Environment=PATH=%h/.local/bin:/usr/local/go/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=%h/.local/bin/build-reap --apply --go
+TimeoutStartSec=30min
+Nice=15
+IOSchedulingClass=idle
