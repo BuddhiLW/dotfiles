@@ -1,0 +1,10 @@
+[Unit]
+Description=Check blw nodes for newer Talos releases (read-only, notifies)
+After=network-online.target
+
+[Service]
+Type=oneshot
+# Optional NTFY_URL=https://ntfy.sh/<topic> for phone notifications.
+EnvironmentFile=-%h/.config/talos-version-check.env
+ExecStart=%h/dotfiles/talos/base/talos-version-check.sh
+TimeoutStartSec=15min
