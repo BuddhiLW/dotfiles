@@ -31,7 +31,7 @@ libxft-dev
 
 figlet
 lolcat
-fortune fortune-mod fortunes-br display-dhammapada fortune-anarchism fortune-mod
+fortune-mod fortunes-br display-dhammapada fortune-anarchism fortune-mod
 gawk
 
 qutebrowser
@@ -54,6 +54,13 @@ libxft-dev
 libxinerama-dev
 libxrandr-dev
 libxss-dev
+trayer
+lxsession
+network-manager-gnome
+pasystray
+htop
+unzip
+fonts-font-awesome
 haskell-stack
 
 cargo
@@ -105,7 +112,7 @@ lldb
 gdb
 
 
-fonts-firacode fonts-fantasque-sans fonts-hermit fonts-inconsolata fonts-league-mono fonts-monofur fonts-monoid fonts-mononoki fonts-oxygen fonts-proggy fonts-spleen fonts-terminus
+fonts-firacode fonts-fantasque-sans fonts-hermit fonts-inconsolata fonts-league-mono fonts-monofur fonts-monoid fonts-mononoki fonts-proggy fonts-spleen fonts-terminus
 
 protobuf-compiler
 
