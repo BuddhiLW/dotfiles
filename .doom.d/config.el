@@ -432,9 +432,9 @@
   ;; (setq doom-modeline-height 1) ; optional
   ;; (setq doom-modeline-buffer-file-name-style 'truncate-upto-root)
   (custom-set-faces
-   '(mode-line ((t (:family "Gayathri" :size 10)))) ;; Free Sans
-   '(mode-line-active ((t (:family "Gayathri" :size 10)))) ; For 29+
-   '(mode-line-inactive ((t (:family "Gayathri" :size 10))))))
+   '(mode-line ((t (:family "FiraCode Nerd Font Mono" :size 10))))
+   '(mode-line-active ((t (:family "FiraCode Nerd Font Mono" :size 10))))
+   '(mode-line-inactive ((t (:family "FiraCode Nerd Font Mono" :size 10))))))
 
 (use-package doom-themes
   :ensure t
