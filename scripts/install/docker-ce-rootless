@@ -1,29 +1,33 @@
-#!/bin/sh
-sudo apt-get install -y uidmap systemd-container dbus-user-session
-sudo apt-get install docker-ce-rootless-extras
+#!/usr/bin/bash
+# Rootless Docker for this user (run ./docker first). The system daemon is
+# turned off so there is one docker, owned by you; the user daemon is kept
+# running without a login session so the k8s LB and volumes survive logouts.
+set -euo pipefail
 
-filename=$(echo $HOME/bin/rootlesskit | sed -e s@^/@@ -e s@/@.@g)
-cat <<EOF > ~/${filename}
+sudo apt-get install -y uidmap dbus-user-session systemd-container docker-ce-rootless-extras
+
+# Ubuntu 24.04+ blocks unprivileged user namespaces unless the binary has an
+# AppArmor profile allowing them. Newer Ubuntu ships one (apparmor package:
+# /etc/apparmor.d/rootlesskit); a second profile for the same path breaks exec.
+prof=/etc/apparmor.d/usr.bin.rootlesskit
+if ! grep -lqs 'rootlesskit /usr/bin/rootlesskit\|^/usr/bin/rootlesskit' /etc/apparmor.d/*; then
+  sudo tee "$prof" >/dev/null <<EOP
 abi <abi/4.0>,
 include <tunables/global>
 
-"$HOME/bin/rootlesskit" flags=(unconfined) {
+/usr/bin/rootlesskit flags=(unconfined) {
   userns,
-
-  include if exists <local/${filename}>
+  include if exists <local/usr.bin.rootlesskit>
 }
-EOF
-sudo mv ~/${filename} /etc/apparmor.d/${filename}
+EOP
+  sudo systemctl restart apparmor.service
+fi
 
-systemctl restart apparmor.service
+sudo systemctl disable --now docker.service docker.socket 2>/dev/null || true
+sudo rm -f /var/run/docker.sock
 
-cd $DOTFILES/gitthings
-curl -fsSL https://get.docker.com/rootless -o rootless.sh
-chmod +x rootless.sh
-systemctl --user stop docker
-rm -f $HOME/bin/dockerd
-sudo systemctl disable --now docker.service docker.socket
-sudo rm /var/run/docker.sock
-$HOME/bin/dockerd-rootless-setuptool.sh uninstall -f ; $HOME/bin/rootlesskit rm -rf "$HOME/.local/share/docker"
-
-bash ./rootless.sh
+systemctl --user is-active -q docker.service || dockerd-rootless-setuptool.sh install
+systemctl --user enable --now docker.service
+sudo loginctl enable-linger "$USER"
+docker context use rootless >/dev/null
+docker info --format '{{.SecurityOptions}}' | grep -q rootless && echo "rootless docker OK"

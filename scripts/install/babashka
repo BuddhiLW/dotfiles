@@ -1,3 +1,7 @@
 #!/usr/bin/bash
+# babashka (bb) into ~/.local/bin: user-writable and on PATH, no sudo.
+set -euo pipefail
 
-bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
+mkdir -p "$HOME/.local/bin"
+curl -fsSL https://raw.githubusercontent.com/babashka/babashka/master/install | bash -s -- --dir "$HOME/.local/bin"
+bb --version

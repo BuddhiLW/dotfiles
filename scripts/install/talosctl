@@ -1,3 +1,17 @@
 #!/usr/bin/bash
+# talosctl, latest release, checksum-verified, into /usr/local/bin.
+# Pin with TALOS_VERSION=v1.13.7 (e.g. to match the nodes, talos/CLAUDE.md).
+set -euo pipefail
 
-curl -sL https://talos.dev/install | sh
+V="${TALOS_VERSION:-$(curl -fsSLI -o /dev/null -w '%{url_effective}' \
+  https://github.com/siderolabs/talos/releases/latest | sed 's#.*/tag/##')}"
+if command -v talosctl >/dev/null && talosctl version --client --short 2>/dev/null | grep -q "$V"; then
+  echo "talosctl $V already installed"; exit 0
+fi
+
+tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
+base="https://github.com/siderolabs/talos/releases/download/$V"
+curl -fsSL -o "$tmp/talosctl-linux-amd64" "$base/talosctl-linux-amd64"
+curl -fsSL "$base/sha256sum.txt" | grep ' talosctl-linux-amd64$' | (cd "$tmp" && sha256sum -c --quiet)
+sudo install -o root -g root -m 0755 "$tmp/talosctl-linux-amd64" /usr/local/bin/talosctl
+talosctl version --client --short

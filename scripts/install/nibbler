@@ -3,6 +3,9 @@ set -euo pipefail
 
 DOTFILES="${DOTFILES:-$HOME/dotfiles}"
 
+bash "$DOTFILES/scripts/install/electron"
+electron_binary="$(command -v electron)"
+
 cd "$DOTFILES/gitthings/"
 
 if [[ ! -d nibbler ]]; then
@@ -12,11 +15,11 @@ fi
 NIBBLER_PATH="$PWD/nibbler"
 PATH_FILE="/usr/local/bin/nibbler"
 
-# Write the wrapper script atomically as root
 sudo tee "$PATH_FILE" >/dev/null <<EOF
 #!/usr/bin/env bash
+set -e
 cd "$NIBBLER_PATH/files/src/"
-exec electron .
+exec "$electron_binary" .
 EOF
 
 sudo chmod a+x "$PATH_FILE"

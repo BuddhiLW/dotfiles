@@ -1,6 +1,21 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
 sudo npm install -g electron
 
-sudo chown root:root /usr/local/lib/node_modules/electron/dist/chrome-sandbox
-sudo chmod 4755 /usr/local/lib/node_modules/electron/dist/chrome-sandbox
+electron_package="$(sudo npm root -g)/electron"
+sandbox_helper="$electron_package/dist/chrome-sandbox"
+electron_binary="$electron_package/dist/electron"
+
+# npm can leave the package installed even when the binary download fails.
+if [[ ! -x "$electron_binary" || ! -f "$sandbox_helper" ]]; then
+  sudo node "$electron_package/install.js"
+fi
+
+if [[ ! -x "$electron_binary" || ! -f "$sandbox_helper" ]]; then
+  echo "Electron binary download failed: $electron_binary" >&2
+  exit 1
+fi
+
+sudo chown root:root "$sandbox_helper"
+sudo chmod 4755 "$sandbox_helper"

@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+# Install the latest codebase-memory-mcp release (static linux-amd64-portable build).
+#
+# Verifies the archive against the release's checksums.txt and smoke-tests the
+# new binary (--version). CBM runs ONE account-wide daemon and refuses clients of
+# a different version while it lives, and the daemon lives as long as any client
+# session (every Claude Code session's MCP server is one). So:
+#
+#   default     daemon idle   -> swap the binary in atomically (old kept as .prev)
+#               daemon busy   -> stage the new binary as <bin>.next, change nothing
+#   --cutover   install the staged (or downloaded) binary, then SIGTERM every
+#               client session so the old daemon exits; MCP clients must reconnect
+#               (/mcp in Claude Code). Disruptive: run it on purpose.
+#   --check     only report installed / staged / latest
+#
+# Usage: codebase-memory-mcp-update [--check|--cutover] [tag]
+set -euo pipefail
+
+repo=DeusData/codebase-memory-mcp
+asset=codebase-memory-mcp-linux-amd64-portable.tar.gz
+bin="${CBM_BIN:-$HOME/dotfiles/.local/bin/codebase-memory-mcp}"
+
+mode=install
+case "${1:-}" in
+  --check) mode=check; shift ;;
+  --cutover) mode=cutover; shift ;;
+esac
+tag="${1:-$(gh release view -R "$repo" --json tagName -q .tagName)}"
+latest="${tag#v}"
+
+version_of() { "$1" --version 2>/dev/null | awk '/^codebase-memory-mcp /{print $2}'; }
+daemon_clients() {
+  "$bin" daemon status 2>/dev/null | awk '/^ *- pid /{print $3}'
+}
+
+installed="$(version_of "$bin" || true)"
+staged="$( [[ -x "$bin.next" ]] && version_of "$bin.next" || true)"
+echo "installed=${installed:-none} staged=${staged:-none} latest=$latest"
+[[ "$mode" == check ]] && exit 0
+if [[ "$installed" == "$latest" ]]; then echo "up to date"; rm -f "$bin.next"; exit 0; fi
+
+if [[ "$staged" != "$latest" ]]; then
+  work="$(mktemp -d)"
+  trap 'rm -rf "$work"' EXIT
+  ( cd "$work"
+    gh release download "$tag" -R "$repo" -p "$asset" -p checksums.txt
+    grep " $asset\$" checksums.txt | sha256sum -c -
+    mkdir x && tar -xzf "$asset" -C x )
+  new="$work/x/codebase-memory-mcp"
+  [[ -x "$new" ]] || { echo "binary missing from $asset" >&2; exit 1; }
+  got="$(version_of "$new")"
+  [[ "$got" == "$latest" ]] || { echo "version mismatch: $got != $latest" >&2; exit 1; }
+  cp -p "$new" "$bin.next.tmp" && mv -f "$bin.next.tmp" "$bin.next"
+  echo "staged $latest at $bin.next"
+fi
+
+clients="$(daemon_clients || true)"
+if [[ -n "$clients" && "$mode" != cutover ]]; then
+  echo "daemon busy ($(echo "$clients" | wc -l) client sessions on $installed); left staged."
+  echo "run '$0 --cutover' to switch (closes those sessions; MCP clients must reconnect)."
+  exit 0
+fi
+
+if [[ -n "$clients" ]]; then
+  echo "closing client sessions: $(echo $clients)"
+  kill -TERM $clients 2>/dev/null || true
+  for _ in $(seq 1 30); do [[ -z "$(daemon_clients || true)" ]] && break; sleep 1; done
+fi
+
+[[ -e "$bin" ]] && cp -p "$bin" "$bin.prev"
+mv -f "$bin.next" "$bin"
+echo "installed $(version_of "$bin")"

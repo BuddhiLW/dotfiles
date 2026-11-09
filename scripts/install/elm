@@ -3,16 +3,7 @@
 cd $DOTFILES/gitthings/
 mkdir elm-install
 cd elm-install
-# Download the 0.19.1 binary for Linux.
-#
-# +-----------+----------------------+
-# | FLAG      | MEANING              |
-# +-----------+----------------------+
-# | -L        | follow redirects     |
-# | -o elm.gz | name the file elm.gz |
-# +-----------+----------------------+
-#
-curl -L -o elm.gz https://github.com/elm/compiler/releases/download/0.19.1/binary-for-linux-64-bit.gz
+curl -L -o elm.gz https://github.com/elm/compiler/releases/download/0.19.3/elm-0.19.3-linux-x64.gz
 
 # There should now be a file named `elm.gz` on your Desktop.
 #
@@ -40,7 +31,3 @@ sudo mv elm /usr/local/bin/
 # Now it should be possible to run the `elm` binary just by saying its name!
 #
 elm --help
-
-## Clean install temporary directory
-cd ..
-rm -rf ./elm-install

@@ -1,4 +1,15 @@
 #!/usr/bin/bash
 
-sudo apt-get install $(< $DOTFILES/deps/dep-out.txt)
+# apt aborts the whole transaction on a single unknown package, so install
+# only the ones this release actually provides and report the rest.
+pkgs=() missing=()
+for p in $(< $DOTFILES/deps/dep-out.txt); do
+  if apt-cache policy "$p" 2>/dev/null | grep -q 'Candidate: [^(]'; then
+    pkgs+=("$p")
+  else
+    missing+=("$p")
+  fi
+done
 
+[ ${#missing[@]} -gt 0 ] && echo "!! skipping packages not available on this release: ${missing[*]}"
+sudo apt-get install -y "${pkgs[@]}"

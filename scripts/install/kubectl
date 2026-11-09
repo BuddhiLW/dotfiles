@@ -1,4 +1,16 @@
 #!/usr/bin/bash
+# kubectl: latest stable release, checksum-verified, into /usr/local/bin.
+# Match the cluster (kubectl supports +/-1 minor) with KUBECTL_VERSION=v1.34.0.
+set -euo pipefail
 
-curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+v="${KUBECTL_VERSION:-$(curl -fsSL https://dl.k8s.io/release/stable.txt)}"
+if command -v kubectl >/dev/null && kubectl version --client 2>/dev/null | grep -q "$v"; then
+  echo "kubectl $v already installed"; exit 0
+fi
+
+tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
+url="https://dl.k8s.io/release/$v/bin/linux/amd64/kubectl"
+curl -fsSL -o "$tmp/kubectl" "$url"
+echo "$(curl -fsSL "$url.sha256")  $tmp/kubectl" | sha256sum -c --quiet
+sudo install -o root -g root -m 0755 "$tmp/kubectl" /usr/local/bin/kubectl
+kubectl version --client
