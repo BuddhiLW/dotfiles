@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# Launch fosfora (main branch build) with tessera's layer effects, trama nodes
+# and media pack. On $PATH, so it shows in rofi (M-r, `rofi -show run`); the
+# desktop entry fosfora-tessera.desktop puts it in `rofi -show drun` too.
+#
+#   fosfora-tessera            run ~/PP/fosfora/target/debug/fosfora (main)
+#   fosfora-tessera --build    rebuild main first (features: repl video)
+#
+# Override the binary with FOSFORA_BIN=/path/to/fosfora.
+set -euo pipefail
+
+FOSFORA_HOME="${FOSFORA_HOME:-$HOME/PP/fosfora}"
+TESSERA="${TESSERA:-$HOME/PP/mentat-collective/tessera}"
+FEATURES="${FOSFORA_FEATURES:-repl video}"
+LOG_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/fosfora"
+mkdir -p "$LOG_DIR"
+
+say() { notify-send -a fosfora "fosfora" "$1" 2>/dev/null || echo "$1" >&2; }
+
+if [ "${1:-}" = "--build" ]; then
+  shift
+  say "building fosfora main (features: $FEATURES)..."
+  if ! (cd "$FOSFORA_HOME" && timeout 2400 nice -n 10 cargo build --features "$FEATURES" \
+          >"$LOG_DIR/build-$(date +%Y%m%d-%H%M%S).log" 2>&1); then
+    say "build failed; see $LOG_DIR/build-*.log"
+    exit 1
+  fi
+fi
+
+if pgrep -x fosfora >/dev/null; then
+  say "already running (pid $(pgrep -x fosfora | head -1)); not starting a second copy"
+  exit 0
+fi
+
+bin="${FOSFORA_BIN:-$FOSFORA_HOME/target/debug/fosfora}"
+if [ ! -x "$bin" ]; then
+  say "no build at $bin; run: fosfora-tessera --build"
+  exit 1
+fi
+
+export FOSFORA_NREPL="${FOSFORA_NREPL:-7888}"
+export FOSFORA_HWACCEL="${FOSFORA_HWACCEL:-cuda}"
+export FOSFORA_TRAMA_DIRS="${FOSFORA_TRAMA_DIRS:-$TESSERA/out/layers}"
+export FOSFORA_EFFECT_DIRS="${FOSFORA_EFFECT_DIRS:-$TESSERA/out/effects}"
+export FOSFORA_MEDIA_DIRS="${FOSFORA_MEDIA_DIRS:-$TESSERA/out/media}"
+
+# Relative assets resolve from the checkout that owns the binary.
+cd "$(dirname "$bin")/../.."
+log="$LOG_DIR/launch-$(date +%Y%m%d-%H%M%S).log"
+say "starting fosfora ($(git -C . rev-parse --abbrev-ref HEAD 2>/dev/null || echo ?) @ $(git -C . rev-parse --short HEAD 2>/dev/null || echo ?))"
+exec setsid "$bin" "$@" >"$log" 2>&1
