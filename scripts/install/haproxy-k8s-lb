@@ -1,0 +1,25 @@
+#!/usr/bin/bash
+# Local kube-apiserver LB at https://127.0.0.1:16443 that the admin@blw
+# kubeconfig context points at (talos/CLAUDE.md). Runs as systemd user units
+# on rootless docker (./docker, ./docker-ce-rootless).
+set -euo pipefail
+
+T="${DOTFILES:-$HOME/dotfiles}/talos/base"
+mkdir -p "$HOME/.config/haproxy-k8s-lb" "$HOME/.config/systemd/user"
+ln -sfn "$T/haproxy-lb.cfg" "$HOME/.config/haproxy-k8s-lb/haproxy.cfg"
+for u in "$T"/systemd/*.service "$T"/systemd/*.timer; do
+  ln -sfn "$u" "$HOME/.config/systemd/user/${u##*/}"
+done
+
+# Pull first: on a slow link the healthcheck timer would restart the unit (and
+# kill the pull) every minute while `docker run` is still downloading.
+for _ in 1 2 3 4 5; do docker pull -q haproxy:2.9-alpine && break; sleep 5; done
+
+systemctl --user daemon-reload
+systemctl --user enable --now haproxy-k8s-lb.service haproxy-k8s-lb-healthcheck.timer
+# Weekly read-only check for newer Talos releases (talos/base/talos-version-check.sh).
+systemctl --user enable --now talos-version-check.timer
+
+for _ in $(seq 60); do curl -fsS -m 2 -o /dev/null http://127.0.0.1:8405/stats && break; sleep 2; done
+curl -fsS -m 2 "http://127.0.0.1:8405/stats;csv" \
+  | awk -F, '$1=="kubernetes_control_planes" && $2!="BACKEND" && $2!="FRONTEND" {print "  backend", $2, $18}'

@@ -1,0 +1,131 @@
+#!/usr/bin/env bash
+# Install VeraCrypt from the official release .deb.
+#
+# Source: https://veracrypt.io/en/Downloads.html (files hosted on GitHub)
+# Default is the GUI package (veracrypt). --console installs veracrypt-console
+# instead: same CLI, no wxGTK GUI. The packages conflict, so switching variant
+# removes the other one first.
+#
+# Idempotent: exits early when the requested version is already installed.
+# The .deb is checked against the release sha256sum file before installing.
+#
+# Usage: veracrypt [--console] [--force] [VERSION]
+#   VERSION defaults to 1.26.31 (override with VERACRYPT_VERSION too).
+
+set -euo pipefail
+
+vc_version="${VERACRYPT_VERSION:-1.26.31}"
+variant=gui
+force=0
+
+usage() {
+  cat <<'EOF'
+Usage: veracrypt [--console] [--force] [VERSION]
+
+  --console   install veracrypt-console (no GUI) instead of the GUI package
+  --force     reinstall even if the requested version is already present
+  VERSION     release to install, default 1.26.31
+EOF
+}
+
+while (($#)); do
+  case "$1" in
+    --console) variant=console ;;
+    --gui)     variant=gui ;;
+    -f|--force) force=1 ;;
+    -h|--help) usage; exit 0 ;;
+    -*) echo "unknown option: $1" >&2; usage >&2; exit 2 ;;
+    *)  vc_version="${1#v}" ;;
+  esac
+  shift
+done
+
+die() { echo "error: $*" >&2; exit 1; }
+
+command -v curl >/dev/null || die "curl is not installed"
+command -v dpkg >/dev/null || die "dpkg not found (Ubuntu/Debian only)"
+
+# shellcheck source=/etc/os-release disable=SC1091
+. /etc/os-release
+[[ -n "${VERSION_ID:-}" ]] || die "cannot determine release: VERSION_ID unset in /etc/os-release"
+
+case "${ID:-}" in
+  ubuntu)
+    distro=Ubuntu
+    # Newest published first; pick the newest one not newer than this system.
+    releases=(26.10 26.04 24.04 22.04)
+    ;;
+  debian)
+    distro=Debian
+    releases=(13 12)
+    ;;
+  *)
+    die "unsupported distro '${ID:-unknown}': this script handles Ubuntu and Debian"
+    ;;
+esac
+
+release=
+for r in "${releases[@]}"; do
+  if dpkg --compare-versions "$VERSION_ID" ge "$r"; then
+    release=$r
+    break
+  fi
+done
+[[ -n $release ]] || die "no VeraCrypt package for ${PRETTY_NAME:-$ID $VERSION_ID}"
+
+arch="$(dpkg --print-architecture)"
+case "$arch" in
+  amd64|arm64) ;;
+  *) die "unsupported architecture: $arch" ;;
+esac
+if [[ "$arch" == arm64 && "$distro/$release" == "Ubuntu/22.04" ]]; then
+  die "no arm64 VeraCrypt package for $distro $release"
+fi
+if [[ "$distro/$release" == "Debian/12" && "$arch" != amd64 ]]; then
+  die "no $arch VeraCrypt package for $distro $release"
+fi
+
+if [[ $variant == console ]]; then
+  pkg=veracrypt-console
+  other=veracrypt
+else
+  pkg=veracrypt
+  other=veracrypt-console
+fi
+deb="$pkg-$vc_version-$distro-$release-$arch.deb"
+base="https://github.com/veracrypt/VeraCrypt/releases/download/VeraCrypt_$vc_version"
+
+if [[ $force -eq 0 ]] && dpkg -s "$pkg" >/dev/null 2>&1; then
+  installed="$(veracrypt -t --version 2>/dev/null | awk 'NR==1{print $2}')"
+  if [[ "$installed" == "$vc_version" ]]; then
+    echo "veracrypt $installed ($pkg) already installed"
+    exit 0
+  fi
+fi
+
+tmp="$(mktemp -d)"
+trap 'rm -rf "$tmp"' EXIT
+
+echo "downloading $deb"
+curl -fsSL --retry 3 --connect-timeout 15 -o "$tmp/$deb" "$base/$deb" \
+  || die "download failed: $base/$deb (version or architecture not published?)"
+
+echo "verifying sha256"
+sums="$(curl -fsSL --retry 3 "$base/veracrypt-$vc_version-sha256sum.txt")" \
+  || die "could not fetch sha256 sums for $vc_version"
+# The sums file is BOM-prefixed CRLF; normalise before matching.
+want="$(printf '%s\n' "$sums" | tr -d '\r' | sed '1s/^\xEF\xBB\xBF//' \
+  | awk -v f="$deb" '$2 == f { print tolower($1); exit }')"
+got="$(sha256sum "$tmp/$deb" | awk '{print $1}')"
+[[ -n "$want" && "$want" == "$got" ]] || die "sha256 mismatch for $deb"
+
+if dpkg -s "$other" >/dev/null 2>&1; then
+  echo "removing conflicting package $other"
+  sudo apt-get remove -y "$other"
+fi
+
+sudo apt-get install -y "$tmp/$deb"
+
+installed="$(veracrypt -t --version 2>/dev/null | awk 'NR==1{print $2}')"
+[[ "$installed" == "$vc_version" ]] || die "installed version '$installed' != requested '$vc_version'"
+echo "installed veracrypt $installed ($pkg)"

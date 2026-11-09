@@ -1,0 +1,12 @@
+[Unit]
+Description=Weekly Talos version check for blw
+
+[Timer]
+# Saturday morning, so a pending patch is known before tuppr's Sunday window.
+OnCalendar=Sat 10:00
+Persistent=true
+RandomizedDelaySec=15min
+Unit=talos-version-check.service
+
+[Install]
+WantedBy=timers.target

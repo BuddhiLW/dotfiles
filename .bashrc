@@ -193,7 +193,8 @@ pathprepend \
     "$DOTFILES/gitthings/flutter/flutter/bin" \
     "$DOTFILES/gitthings/graalvm/bin" \
     "$DOTFILES/.npm-global/bin" \
-    "$DOOMDIR/bin"
+    "$DOOMDIR/bin" \
+    "$CARGO_HOME/bin"
 
 # export PATH="$DOTFILES/gitthings/flutter/flutter/bin:$PATH"
 #    "$HOME/.conda/envs/simple-signer-env/bin" \
@@ -597,14 +598,14 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$("$HOME/anaconda3/bin/conda" 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$('/home/klein/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "$HOME/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "$HOME/anaconda3/etc/profile.d/conda.sh"
+    if [ -f "/home/klein/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/klein/anaconda3/etc/profile.d/conda.sh"
     else
-        export PATH="$HOME/anaconda3/bin:$PATH"
+        export PATH="/home/klein/anaconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup
@@ -654,8 +655,6 @@ if [ -f "$HOME/google-cloud-sdk/completion.bash.inc" ]; then . "$HOME/google-clo
 
 export FLYCTL_INSTALL="$HOME/.fly"
 export PATH="$FLYCTL_INSTALL/bin:$PATH"
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-. "$HOME/.local/share/cargo/env"
 
 export NVM_DIR="$HOME/.config/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -676,8 +675,6 @@ export HIVE_EMACS_DIR="$HIVE_DIR/hive-emacs"
 export CLEL_HOME="$HOME/PP/clojure-elisp"
 export QT_XCB_GL_INTEGRATION=xcb_glx
 export PATH="$HOME/anaconda3/envs/hive/bin:$PATH"
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # opencode
 export PATH=$HOME/.opencode/bin:$PATH
@@ -747,3 +744,9 @@ ASYNCAPI_AC_BASH_SETUP_PATH=$HOME/.cache/@asyncapi/cli/autocomplete/bash_setup &
 
 # Resend CLI
 export PATH="$HOME/.resend/bin:$PATH"
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# >>> Codex installer >>>
+export PATH="/home/klein/.local/bin:$PATH"
+# <<< Codex installer <<<

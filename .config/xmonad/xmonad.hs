@@ -30,6 +30,7 @@ import XMonad.Hooks.DynamicLog (dynamicLogWithPP, wrap, xmobarPP, xmobarColor, s
 import XMonad.Hooks.EwmhDesktops  -- for some fullscreen events, also for xcomposite in obs.
 import XMonad.Hooks.ManageDocks (avoidStruts, docks, manageDocks, ToggleStruts(..))
 import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat, doCenterFloat, doFocus)
+import XMonad.Hooks.Place (placeHook, fixed)
 import XMonad.Hooks.Rescreen (addRandrChangeHook)
 import XMonad.Hooks.ServerMode
 import XMonad.Hooks.SetWMName
@@ -545,8 +546,9 @@ myManageHook = composeAll
   , className =? "splash"          --> doFloat
   , className =? "toolbar"         --> doFloat
   , className =? "Yad"             --> doCenterFloat
-  -- hive guard permission dialogs (hive-notify :dialog backend): float top-right, beside dunst.
-  , title =? "hive ask"            --> customFloating (W.RationalRect 0.69 0.03 0.30 0.22)
+  -- hive guard permission dialogs (hive-notify :dialog backend): float top-right, beside dunst,
+  -- at the size the dialog asks for, so long requests are never clipped.
+  , title =? "hive ask"            --> placeHook (fixed (0.99, 0.03)) <+> doFloat
   , title =? "Oracle VM VirtualBox Manager"  --> doFloat
   -- Web browsers open on workspace 2 (web, M-2).
   , isBrowser                      --> doShift ( myWorkspaces !! 1 )

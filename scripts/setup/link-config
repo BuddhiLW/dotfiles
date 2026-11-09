@@ -11,6 +11,14 @@ backup_then_link() {
   local src="$1" dest="$2"
   mkdir -p "$(dirname "$dest")"
 
+  # ~/.config and ~/.local are themselves links into $DOTFILES, so dest can be
+  # src under another name: linking would replace the file with a self-link.
+  if [[ "$(cd "$(dirname "$dest")" && pwd -P)/$(basename "$dest")" == \
+        "$(cd "$(dirname "$src")" && pwd -P)/$(basename "$src")" ]]; then
+    echo "✓ Same file: $dest"
+    return 0
+  fi
+
   if [[ -L "$dest" ]]; then
     if [[ "$(readlink -f "$dest")" == "$(readlink -f "$src")" ]]; then
       echo "✓ Already linked: $dest -> $src"

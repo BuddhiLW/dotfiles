@@ -1,3 +1,15 @@
 #!/usr/bin/bash
+# Ollama (system service, NVIDIA GPU picked up by the installer) plus the
+# embedding model hive-mcp's config routes every type to.
+#   OLLAMA_MODELS_PULL="qwen3-embedding:4b other:tag" to change the set.
+set -euo pipefail
 
-curl -fsSL https://ollama.com/install.sh | sh
+command -v ollama >/dev/null || curl -fsSL https://ollama.com/install.sh | sh
+
+for _ in $(seq 30); do curl -fsS -m 2 -o /dev/null http://localhost:11434/api/version && break; sleep 2; done
+
+for m in ${OLLAMA_MODELS_PULL:-qwen3-embedding:4b}; do
+  ollama list | awk 'NR>1{print $1}' | grep -qx "$m" && { echo "ollama: $m present"; continue; }
+  for _ in 1 2 3 4 5; do ollama pull "$m" && break; sleep 5; done   # slow links drop; pull resumes
+done
+ollama list

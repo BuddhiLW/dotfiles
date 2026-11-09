@@ -14,6 +14,7 @@ bash $INSTALL/pomodoro
 bash $INSTALL/keg
 bash $INSTALL/libxft-bgra
 bash $INSTALL/joypixels
+bash $INSTALL/install-nerd-fonts
 # bash $INSTALL/mongo
 bash $INSTALL/npm-global
 bash $INSTALL/brew

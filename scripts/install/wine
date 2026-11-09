@@ -1,0 +1,20 @@
+#!/usr/bin/bash
+# wine — a cmd.exe to parse FOR REAL what probe's :cmd-exe channel shapes.
+# Idempotent: skips when wine/wine64 is already on PATH.
+set -euo pipefail
+
+if command -v wine >/dev/null 2>&1; then
+  echo "wine already installed: $(command -v wine)"; exit 0
+fi
+
+sudo apt-get update -qq
+sudo apt-get install -y --no-install-recommends wine64
+
+# the probe simulator calls `wine cmd /c ...`; wine64 ships /usr/bin/wine64 and
+# only sometimes a `wine` shim, so provide one in ~/.local/bin when missing.
+if ! command -v wine >/dev/null 2>&1 && command -v wine64 >/dev/null 2>&1; then
+  mkdir -p "$HOME/.local/bin"
+  ln -sf "$(command -v wine64)" "$HOME/.local/bin/wine"
+fi
+
+wine --version || wine64 --version

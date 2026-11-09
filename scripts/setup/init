@@ -3,6 +3,10 @@
 link() {
   local src="$DOTFILES/$1" dest="$HOME/$1"
   [ "$(readlink -f "$dest")" = "$(readlink -f "$src")" ] && return 0
+  # A real dir here may hold what secrets-restore/home-restore just put back
+  # (pass store, gh, hive-mcp, ...): carry it into the dotfiles copy, never
+  # overwriting tracked files, before moving the original aside.
+  [ -d "$dest" ] && [ ! -L "$dest" ] && rsync -a --ignore-existing "$dest/" "$src/"
   [ -e "$dest" ] || [ -L "$dest" ] && mv -v "$dest" "$dest.bak.$(date +%Y%m%d-%H%M%S)"
   ln -svfT "$src" "$dest"
 }

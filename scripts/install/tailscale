@@ -1,3 +1,14 @@
 #!/usr/bin/bash
+# Tailscale. Off the cluster LAN, kubectl reaches the apiserver through the
+# tailnet subnet router (10.96.0.1, see talos/CLAUDE.md), and Linux ignores
+# advertised subnet routes unless --accept-routes is set.
+set -euo pipefail
 
-curl -fsSL https://tailscale.com/install.sh | sh
+command -v tailscale >/dev/null || curl -fsSL https://tailscale.com/install.sh | sh
+
+if tailscale status >/dev/null 2>&1; then
+  sudo tailscale set --accept-routes
+else
+  sudo tailscale up --accept-routes   # prints a login URL on first run
+fi
+tailscale status | head -n 5

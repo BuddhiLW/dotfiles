@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# Daily live GC of hive's Datahike stores, run as a sidecar next to hive-mcp.
+#
+# Keeps KEEP_DAYS of commit snapshots per store and never deletes anything
+# written in the last FLOOR_MIN minutes, so it is safe while hive-mcp writes
+# (upstream datahike sidecar collection: shared writer + :min-age-ms floor).
+# Knowledge is not removed: only snapshots older than the window go.
+#
+# Started detached by the hive-mcp launcher. Runs at most once per day.
+#   HIVE_DATAHIKE_GC_FORCE=1  run even if it already ran today
+set -u
+G="$HOME/.local/share/hive-mcp/gc-sidecar"
+LOG="$G/gc.log"
+STAMP="$G/last-run"
+KEEP_DAYS="${HIVE_DATAHIKE_GC_KEEP_DAYS:-7}"
+FLOOR_MIN="${HIVE_DATAHIKE_GC_FLOOR_MIN:-60}"
+STORES=(
+  "$HOME/.local/share/hive-mcp/datahike"
+  "$HOME/PP/hive/hive-mcp/data/action-log/datahike"
+  "$HOME/PP/hive/hive-mcp/data/done-archive/datahike"
+  "$HOME/.local/share/hive-agent/chat-points/datahike"
+)
+
+exec >>"$LOG" 2>&1
+exec 9>"$G/lock"
+flock -n 9 || { echo "[$(date '+%F %T')] another run holds the lock; exiting"; exit 0; }
+
+today=$(date +%F)
+if [ "${HIVE_DATAHIKE_GC_FORCE:-0}" != "1" ] && [ "$(cat "$STAMP" 2>/dev/null)" = "$today" ]; then
+  exit 0
+fi
+echo "$today" > "$STAMP"
+log() { echo "[$(date '+%F %T')] $*"; }
+
+log "start: keep ${KEEP_DAYS}d, floor ${FLOOR_MIN}min"
+for i in $(seq 300); do ss -ltn | grep -q ':7910 ' && break; sleep 2; done
+ss -ltn | grep -q ':7910 ' || log "WARNING: hive-mcp not on 7910 after 10 min; continuing (floor still protects writes)"
+
+gc_one() { # <deps-dir> <store>
+  (cd "$G/$1" && nice -n 19 ionice -c3 clojure -J-Xmx4g -M -m gclive "$2" "$KEEP_DAYS" "$FLOOR_MIN") 2>&1 \
+    | grep -vE 'WARN|SLF4J'
+}
+
+for s in "${STORES[@]}"; do
+  [ -d "$s" ] || { log "skip (missing): $s"; continue; }
+  log "gc $s"
+  out=$(gc_one k394 "$s")
+  if grep -q 'newer konserve version' <<<"$out"; then
+    log "store stamped by newer konserve; retrying with 0.9.398"
+    out=$(gc_one k398 "$s")
+  fi
+  echo "$out" | grep -E '^:cutoff|^:deleted|^:before|rror|Exception' | cut -c1-300
+done
+log "done; $(df -h / | awk 'NR==2{print $4" free ("$5" used)"}')"

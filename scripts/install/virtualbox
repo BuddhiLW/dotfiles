@@ -1,0 +1,47 @@
+#!/usr/bin/bash
+# VirtualBox from Oracle's apt repo (Ubuntu's multiverse build lags behind).
+#
+#   scripts/install/virtualbox              latest 7.2.x
+#   EXTPACK=1 scripts/install/virtualbox    plus the Extension Pack (USB 3, RDP, disk
+#                                           encryption; PUEL license, personal use)
+#
+# vboxdrv is built on install by /sbin/vboxconfig, so it needs gcc/make and the
+# running kernel's headers; rerun `sudo /sbin/vboxconfig` after a kernel update
+# if VMs refuse to start. If VMs fail with "VT-x is being used by another
+# hypervisor", KVM holds VT-x: boot with kvm.enable_virt_at_load=0.
+#
+# Idempotent: rerun to upgrade.
+set -euo pipefail
+
+VER=7.2
+KEYRING=/usr/share/keyrings/oracle-virtualbox-2016.gpg
+
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl gpg gcc make "linux-headers-$(uname -r)"
+
+curl -fsSL https://www.virtualbox.org/download/oracle_vbox_2016.asc | sudo gpg --yes --dearmor --output "$KEYRING"
+sudo tee /etc/apt/sources.list.d/virtualbox.sources >/dev/null <<EOS
+Types: deb
+URIs: https://download.virtualbox.org/virtualbox/debian
+Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Components: contrib
+Architectures: amd64
+Signed-By: $KEYRING
+EOS
+
+sudo apt-get update
+sudo apt-get install -y "virtualbox-$VER"
+
+# USB passthrough needs vboxusers; takes effect on next login.
+sudo usermod -aG vboxusers "$USER"
+
+if [ "${EXTPACK:-0}" = 1 ]; then
+  full=$(VBoxManage --version | sed 's/r.*//')   # 7.2.20r175154 -> 7.2.20
+  pack="Oracle_VirtualBox_Extension_Pack-$full.vbox-extpack"
+  tmp=$(mktemp -d)
+  trap 'rm -rf "$tmp"' EXIT
+  curl -fsSL -o "$tmp/$pack" "https://download.virtualbox.org/virtualbox/$full/$pack"
+  yes | sudo VBoxManage extpack install --replace "$tmp/$pack"
+fi
+
+VBoxManage --version
