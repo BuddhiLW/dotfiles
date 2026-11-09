@@ -31,6 +31,14 @@
     # screen width minus the width defined in within the geometry option.
     geometry = "300x60-15+46"
 
+    # dunst >= 1.7 ignores `geometry`; these replace it. height is the
+    # per-notification maximum in pixels: past it the body is cut with an
+    # ellipsis, so it is large enough for a full guard permission request.
+    origin = top-right
+    offset = (15, 46)
+    width = (300, 520)
+    height = (0, 1000)
+
     # Show how many messages are currently hidden (because of geometry).
     indicate_hidden = yes
 
