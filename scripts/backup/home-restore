@@ -5,6 +5,7 @@
 #   FORCE=1 home-restore    overwrite files that already exist (default: keep them)
 #   JOBS=4 home-restore     parallel extract streams
 set -Eeuo pipefail
+trap 'warn "home-restore stopped at line $LINENO (exit $?); re-run it: restores never overwrite"' ERR
 
 DOTFILES="${DOTFILES:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)}"
 source "$DOTFILES/scripts/backup/lib"
@@ -45,7 +46,9 @@ if [ -n "$KG" ]; then
     (cd "$KG" && sha256sum --quiet -c SHA256SUMS) || die "KG archive checksum mismatch in $KG"
     mkdir -p "$KGDEST"
     log "KG: restoring $(ls "$KG"/part-*.tar.zst | wc -l) parts -> $KGDEST/datahike"
-    ls "$KG"/part-*.tar.zst | xargs -P "$JOBS" -I{} bash -c 'zstd -dc "$1" | tar -C "$2" -xpf -' _ {} "$KGDEST"
+    # A failed part must be reported, not kill the script silently under set -e.
+    ls "$KG"/part-*.tar.zst | xargs -P "$JOBS" -I{} bash -c \
+      'zstd -dc "$1" | tar -C "$2" -xpf - || echo "FAILED $(basename "$1") (re-run: zstd -dc $1 | tar -C $2 -xpf -)"' _ {} "$KGDEST"
     log "KG: $(find "$KGDEST/datahike" | wc -l) entries restored"
   fi
 fi
