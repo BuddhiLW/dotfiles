@@ -1,0 +1,80 @@
+#!/usr/bin/bash
+# Install LuxCoreRender under ~/.local/share/luxcore, no sudo.
+#
+#   ./luxcore           # the pinned version below
+#   ./luxcore 2.11.2    # a specific version
+#   NO_LINK=1 ./luxcore # install only, leave ~/.local/bin alone
+#
+# Two parts, one version:
+#   <version>/{bin,lib}  standalone luxcoreconsole + luxcoreui (bundled libs, RPATH $ORIGIN/../lib)
+#   venv/                pyluxcore from PyPI, with pyluxcore-console, in its own venv
+#                        so it never touches the conda envs
+# `current` points at the last version installed. Re-running is a no-op.
+# Render and inspect with ./luxcore-run (next to this script).
+#
+# LuxCore publishes the Linux binaries as a "samples" release: a zip holding a zip.
+
+set -euo pipefail
+
+VERSION="${1:-2.11.2}"
+PYTHON_VERSION=3.12
+REPO=LuxCoreRender/LuxCore
+ASSET=LuxCore-Samples-Linux-X64.zip
+ROOT="$HOME/.local/share/luxcore"
+DEST="$ROOT/$VERSION"
+BIN="$HOME/.local/bin"
+
+[ "$(uname -m)" = x86_64 ] || { echo "LuxCore publishes Linux binaries for x86_64 only" >&2; exit 1; }
+command -v uv >/dev/null || { echo "uv is required: run ./uv first" >&2; exit 1; }
+
+# --- standalone binaries ----------------------------------------------------
+if [ -x "$DEST/bin/luxcoreconsole" ]; then
+  echo "LuxCore $VERSION binaries already installed at $DEST"
+else
+  SHA="$(curl -fsSL "https://api.github.com/repos/$REPO/releases/tags/samples-v$VERSION" |
+    python3 -c "
+import json,sys
+for a in json.load(sys.stdin)['assets']:
+    if a['name'] == '$ASSET':
+        print(a['digest'].removeprefix('sha256:'))")"
+  [ -n "$SHA" ] || { echo "no $ASSET digest in release samples-v$VERSION" >&2; exit 1; }
+
+  TMP="$(mktemp -d)"
+  trap 'rm -rf "$TMP"' EXIT
+
+  URL="https://github.com/$REPO/releases/download/samples-v$VERSION/$ASSET"
+  echo "downloading $URL"
+  curl -fL --progress-bar -o "$TMP/$ASSET" "$URL"
+
+  echo "verifying sha256"
+  echo "$SHA  $TMP/$ASSET" | sha256sum -c -
+
+  echo "extracting to $DEST"
+  unzip -q "$TMP/$ASSET" -d "$TMP/outer"
+  unzip -q "$TMP"/outer/*.zip -d "$TMP/inner"
+  mkdir -p "$ROOT"
+  rm -rf "$DEST"
+  mv "$TMP/inner/LuxCore" "$DEST"
+  chmod +x "$DEST"/bin/*
+fi
+ln -sfn "$VERSION" "$ROOT/current"
+
+# --- pyluxcore --------------------------------------------------------------
+uv venv --quiet --allow-existing --python "$PYTHON_VERSION" "$ROOT/venv"
+uv pip install --quiet --python "$ROOT/venv/bin/python" "pyluxcore==$VERSION"
+
+# --- link it onto PATH ------------------------------------------------------
+if [ -z "${NO_LINK:-}" ]; then
+  mkdir -p "$BIN"
+  ln -sfn "$ROOT/current/bin/luxcoreconsole" "$BIN/luxcoreconsole"
+  ln -sfn "$ROOT/current/bin/luxcoreui" "$BIN/luxcoreui"
+  ln -sfn "$ROOT/venv/bin/pyluxcore-console" "$BIN/pyluxcore-console"
+  case ":$PATH:" in
+    *":$BIN:"*) ;;
+    *) echo "NOTE: $BIN is not on your PATH -- add it to your shell rc." ;;
+  esac
+fi
+
+echo "installed: $DEST"
+echo "pyluxcore: $("$ROOT/venv/bin/python" -c 'import pyluxcore as p; p.Init(); print(p.Version())' | tail -1)"
+echo "next:      $(dirname "$(readlink -f "$0")")/luxcore-run test"
