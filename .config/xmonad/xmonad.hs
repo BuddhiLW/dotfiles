@@ -500,6 +500,20 @@ clickable ws = "<action=xdotool key super+"++show i++">"++ws++"</action>"
 hiveCljsHeadedClass :: String
 hiveCljsHeadedClass = "hive-cljs-headed"
 
+-- WM_CLASS class names of web browsers. Check a window with `xprop WM_CLASS`
+-- (the second string is the class).
+browserClasses :: [String]
+browserClasses =
+  [ "firefox", "Firefox", "firefox_firefox", "firefox-esr", "LibreWolf", "Waterfox"
+  , "Chromium", "chromium", "Chromium-browser", "Google-chrome", "Brave-browser"
+  , "Vivaldi-stable", "Opera", "Microsoft-edge"
+  , "Mullvad Browser", "Mullvad Browser Alpha", "Tor Browser", "Tor Browser Alpha"
+  , "qutebrowser", "zen", "zen-browser", "Epiphany", "Nyxt"
+  ]
+
+isBrowser :: Query Bool
+isBrowser = fmap (`elem` browserClasses) className
+
 -- _NET_ACTIVE_WINDOW requests normally focus the window, switching workspace.
 -- Test browsers ask for activation on launch and on every page.bringToFront;
 -- ignore theirs so a test run never pulls the view away from the terminal.
@@ -534,8 +548,8 @@ myManageHook = composeAll
   -- hive guard permission dialogs (hive-notify :dialog backend): float top-right, beside dunst.
   , title =? "hive ask"            --> customFloating (W.RationalRect 0.69 0.03 0.30 0.22)
   , title =? "Oracle VM VirtualBox Manager"  --> doFloat
-  , title =? "Mozilla Firefox"     --> doShift ( myWorkspaces !! 1 )
-  , className =? "Brave-browser"   --> doShift ( myWorkspaces !! 1 )
+  -- Web browsers open on workspace 2 (web, M-2).
+  , isBrowser                      --> doShift ( myWorkspaces !! 1 )
   , className =? "mpv"             --> doShift ( myWorkspaces !! 7 )
   , className =? "Gimp"            --> doShift ( myWorkspaces !! 8 )
   , className =? "VirtualBox Manager" --> doShift  ( myWorkspaces !! 4 )
