@@ -78,6 +78,42 @@ If you need different extensions per node, generate a new schematic:
 |------|---------|-------|
 | 2025-09-18 | v1.11.1 | Initial cluster setup |
 | 2025-12-30 | v1.12.0 | Upgraded both nodes, kernel 6.18.1 |
+| 2026-08-07 | v1.13.7 | All 5 nodes converged |
+| 2026-11-10 | v1.14.5 | All 5 nodes, etcd 3.6 → 3.7 (storage version now 3.7.0; downgrade below 1.14 = snapshot restore) |
+| 2026-11-10 | v1.15.0-alpha.2 | **Control planes only** (T320, MPC1, MPC2). Workers held on v1.14.5: see below |
+
+### 2026-11-10 rollout: what broke and why workers stayed on 1.14.5
+
+Route taken: 1.13.7 → 1.14.5 (all nodes) → 1.15.0-alpha.2 (CPs). One minor at a time.
+Snapshots: `db.snapshot/etcd-backup-pre-1.14-20261110-134923.snapshot`, `etcd-backup-pre-1.15-*.snapshot`.
+
+1. **talosctl's built-in drain uses `cluster.controlPlane.endpoint`**, which in every CP config is
+   still the dead laptop IP `https://100.80.148.66:6443`. With a v1.14+ client the upgrade installs,
+   then fails to cordon and aborts *before rebooting*. Workaround used: `kubectl drain` via the LB,
+   then `talosctl upgrade --drain=false`. Real fix: correct the endpoint in the machine configs.
+2. **`192.168.100.136` apid (:50000) is unreachable directly from the workstation**; proxy through
+   T320: `talosctl -n 192.168.100.136 -e 192.168.100.137 ...`.
+3. **Talos 1.15 (Linux 7.3) breaks Cilium < 1.18.14**: agent crashes with
+   `failed to probe helper ... FnSetRetval ... bpf_set_retval#187: R1 is not a scalar`
+   (cilium/cilium#48016, fixed in 1.18.14 via #48381). Upgraded Cilium 1.18.12 → 1.18.16 first.
+4. **`helm upgrade --reuse-values` silently kept the old chart's image tags** (helm v3.15.4): release
+   said chart 1.18.16, pods ran 1.18.12. Use `--reset-then-reuse-values` and verify with
+   `helm get manifest cilium -n kube-system | grep image:`.
+   Also: `k8s-a3f/infrastructure/cilium/values.yaml` does **not** match the live release: live is
+   `routing-mode: tunnel` (vxlan), the file says `routingMode: native`. Do **not** `helm upgrade -f values.yaml`
+   without reconciling that first; it would switch the datapath.
+5. **Talos 1.15 removes the `nvidia` containerd runtime handler** (containerd config v4, CDI only).
+   GPU pods using `runtimeClassName: nvidia` fail with `no runtime for "nvidia" is configured`.
+   `talos-18t-abp` was rolled back to v1.14.5. Before 1.15 on the GPU worker: migrate
+   nvidia-device-plugin (v0.14.5) to a CDI-based setup and drop `runtimeClassName: nvidia` from
+   GPU workloads (`vtranslate-asr`, the device plugin itself).
+6. **Single-replica Longhorn volumes on `talos-21a-oep`** (`milvus/milvus-data`: hive's memory
+   store: and `vtranslate-production/models-vtranslate-asr-0`) fault on every reboot of that node,
+   because `talos-18t-abp`'s Longhorn disk is below the 25% minimal-available threshold and cannot
+   take a second replica. Both workloads are ArgoCD self-healed (`argocd-a3f`: `hive-milvus`,
+   `vtranslate-asr-production`), so `kubectl scale --replicas=0` is reverted within a minute -
+   pause self-heal first, and warn the hive coordinators before Milvus goes down.
+7. **Falco** crashloops on Talos ≥1.14 kernels (`scap_init` with the modern BPF probe): needs a Falco upgrade.
 
 ## Important Notes
 
